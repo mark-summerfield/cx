@@ -20,19 +20,21 @@ int main() {
 }
 
 bool va_tests() {
-    /*
-    int j = va_test();
+    int j = opt_test();
     if (j != 14) {
-        err(EXIT_FAILURE, "FAIL: va_test() expecte 14 go %d\n", j);
+        errx(EXIT_FAILURE, "FAIL: opt_test() expecte 14 go %d\n", j);
     }
-    */
+    j = opt_test(.i = 19);
+    if (j != 22) {
+        errx(EXIT_FAILURE, "FAIL: opt_test() expecte 22 go %d\n", j);
+    }
     int i = va_test(5);
     if (i != 8) {
-        err(EXIT_FAILURE, "FAIL: va_test() expecte 8 go %d\n", i);
+        errx(EXIT_FAILURE, "FAIL: va_test() expecte 8 go %d\n", i);
     }
     i = va_test(2, 9);
     if (i != 11) {
-        err(EXIT_FAILURE, "FAIL: va_test() expecte 11 go %d\n", i);
+        errx(EXIT_FAILURE, "FAIL: va_test() expecte 11 go %d\n", i);
     }
     return true;
 }
