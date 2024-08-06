@@ -5,3 +5,11 @@
 
 #define CONC(A, B) CONC_(A, B)
 #define CONC_(A, B) A##B
+
+/* Example
+    #define myfunc(...) CONC(myfunc, NARGS(__VA_ARGS__))(__VA_ARGS__)
+    int myfunc1(int a) { return myfunc2(3, a); }
+    int myfunc2(int a, int b) { return a + b; }
+    // NOTE: does _not_ work for 0 args (so cannot do function with one
+    // optional arg)
+*/

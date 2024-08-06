@@ -1,10 +1,20 @@
-# TODO str_set str_lst collections
+# TODO
+# I need these fundamental collections:
+#   - vec vector void* values: for vec stack queue
+#   - htb hash table void* keys void* values: for map set
+#   - rbt red-black tree void* keys void* values: for omap oset
+# And optionally:
+#   - lst doubly-linked list void* values: for deque
+# Plus macros or function wrappers for type safety
+
+vec.h
+vec.c
 
 vaargs.h
-
 va_test.h
 va_test.c
-cx_test.c
+
+cx_test.c # TODO vec tests
 
 SConstruct
 

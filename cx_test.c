@@ -21,9 +21,9 @@ int main() {
 
 bool va_tests() {
     /*
-    int i = va_test();
-    if (i != 14) {
-        err(EXIT_FAILURE, "FAIL: va_test() expecte 14 go %d\n", i);
+    int j = va_test();
+    if (j != 14) {
+        err(EXIT_FAILURE, "FAIL: va_test() expecte 14 go %d\n", j);
     }
     */
     int i = va_test(5);
