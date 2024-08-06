@@ -1,4 +1,5 @@
 #pragma once
+
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vaargs.h"
@@ -34,13 +35,13 @@ void vec_str_free(vec_str* v);
 void vec_str_clear(vec_str* v);
 
 // Returns whether the vec_str is empty.
-bool vec_str_isempty(vec_str* v) { return v->size > 0; }
+bool vec_str_isempty(vec_str* v);
 
 // Returns the vec_str's size.
-size_t vec_str_size(vec_str* v) { return v->size; }
+size_t vec_str_size(vec_str* v);
 
 // Returns the vec_str's capacity.
-size_t vec_str_cap(vec_str* v) { return v->cap; }
+size_t vec_str_cap(vec_str* v);
 
 // Returns the vec_str's str at position index.
 const char* vec_str_get(vec_str* v, size_t index);
@@ -59,9 +60,7 @@ const char* vec_str_exch(vec_str* v, size_t index, char* value);
 #define vec_str_remove(...)                                                \
     CONC(vec_str_remove, NARGS(__VA_ARGS__))(__VA_ARGS__)
 void vec_str_remove3(vec_str* v, size_t begin, size_t end);
-void vec_str_remove2(vec_str* v, size_t begin) {
-    vec_str_remove3(v, begin, begin + 1);
-}
+void vec_str_remove2(vec_str* v, size_t begin);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
 // If own_values=true, ownership passes to the caller.

@@ -16,7 +16,13 @@ vec_str vec_str_alloc_(vec_str_alloc_args args) {
     return v;
 }
 
-void vec_str_free(vec_str* v) { vec_str_clear(v); }
+inline void vec_str_free(vec_str* v) { vec_str_clear(v); }
+
+inline bool vec_str_isempty(vec_str* v) { return v->size > 0; }
+
+inline size_t vec_str_size(vec_str* v) { return v->size; }
+
+inline size_t vec_str_cap(vec_str* v) { return v->cap; }
 
 void vec_str_clear(vec_str* v) {
     if (v->own_values) {
@@ -59,6 +65,10 @@ void vec_str_remove3(vec_str* v, size_t begin, size_t end) {
         v->values[i] = NULL;
     }
     v->size -= (end - begin);
+}
+
+inline void vec_str_remove2(vec_str* v, size_t begin) {
+    vec_str_remove3(v, begin, begin + 1);
 }
 
 const char* vec_str_pop(vec_str* v) {
