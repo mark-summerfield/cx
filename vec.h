@@ -80,9 +80,13 @@ typedef struct {
 // Returns the index of value in the vec and true or 0 and false.
 vec_find_result vec_find(vec* v, void* value);
 
-// Returns a deep copy of the vec including .eq and .destroy using the
+// Returns a deep copy of the vec including eq and destroy using the
 // given cp function for copying each value.
 vec vec_copy(vec* v, void* (*cp)(void*));
+
+// Returns true if the two vec's have the same values and eq and destroy
+// functions.
+bool vec_eq(vec* v1, vec* v2);
 
 // To iterate:
 //  for (size_t i = 0; i < v.size(); i++) void* value = v.get(i);

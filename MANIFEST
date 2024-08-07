@@ -1,8 +1,4 @@
-# TODO fix vec_str:
-#   - BUG in remove
-#   - CHK no invalid const use
-#   - ADD vec_str_eq (for testing)
-# Then try to make generic using a destroy function
+# TODO vec tests
 
 # TODO
 # I need these fundamental collections:

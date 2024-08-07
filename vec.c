@@ -107,3 +107,17 @@ vec vec_copy(vec* v, void* (*cp)(void*)) {
     }
     return vc;
 }
+
+bool vec_eq(vec* v1, vec* v2) {
+    if (v1->eq != v2->eq)
+        return false;
+    if (v1->destroy != v2->destroy)
+        return false;
+    if (v1->size != v2->size)
+        return false;
+    for (size_t i = 0; i < v1->size; i++) {
+        if (!v1->eq(v1->values[i], v2->values[i]))
+            return false;
+    }
+    return true;
+}
