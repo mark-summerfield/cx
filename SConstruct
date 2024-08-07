@@ -8,7 +8,7 @@ else:
 env.Append(CPPPATH=['.', '../sx/include'])
 
 app = env.Program('cx', ['cx_test.c', '../sx/sx.c', 'va_test.c',
-                         'vec_str.c'])
+                         'vec.c', 'vec_str.c'])
 
 Default(app)
 appname = str(app[0])

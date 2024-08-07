@@ -1,12 +1,19 @@
+# TODO fix vec_str:
+#   - BUG in remove
+#   - CHK no invalid const use
+#   - ADD vec_str_eq (for testing)
+# Then try to make generic using a destroy function
+
 # TODO
 # I need these fundamental collections:
 #   - vec vector void* values: for vec stack queue
-#   - ovec ordered vector (add() instead of push(), etc)
-#   - htb hash table void* keys void* values: for map set
-#   - rbt red-black tree void* keys void* values: for omap oset
+#   - rbt red-black tree void* keys & values: for map & set (both ordered)
 # And optionally:
 #   - lst doubly-linked list void* values: for deque
 # Plus macros or function wrappers for type safety
+
+vec.h
+vec.c
 
 vec_str.h
 vec_str.c

@@ -2,7 +2,6 @@
 
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
-#include "vaargs.h"
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -35,13 +34,13 @@ void vec_str_free(vec_str* v);
 void vec_str_clear(vec_str* v);
 
 // Returns whether the vec_str is empty.
-bool vec_str_isempty(vec_str* v);
+#define vec_str_isempty(v) ((v)->size > 0)
 
 // Returns the vec_str's size.
-size_t vec_str_size(vec_str* v);
+#define vec_str_size(v) ((v)->size)
 
 // Returns the vec_str's capacity.
-size_t vec_str_cap(vec_str* v);
+#define vec_str_cap(v) ((v)->cap)
 
 // Returns the vec_str's str at position index.
 const char* vec_str_get(vec_str* v, size_t index);
@@ -51,16 +50,16 @@ const char* vec_str_get(vec_str* v, size_t index);
 void vec_str_set(vec_str* v, size_t index, char* value);
 
 // Sets the vec_str's str at position index to the given value and
-// returns the old str from that position.
-const char* vec_str_exch(vec_str* v, size_t index, char* value);
+// returns the old str from that position. Caller now owns the old str.
+char* vec_str_replace(vec_str* v, size_t index, char* value);
 
-// Removes the value at index begin (up to index end if given) and
-// closes up the gap.
-// If own_values is true, frees the removed strings.
-#define vec_str_remove(...)                                                \
-    CONC(vec_str_remove, NARGS(__VA_ARGS__))(__VA_ARGS__)
-void vec_str_remove3(vec_str* v, size_t begin, size_t end);
-void vec_str_remove2(vec_str* v, size_t begin);
+// Removes the value at the given index and closes up the gap.
+// If own_values is true, frees the removed string.
+void vec_str_remove(vec_str* v, size_t index);
+
+// Returns and removes the value at the given index and closes up the
+// gap. The returned str is now owned by the caller.
+char* vec_str_take(vec_str* v, size_t index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
 // If own_values=true, ownership passes to the caller.
@@ -79,7 +78,7 @@ typedef struct {
 vec_str_find_result vec_str_find(vec_str* v, char* value);
 
 // Returns a deep copy of the vec_str and the copy has own_values=true.
-vec_str copy(vec_str* v);
+vec_str vec_str_copy(vec_str* v);
 
 // To iterate:
 //  for (size_t i = 0; i < v.size(); i++) char* value = v.get(i);
