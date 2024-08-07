@@ -10,9 +10,9 @@ bool vec_str_eq(void* s, void* t);
 void vec_str_destroy(void* value);
 
 // Allocates a new vec of char*'s owned by the vec and with default capacity
-// of 8.
+// of 32.
 #define vec_str_alloc(...)                                                 \
-    vec_alloc_((vec_alloc_args){.cap = 8,                                  \
+    vec_alloc_((vec_alloc_args){.cap = 32,                                 \
                                 .eq = vec_str_eq,                          \
                                 .destroy = vec_str_destroy,                \
                                 __VA_ARGS__})

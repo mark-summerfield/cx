@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #define assert_valid_index(v, index)                                       \
-    assert((index) < (v)->size && "index out of range")
+    assert((index) < (v)->_size && "index out of range")
 
 #define assert_alloc(p) assert((p) && "failed to acquire memory")
 
@@ -14,87 +14,87 @@ vec vec_alloc_(vec_alloc_args args) {
     assert(args.destroy && "must provide a destroy function");
     void** values = malloc(args.cap * sizeof(void*));
     assert_alloc(values);
-    vec v = {.size = 0,
-             .cap = args.cap,
-             .values = values,
-             .eq = args.eq,
-             .destroy = args.destroy};
+    vec v = {._size = 0,
+             ._cap = args.cap,
+             ._values = values,
+             ._eq = args.eq,
+             ._destroy = args.destroy};
     return v;
 }
 
 inline void vec_free(vec* v) { vec_clear(v); }
 
 void vec_clear(vec* v) {
-    for (size_t i = 0; i < v->size; i++) {
-        v->destroy(v->values[i]);
+    for (size_t i = 0; i < v->_size; i++) {
+        v->_destroy(v->_values[i]);
     }
-    free(v->values);
-    v->values = NULL;
-    v->size = 0;
-    v->cap = 0;
+    free(v->_values);
+    v->_values = NULL;
+    v->_size = 0;
+    v->_cap = 0;
 }
 
 const void* vec_get(vec* v, size_t index) {
     assert_valid_index(v, index);
-    return v->values[index];
+    return v->_values[index];
 }
 
 void vec_set(vec* v, size_t index, void* value) {
     assert_valid_index(v, index);
-    v->destroy(v->values[index]);
-    v->values[index] = value;
+    v->_destroy(v->_values[index]);
+    v->_values[index] = value;
 }
 
 void* vec_replace(vec* v, size_t index, void* value) {
     assert_valid_index(v, index);
-    void* old = v->values[index];
-    v->values[index] = value;
+    void* old = v->_values[index];
+    v->_values[index] = value;
     return old;
 }
 
 void vec_remove(vec* v, size_t index) {
     assert_valid_index(v, index);
-    void* old = v->values[index];
-    for (size_t i = index; i < v->size; i++) {
-        v->values[i] = v->values[i + 1];
+    void* old = v->_values[index];
+    for (size_t i = index; i < v->_size; i++) {
+        v->_values[i] = v->_values[i + 1];
     }
-    v->values[v->size - 1] = NULL;
-    v->size--;
-    v->destroy(old);
+    v->_values[v->_size - 1] = NULL;
+    v->_size--;
+    v->_destroy(old);
 }
 
 void* vec_take(vec* v, size_t index) {
     assert_valid_index(v, index);
-    void* old = v->values[index];
-    for (size_t i = index; i < v->size; i++) {
-        v->values[i] = v->values[i + 1];
+    void* old = v->_values[index];
+    for (size_t i = index; i < v->_size; i++) {
+        v->_values[i] = v->_values[i + 1];
     }
-    v->values[v->size - 1] = NULL;
-    v->size--;
+    v->_values[v->_size - 1] = NULL;
+    v->_size--;
     return old;
 }
 
 void* vec_pop(vec* v) {
-    assert(v->size > 0 && "can't pop empty vec");
-    return v->values[--v->size];
+    assert(v->_size > 0 && "can't pop empty vec");
+    return v->_values[--v->_size];
 }
 
 void vec_push(vec* v, void* value) {
     const size_t BLOCK_SIZE = 4096;
-    if (v->size == v->cap) {
+    if (v->_size == v->_cap) {
         size_t cap =
-            (v->cap < BLOCK_SIZE) ? v->cap * 2 : v->cap + BLOCK_SIZE;
-        void** values = realloc(v->values, cap);
+            (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
+        void** values = realloc(v->_values, cap);
         assert_alloc(values);
-        v->values = values;
-        v->cap = cap;
+        v->_values = values;
+        v->_cap = cap;
     }
-    v->values[v->size++] = value;
+    v->_values[v->_size++] = value;
 }
 
 vec_find_result vec_find(vec* v, void* value) {
-    for (size_t i = 0; i < v->size; i++) {
-        if (v->eq(v->values[i], value)) {
+    for (size_t i = 0; i < v->_size; i++) {
+        if (v->_eq(v->_values[i], value)) {
             return (vec_find_result){.index = i, .found = true};
         }
     }
@@ -102,22 +102,23 @@ vec_find_result vec_find(vec* v, void* value) {
 }
 
 vec vec_copy(vec* v, void* (*cp)(void*)) {
-    vec vc = vec_alloc(.cap = v->size, .eq = v->eq, .destroy = v->destroy);
-    for (size_t i = 0; i < v->size; i++) {
-        vec_push(&vc, cp(v->values[i]));
+    vec vc =
+        vec_alloc(.cap = v->_size, .eq = v->_eq, .destroy = v->_destroy);
+    for (size_t i = 0; i < v->_size; i++) {
+        vec_push(&vc, cp(v->_values[i]));
     }
     return vc;
 }
 
 bool vec_eq(vec* v1, vec* v2) {
-    if (v1->eq != v2->eq)
+    if (v1->_eq != v2->_eq)
         return false;
-    if (v1->destroy != v2->destroy)
+    if (v1->_destroy != v2->_destroy)
         return false;
-    if (v1->size != v2->size)
+    if (v1->_size != v2->_size)
         return false;
-    for (size_t i = 0; i < v1->size; i++) {
-        if (!v1->eq(v1->values[i], v2->values[i]))
+    for (size_t i = 0; i < v1->_size; i++) {
+        if (!v1->_eq(v1->_values[i], v2->_values[i]))
             return false;
     }
     return true;

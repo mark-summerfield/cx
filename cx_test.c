@@ -13,16 +13,17 @@ typedef struct counts_pair {
 } counts_pair;
 
 void va_tests(counts_pair*);
-void vec_int_tests(counts_pair*);
+void vec_int_tests(counts_pair*, bool);
 void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
-                            size_t size, size_t capacity);
-void vec_str_tests(counts_pair*);
+                            size_t size, size_t capacity, bool verbose);
+void vec_str_tests(counts_pair*, bool);
 
-int main() {
+int main(int argc, char** argv) {
+    bool verbose = argc > 1;
     counts_pair counts = {0, 0};
     va_tests(&counts);
-    vec_int_tests(&counts);
-    vec_str_tests(&counts);
+    vec_int_tests(&counts, verbose);
+    vec_str_tests(&counts, verbose);
     printf("%s %d/%d\n", (counts.ok == counts.total) ? "OK" : "FAIL",
            counts.ok, counts.total);
 }
@@ -42,26 +43,28 @@ void va_tests(counts_pair* counts) {
         counts->ok++;
 }
 
-void vec_int_tests(counts_pair* counts) {
-    vec_int v1 = vec_int_alloc_default(); // default of 8
-    vec_int_check_size_cap(1, counts, &v1, 0, 8);
+void vec_int_tests(counts_pair* counts, bool verbose) {
+    vec_int v1 = vec_int_alloc_default(); // default of 32
+    vec_int_check_size_cap(1, counts, &v1, 0, 32, verbose);
 
     counts->total++;
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= 40; i++) {
         vec_int_push(&v1, i);
+        vec_int_check_size_cap(2, counts, &v1, i, i <= 32 ? 32 : 64,
+                               verbose);
     }
     counts->ok++;
 
-    vec_int_check_size_cap(2, counts, &v1, 10, 16);
+    vec_int_check_size_cap(2, counts, &v1, 40, 64, verbose);
 
     // TODO
 
     vec_int_clear(&v1);
-    vec_int_check_size_cap(3, counts, &v1, 0, 0);
+    vec_int_check_size_cap(3, counts, &v1, 0, 0, verbose);
 }
 
 void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
-                            size_t size, size_t capacity) {
+                            size_t size, size_t capacity, bool verbose) {
     counts->total++;
     if (vec_size(v) != size) {
         fprintf(stderr, "FAIL #%d: vec_int_size() expected %zu, got %zu\n",
@@ -77,7 +80,7 @@ void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
         counts->ok++;
 }
 
-void vec_str_tests(counts_pair* counts) {
+void vec_str_tests(counts_pair* counts, bool verbose) {
     // counts->total++;
     //  TODO
 }

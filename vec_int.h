@@ -5,34 +5,36 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+// A vector of int values.
+// All data members are private; all accesses via functions.
 typedef struct vec_int {
-    size_t size; // This is "end", i.e., one past the last value
-    size_t cap;  // The size of the allocated array
-    int* values;
+    size_t _size; // This is "end", i.e., one past the last value
+    size_t _cap;  // The size of the allocated array
+    int* _values;
 } vec_int;
 
 // Allocates a new empty vec_int with the given capacity.
 vec_int vec_int_alloc(size_t capacity);
 
 // Allocates a new empty vec_int with a default capacity of 0.
-#define vec_int_alloc_default() vec_int_alloc(8)
+#define vec_int_alloc_default() vec_int_alloc(32)
 
-// Destroys the vec_int freeing its memory and if destroy is not NULL, also
-// freeing every value. The vec_int is not usable after this.
+// Destroys the vec_int freeing its memory and also freeing every value. The
+// vec_int is not usable after this.
 void vec_int_free(vec_int* v);
 
-// Clears the vec_int freeing its memory and if destroy is not NULL, also
-// freeing every value. The vec_int is usable after this (e.g., push() etc).
+// Clears the vec_int freeing its memory and also freeing every value. The
+// vec_int is usable after this (e.g., push() etc).
 void vec_int_clear(vec_int* v);
 
 // Returns true if the vec_int is empty.
-#define vec_int_isempty(v) ((v)->size > 0)
+#define vec_int_isempty(v) ((v)->_size > 0)
 
 // Returns the vec_int's size.
-#define vec_int_size(v) ((v)->size)
+#define vec_int_size(v) ((v)->_size)
 
 // Returns the vec_int's capacity.
-#define vec_int_cap(v) ((v)->cap)
+#define vec_int_cap(v) ((v)->_cap)
 
 // Returns the vec_int's value at position index.
 int vec_int_get(vec_int* v, size_t index);

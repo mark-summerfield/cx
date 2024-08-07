@@ -5,12 +5,14 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+// A vector of owned void* values.
+// All data members are private; all accesses via functions.
 typedef struct vec {
-    size_t size; // This is "end", i.e., one past the last value
-    size_t cap;  // The size of the allocated array
-    void** values;
-    bool (*eq)(void* a, void* b);
-    void (*destroy)(void* values);
+    size_t _size; // This is "end", i.e., one past the last value
+    size_t _cap;  // The size of the allocated array
+    void** _values;
+    bool (*_eq)(void* a, void* b);
+    void (*_destroy)(void* values);
 } vec;
 
 typedef struct {
@@ -19,12 +21,12 @@ typedef struct {
     void (*destroy)(void* values);
 } vec_alloc_args;
 
-// Allocates a new vec with default capacity of 8.
+// Allocates a new vec with default capacity of 32.
 // Set the initial capacity with .cap.
 // Caller must supply an eq function.
 // Values must be pointers, and the caller must supply a destroy function
 // (since vec owns its values).
-#define vec_alloc(...) vec_alloc_((vec_alloc_args){.cap = 8, __VA_ARGS__})
+#define vec_alloc(...) vec_alloc_((vec_alloc_args){.cap = 32, __VA_ARGS__})
 vec vec_alloc_(vec_alloc_args args);
 
 // Destroys the vec freeing its memory and also freeing every value. The vec
@@ -36,13 +38,13 @@ void vec_free(vec* v);
 void vec_clear(vec* v);
 
 // Returns true if the vec is empty.
-#define vec_isempty(v) ((v)->size > 0)
+#define vec_isempty(v) ((v)->_size > 0)
 
 // Returns the vec's size.
-#define vec_size(v) ((v)->size)
+#define vec_size(v) ((v)->_size)
 
 // Returns the vec's capacity.
-#define vec_cap(v) ((v)->cap)
+#define vec_cap(v) ((v)->_cap)
 
 // Returns the vec's value at position index.
 // vec retains ownership, so do not delete the value.
