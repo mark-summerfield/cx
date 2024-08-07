@@ -71,7 +71,7 @@ void vec_int_push(vec_int* v, int value) {
     if (v->_size == v->_cap) {
         size_t cap =
             (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-        int* values = realloc(v->_values, cap);
+        int* values = reallocarray(v->_values, sizeof(int), cap);
         assert_alloc(values);
         v->_values = values;
         v->_cap = cap;

@@ -84,7 +84,7 @@ void vec_push(vec* v, void* value) {
     if (v->_size == v->_cap) {
         size_t cap =
             (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-        void** values = realloc(v->_values, cap);
+        void** values = reallocarray(v->_values, sizeof(void*), cap);
         assert_alloc(values);
         v->_values = values;
         v->_cap = cap;
