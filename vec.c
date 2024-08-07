@@ -7,11 +7,16 @@
 #define assert_valid_index(v, index)                                       \
     assert((index) < (v)->size && "index out of range")
 
+#define assert_alloc(p) assert((p) && "failed to acquire memory")
+
 vec vec_alloc_(vec_alloc_args args) {
     assert(args.eq && "must provide an eq function");
+    assert(args.destroy && "must provide a destroy function");
+    void** values = malloc(args.cap * sizeof(void*));
+    assert_alloc(values);
     vec v = {.size = 0,
              .cap = args.cap,
-             .values = malloc(args.cap * sizeof(void*)),
+             .values = values,
              .eq = args.eq,
              .destroy = args.destroy};
     return v;
@@ -20,10 +25,8 @@ vec vec_alloc_(vec_alloc_args args) {
 inline void vec_free(vec* v) { vec_clear(v); }
 
 void vec_clear(vec* v) {
-    if (v->destroy) {
-        for (size_t i = 0; i < v->size; i++) {
-            v->destroy(v->values[i]);
-        }
+    for (size_t i = 0; i < v->size; i++) {
+        v->destroy(v->values[i]);
     }
     free(v->values);
     v->values = NULL;
@@ -38,9 +41,7 @@ const void* vec_get(vec* v, size_t index) {
 
 void vec_set(vec* v, size_t index, void* value) {
     assert_valid_index(v, index);
-    if (v->destroy) {
-        v->destroy(v->values[index]);
-    }
+    v->destroy(v->values[index]);
     v->values[index] = value;
 }
 
@@ -59,9 +60,7 @@ void vec_remove(vec* v, size_t index) {
     }
     v->values[v->size - 1] = NULL;
     v->size--;
-    if (v->destroy) {
-        v->destroy(old);
-    }
+    v->destroy(old);
 }
 
 void* vec_take(vec* v, size_t index) {
@@ -85,7 +84,9 @@ void vec_push(vec* v, void* value) {
     if (v->size == v->cap) {
         size_t cap =
             (v->cap < BLOCK_SIZE) ? v->cap * 2 : v->cap + BLOCK_SIZE;
-        v->values = realloc(v->values, cap);
+        void** values = realloc(v->values, cap);
+        assert_alloc(values);
+        v->values = values;
         v->cap = cap;
     }
     v->values[v->size++] = value;

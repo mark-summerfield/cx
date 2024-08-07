@@ -7,11 +7,13 @@
 #define assert_valid_index(v, index)                                       \
     assert((index) < (v)->size && "index out of range")
 
+#define assert_alloc(p) assert((p) && "failed to acquire memory")
+
 vec_int vec_int_alloc(size_t capacity) {
     capacity = capacity ? capacity : 8;
-    vec_int v = {.size = 0,
-                 .cap = capacity,
-                 .values = malloc(capacity * sizeof(int))};
+    int* values = malloc(capacity * sizeof(int));
+    assert_alloc(values);
+    vec_int v = {.size = 0, .cap = capacity, .values = values};
     return v;
 }
 
@@ -69,7 +71,9 @@ void vec_int_push(vec_int* v, int value) {
     if (v->size == v->cap) {
         size_t cap =
             (v->cap < BLOCK_SIZE) ? v->cap * 2 : v->cap + BLOCK_SIZE;
-        v->values = realloc(v->values, cap);
+        int* values = realloc(v->values, cap);
+        assert_alloc(values);
+        v->values = values;
         v->cap = cap;
     }
     v->values[v->size++] = value;

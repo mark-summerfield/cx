@@ -10,9 +10,10 @@ cx_test.c # TODO (1) vec_int tests (2) vec_str tests
 
 vec.h
 vec.c
+vec_str.h
+vec_str.c
 vec_int.h
 vec_int.c
-vec_str.h
 
 vaargs.h
 va_test.h

@@ -22,18 +22,17 @@ typedef struct {
 // Allocates a new vec with default capacity of 8.
 // Set the initial capacity with .cap.
 // Caller must supply an eq function.
-// If values are pointers, caller must supply a destroy function (since
-// vec owns its values).
-#define vec_alloc(...)                                                     \
-    vec_alloc_((vec_alloc_args){.cap = 8, .destroy = NULL, __VA_ARGS__})
+// Values must be pointers, and the caller must supply a destroy function
+// (since vec owns its values).
+#define vec_alloc(...) vec_alloc_((vec_alloc_args){.cap = 8, __VA_ARGS__})
 vec vec_alloc_(vec_alloc_args args);
 
-// Destroys the vec freeing its memory and if destroy is not NULL, also
-// freeing every value. The vec is not usable after this.
+// Destroys the vec freeing its memory and also freeing every value. The vec
+// is not usable after this.
 void vec_free(vec* v);
 
-// Clears the vec freeing its memory and if destroy is not NULL, also
-// freeing every value. The vec is usable after this (e.g., push() etc).
+// Clears the vec freeing its memory and also freeing every value. The vec
+// is usable after this (e.g., push() etc).
 void vec_clear(vec* v);
 
 // Returns true if the vec is empty.
@@ -46,24 +45,21 @@ void vec_clear(vec* v);
 #define vec_cap(v) ((v)->cap)
 
 // Returns the vec's value at position index.
-// For pointers, vec retains ownership, so do not delete the value.
+// vec retains ownership, so do not delete the value.
 const void* vec_get(vec* v, size_t index);
 
 // Sets the vec's value at position index to the given value.
-// If the value is a pointer, vec takes ownership (e.g., if char* then
-// use strdup()).
-// If destroy is not NULL, frees the old value.
+// vec takes ownership of the new value (e.g., if char* then use strdup())
+// and frees the old value.
 void vec_set(vec* v, size_t index, void* value);
 
 // Sets the vec's value at position index to the given value and returns
 // the old value from that position.
-// If the value is a pointer, vec takes ownership (e.g., if char* then
-// use strdup()).
+// vec takes ownership of the new value (e.g., if char* then use strdup()).
 // The returned value is now owned by the caller.
 void* vec_replace(vec* v, size_t index, void* value);
 
-// Removes the value at the given index and closes up the gap.
-// If destroy is not NULL, frees the removed value.
+// Removes and frees the value at the given index and closes up the gap.
 void vec_remove(vec* v, size_t index);
 
 // Returns and removes the value at the given index and closes up the
@@ -77,8 +73,7 @@ void* vec_pop(vec* v);
 
 // Pushes a new value onto the end of the vec, increasing the vec's size
 // (and cap) if necessary.
-// If the value is a pointer, vec takes ownership (e.g., if char* then
-// use strdup()).
+// vec takes ownership of the value (e.g., if char* then use strdup()).
 void vec_push(vec* v, void* value);
 
 typedef struct {

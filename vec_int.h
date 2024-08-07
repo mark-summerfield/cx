@@ -74,4 +74,4 @@ vec_int vec_int_copy(vec_int* v);
 bool vec_int_eq(vec_int* v1, vec_int* v2);
 
 // To iterate:
-//  for (size_t i = 0; i < v.size(); i++) int* value = v.get(i);
+//  for (size_t i = 0; i < v.size(); i++) int value = v.get(i);
