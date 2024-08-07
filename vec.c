@@ -4,8 +4,6 @@
 #include <assert.h>
 #include <stdlib.h>
 
-const size_t VEC_BLOCK_SIZE = 4096;
-
 #define assert_valid_index(v, index)                                       \
     assert((index) < (v)->size && "index out of range")
 
@@ -83,9 +81,10 @@ void* vec_pop(vec* v) {
 }
 
 void vec_push(vec* v, void* value) {
+    const size_t BLOCK_SIZE = 4096;
     if (v->size == v->cap) {
-        size_t cap = (v->cap < VEC_BLOCK_SIZE) ? v->cap * 2
-                                               : v->cap + VEC_BLOCK_SIZE;
+        size_t cap =
+            (v->cap < BLOCK_SIZE) ? v->cap * 2 : v->cap + BLOCK_SIZE;
         v->values = realloc(v->values, cap);
         v->cap = cap;
     }

@@ -16,6 +16,11 @@ void vec_str_destroy(void* value) { free((char*)value); }
     vec_alloc_((vec_alloc_args){                                           \
         .cap = 8, .destroy = vec_str_destroy, __VA_ARGS__})
 
-#define vec_str_get(v, index) (char*)(vec_get((v), (index)))
+#define vec_str_get(v, index) (char*)vec_get((v), (index))
 
-#define vec_str_set(v, index, value) (vec_set((v), (index), (value)))
+#define vec_str_replace(v, index, value)                                   \
+    (char*)vec_replace((v), (index), (value))
+
+#define vec_str_take(v, index) (char*)vec_take((v), (index))
+
+#define vec_str_pop(v) (char*)vec_pop((v))

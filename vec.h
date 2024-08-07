@@ -19,23 +19,24 @@ typedef struct {
     void (*destroy)(void* values);
 } vec_alloc_args;
 
-// Allocates a new vec with default capacity of 8. Set the initial
-// capacity with .cap. Caller must supply an eq function and for pointer
-// values a destroy function (since vec owns its values). Destroy may be
-// NULL for nonpointers, e.g., int.
+// Allocates a new vec with default capacity of 8.
+// Set the initial capacity with .cap.
+// Caller must supply an eq function.
+// If values are pointers, caller must supply a destroy function (since
+// vec owns its values).
 #define vec_alloc(...)                                                     \
     vec_alloc_((vec_alloc_args){.cap = 8, .destroy = NULL, __VA_ARGS__})
 vec vec_alloc_(vec_alloc_args args);
 
-// Destroys the vec freeing its memory and if .destroy is not NULL, also
+// Destroys the vec freeing its memory and if destroy is not NULL, also
 // freeing every value. The vec is not usable after this.
 void vec_free(vec* v);
 
-// Clears the vec freeing its memory and if .destroy is not NULL, also
+// Clears the vec freeing its memory and if destroy is not NULL, also
 // freeing every value. The vec is usable after this (e.g., push() etc).
 void vec_clear(vec* v);
 
-// Returns whether the vec is empty.
+// Returns true if the vec is empty.
 #define vec_isempty(v) ((v)->size > 0)
 
 // Returns the vec's size.
@@ -45,23 +46,29 @@ void vec_clear(vec* v);
 #define vec_cap(v) ((v)->cap)
 
 // Returns the vec's value at position index.
+// For pointers, vec retains ownership, so do not delete the value.
 const void* vec_get(vec* v, size_t index);
 
 // Sets the vec's value at position index to the given value.
-// If .destroy is not NULL, frees the old value.
+// If the value is a pointer, vec takes ownership (e.g., if char* then
+// use strdup()).
+// If destroy is not NULL, frees the old value.
 void vec_set(vec* v, size_t index, void* value);
 
 // Sets the vec's value at position index to the given value and returns
-// the old value from that position. The returned value is now owned by
-// the caller.
+// the old value from that position.
+// If the value is a pointer, vec takes ownership (e.g., if char* then
+// use strdup()).
+// The returned value is now owned by the caller.
 void* vec_replace(vec* v, size_t index, void* value);
 
 // Removes the value at the given index and closes up the gap.
-// If .destroy is not NULL, frees the removed value.
+// If destroy is not NULL, frees the removed value.
 void vec_remove(vec* v, size_t index);
 
 // Returns and removes the value at the given index and closes up the
-// gap. The returned value is now owned by the caller.
+// gap.
+// The returned value is now owned by the caller.
 void* vec_take(vec* v, size_t index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
@@ -70,6 +77,8 @@ void* vec_pop(vec* v);
 
 // Pushes a new value onto the end of the vec, increasing the vec's size
 // (and cap) if necessary.
+// If the value is a pointer, vec takes ownership (e.g., if char* then
+// use strdup()).
 void vec_push(vec* v, void* value);
 
 typedef struct {

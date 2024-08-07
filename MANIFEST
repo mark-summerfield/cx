@@ -1,3 +1,4 @@
+# TODO memcpy or similar in vec_copy and vec_int_copy
 # TODO vec tests
 
 # TODO
@@ -8,15 +9,17 @@
 #   - lst doubly-linked list void* values: for deque
 # Plus macros or function wrappers for type safety
 
+cx_test.c # TODO (1) vec_int tests (2) vec_str tests
+
 vec.h
-vec.c
+vec.c # TODO vec_copy memcpy?
+vec_int.h
+vec_int.c # TODO vec_int_copy memcpy?
 vec_str.h
 
 vaargs.h
 va_test.h
 va_test.c
-
-cx_test.c # TODO (1) vec_str tests
 
 SConstruct
 
