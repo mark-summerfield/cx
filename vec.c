@@ -1,12 +1,13 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec.h"
-#include "../sx/sx.h"
 #include <assert.h>
 #include <stdlib.h>
 
-const void* VEC_ERR_INDEX_OUT_OF_RANGE = "index out of range";
 const size_t VEC_BLOCK_SIZE = 4096;
+
+#define assert_valid_index(v, index)                                       \
+    assert((index) < (v)->size && "index out of range")
 
 vec vec_alloc_(vec_alloc_args args) {
     assert(args.eq && "must provide an eq function");
@@ -33,12 +34,12 @@ void vec_clear(vec* v) {
 }
 
 const void* vec_get(vec* v, size_t index) {
-    assert(index < v->size && VEC_ERR_INDEX_OUT_OF_RANGE);
+    assert_valid_index(v, index);
     return v->values[index];
 }
 
 void vec_set(vec* v, size_t index, void* value) {
-    assert(index < v->size && VEC_ERR_INDEX_OUT_OF_RANGE);
+    assert_valid_index(v, index);
     if (v->destroy) {
         v->destroy(v->values[index]);
     }
@@ -46,14 +47,14 @@ void vec_set(vec* v, size_t index, void* value) {
 }
 
 void* vec_replace(vec* v, size_t index, void* value) {
-    assert(index < v->size && VEC_ERR_INDEX_OUT_OF_RANGE);
+    assert_valid_index(v, index);
     void* old = v->values[index];
     v->values[index] = value;
     return old;
 }
 
 void vec_remove(vec* v, size_t index) {
-    assert(index < v->size && VEC_ERR_INDEX_OUT_OF_RANGE);
+    assert_valid_index(v, index);
     void* old = v->values[index];
     for (size_t i = index; i < v->size; i++) {
         v->values[i] = v->values[i + 1];
@@ -66,7 +67,7 @@ void vec_remove(vec* v, size_t index) {
 }
 
 void* vec_take(vec* v, size_t index) {
-    assert(index < v->size && VEC_ERR_INDEX_OUT_OF_RANGE);
+    assert_valid_index(v, index);
     void* old = v->values[index];
     for (size_t i = index; i < v->size; i++) {
         v->values[i] = v->values[i + 1];

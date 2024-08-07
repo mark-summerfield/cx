@@ -1,7 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "va_test.h"
-#include "vec.h"
 #include "vec_str.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -13,7 +12,6 @@ typedef struct counts_pair {
 } counts_pair;
 
 void va_tests(counts_pair*);
-void vec_tests(counts_pair*);
 void vec_str_tests(counts_pair*);
 
 int main() {
@@ -49,11 +47,6 @@ void va_tests(counts_pair* counts) {
         fprintf(stderr, "FAIL: va_test() expecte 11 go %d\n", i);
     } else
         counts->ok++;
-}
-
-void vec_tests(counts_pair* counts) {
-    counts->total++;
-    // TODO
 }
 
 void vec_str_tests(counts_pair* counts) {

@@ -5,10 +5,8 @@ if GetOption('dbg'):
     env.Append(CCFLAGS='-Wall -g')
 else:
     env.Append(CCFLAGS='-Wall -O3 -DNDEBUG')
-env.Append(CPPPATH=['.', '../sx/include'])
 
-app = env.Program('cx', ['cx_test.c', '../sx/sx.c', 'va_test.c',
-                         'vec.c', 'vec_str.c'])
+app = env.Program('cx', ['cx_test.c', 'va_test.c', 'vec.c'])
 
 Default(app)
 appname = str(app[0])

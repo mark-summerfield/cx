@@ -10,10 +10,7 @@
 
 vec.h
 vec.c
-
 vec_str.h
-vec_str.c
-# TODO (2) vec_int
 
 vaargs.h
 va_test.h

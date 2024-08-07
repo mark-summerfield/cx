@@ -20,10 +20,9 @@ typedef struct {
 } vec_alloc_args;
 
 // Allocates a new vec with default capacity of 8. Set the initial
-// capacity with .cap. Caller must supply an eq function (for find) and
-// a destroy function if values are pointers *and* owned by the vec
-// (e.g., owned char*; but the default of NULL is fine for say, int or
-// unowned char*).
+// capacity with .cap. Caller must supply an eq function and for pointer
+// values a destroy function (since vec owns its values). Destroy may be
+// NULL for nonpointers, e.g., int.
 #define vec_alloc(...)                                                     \
     vec_alloc_((vec_alloc_args){.cap = 8, .destroy = NULL, __VA_ARGS__})
 vec vec_alloc_(vec_alloc_args args);
@@ -45,27 +44,28 @@ void vec_clear(vec* v);
 // Returns the vec's capacity.
 #define vec_cap(v) ((v)->cap)
 
-// Returns the vec's str at position index.
+// Returns the vec's value at position index.
 const void* vec_get(vec* v, size_t index);
 
-// Sets the vec's str at position index to the given value.
-// If .destroy is not NULL, frees the old string.
+// Sets the vec's value at position index to the given value.
+// If .destroy is not NULL, frees the old value.
 void vec_set(vec* v, size_t index, void* value);
 
-// Sets the vec's str at position index to the given value and
-// returns the old str from that position. Caller now owns the old str.
+// Sets the vec's value at position index to the given value and returns
+// the old value from that position. The returned value is now owned by
+// the caller.
 void* vec_replace(vec* v, size_t index, void* value);
 
 // Removes the value at the given index and closes up the gap.
-// If .destroy is not NULL, frees the removed string.
+// If .destroy is not NULL, frees the removed value.
 void vec_remove(vec* v, size_t index);
 
 // Returns and removes the value at the given index and closes up the
-// gap. The returned str is now owned by the caller.
+// gap. The returned value is now owned by the caller.
 void* vec_take(vec* v, size_t index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
-// Ownership passes to the caller.
+// The returned value is now owned by the caller.
 void* vec_pop(vec* v);
 
 // Pushes a new value onto the end of the vec, increasing the vec's size
