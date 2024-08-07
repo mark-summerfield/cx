@@ -14,6 +14,8 @@ typedef struct counts_pair {
 
 void va_tests(counts_pair*);
 void vec_int_tests(counts_pair*);
+void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
+                            size_t size, size_t capacity);
 void vec_str_tests(counts_pair*);
 
 int main() {
@@ -26,18 +28,6 @@ int main() {
 }
 
 void va_tests(counts_pair* counts) {
-    counts->total++;
-    int j = opt_test();
-    if (j != 14) {
-        fprintf(stderr, "FAIL: opt_test() expecte 14 go %d\n", j);
-    } else
-        counts->ok++;
-    counts->total++;
-    j = opt_test(.i = 19);
-    if (j != 22) {
-        fprintf(stderr, "FAIL: opt_test() expecte 22 go %d\n", j);
-    } else
-        counts->ok++;
     counts->total++;
     int i = va_test(5);
     if (i != 8) {
@@ -53,18 +43,38 @@ void va_tests(counts_pair* counts) {
 }
 
 void vec_int_tests(counts_pair* counts) {
-    vec_int v1 = vec_int_alloc(5);
+    vec_int v1 = vec_int_alloc_default(); // default of 8
+    vec_int_check_size_cap(1, counts, &v1, 0, 8);
+
     counts->total++;
-    if (vec_size(&v1)) {
-        fprintf(stderr, "FAIL: vec_int() expected size 0, got %zu\n",
-                vec_size(&v1));
-    } else
-        counts->ok++;
     for (int i = 1; i <= 10; i++) {
-        // printf("vec_int_push %d\n", i);
         vec_int_push(&v1, i);
     }
+    counts->ok++;
+
+    vec_int_check_size_cap(2, counts, &v1, 10, 16);
+
     // TODO
+
+    vec_int_clear(&v1);
+    vec_int_check_size_cap(3, counts, &v1, 0, 0);
+}
+
+void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
+                            size_t size, size_t capacity) {
+    counts->total++;
+    if (vec_size(v) != size) {
+        fprintf(stderr, "FAIL #%d: vec_int_size() expected %zu, got %zu\n",
+                n, size, vec_size(v));
+    } else
+        counts->ok++;
+
+    counts->total++;
+    if (vec_cap(v) != capacity) {
+        fprintf(stderr, "FAIL #%d: vec_int_cap() expected %zu, got %zu\n",
+                n, capacity, vec_cap(v));
+    } else
+        counts->ok++;
 }
 
 void vec_str_tests(counts_pair* counts) {

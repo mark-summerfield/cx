@@ -8,6 +8,7 @@
     assert((index) < (v)->size && "index out of range")
 
 vec_int vec_int_alloc(size_t capacity) {
+    capacity = capacity ? capacity : 8;
     vec_int v = {.size = 0,
                  .cap = capacity,
                  .values = malloc(capacity * sizeof(int))};

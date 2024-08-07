@@ -11,8 +11,11 @@ typedef struct vec_int {
     int* values;
 } vec_int;
 
-// Allocates a new vec_int with the given capacity.
+// Allocates a new empty vec_int with the given capacity.
 vec_int vec_int_alloc(size_t capacity);
+
+// Allocates a new empty vec_int with a default capacity of 0.
+#define vec_int_alloc_default() vec_int_alloc(8)
 
 // Destroys the vec_int freeing its memory and if destroy is not NULL, also
 // freeing every value. The vec_int is not usable after this.

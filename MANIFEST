@@ -1,6 +1,3 @@
-# TODO memcpy or similar in vec_copy and vec_int_copy
-# TODO vec tests
-
 # TODO
 # I need these fundamental collections:
 #   - vec vector void* values: for vec stack queue
@@ -12,9 +9,9 @@
 cx_test.c # TODO (1) vec_int tests (2) vec_str tests
 
 vec.h
-vec.c # TODO vec_copy memcpy?
+vec.c
 vec_int.h
-vec_int.c # TODO vec_int_copy memcpy?
+vec_int.c
 vec_str.h
 
 vaargs.h

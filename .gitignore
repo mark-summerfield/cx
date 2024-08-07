@@ -48,4 +48,4 @@ build/
 *.fhd
 zOld/
 .qmake.stash
-cx
+cx_test
