@@ -56,7 +56,7 @@ void vec_int_tests(counts_pair* counts) {
     vec_int v1 = vec_int_alloc(5);
     counts->total++;
     if (vec_size(&v1)) {
-        fprintf(stderr, "FAIL: vec_int() expected size 0, got %ld\n",
+        fprintf(stderr, "FAIL: vec_int() expected size 0, got %zu\n",
                 vec_size(&v1));
     } else
         counts->ok++;
