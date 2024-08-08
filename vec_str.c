@@ -35,7 +35,7 @@ char* vec_str_dump(vec* v, const char* name) {
     size -= n;
     assert_size_ok(size);
     for (size_t i = 0; i < v->_size; i++) {
-        n = snprintf(out, size, "\"%s\"", (char*)v->_values[i]);
+        n = snprintf(out, size, "{%s}", (char*)v->_values[i]);
         out += n;
         size -= n;
         size -= n;
