@@ -40,6 +40,9 @@ void vec_int_clear(vec_int* v);
 // Returns the vec_int's int value at position index.
 int vec_int_get(vec_int* v, size_t index);
 
+// Returns the vec_int's int value at its last valid index.
+int vec_int_get_last(vec_int* v);
+
 // Sets the vec_int's value at position index to the given int.
 void vec_int_set(vec_int* v, size_t index, int value);
 

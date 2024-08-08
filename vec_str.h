@@ -24,6 +24,10 @@ void vec_str_destroy(void* value);
 // vec retains ownership, so do not delete the value.
 #define vec_str_get(v, index) (char*)vec_get((v), (index))
 
+// Returns the vec's char* value at its last valid index.
+// vec retains ownership, so do not delete the value.
+const char* vec_str_get_last(vec* v);
+
 // Sets the vec's char* value at position index to the given value and
 // returns the old char* value from that position.
 // vec takes ownership of the new value (e.g., use strdup()).
@@ -41,4 +45,4 @@ void vec_str_destroy(void* value);
 // The returned char* value is now owned by the caller.
 #define vec_str_pop(v) (char*)vec_pop((v))
 
-void vec_str_dump(vec* v, const char* name);
+char* vec_str_dump(vec* v, const char* name);

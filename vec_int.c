@@ -33,6 +33,8 @@ int vec_int_get(vec_int* v, size_t index) {
     return v->_values[index];
 }
 
+inline int vec_int_get_last(vec_int* v) { return v->_values[v->_size - 1]; }
+
 void vec_int_set(vec_int* v, size_t index, int value) {
     assert_valid_index(v, index);
     v->_values[index] = value;
@@ -127,30 +129,37 @@ void _vec_int_grow(vec_int* v) {
     v->_cap = cap;
 }
 
+#define assert_size_ok(expr) assert((expr) <= 0 && "buffer too small")
+
 char* vec_int_dump(vec_int* v, const char* name) {
     const size_t SIZE = 250;
     char* buffer = malloc(SIZE);
     char* out = buffer;
-    size_t size = SIZE - 1;
+    long long size = SIZE - 1;
     size_t n;
     if (name) {
         n = snprintf(out, size, "%s=", name);
         out += n;
         size -= n;
+        assert_size_ok(size);
     }
     n = snprintf(out, size, "[");
     out += n;
     size -= n;
+    assert_size_ok(size);
     for (size_t i = 0; i < v->_size; i++) {
         n = snprintf(out, size, "%d", v->_values[i]);
         out += n;
         size -= n;
+        assert_size_ok(size);
         if (i + 1 < v->_size) {
             n = snprintf(out, size, " ");
             out += n;
             size -= n;
+            assert_size_ok(size);
         }
     }
-    snprintf(out, size, "]\n");
+    assert_size_ok(size - 2);
+    snprintf(out, size, "]");
     return buffer;
 }

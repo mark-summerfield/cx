@@ -43,6 +43,8 @@ const void* vec_get(vec* v, size_t index) {
     return v->_values[index];
 }
 
+inline const void* vec_get_last(vec* v) { return v->_values[v->_size - 1]; }
+
 void vec_set(vec* v, size_t index, void* value) {
     assert_valid_index(v, index);
     v->_destroy(v->_values[index]);

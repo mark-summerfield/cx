@@ -51,6 +51,10 @@ void vec_clear(vec* v);
 // vec retains ownership, so do not delete the value.
 const void* vec_get(vec* v, size_t index);
 
+// Returns the vec's value at its last valid index.
+// vec retains ownership, so do not delete the value.
+const void* vec_get_last(vec* v);
+
 // Sets the vec's value at position index to the given value.
 // vec takes ownership of the new value (e.g., if char* then use strdup())
 // and frees the old value.
