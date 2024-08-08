@@ -126,3 +126,31 @@ void _vec_int_grow(vec_int* v) {
     v->_values = values;
     v->_cap = cap;
 }
+
+char* vec_int_dump(vec_int* v, const char* name) {
+    const size_t SIZE = 250;
+    char* buffer = malloc(SIZE);
+    char* out = buffer;
+    size_t size = SIZE - 1;
+    size_t n;
+    if (name) {
+        n = snprintf(out, size, "%s=", name);
+        out += n;
+        size -= n;
+    }
+    n = snprintf(out, size, "[");
+    out += n;
+    size -= n;
+    for (size_t i = 0; i < v->_size; i++) {
+        n = snprintf(out, size, "%d", v->_values[i]);
+        out += n;
+        size -= n;
+        if (i + 1 < v->_size) {
+            n = snprintf(out, size, " ");
+            out += n;
+            size -= n;
+        }
+    }
+    snprintf(out, size, "]\n");
+    return buffer;
+}

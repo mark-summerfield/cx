@@ -4,6 +4,7 @@
 
 #include "vec.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 bool vec_str_eq(void* s, void* t);
 
@@ -39,3 +40,5 @@ void vec_str_destroy(void* value);
 // false.
 // The returned char* value is now owned by the caller.
 #define vec_str_pop(v) (char*)vec_pop((v))
+
+void vec_str_dump(vec* v, const char* name);

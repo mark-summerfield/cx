@@ -44,23 +44,38 @@ void va_tests(counts_pair* counts) {
 }
 
 void vec_int_tests(counts_pair* counts, bool verbose) {
+    int n = 1;
     vec_int v1 = vec_int_alloc(); // default of 32
-    vec_int_check_size_cap(1, counts, &v1, 0, 32, verbose);
+    vec_int_check_size_cap(n++, counts, &v1, 0, 32, verbose);
+
+    vec_int v2 = vec_int_copy(&v1);
+    vec_int_check_size_cap(n++, counts, &v1, 0, 32, verbose);
 
     counts->total++;
-    for (int i = 1; i <= 40; i++) {
+    for (int i = 1; i <= 35; i++) {
+        n++;
         vec_int_push(&v1, i);
-        vec_int_check_size_cap(2, counts, &v1, i, i <= 32 ? 32 : 64,
+        vec_int_check_size_cap(n, counts, &v1, i, i <= 32 ? 32 : 64,
                                verbose);
     }
+    n++;
     counts->ok++;
 
-    vec_int_check_size_cap(2, counts, &v1, 40, 64, verbose);
+    vec_int_check_size_cap(n++, counts, &v1, 35, 64, verbose);
+    vec_int_check_size_cap(n++, counts, &v2, 0, 32, verbose);
+    // TODO sx_eq() to check
+    vec_int_print(&v1, "v1");
+    vec_int_print(&v2, "v2");
 
-    // TODO
-
+    fprintf(stderr, "TODO vec_int_tests\n"); // TODO
     vec_int_clear(&v1);
-    vec_int_check_size_cap(3, counts, &v1, 0, 0, verbose);
+    vec_int_check_size_cap(n++, counts, &v1, 0, 0, verbose);
+}
+
+void vec_int_print(vec_int* v, const char* name) {
+    char* out = vec_int_dump(v, name);
+    printf("%s", out);
+    free(out);
 }
 
 void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
@@ -81,6 +96,6 @@ void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
 }
 
 void vec_str_tests(counts_pair* counts, bool verbose) {
+    fprintf(stderr, "TODO vec_str_tests\n"); // TODO
     // counts->total++;
-    //  TODO
 }
