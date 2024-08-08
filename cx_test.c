@@ -44,7 +44,7 @@ void va_tests(counts_pair* counts) {
 }
 
 void vec_int_tests(counts_pair* counts, bool verbose) {
-    vec_int v1 = vec_int_alloc_default(); // default of 32
+    vec_int v1 = vec_int_alloc(); // default of 32
     vec_int_check_size_cap(1, counts, &v1, 0, 32, verbose);
 
     counts->total++;

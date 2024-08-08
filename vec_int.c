@@ -9,11 +9,13 @@
 
 #define assert_alloc(p) assert((p) && "failed to acquire memory")
 
-vec_int vec_int_alloc(size_t capacity) {
-    capacity = capacity ? capacity : 32;
-    int* values = malloc(capacity * sizeof(int));
+void _vec_int_grow(vec_int* v);
+
+vec_int vec_int_alloc_cap(size_t cap) {
+    cap = cap ? cap : 32;
+    int* values = malloc(cap * sizeof(int));
     assert_alloc(values);
-    vec_int v = {._size = 0, ._cap = capacity, ._values = values};
+    vec_int v = {._size = 0, ._cap = cap, ._values = values};
     return v;
 }
 
@@ -34,6 +36,21 @@ int vec_int_get(vec_int* v, size_t index) {
 void vec_int_set(vec_int* v, size_t index, int value) {
     assert_valid_index(v, index);
     v->_values[index] = value;
+}
+
+void vec_int_insert(vec_int* v, size_t index, int value) {
+    if (index == v->_size) { // add at the end
+        vec_int_push(v, value);
+        return;
+    }
+    if (v->_size == v->_cap) {
+        _vec_int_grow(v);
+    }
+    for (size_t i = v->_size - 1; i >= index; i--) {
+        v->_values[i + 1] = v->_values[i];
+    }
+    v->_values[index] = value;
+    v->_size++;
 }
 
 int vec_int_replace(vec_int* v, size_t index, int value) {
@@ -67,14 +84,8 @@ int vec_int_pop(vec_int* v) {
 }
 
 void vec_int_push(vec_int* v, int value) {
-    const size_t BLOCK_SIZE = 1024 * 1024;
     if (v->_size == v->_cap) {
-        size_t cap =
-            (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-        int* values = realloc(v->_values, cap * sizeof(int));
-        assert_alloc(values);
-        v->_values = values;
-        v->_cap = cap;
+        _vec_int_grow(v);
     }
     v->_values[v->_size++] = value;
 }
@@ -89,7 +100,7 @@ vec_int_find_result vec_int_find(vec_int* v, int value) {
 }
 
 vec_int vec_int_copy(vec_int* v) {
-    vec_int vc = vec_int_alloc(v->_size);
+    vec_int vc = vec_int_alloc_cap(v->_size);
     for (size_t i = 0; i < v->_size; i++) {
         vec_int_push(&vc, v->_values[i]);
     }
@@ -104,4 +115,14 @@ bool vec_int_eq(vec_int* v1, vec_int* v2) {
             return false;
     }
     return true;
+}
+
+void _vec_int_grow(vec_int* v) {
+    const size_t BLOCK_SIZE = 1024 * 1024;
+    size_t cap =
+        (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
+    int* values = realloc(v->_values, cap * sizeof(int));
+    assert_alloc(values);
+    v->_values = values;
+    v->_cap = cap;
 }

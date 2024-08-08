@@ -9,6 +9,8 @@
 
 #define assert_alloc(p) assert((p) && "failed to acquire memory")
 
+void _vec_grow(vec* v);
+
 vec vec_alloc_(vec_alloc_args args) {
     assert(args.eq && "must provide an eq function");
     assert(args.cp && "must provide a cp function");
@@ -47,6 +49,21 @@ void vec_set(vec* v, size_t index, void* value) {
     v->_values[index] = value;
 }
 
+void vec_insert(vec* v, size_t index, void* value) {
+    if (index == v->_size) { // add at the end
+        vec_push(v, value);
+        return;
+    }
+    if (v->_size == v->_cap) {
+        _vec_grow(v);
+    }
+    for (size_t i = v->_size - 1; i >= index; i--) {
+        v->_values[i + 1] = v->_values[i];
+    }
+    v->_values[index] = value;
+    v->_size++;
+}
+
 void* vec_replace(vec* v, size_t index, void* value) {
     assert_valid_index(v, index);
     void* old = v->_values[index];
@@ -82,14 +99,8 @@ void* vec_pop(vec* v) {
 }
 
 void vec_push(vec* v, void* value) {
-    const size_t BLOCK_SIZE = 1024 * 1024;
     if (v->_size == v->_cap) {
-        size_t cap =
-            (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-        void** values = realloc(v->_values, cap * sizeof(void*));
-        assert_alloc(values);
-        v->_values = values;
-        v->_cap = cap;
+        _vec_grow(v);
     }
     v->_values[v->_size++] = value;
 }
@@ -124,4 +135,14 @@ bool vec_eq(vec* v1, vec* v2) {
             return false;
     }
     return true;
+}
+
+void _vec_grow(vec* v) {
+    const size_t BLOCK_SIZE = 1024 * 1024;
+    size_t cap =
+        (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
+    void** values = realloc(v->_values, cap * sizeof(void*));
+    assert_alloc(values);
+    v->_values = values;
+    v->_cap = cap;
 }

@@ -56,6 +56,11 @@ const void* vec_get(vec* v, size_t index);
 // and frees the old value.
 void vec_set(vec* v, size_t index, void* value);
 
+// Inserts the value at position index and moves succeeding values up
+// (right), increasing the vec's size (and cap if necessary).
+// vec takes ownership of the new value (e.g., if char* then use strdup()).
+void vec_insert(vec* v, size_t index, void* value);
+
 // Sets the vec's value at position index to the given value and returns
 // the old value from that position.
 // vec takes ownership of the new value (e.g., if char* then use strdup()).
@@ -75,7 +80,7 @@ void* vec_take(vec* v, size_t index);
 void* vec_pop(vec* v);
 
 // Pushes a new value onto the end of the vec, increasing the vec's size
-// (and cap) if necessary.
+// (and cap if necessary).
 // vec takes ownership of the value (e.g., if char* then use strdup()).
 void vec_push(vec* v, void* value);
 
