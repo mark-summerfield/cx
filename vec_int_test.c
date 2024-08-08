@@ -2,10 +2,7 @@
 
 #include "vec_int_test.h"
 #include "vec_int.h"
-#include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
                             size_t size, size_t capacity, bool verbose);

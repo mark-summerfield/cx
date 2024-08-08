@@ -3,10 +3,7 @@
 #include "cx_test_util.h"
 #include "va_test.h"
 #include "vec_int_test.h"
-#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 void va_tests(counts_pair*);
 

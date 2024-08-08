@@ -3,7 +3,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdio.h>
 
 // A vector of int values.
