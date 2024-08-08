@@ -9,5 +9,3 @@ bool vec_str_eq(void* s, void* t) { return strcmp((s), (t)) == 0; }
 void vec_str_destroy(void* value) { free((char*)value); }
 
 void* vec_str_cp(void* value) { return (void*)strdup((char*)value); }
-
-vec vec_str_copy(vec* v) { return vec_copy(v, vec_str_cp); }

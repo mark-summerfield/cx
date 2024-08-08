@@ -7,13 +7,15 @@
 
 bool vec_str_eq(void* s, void* t);
 
+void* vec_str_cp(void* value);
+
 void vec_str_destroy(void* value);
 
-// Allocates a new vec of char*'s owned by the vec and with default capacity
-// of 32.
+// Allocates a new vec of owned char*'s with default capacity of 32.
 #define vec_str_alloc(...)                                                 \
     vec_alloc_((vec_alloc_args){.cap = 32,                                 \
                                 .eq = vec_str_eq,                          \
+                                .cp = vec_str_cp,                          \
                                 .destroy = vec_str_destroy,                \
                                 __VA_ARGS__})
 
@@ -37,7 +39,3 @@ void vec_str_destroy(void* value);
 // false.
 // The returned char* value is now owned by the caller.
 #define vec_str_pop(v) (char*)vec_pop((v))
-
-// Returns a deep copy of the vec including eq and destroy, copying each
-// char* using strdup().
-vec vec_str_copy(vec* v);

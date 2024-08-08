@@ -11,6 +11,7 @@
 
 vec vec_alloc_(vec_alloc_args args) {
     assert(args.eq && "must provide an eq function");
+    assert(args.cp && "must provide a cp function");
     assert(args.destroy && "must provide a destroy function");
     void** values = malloc(args.cap * sizeof(void*));
     assert_alloc(values);
@@ -18,6 +19,7 @@ vec vec_alloc_(vec_alloc_args args) {
              ._cap = args.cap,
              ._values = values,
              ._eq = args.eq,
+             ._cp = args.cp,
              ._destroy = args.destroy};
     return v;
 }
@@ -80,11 +82,11 @@ void* vec_pop(vec* v) {
 }
 
 void vec_push(vec* v, void* value) {
-    const size_t BLOCK_SIZE = 4096;
+    const size_t BLOCK_SIZE = 1024 * 1024;
     if (v->_size == v->_cap) {
         size_t cap =
             (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-        void** values = reallocarray(v->_values, sizeof(void*), cap);
+        void** values = realloc(v->_values, cap * sizeof(void*));
         assert_alloc(values);
         v->_values = values;
         v->_cap = cap;
@@ -101,11 +103,11 @@ vec_find_result vec_find(vec* v, void* value) {
     return (vec_find_result){.index = 0, .found = false};
 }
 
-vec vec_copy(vec* v, void* (*cp)(void*)) {
+vec vec_copy(vec* v) {
     vec vc =
         vec_alloc(.cap = v->_size, .eq = v->_eq, .destroy = v->_destroy);
     for (size_t i = 0; i < v->_size; i++) {
-        vec_push(&vc, cp(v->_values[i]));
+        vec_push(&vc, v->_cp(v->_values[i]));
     }
     return vc;
 }
