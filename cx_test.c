@@ -1,35 +1,21 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
+#include "cx_test_util.h"
 #include "va_test.h"
-#include "vec_int.h"
-#include "vec_str.h"
+#include "vec_int_test.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct counts_pair {
-    int total;
-    int ok;
-} counts_pair;
-
 void va_tests(counts_pair*);
-void vec_int_tests(counts_pair*, bool);
-void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
-                            size_t size, size_t capacity, bool verbose);
-void vec_int_match(int n, counts_pair* counts, vec_int* v, char* expected);
-void vec_int_equal(int n, counts_pair* counts, vec_int* v1, vec_int* v2);
-void vec_int_print(vec_int* v, const char* name);
-void vec_str_tests(counts_pair*, bool);
-void check_str_eq(int n, counts_pair* counts, const char* s, const char* t);
-void check_int_eq(int n, counts_pair* counts, int a, int b);
 
 int main(int argc, char** argv) {
     bool verbose = argc > 1;
     counts_pair counts = {0, 0};
     va_tests(&counts);
     vec_int_tests(&counts, verbose);
-    vec_str_tests(&counts, verbose);
+    printf("TODO vec_str_tests(&counts, verbose);\n");
     printf("%s %d/%d\n", (counts.ok == counts.total) ? "OK" : "FAIL",
            counts.ok, counts.total);
 }
@@ -45,123 +31,6 @@ void va_tests(counts_pair* counts) {
     i = va_test(2, 9);
     if (i != 11) {
         fprintf(stderr, "FAIL: va_test() expecte 11 go %d\n", i);
-    } else
-        counts->ok++;
-}
-
-void vec_int_tests(counts_pair* counts, bool verbose) {
-    int n = 1;
-    vec_int v1 = vec_int_alloc(); // default of 32
-    vec_int_check_size_cap(n++, counts, &v1, 0, 32, verbose);
-
-    vec_int v2 = vec_int_copy(&v1);
-    vec_int_check_size_cap(n++, counts, &v1, 0, 32, verbose);
-
-    counts->total++;
-    for (int i = 1; i <= 35; i++) {
-        n++;
-        vec_int_push(&v1, i);
-        if (i < 10)
-            vec_int_push(&v2, i);
-        vec_int_check_size_cap(n, counts, &v1, i, i <= 32 ? 32 : 64,
-                               verbose);
-    }
-    n++;
-    counts->ok++;
-
-    vec_int_check_size_cap(n++, counts, &v1, 35, 64, verbose);
-    vec_int_check_size_cap(n++, counts, &v2, 9, 32, verbose);
-    vec_int_match(n++, counts, &v1,
-                  "[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 "
-                  "20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35]");
-    vec_int_match(n++, counts, &v2, "[1 2 3 4 5 6 7 8 9]");
-
-    for (int i = 35; i > 9; i--) {
-        int v = vec_int_pop(&v1);
-        check_int_eq(n++, counts, v, i);
-    }
-    vec_int_match(n++, counts, &v1, "[1 2 3 4 5 6 7 8 9]");
-    vec_int_equal(n++, counts, &v1, &v2);
-
-    vec_int_push(&v1, -99);
-    vec_int_match(n++, counts, &v1, "[1 2 3 4 5 6 7 8 9 -99]");
-
-    vec_int_insert(&v1, 4, -555);
-    vec_int_match(n++, counts, &v1, "[1 2 3 4 -555 5 6 7 8 9 -99]");
-
-    int x = vec_int_get(&v1, 0);
-    check_int_eq(n++, counts, x, 1);
-    x = vec_int_get(&v1, 4);
-    check_int_eq(n++, counts, x, -555);
-    x = vec_int_get_last(&v1);
-    check_int_eq(n++, counts, x, -99);
-
-    fprintf(stderr, "TODO vec_int_tests: vec_int_set vec_int_replace "
-                    "vec_int_remove vec_int_take vec_int_find\n"); // TODO
-    vec_int_clear(&v1);
-    vec_int_check_size_cap(n++, counts, &v1, 0, 0, verbose);
-    vec_int_free(&v2);
-    vec_int_check_size_cap(n++, counts, &v2, 0, 0, verbose);
-}
-
-void vec_int_match(int n, counts_pair* counts, vec_int* v, char* expected) {
-    char* out = vec_int_dump(v, NULL);
-    check_str_eq(n, counts, out, expected);
-    free(out);
-}
-
-// TODO Comment out once tests complete.
-void vec_int_print(vec_int* v, const char* name) {
-    char* out = vec_int_dump(v, name);
-    printf("%s\n", out);
-    free(out);
-}
-
-void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
-                            size_t size, size_t capacity, bool verbose) {
-    counts->total++;
-    if (vec_size(v) != size) {
-        fprintf(stderr, "FAIL #%d: vec_int_size() expected %zu, got %zu\n",
-                n, size, vec_size(v));
-    } else
-        counts->ok++;
-
-    counts->total++;
-    if (vec_cap(v) != capacity) {
-        fprintf(stderr, "FAIL #%d: vec_int_cap() expected %zu, got %zu\n",
-                n, capacity, vec_cap(v));
-    } else
-        counts->ok++;
-}
-
-void vec_int_equal(int n, counts_pair* counts, vec_int* v1, vec_int* v2) {
-    counts->total++;
-    if (!vec_int_eq(v1, v2)) {
-        fprintf(stderr, "FAIL #%d: vec_int_eq() expected true, got false\n",
-                n);
-    } else
-        counts->ok++;
-}
-
-void vec_str_tests(counts_pair* counts, bool verbose) {
-    fprintf(stderr, "TODO vec_str_tests\n"); // TODO
-    // counts->total++;
-}
-
-void check_str_eq(int n, counts_pair* counts, const char* s,
-                  const char* t) {
-    counts->total++;
-    if (strcmp((s), (t)) != 0) {
-        fprintf(stderr, "FAIL #%d: expected\n\t\"%s\", got\n\t\"%s\"\n", n,
-                s, t);
-    } else
-        counts->ok++;
-}
-
-void check_int_eq(int n, counts_pair* counts, int a, int b) {
-    counts->total++;
-    if (a != b) {
-        fprintf(stderr, "FAIL #%d: expected %d, got %d\n", n, a, b);
     } else
         counts->ok++;
 }

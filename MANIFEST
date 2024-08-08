@@ -7,6 +7,12 @@
 # Plus macros or function wrappers for type safety
 
 cx_test.c # TODO (1) vec_int tests (2) vec_str tests
+cx_test_util.h
+cx_test_util.c
+vec_int_test.h
+vec_int_test.c
+va_test.h
+va_test.c
 
 vec.h
 vec.c
@@ -16,8 +22,6 @@ vec_int.h
 vec_int.c
 
 vaargs.h
-va_test.h
-va_test.c
 
 SConstruct
 
