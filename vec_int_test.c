@@ -8,7 +8,7 @@ void vec_int_check_size_cap(int n, counts_pair* counts, vec_int* v,
                             size_t size, size_t capacity, bool verbose);
 void vec_int_match(int n, counts_pair* counts, vec_int* v, char* expected);
 void vec_int_equal(int n, counts_pair* counts, vec_int* v1, vec_int* v2);
-void vec_int_print(vec_int* v, const char* name);
+void vec_int_print(vec_int* v);
 void vec_str_tests(counts_pair*, bool);
 
 void vec_int_tests(counts_pair* counts, bool verbose) {
@@ -34,9 +34,9 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
     vec_int_check_size_cap(n++, counts, &v1, 35, 64, verbose);
     vec_int_check_size_cap(n++, counts, &v2, 9, 32, verbose);
     vec_int_match(n++, counts, &v1,
-                  "[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 "
-                  "20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35]");
-    vec_int_match(n++, counts, &v2, "[1 2 3 4 5 6 7 8 9]");
+                  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 "
+                  "20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35");
+    vec_int_match(n++, counts, &v2, "1 2 3 4 5 6 7 8 9");
 
     for (int i = 35; i > 9; i--) {
         int v = vec_int_pop(&v1);
@@ -46,10 +46,10 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
     vec_int_equal(n++, counts, &v1, &v2);
 
     vec_int_push(&v1, -99);
-    vec_int_match(n++, counts, &v1, "[1 2 3 4 5 6 7 8 9 -99]");
+    vec_int_match(n++, counts, &v1, "1 2 3 4 5 6 7 8 9 -99");
 
     vec_int_insert(&v1, 4, -555);
-    vec_int_match(n++, counts, &v1, "[1 2 3 4 -555 5 6 7 8 9 -99]");
+    vec_int_match(n++, counts, &v1, "1 2 3 4 -555 5 6 7 8 9 -99");
 
     int x = vec_int_get(&v1, 0);
     check_int_eq(n++, counts, x, 1);
@@ -67,14 +67,14 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
 }
 
 void vec_int_match(int n, counts_pair* counts, vec_int* v, char* expected) {
-    char* out = vec_int_dump(v, NULL);
+    char* out = vec_int_dump(v);
     check_str_eq(n, counts, out, expected);
     free(out);
 }
 
 // TODO Comment out once tests complete.
-void vec_int_print(vec_int* v, const char* name) {
-    char* out = vec_int_dump(v, name);
+void vec_int_print(vec_int* v) {
+    char* out = vec_int_dump(v);
     printf("%s\n", out);
     free(out);
 }

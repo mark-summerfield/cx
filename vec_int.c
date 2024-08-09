@@ -131,22 +131,12 @@ void _vec_int_grow(vec_int* v) {
 
 #define assert_size_ok(expr) assert((expr) <= 0 && "buffer too small")
 
-char* vec_int_dump(vec_int* v, const char* name) {
+char* vec_int_dump(vec_int* v) {
     const size_t SIZE = 250;
     char* buffer = malloc(SIZE);
     char* out = buffer;
     long long size = SIZE - 1;
     size_t n;
-    if (name) {
-        n = snprintf(out, size, "%s=", name);
-        out += n;
-        size -= n;
-        assert_size_ok(size);
-    }
-    n = snprintf(out, size, "[");
-    out += n;
-    size -= n;
-    assert_size_ok(size);
     for (size_t i = 0; i < v->_size; i++) {
         n = snprintf(out, size, "%d", v->_values[i]);
         out += n;
@@ -159,7 +149,6 @@ char* vec_int_dump(vec_int* v, const char* name) {
             assert_size_ok(size);
         }
     }
-    assert_size_ok(size - 2);
-    snprintf(out, size, "]");
+    assert_size_ok(size - 1);
     return buffer;
 }

@@ -18,10 +18,10 @@ va_test.c
 
 vec.h
 vec.c
-vec_str.h
-vec_str.c
+vec_str.h # TODO char* vec_str_join(vec* v, char* sep) // 1 malloc
+vec_str.c # TODO vec vec_str_from_split(char* s, char* sep)
 vec_int.h
-vec_int.c
+vec_int.c # TODO char* vec_int_tostring(vec_int* v) // 1 malloc?
 
 vaargs.h
 

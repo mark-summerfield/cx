@@ -82,7 +82,7 @@ vec_int vec_int_copy(vec_int* v);
 // Returns true if the two vec_int's have the same int values.
 bool vec_int_eq(vec_int* v1, vec_int* v2);
 
-char* vec_int_dump(vec_int* v, const char* name);
+char* vec_int_dump(vec_int* v);
 
 // To iterate:
 //  for (size_t i = 0; i < v.size(); i++) int value = v.get(i);
