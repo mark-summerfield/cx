@@ -134,6 +134,9 @@ typedef struct _pair {
     size_t size;
 } _pair;
 
+// TODO iterate populating pairs[]; at the end iterater pairs to free
+// every char*
+
 // TODO replace with: char* vec_int_tostring(vec_int* v) // 1 malloc?
 #define assert_size_ok(expr) assert((expr) <= 0 && "buffer too small")
 

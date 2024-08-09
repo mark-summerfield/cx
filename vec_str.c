@@ -28,25 +28,26 @@ inline const char* vec_str_get_last(vec* v) {
 }
 
 char* vec_str_join(vec* v, const char* sep) {
-    const size_t sep_size = sep ? strlen(sep) : 0;
+    const size_t VEC_SIZE = vec_size(v);
+    const size_t SEP_SIZE = sep ? strlen(sep) : 0;
     size_t total_size = 0;
-    size_t sizes[vec_size(v)];
-    for (size_t i = 0; i < vec_size(v); i++) {
+    size_t sizes[VEC_SIZE];
+    for (size_t i = 0; i < VEC_SIZE; i++) {
         size_t size = strlen(vec_str_get(v, i));
         sizes[i] = size;
-        total_size += size + sep_size;
+        total_size += size + SEP_SIZE;
     }
-    total_size -= sep_size; // don't want one at the end
+    total_size -= SEP_SIZE; // don't want one at the end
     total_size++;           // allow for \0
     char* s = malloc(total_size);
     char* p = s;
-    for (size_t i = 0; i < vec_size(v); i++) {
+    for (size_t i = 0; i < VEC_SIZE; i++) {
         size_t size = sizes[i];
         strncpy(p, strndup(vec_str_get(v, i), size), size);
         p += size;
-        if (sep && (i + 1 < vec_size(v))) { // avoid adding one at the end
-            strncpy(p, strndup(sep, sep_size), sep_size);
-            p += sep_size;
+        if (sep && (i + 1 < VEC_SIZE)) { // avoid adding one at the end
+            strncpy(p, strndup(sep, SEP_SIZE), SEP_SIZE);
+            p += SEP_SIZE;
         }
     }
     return s;
