@@ -20,6 +20,10 @@ void vec_str_destroy(void* value);
                                 .destroy = vec_str_destroy,                \
                                 __VA_ARGS__})
 
+// Allocates a new vec of owned char*'s by splitting s on sep; neither
+// may be NULL.
+vec vec_str_from_split(const char* s, const char* sep);
+
 // Returns the vec's char* value at position index.
 // vec retains ownership, so do not delete the value.
 #define vec_str_get(v, index) (char*)vec_get((v), (index))
@@ -45,4 +49,7 @@ const char* vec_str_get_last(vec* v);
 // The returned char* value is now owned by the caller.
 #define vec_str_pop(v) (char*)vec_pop((v))
 
-char* vec_str_dump(vec* v, const char* name);
+// Returns a char* of all the vec's strings joined together with sep. If
+// sep is NULL they are joined with no separator.
+// The returned char* value is now owned by the caller.
+char* vec_str_join(vec* v, const char* sep);

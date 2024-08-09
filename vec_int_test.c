@@ -8,7 +8,7 @@ void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
                             size_t capacity, bool verbose);
 void vec_int_match(counts_pair* counts, vec_int* v, char* expected);
 void vec_int_equal(counts_pair* counts, vec_int* v1, vec_int* v2);
-void vec_int_print(vec_int* v, const char* name);
+void vec_int_print(vec_int* v);
 void vec_str_tests(counts_pair*, bool);
 
 void vec_int_tests(counts_pair* counts, bool verbose) {

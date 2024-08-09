@@ -11,45 +11,43 @@ void vec_str_destroy(void* value) { free((char*)value); }
 
 void* vec_str_cp(void* value) { return (void*)strdup((char*)value); }
 
+vec vec_str_from_split(const char* s, const char* sep) {
+    assert(s && "can't split empty string");
+    assert(sep && "can't split with empty sep");
+
+    printf("TODO vec_str_from_split\n"); // TODO
+    size_t size = 0;                     // TODO
+                                         // TODO
+    vec v = vec_str_alloc(.cap = size);
+    // TODO
+    return v;
+}
+
 inline const char* vec_str_get_last(vec* v) {
     return (char*)v->_values[v->_size - 1];
 }
 
-#define assert_size_ok(expr) assert((expr) <= 0 && "buffer too small")
-
-char* vec_str_dump(vec* v, const char* name) {
-    const size_t SIZE = 500;
-    char* buffer = malloc(SIZE);
-    char* out = buffer;
-    long long size = SIZE - 1;
-    size_t n;
-    if (name) {
-        n = snprintf(out, size, "%s=", name);
-        out += n;
-        size -= n;
-        assert_size_ok(size);
+char* vec_str_join(vec* v, const char* sep) {
+    const size_t sep_size = sep ? strlen(sep) : 0;
+    size_t total_size = 0;
+    size_t sizes[vec_size(v)];
+    for (size_t i = 0; i < vec_size(v); i++) {
+        size_t size = strlen(vec_str_get(v, i));
+        sizes[i] = size;
+        total_size += size + sep_size;
     }
-    n = snprintf(out, size, "[");
-    out += n;
-    size -= n;
-    size -= n;
-    assert_size_ok(size);
-    for (size_t i = 0; i < v->_size; i++) {
-        n = snprintf(out, size, "{%s}", (char*)v->_values[i]);
-        out += n;
-        size -= n;
-        size -= n;
-        assert_size_ok(size);
-        if (i + 1 < v->_size) {
-            n = snprintf(out, size, " ");
-            out += n;
-            size -= n;
-            size -= n;
-            assert_size_ok(size);
+    total_size -= sep_size; // don't want one at the end
+    total_size++;           // allow for \0
+    char* s = malloc(total_size);
+    char* p = s;
+    for (size_t i = 0; i < vec_size(v); i++) {
+        size_t size = sizes[i];
+        strncpy(p, strndup(vec_str_get(v, i), size), size);
+        p += size;
+        if (sep && (i + 1 < vec_size(v))) { // avoid adding one at the end
+            strncpy(p, strndup(sep, sep_size), sep_size);
+            p += sep_size;
         }
     }
-    size -= n;
-    assert_size_ok(size - 2);
-    snprintf(out, size, "]");
-    return buffer;
+    return s;
 }

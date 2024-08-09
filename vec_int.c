@@ -129,6 +129,12 @@ void _vec_int_grow(vec_int* v) {
     v->_cap = cap;
 }
 
+typedef struct _pair {
+    char* number;
+    size_t size;
+} _pair;
+
+// TODO replace with: char* vec_int_tostring(vec_int* v) // 1 malloc?
 #define assert_size_ok(expr) assert((expr) <= 0 && "buffer too small")
 
 char* vec_int_dump(vec_int* v) {
