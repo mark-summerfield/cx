@@ -37,10 +37,10 @@ void vec_int_clear(vec_int* v);
 #define vec_int_cap(v) ((v)->_cap)
 
 // Returns the vec_int's int value at position index.
-int vec_int_get(vec_int* v, size_t index);
+int vec_int_get(const vec_int* v, size_t index);
 
 // Returns the vec_int's int value at its last valid index.
-int vec_int_get_last(vec_int* v);
+int vec_int_get_last(const vec_int* v);
 
 // Sets the vec_int's value at position index to the given int.
 void vec_int_set(vec_int* v, size_t index, int value);
@@ -74,15 +74,18 @@ typedef struct {
 
 // Returns the index of the int value in the vec_int and true or 0 and
 // false.
-vec_int_find_result vec_int_find(vec_int* v, int value);
+vec_int_find_result vec_int_find(const vec_int* v, int value);
 
 // Returns a deep copy of the vec_int.
-vec_int vec_int_copy(vec_int* v);
+vec_int vec_int_copy(const vec_int* v);
 
 // Returns true if the two vec_int's have the same int values.
-bool vec_int_eq(vec_int* v1, vec_int* v2);
+bool vec_int_eq(const vec_int* v1, const vec_int* v2);
 
-char* vec_int_dump(vec_int* v);
+// Returns a string of space-separated int values.
+// The returned char* value is now owned by the caller.
+char* vec_int_tostring(const vec_int* v);
 
 // To iterate:
-//  for (size_t i = 0; i < v.size(); i++) int value = v.get(i);
+//  for (size_t i = 0; i < vec_int_size(v); i++)
+//      int value = vec_int_get(v, i);

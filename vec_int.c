@@ -3,6 +3,7 @@
 #include "vec_int.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define assert_valid_index(v, index)                                       \
     assert((index) < (v)->_size && "index out of range")
@@ -28,12 +29,14 @@ void vec_int_clear(vec_int* v) {
     v->_cap = 0;
 }
 
-int vec_int_get(vec_int* v, size_t index) {
+int vec_int_get(const vec_int* v, size_t index) {
     assert_valid_index(v, index);
     return v->_values[index];
 }
 
-inline int vec_int_get_last(vec_int* v) { return v->_values[v->_size - 1]; }
+inline int vec_int_get_last(const vec_int* v) {
+    return v->_values[v->_size - 1];
+}
 
 void vec_int_set(vec_int* v, size_t index, int value) {
     assert_valid_index(v, index);
@@ -92,7 +95,7 @@ void vec_int_push(vec_int* v, int value) {
     v->_values[v->_size++] = value;
 }
 
-vec_int_find_result vec_int_find(vec_int* v, int value) {
+vec_int_find_result vec_int_find(const vec_int* v, int value) {
     for (size_t i = 0; i < v->_size; i++) {
         if (v->_values[i] == value) {
             return (vec_int_find_result){.index = i, .found = true};
@@ -101,7 +104,7 @@ vec_int_find_result vec_int_find(vec_int* v, int value) {
     return (vec_int_find_result){.index = 0, .found = false};
 }
 
-vec_int vec_int_copy(vec_int* v) {
+vec_int vec_int_copy(const vec_int* v) {
     vec_int vc = vec_int_alloc_cap(v->_size);
     for (size_t i = 0; i < v->_size; i++) {
         vec_int_push(&vc, v->_values[i]);
@@ -109,7 +112,7 @@ vec_int vec_int_copy(vec_int* v) {
     return vc;
 }
 
-bool vec_int_eq(vec_int* v1, vec_int* v2) {
+bool vec_int_eq(const vec_int* v1, const vec_int* v2) {
     if (v1->_size != v2->_size)
         return false;
     for (size_t i = 0; i < v1->_size; i++) {
@@ -119,45 +122,35 @@ bool vec_int_eq(vec_int* v1, vec_int* v2) {
     return true;
 }
 
+char* vec_int_tostring(const vec_int* v) {
+    const size_t BUF_SIZE = 128;
+    const size_t VEC_SIZE = vec_int_size(v);
+    size_t cap = VEC_SIZE * 4;
+    char* s = malloc(cap);
+    assert_alloc(s);
+    size_t pos = 0;
+    char buf[BUF_SIZE];
+    for (size_t i = 0; i < VEC_SIZE; i++) {
+        size_t n = snprintf(buf, BUF_SIZE, "%d ", vec_int_get(v, i));
+        strncpy(&s[pos], buf, n);
+        pos += n;
+        if (pos + 4 > cap) {
+            cap *= 2;
+            char* p = realloc(s, cap);
+            assert_alloc(p);
+            s = p;
+        }
+    }
+    s[pos - 1] = '\0'; // avoid trailing space
+    return s;
+}
+
 void _vec_int_grow(vec_int* v) {
     const size_t BLOCK_SIZE = 1024 * 1024;
     size_t cap =
         (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-    int* values = realloc(v->_values, cap * sizeof(int));
-    assert_alloc(values);
-    v->_values = values;
+    int* p = realloc(v->_values, cap * sizeof(int));
+    assert_alloc(p);
+    v->_values = p;
     v->_cap = cap;
-}
-
-typedef struct _pair {
-    char* number;
-    size_t size;
-} _pair;
-
-// TODO iterate populating pairs[]; at the end iterater pairs to free
-// every char*
-
-// TODO replace with: char* vec_int_tostring(vec_int* v) // 1 malloc?
-#define assert_size_ok(expr) assert((expr) <= 0 && "buffer too small")
-
-char* vec_int_dump(vec_int* v) {
-    const size_t SIZE = 250;
-    char* buffer = malloc(SIZE);
-    char* out = buffer;
-    long long size = SIZE - 1;
-    size_t n;
-    for (size_t i = 0; i < v->_size; i++) {
-        n = snprintf(out, size, "%d", v->_values[i]);
-        out += n;
-        size -= n;
-        assert_size_ok(size);
-        if (i + 1 < v->_size) {
-            n = snprintf(out, size, " ");
-            out += n;
-            size -= n;
-            assert_size_ok(size);
-        }
-    }
-    assert_size_ok(size - 1);
-    return buffer;
 }

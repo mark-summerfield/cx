@@ -30,7 +30,7 @@ vec vec_str_from_split(const char* s, const char* sep);
 
 // Returns the vec's char* value at its last valid index.
 // vec retains ownership, so do not delete the value.
-const char* vec_str_get_last(vec* v);
+const char* vec_str_get_last(const vec* v);
 
 // Sets the vec's char* value at position index to the given value and
 // returns the old char* value from that position.
@@ -52,4 +52,8 @@ const char* vec_str_get_last(vec* v);
 // Returns a char* of all the vec's strings joined together with sep. If
 // sep is NULL they are joined with no separator.
 // The returned char* value is now owned by the caller.
-char* vec_str_join(vec* v, const char* sep);
+char* vec_str_join(const vec* v, const char* sep);
+
+// To iterate:
+//  for (size_t i = 0; i < vec_size(v); i++)
+//      const char* value = vec_str_get(v, i);

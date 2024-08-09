@@ -38,12 +38,14 @@ void vec_clear(vec* v) {
     v->_cap = 0;
 }
 
-const void* vec_get(vec* v, size_t index) {
+const void* vec_get(const vec* v, size_t index) {
     assert_valid_index(v, index);
     return v->_values[index];
 }
 
-inline const void* vec_get_last(vec* v) { return v->_values[v->_size - 1]; }
+inline const void* vec_get_last(const vec* v) {
+    return v->_values[v->_size - 1];
+}
 
 void vec_set(vec* v, size_t index, void* value) {
     assert_valid_index(v, index);
@@ -107,7 +109,7 @@ void vec_push(vec* v, void* value) {
     v->_values[v->_size++] = value;
 }
 
-vec_find_result vec_find(vec* v, void* value) {
+vec_find_result vec_find(const vec* v, void* value) {
     for (size_t i = 0; i < v->_size; i++) {
         if (v->_eq(v->_values[i], value)) {
             return (vec_find_result){.index = i, .found = true};
@@ -116,7 +118,7 @@ vec_find_result vec_find(vec* v, void* value) {
     return (vec_find_result){.index = 0, .found = false};
 }
 
-vec vec_copy(vec* v) {
+vec vec_copy(const vec* v) {
     vec vc =
         vec_alloc(.cap = v->_size, .eq = v->_eq, .destroy = v->_destroy);
     for (size_t i = 0; i < v->_size; i++) {
@@ -125,7 +127,7 @@ vec vec_copy(vec* v) {
     return vc;
 }
 
-bool vec_eq(vec* v1, vec* v2) {
+bool vec_eq(const vec* v1, const vec* v2) {
     if (v1->_eq != v2->_eq)
         return false;
     if (v1->_destroy != v2->_destroy)
@@ -143,8 +145,8 @@ void _vec_grow(vec* v) {
     const size_t BLOCK_SIZE = 1024 * 1024;
     size_t cap =
         (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-    void** values = realloc(v->_values, cap * sizeof(void*));
-    assert_alloc(values);
-    v->_values = values;
+    void** p = realloc(v->_values, cap * sizeof(void*));
+    assert_alloc(p);
+    v->_values = p;
     v->_cap = cap;
 }

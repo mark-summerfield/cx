@@ -49,11 +49,11 @@ void vec_clear(vec* v);
 
 // Returns the vec's value at position index.
 // vec retains ownership, so do not delete the value.
-const void* vec_get(vec* v, size_t index);
+const void* vec_get(const vec* v, size_t index);
 
 // Returns the vec's value at its last valid index.
 // vec retains ownership, so do not delete the value.
-const void* vec_get_last(vec* v);
+const void* vec_get_last(const vec* v);
 
 // Sets the vec's value at position index to the given value.
 // vec takes ownership of the new value (e.g., if char* then use strdup())
@@ -94,14 +94,15 @@ typedef struct {
 } vec_find_result;
 
 // Returns the index of value in the vec and true or 0 and false.
-vec_find_result vec_find(vec* v, void* value);
+vec_find_result vec_find(const vec* v, void* value);
 
 // Returns a deep copy of the vec including eq, cp, and destroy.
-vec vec_copy(vec* v);
+vec vec_copy(const vec* v);
 
 // Returns true if the two vec's have the same values and eq, cp, and
 // destroy functions.
-bool vec_eq(vec* v1, vec* v2);
+bool vec_eq(const vec* v1, const vec* v2);
 
 // To iterate:
-//  for (size_t i = 0; i < v.size(); i++) void* value = v.get(i);
+//  for (size_t i = 0; i < vec_size(v); i++)
+//      const MyType* value = (MyType*)vec_get(v, i);

@@ -63,14 +63,14 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
 }
 
 void vec_int_match(counts_pair* counts, vec_int* v, char* expected) {
-    char* out = vec_int_dump(v);
+    char* out = vec_int_tostring(v);
     check_str_eq(counts, out, expected);
     free(out);
 }
 
 // TODO Comment out once tests complete.
 void vec_int_print(vec_int* v) {
-    char* out = vec_int_dump(v);
+    char* out = vec_int_tostring(v);
     printf("%s\n", out);
     free(out);
 }
