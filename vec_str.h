@@ -55,5 +55,5 @@ const char* vec_str_get_last(const vec* v);
 char* vec_str_join(const vec* v, const char* sep);
 
 // To iterate:
-//  for (size_t i = 0; i < vec_size(v); i++)
+//  for (size_t i = 0; i < vec_size(v); ++i)
 //      const char* value = vec_str_get(v, i);

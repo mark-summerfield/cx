@@ -34,7 +34,7 @@ char* vec_str_join(const vec* v, const char* sep) {
     const size_t SEP_SIZE = sep ? strlen(sep) : 0;
     size_t total_size = 0;
     size_t sizes[VEC_SIZE];
-    for (size_t i = 0; i < VEC_SIZE; i++) {
+    for (size_t i = 0; i < VEC_SIZE; ++i) {
         size_t size = strlen(vec_str_get(v, i));
         sizes[i] = size;
         total_size += size + SEP_SIZE;
@@ -44,7 +44,7 @@ char* vec_str_join(const vec* v, const char* sep) {
     char* s = malloc(total_size);
     assert_alloc(s);
     char* p = s;
-    for (size_t i = 0; i < VEC_SIZE; i++) {
+    for (size_t i = 0; i < VEC_SIZE; ++i) {
         size_t size = sizes[i];
         strncpy(p, strndup(vec_str_get(v, i), size), size);
         p += size;

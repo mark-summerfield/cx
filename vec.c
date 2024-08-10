@@ -29,7 +29,7 @@ vec vec_alloc_(vec_alloc_args args) {
 inline void vec_free(vec* v) { vec_clear(v); }
 
 void vec_clear(vec* v) {
-    for (size_t i = 0; i < v->_size; i++) {
+    for (size_t i = 0; i < v->_size; ++i) {
         v->_destroy(v->_values[i]);
     }
     free(v->_values);
@@ -61,7 +61,7 @@ void vec_insert(vec* v, size_t index, void* value) {
     if (v->_size == v->_cap) {
         _vec_grow(v);
     }
-    for (size_t i = v->_size - 1; i >= index; i--) {
+    for (size_t i = v->_size - 1; i >= index; --i) {
         v->_values[i + 1] = v->_values[i];
     }
     v->_values[index] = value;
@@ -78,7 +78,7 @@ void* vec_replace(vec* v, size_t index, void* value) {
 void vec_remove(vec* v, size_t index) {
     assert_valid_index(v, index);
     void* old = v->_values[index];
-    for (size_t i = index; i < v->_size; i++) {
+    for (size_t i = index; i < v->_size; ++i) {
         v->_values[i] = v->_values[i + 1];
     }
     v->_values[v->_size - 1] = NULL;
@@ -89,7 +89,7 @@ void vec_remove(vec* v, size_t index) {
 void* vec_take(vec* v, size_t index) {
     assert_valid_index(v, index);
     void* old = v->_values[index];
-    for (size_t i = index; i < v->_size; i++) {
+    for (size_t i = index; i < v->_size; ++i) {
         v->_values[i] = v->_values[i + 1];
     }
     v->_values[v->_size - 1] = NULL;
@@ -110,7 +110,7 @@ void vec_push(vec* v, void* value) {
 }
 
 vec_find_result vec_find(const vec* v, void* value) {
-    for (size_t i = 0; i < v->_size; i++) {
+    for (size_t i = 0; i < v->_size; ++i) {
         if (v->_eq(v->_values[i], value)) {
             return (vec_find_result){.index = i, .found = true};
         }
@@ -121,7 +121,7 @@ vec_find_result vec_find(const vec* v, void* value) {
 vec vec_copy(const vec* v) {
     vec vc =
         vec_alloc(.cap = v->_size, .eq = v->_eq, .destroy = v->_destroy);
-    for (size_t i = 0; i < v->_size; i++) {
+    for (size_t i = 0; i < v->_size; ++i) {
         vec_push(&vc, v->_cp(v->_values[i]));
     }
     return vc;
@@ -134,7 +134,7 @@ bool vec_eq(const vec* v1, const vec* v2) {
         return false;
     if (v1->_size != v2->_size)
         return false;
-    for (size_t i = 0; i < v1->_size; i++) {
+    for (size_t i = 0; i < v1->_size; ++i) {
         if (!v1->_eq(v1->_values[i], v2->_values[i]))
             return false;
     }

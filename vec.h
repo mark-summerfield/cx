@@ -104,5 +104,5 @@ vec vec_copy(const vec* v);
 bool vec_eq(const vec* v1, const vec* v2);
 
 // To iterate:
-//  for (size_t i = 0; i < vec_size(v); i++)
+//  for (size_t i = 0; i < vec_size(v); ++i)
 //      const MyType* value = (MyType*)vec_get(v, i);

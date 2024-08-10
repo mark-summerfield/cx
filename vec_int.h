@@ -87,5 +87,5 @@ bool vec_int_eq(const vec_int* v1, const vec_int* v2);
 char* vec_int_tostring(const vec_int* v);
 
 // To iterate:
-//  for (size_t i = 0; i < vec_int_size(v); i++)
+//  for (size_t i = 0; i < vec_int_size(v); ++i)
 //      int value = vec_int_get(v, i);

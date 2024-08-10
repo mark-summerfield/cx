@@ -51,7 +51,7 @@ void vec_int_insert(vec_int* v, size_t index, int value) {
     if (v->_size == v->_cap) {
         _vec_int_grow(v);
     }
-    for (size_t i = v->_size - 1; i >= index; i--) {
+    for (size_t i = v->_size - 1; i >= index; --i) {
         v->_values[i + 1] = v->_values[i];
     }
     v->_values[index] = value;
@@ -67,7 +67,7 @@ int vec_int_replace(vec_int* v, size_t index, int value) {
 
 void vec_int_remove(vec_int* v, size_t index) {
     assert_valid_index(v, index);
-    for (size_t i = index; i < v->_size; i++) {
+    for (size_t i = index; i < v->_size; ++i) {
         v->_values[i] = v->_values[i + 1];
     }
     v->_size--;
@@ -76,7 +76,7 @@ void vec_int_remove(vec_int* v, size_t index) {
 int vec_int_take(vec_int* v, size_t index) {
     assert_valid_index(v, index);
     int old = v->_values[index];
-    for (size_t i = index; i < v->_size; i++) {
+    for (size_t i = index; i < v->_size; ++i) {
         v->_values[i] = v->_values[i + 1];
     }
     v->_size--;
@@ -96,7 +96,7 @@ void vec_int_push(vec_int* v, int value) {
 }
 
 vec_int_find_result vec_int_find(const vec_int* v, int value) {
-    for (size_t i = 0; i < v->_size; i++) {
+    for (size_t i = 0; i < v->_size; ++i) {
         if (v->_values[i] == value) {
             return (vec_int_find_result){.index = i, .found = true};
         }
@@ -106,7 +106,7 @@ vec_int_find_result vec_int_find(const vec_int* v, int value) {
 
 vec_int vec_int_copy(const vec_int* v) {
     vec_int vc = vec_int_alloc_cap(v->_size);
-    for (size_t i = 0; i < v->_size; i++) {
+    for (size_t i = 0; i < v->_size; ++i) {
         vec_int_push(&vc, v->_values[i]);
     }
     return vc;
@@ -115,7 +115,7 @@ vec_int vec_int_copy(const vec_int* v) {
 bool vec_int_eq(const vec_int* v1, const vec_int* v2) {
     if (v1->_size != v2->_size)
         return false;
-    for (size_t i = 0; i < v1->_size; i++) {
+    for (size_t i = 0; i < v1->_size; ++i) {
         if (v1->_values[i] != v2->_values[i])
             return false;
     }
@@ -130,7 +130,7 @@ char* vec_int_tostring(const vec_int* v) {
     assert_alloc(s);
     size_t pos = 0;
     char buf[BUF_SIZE];
-    for (size_t i = 0; i < VEC_SIZE; i++) {
+    for (size_t i = 0; i < VEC_SIZE; ++i) {
         size_t n = snprintf(buf, BUF_SIZE, "%d ", vec_int_get(v, i));
         strncpy(&s[pos], buf, n);
         pos += n;
