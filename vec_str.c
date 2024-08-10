@@ -13,7 +13,7 @@ void vec_str_destroy(void* value) { free((char*)value); }
 
 void* vec_str_cp(void* value) { return (void*)strdup((char*)value); }
 
-vec vec_str_from_split(const char* s, const char* sep) {
+vec vec_str_alloc_split(const char* s, const char* sep) {
     assert(s && "can't split empty string");
     assert(sep && "can't split with empty sep");
 
@@ -54,4 +54,18 @@ char* vec_str_join(const vec* v, const char* sep) {
         }
     }
     return s;
+}
+
+void vec_str_sort(vec* v) {
+    printf("TODO vec_str_sort"); // TODO
+}
+
+void vec_str_sort_fold(vec* v){
+    printf("TODO vec_str_sort_fold"); // TODO
+    }
+
+vec_str_bsearch_result vec_str_bsearch(const vec* v, const char* s){
+    vec_str_bsearch_result result = {0, false};
+    printf("TODO vec_str_bsearch"); // TODO
+    return result;
 }

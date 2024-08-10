@@ -1,15 +1,30 @@
 # TODO
-# I need these fundamental collections:
-#   - vec vector void* values: for vec stack queue
-#   - rbt red-black tree void* keys & values: for map & set (both ordered)
-# And optionally:
-#   - lst doubly-linked list void* values: for deque
-# Plus macros or function wrappers for type safety
+# (1) For all vec_METHOD create equiv #define vec_str_METHOD so for vec_str
+# every method starts vec_str
+#
+# (2) vec vec_str_alloc_split(const char* s, const char* sep)
+# (3) void vec_str_sort(vec* v) // no const!
+# (4) void vec_str_sort_fold(vec* v) // no const!
+# (5) vec_bsearch_result vec_str_bsearch(const vec* v, const char* s)
+#
+# (6) complete tests of all vec_int functions
+# (7) complete tests of all vec_str functions (start by copy/edit vec_int
+#     tests)
+#
+# (8) map with void* keys & values (based on rbt)
+# (9) map_str with char* keys & char* values (based on map)
+# (10) set with void* keys (based on rbt)
+# (11) set_str with char* keys (based on set)
+# (12) set_int with int keys (based on or copy/edit of set)
+#
+# (13) que (based on vec)?
+# (14) lst (doubly-linked list)?
+# (15) deq (based on list)?
 
 cx_test.c
 cx_test_util.h
 cx_test_util.c
-vec_int_test.h # TODO test all functions
+vec_int_test.h
 vec_int_test.c
 # TODO vec_str_test.h
 # TODO vec_str_test.c

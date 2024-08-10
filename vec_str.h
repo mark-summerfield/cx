@@ -22,7 +22,9 @@ void vec_str_destroy(void* value);
 
 // Allocates a new vec of owned char*'s by splitting s on sep; neither
 // may be NULL.
-vec vec_str_from_split(const char* s, const char* sep);
+vec vec_str_alloc_split(const char* s, const char* sep);
+
+#define vec_str_free() vec_free
 
 // Returns the vec's char* value at position index.
 // vec retains ownership, so do not delete the value.
@@ -53,6 +55,17 @@ const char* vec_str_get_last(const vec* v);
 // sep is NULL they are joined with no separator.
 // The returned char* value is now owned by the caller.
 char* vec_str_join(const vec* v, const char* sep);
+
+void vec_str_sort(vec* v);
+
+void vec_str_sort_fold(vec* v);
+
+typedef struct {
+    size_t index;
+    bool found;
+} vec_str_bsearch_result;
+
+vec_str_bsearch_result vec_str_bsearch(const vec* v, const char* s);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_size(v); ++i)
