@@ -1,0 +1,7 @@
+#pragma once
+
+// Copyright © 2024 Mark Summerfield. All rights reserved.
+
+#include <assert.h>
+
+#define assert_alloc(p) assert((p) && "failed to acquire memory")

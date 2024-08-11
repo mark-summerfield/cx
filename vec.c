@@ -1,13 +1,11 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec.h"
-#include <assert.h>
+#include "cx.h"
 #include <stdlib.h>
 
 #define assert_valid_index(v, index)                                       \
     assert((index) < (v)->_size && "index out of range")
-
-#define assert_alloc(p) assert((p) && "failed to acquire memory")
 
 void _vec_grow(vec* v);
 

@@ -34,6 +34,7 @@ vec_int_test.c
 va_test.h
 va_test.c
 
+cx.h
 vec.h
 vec.c
 vec_str.h
