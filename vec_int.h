@@ -5,12 +5,15 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-// A vector of int values.
+// Change to long or any other integer type if needed.
+typedef int VEC_INT_VALUE_T;
+
+// A vector of VEC_INT_VALUE_T values.
 // All data members are private; all accesses via functions.
 typedef struct vec_int {
     size_t _size; // This is "end", i.e., one past the last value
     size_t _cap;  // The size of the allocated array
-    int* _values;
+    VEC_INT_VALUE_T* _values;
 } vec_int;
 
 // Allocates a new empty vec_int with the given capacity.
@@ -36,56 +39,58 @@ void vec_int_clear(vec_int* v);
 // Returns the vec_int's capacity.
 #define vec_int_cap(v) ((v)->_cap)
 
-// Returns the vec_int's int value at position index.
-int vec_int_get(const vec_int* v, size_t index);
+// Returns the vec_int's VEC_INT_VALUE_T value at position index.
+VEC_INT_VALUE_T vec_int_get(const vec_int* v, size_t index);
 
-// Returns the vec_int's int value at its last valid index.
-int vec_int_get_last(const vec_int* v);
+// Returns the vec_int's VEC_INT_VALUE_T value at its last valid index.
+VEC_INT_VALUE_T vec_int_get_last(const vec_int* v);
 
-// Sets the vec_int's value at position index to the given int.
-void vec_int_set(vec_int* v, size_t index, int value);
+// Sets the vec_int's value at position index to the given VEC_INT_VALUE_T.
+void vec_int_set(vec_int* v, size_t index, VEC_INT_VALUE_T value);
 
-// Inserts the int at position index and moves succeeding values up
-// (right), increasing the vec_int's size (and cap if necessary).
-void vec_int_insert(vec_int* v, size_t index, int value);
+// Inserts the VEC_INT_VALUE_T at position index and moves succeeding values
+// up (right), increasing the vec_int's size (and cap if necessary).
+void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value);
 
-// Sets the vec_int's value at position index to the given int and returns
-// the old int value from that position.
-int vec_int_replace(vec_int* v, size_t index, int value);
+// Sets the vec_int's value at position index to the given VEC_INT_VALUE_T
+// and returns the old VEC_INT_VALUE_T value from that position.
+VEC_INT_VALUE_T vec_int_replace(vec_int* v, size_t index,
+                                VEC_INT_VALUE_T value);
 
 // Removes the value at the given index and closes up the gap.
 void vec_int_remove(vec_int* v, size_t index);
 
-// Returns and removes the int value at the given index and closes up the
-// gap.
-int vec_int_take(vec_int* v, size_t index);
+// Returns and removes the VEC_INT_VALUE_T value at the given index and
+// closes up the gap.
+VEC_INT_VALUE_T vec_int_take(vec_int* v, size_t index);
 
-// Removes and returns the last int value. Only use if v.isempty() is false.
-int vec_int_pop(vec_int* v);
+// Removes and returns the last VEC_INT_VALUE_T value. Only use if
+// v.isempty() is false.
+VEC_INT_VALUE_T vec_int_pop(vec_int* v);
 
-// Pushes a new int value onto the end of the vec_int, increasing the
-// vec_int's size (and cap) if necessary.
-void vec_int_push(vec_int* v, int value);
+// Pushes a new VEC_INT_VALUE_T value onto the end of the vec_int,
+// increasing the vec_int's size (and cap) if necessary.
+void vec_int_push(vec_int* v, VEC_INT_VALUE_T value);
 
 typedef struct {
     size_t index;
     bool found;
 } vec_int_find_result;
 
-// Returns the index of the int value in the vec_int and true or 0 and
-// false.
-vec_int_find_result vec_int_find(const vec_int* v, int value);
+// Returns the index of the VEC_INT_VALUE_T value in the vec_int and true or
+// 0 and false.
+vec_int_find_result vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
 
 // Returns a deep copy of the vec_int.
 vec_int vec_int_copy(const vec_int* v);
 
-// Returns true if the two vec_int's have the same int values.
+// Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
 bool vec_int_eq(const vec_int* v1, const vec_int* v2);
 
-// Returns a string of space-separated int values.
+// Returns a string of space-separated VEC_INT_VALUE_T values.
 // The returned char* value is now owned by the caller.
 char* vec_int_tostring(const vec_int* v);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_int_size(v); ++i)
-//      int value = vec_int_get(v, i);
+//      VEC_INT_VALUE_T value = vec_int_get(v, i);

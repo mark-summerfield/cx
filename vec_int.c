@@ -12,7 +12,7 @@ void _vec_int_grow(vec_int* v);
 
 vec_int vec_int_alloc_cap(size_t cap) {
     cap = cap ? cap : 32;
-    int* values = malloc(cap * sizeof(int));
+    VEC_INT_VALUE_T* values = malloc(cap * sizeof(VEC_INT_VALUE_T));
     assert_alloc(values);
     vec_int v = {._size = 0, ._cap = cap, ._values = values};
     return v;
@@ -27,21 +27,21 @@ void vec_int_clear(vec_int* v) {
     v->_cap = 0;
 }
 
-int vec_int_get(const vec_int* v, size_t index) {
+VEC_INT_VALUE_T vec_int_get(const vec_int* v, size_t index) {
     assert_valid_index(v, index);
     return v->_values[index];
 }
 
-inline int vec_int_get_last(const vec_int* v) {
+inline VEC_INT_VALUE_T vec_int_get_last(const vec_int* v) {
     return v->_values[v->_size - 1];
 }
 
-void vec_int_set(vec_int* v, size_t index, int value) {
+void vec_int_set(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
     assert_valid_index(v, index);
     v->_values[index] = value;
 }
 
-void vec_int_insert(vec_int* v, size_t index, int value) {
+void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
     if (index == v->_size) { // add at the end
         vec_int_push(v, value);
         return;
@@ -56,9 +56,10 @@ void vec_int_insert(vec_int* v, size_t index, int value) {
     v->_size++;
 }
 
-int vec_int_replace(vec_int* v, size_t index, int value) {
+VEC_INT_VALUE_T vec_int_replace(vec_int* v, size_t index,
+                                VEC_INT_VALUE_T value) {
     assert_valid_index(v, index);
-    int old = v->_values[index];
+    VEC_INT_VALUE_T old = v->_values[index];
     v->_values[index] = value;
     return old;
 }
@@ -71,9 +72,9 @@ void vec_int_remove(vec_int* v, size_t index) {
     v->_size--;
 }
 
-int vec_int_take(vec_int* v, size_t index) {
+VEC_INT_VALUE_T vec_int_take(vec_int* v, size_t index) {
     assert_valid_index(v, index);
-    int old = v->_values[index];
+    VEC_INT_VALUE_T old = v->_values[index];
     for (size_t i = index; i < v->_size; ++i) {
         v->_values[i] = v->_values[i + 1];
     }
@@ -81,19 +82,19 @@ int vec_int_take(vec_int* v, size_t index) {
     return old;
 }
 
-int vec_int_pop(vec_int* v) {
+VEC_INT_VALUE_T vec_int_pop(vec_int* v) {
     assert(v->_size > 0 && "can't pop empty vec_int");
     return v->_values[--v->_size];
 }
 
-void vec_int_push(vec_int* v, int value) {
+void vec_int_push(vec_int* v, VEC_INT_VALUE_T value) {
     if (v->_size == v->_cap) {
         _vec_int_grow(v);
     }
     v->_values[v->_size++] = value;
 }
 
-vec_int_find_result vec_int_find(const vec_int* v, int value) {
+vec_int_find_result vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_values[i] == value) {
             return (vec_int_find_result){.index = i, .found = true};
@@ -147,7 +148,7 @@ void _vec_int_grow(vec_int* v) {
     const size_t BLOCK_SIZE = 1024 * 1024;
     size_t cap =
         (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-    int* p = realloc(v->_values, cap * sizeof(int));
+    VEC_INT_VALUE_T* p = realloc(v->_values, cap * sizeof(VEC_INT_VALUE_T));
     assert_alloc(p);
     v->_values = p;
     v->_cap = cap;
