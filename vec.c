@@ -4,7 +4,7 @@
 #include "cx.h"
 #include <stdlib.h>
 
-#define assert_valid_index(v, index)                                       \
+#define assert_valid_index(v, index) \
     assert((index) < (v)->_size && "index out of range")
 
 void _vec_grow(vec* v);

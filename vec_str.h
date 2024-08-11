@@ -13,11 +13,11 @@ void* vec_str_cp(void* value);
 void vec_str_destroy(void* value);
 
 // Allocates a new vec of owned char*'s with default capacity of 32.
-#define vec_str_alloc(...)                                                 \
-    vec_alloc_((vec_alloc_args){.cap = 32,                                 \
-                                .eq = vec_str_eq,                          \
-                                .cp = vec_str_cp,                          \
-                                .destroy = vec_str_destroy,                \
+#define vec_str_alloc(...)                                  \
+    vec_alloc_((vec_alloc_args){.cap = 32,                  \
+                                .eq = vec_str_eq,           \
+                                .cp = vec_str_cp,           \
+                                .destroy = vec_str_destroy, \
                                 __VA_ARGS__})
 
 // Allocates a new vec of owned char*'s by splitting s on sep; neither
@@ -38,7 +38,7 @@ const char* vec_str_get_last(const vec* v);
 // returns the old char* value from that position.
 // vec takes ownership of the new value (e.g., use strdup()).
 // The returned char* value is now owned by the caller.
-#define vec_str_replace(v, index, value)                                   \
+#define vec_str_replace(v, index, value) \
     (char*)vec_replace((v), (index), (value))
 
 // Returns and removes the char* value at the given index and closes up the
