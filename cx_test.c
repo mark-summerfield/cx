@@ -1,6 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
-#include "cx_test_util.h"
+#include "cx_util_test.h"
 #include "va_test.h"
 #include "vec_int_test.h"
 #include <stdio.h>
