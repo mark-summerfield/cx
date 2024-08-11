@@ -58,8 +58,6 @@ char* vec_str_join(const vec* v, const char* sep);
 
 void vec_str_sort(vec* v);
 
-void vec_str_sort_fold(vec* v);
-
 typedef struct {
     size_t index;
     bool found;
@@ -69,4 +67,4 @@ vec_str_bsearch_result vec_str_bsearch(const vec* v, const char* s);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_size(v); ++i)
-//      const char* value = vec_str_get(v, i);
+//      const char* s = vec_str_get(v, i);

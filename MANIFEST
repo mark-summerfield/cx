@@ -5,24 +5,23 @@
 #
 # (2) vec vec_str_alloc_split(const char* s, const char* sep)
 # (3) void vec_str_sort(vec* v) // no const!
-# (4) void vec_str_sort_fold(vec* v) // no const!
-# (5) vec_bsearch_result vec_str_bsearch(const vec* v, const char* s)
+# (4) vec_bsearch_result vec_str_bsearch(const vec* v, const char* s)
 #
-# (6) complete tests of all vec_int functions
-# (7) complete tests of all vec_str functions (start by copy/edit vec_int
+# (5) complete tests of all vec_int functions
+# (6) complete tests of all vec_str functions (start by copy/edit vec_int
 #     tests)
 #
-# (8) map with void* keys & values (based on rbt) + tests
-# (9) map_str with char* keys & char* values (based on map) + tests
-# (10) set with void* keys (based on rbt) + tests
-# (11) set_str with char* keys (based on set) + tests
-# (12) set_int with int keys (based on or copy/edit of set) + tests
+# (7) map with void* keys & values (based on rbt) + tests
+# (8) map_str with char* keys & char* values (based on map) + tests
+# (9) set with void* keys (based on rbt) + tests
+# (10) set_str with char* keys (based on set) + tests
+# (11) set_int with int keys (based on or copy/edit of set) + tests
 #
-# (13) que (based on vec)? + tests
-# (14) lst (doubly-linked list)? + tests
-# (15) deq (based on list)? + tests
+# (12) que (based on vec)? + tests
+# (13) lst (doubly-linked list)? + tests
+# (14) deq (based on list)? + tests
 #
-# (16) str (based on vec)? + tests
+# (15) str (based on vec)? + tests
 
 cx_test.c
 cx_util_test.h

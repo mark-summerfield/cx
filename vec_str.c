@@ -58,10 +58,6 @@ void vec_str_sort(vec* v) {
     printf("TODO vec_str_sort"); // TODO
 }
 
-void vec_str_sort_fold(vec* v) {
-    printf("TODO vec_str_sort_fold"); // TODO
-}
-
 vec_str_bsearch_result vec_str_bsearch(const vec* v, const char* s) {
     vec_str_bsearch_result result = {0, false};
     printf("TODO vec_str_bsearch"); // TODO
