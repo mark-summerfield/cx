@@ -9,7 +9,7 @@ int vec_str_cmp(const void* s, const void* t) { return strcmp((s), (t)); }
 
 void vec_str_destroy(void* value) { free((char*)value); }
 
-void* vec_str_copy_value(const void* value) { return strdup((char*)value); }
+void* vec_str_cpy(const void* value) { return strdup((char*)value); }
 
 vec vec_str_alloc_split(const char* s, const char* sep) {
     assert(s && "can't split empty string");

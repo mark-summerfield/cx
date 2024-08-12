@@ -8,7 +8,7 @@
 
 int vec_str_cmp(const void* s, const void* t);
 
-void* vec_str_copy_value(const void* value);
+void* vec_str_cpy(const void* value);
 
 void vec_str_destroy(void* value);
 
@@ -17,7 +17,7 @@ void vec_str_destroy(void* value);
 #define vec_str_alloc(...)                                  \
     vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_CAP,     \
                                 .cmp = vec_str_cmp,         \
-                                .copy = vec_str_copy_value, \
+                                .cpy = vec_str_cpy,         \
                                 .destroy = vec_str_destroy, \
                                 __VA_ARGS__})
 

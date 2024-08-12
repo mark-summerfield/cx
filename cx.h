@@ -11,7 +11,7 @@
 // Use as an argument to functions that need a cmp(a, b) function
 typedef int (*cmpfn)(void*, void*);
 
-#define bool_to_str(b) (b ? "true" : "false")
+#define bool_to_str(b) ((b) ? "true" : "false")
 
 #define typename(x) \
     _Generic((x), \
