@@ -32,8 +32,10 @@ void vec_str_tests(counts_pair* counts, bool verbose) {
     for (int i = 0; i < count; ++i) {
         vec_str_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64, verbose);
         vec_str_push(&v1, strdup(WORDS[i]));
-        if (i < 10)
+        if (i < 10) {
+            vec_str_check_size_cap(counts, &v2, i, 32, verbose);
             vec_str_push(&v2, strdup(WORDS[i]));
+        }
     }
     counts->ok++;
 

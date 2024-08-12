@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define VEC_INITIAL_SIZE 32
+#define VEC_INITIAL_CAP 32
 
 #define assert_valid_index(v, index) \
     assert((index) < (v)->_size && "index out of range")
@@ -16,5 +16,3 @@ typedef struct {
     size_t index;
     bool found;
 } vec_found_index;
-
-typedef void* (*copyfn)(void*);

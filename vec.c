@@ -7,6 +7,7 @@ void _vec_grow(vec* v);
 
 vec vec_alloc_(vec_alloc_args args) {
     assert(args.eq && "must provide an eq function");
+    assert(args.cp && "must provide a cp function");
     assert(args.destroy && "must provide a destroy function");
     void** values = malloc(args.cap * sizeof(void*));
     assert_alloc(values);
@@ -14,6 +15,7 @@ vec vec_alloc_(vec_alloc_args args) {
              ._cap = args.cap,
              ._values = values,
              ._eq = args.eq,
+             ._cp = args.cp,
              ._destroy = args.destroy};
     return v;
 }
@@ -110,21 +112,18 @@ vec_found_index vec_find(const vec* v, void* value) {
     return (vec_found_index){.index = 0, .found = false};
 }
 
-vec vec_copy(const vec* v, copyfn cp) {
-    vec vc =
-        vec_alloc(.cap = v->_size, .eq = v->_eq, .destroy = v->_destroy);
+vec vec_copy(const vec* v) {
+    vec vc = vec_alloc(.cap = v->_size ? v->_size : VEC_INITIAL_CAP,
+                       .eq = v->_eq, .cp = v->_cp, .destroy = v->_destroy);
     for (size_t i = 0; i < v->_size; ++i) {
-        vec_push(&vc, cp(v->_values[i]));
+        vec_push(&vc, v->_cp(v->_values[i]));
     }
     return vc;
 }
 
 bool vec_equal(const vec* v1, const vec* v2) {
-    if (v1->_eq != v2->_eq)
-        return false;
-    if (v1->_destroy != v2->_destroy)
-        return false;
-    if (v1->_size != v2->_size)
+    if (v1->_eq != v2->_eq || v1->_cp != v2->_cp ||
+        v1->_destroy != v2->_destroy || v1->_size != v2->_size)
         return false;
     for (size_t i = 0; i < v1->_size; ++i) {
         if (!v1->_eq(v1->_values[i], v2->_values[i]))

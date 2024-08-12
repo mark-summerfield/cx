@@ -21,8 +21,8 @@ typedef struct vec_int {
 vec_int vec_int_alloc_cap(size_t cap);
 
 // Allocates a new empty vec_int with a default capacity of
-// VEC_INITIAL_SIZE.
-#define vec_int_alloc() vec_int_alloc_cap(VEC_INITIAL_SIZE)
+// VEC_INITIAL_CAP.
+#define vec_int_alloc() vec_int_alloc_cap(VEC_INITIAL_CAP)
 
 // Destroys the vec_int freeing its memory. The vec_int is not usable
 // after this.

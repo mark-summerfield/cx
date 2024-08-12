@@ -13,10 +13,11 @@ void* vec_str_cp(void* value);
 void vec_str_destroy(void* value);
 
 // Allocates a new vec of owned char*'s with default capacity of
-// VEC_INITIAL_SIZE.
+// VEC_INITIAL_CAP.
 #define vec_str_alloc(...)                                  \
-    vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_SIZE,    \
+    vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_CAP,     \
                                 .eq = vec_str_eq,           \
+                                .cp = vec_str_cp,           \
                                 .destroy = vec_str_destroy, \
                                 __VA_ARGS__})
 
@@ -61,7 +62,7 @@ const char* vec_str_get_last(const vec* v);
 
 #define vec_str_push(v, value) vec_push((v), (value))
 #define vec_str_find(v, value) vec_find((v), (value))
-#define vec_str_copy(v) vec_copy((v), vec_str_cp)
+#define vec_str_copy(v) vec_copy((v))
 #define vec_str_equal(v1, v2) vec_equal((v1), (v2))
 
 // Returns a char* of all the vec's strings joined together with sep. If
