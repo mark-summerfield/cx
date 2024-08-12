@@ -3,6 +3,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "cx.h"
+#include "vec_common.h"
 
 // A vector of owned void* values.
 // All data members are private; all accesses via functions.
@@ -22,11 +23,13 @@ typedef struct {
     void (*destroy)(void* values);
 } vec_alloc_args;
 
-// Allocates a new vec of owned void* with default capacity of 32.
+// Allocates a new vec of owned void* with default capacity of
+// VEC_INITIAL_SIZE.
 // Set the initial capacity with .cap.
 // Caller must supply functions: eq to compare two values, cp to deep
 // copy a value, and a destroy function to free a value.
-#define vec_alloc(...) vec_alloc_((vec_alloc_args){.cap = 32, __VA_ARGS__})
+#define vec_alloc(...) \
+    vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_SIZE, __VA_ARGS__})
 vec vec_alloc_(vec_alloc_args args);
 
 // Destroys the vec freeing its memory and also freeing every value. The vec
@@ -88,6 +91,7 @@ void* vec_pop(vec* v);
 void vec_push(vec* v, void* value);
 
 // Returns the index of value in the vec and true or 0 and false.
+// Uses a linear search.
 maybe_found_index vec_find(const vec* v, void* value);
 
 // Returns a deep copy of the vec including eq, cp, and destroy.

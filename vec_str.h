@@ -12,9 +12,10 @@ void* vec_str_cp(void* value);
 
 void vec_str_destroy(void* value);
 
-// Allocates a new vec of owned char*'s with default capacity of 32.
+// Allocates a new vec of owned char*'s with default capacity of
+// VEC_INITIAL_SIZE.
 #define vec_str_alloc(...)                                  \
-    vec_alloc_((vec_alloc_args){.cap = 32,                  \
+    vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_SIZE,    \
                                 .eq = vec_str_eq,           \
                                 .cp = vec_str_cp,           \
                                 .destroy = vec_str_destroy, \
@@ -69,12 +70,12 @@ const char* vec_str_get_last(const vec* v);
 // The returned char* value is now owned by the caller.
 char* vec_str_join(const vec* v, const char* sep);
 
-// Sorts the vec_str in-place using the given comparison function.
+// Sorts the vec in-place using the given comparison function.
 void vec_str_sort(vec* v, cmpfn cmp);
 
-// Searches the vec_str using binary search: assumes that the vec_str is
-// in order (e.g., vec_str_sort() has been used with the given comparison
-// function).
+// Searches the vec using binary search: assumes that the vec is in
+// order, e.g., vec_str_sort() has been used with the given comparison
+// function. For a linear search of an unsorted vec, use vec_str_find.
 maybe_found_index vec_str_bsearch(const vec* v, const char* s, cmpfn cmp);
 
 // To iterate:

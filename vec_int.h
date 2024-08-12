@@ -3,6 +3,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "cx.h"
+#include "vec_common.h"
 #include <stdio.h>
 
 // Change to long or any other integer type if needed.
@@ -19,8 +20,9 @@ typedef struct vec_int {
 // Allocates a new empty vec_int with the given capacity.
 vec_int vec_int_alloc_cap(size_t cap);
 
-// Allocates a new empty vec_int with a default capacity of 32.
-#define vec_int_alloc() vec_int_alloc_cap(32)
+// Allocates a new empty vec_int with a default capacity of
+// VEC_INITIAL_SIZE.
+#define vec_int_alloc() vec_int_alloc_cap(VEC_INITIAL_SIZE)
 
 // Destroys the vec_int freeing its memory. The vec_int is not usable
 // after this.

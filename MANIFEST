@@ -1,9 +1,9 @@
 # TODO
+# (1) complete tests of all vec_int functions
 # (2) vec vec_str_alloc_split(const char* s, const char* sep)
 # (3) void vec_str_sort(vec* v) // no const!
 # (4) vec_bsearch_result vec_str_bsearch(const vec* v, const char* s)
 #
-# (5) complete tests of all vec_int functions
 # (6) complete tests of all vec_str functions (start by copy/edit vec_int
 #     tests)
 #
@@ -30,6 +30,7 @@ va_test.h
 va_test.c
 
 cx.h
+vec_common.h
 vec.h
 vec.c
 vec_str.h

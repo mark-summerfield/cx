@@ -3,14 +3,9 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include <assert.h>
-#include <stdbool.h>
-#include <stddef.h>
 
+// Use after malloc or realloc
 #define assert_alloc(p) assert((p) && "failed to acquire memory")
 
-typedef struct {
-    size_t index;
-    bool found;
-} maybe_found_index;
-
+// Use as an argument to functions that need a cmp(a, b) function
 typedef int (*cmpfn)(void*, void*);
