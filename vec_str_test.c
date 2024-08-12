@@ -101,8 +101,17 @@ void vec_str_tests(counts_pair* counts, bool verbose) {
     check_int_eq(counts, found_index.index, 6);
     */
 
+    vec_str_clear(&v1);
+    vec_str_check_size_cap(counts, &v1, 0, 64, verbose);
+    vec_str_push(&v1, strdup("more"));
+    const char* more = vec_str_get(&v1, 0);
+    check_str_eq(counts, more, "more");
+    vec_str_match(counts, &v1, "more");
+    vec_str_check_size_cap(counts, &v1, 1, 64, verbose);
     vec_str_free(&v1);
     vec_str_check_size_cap(counts, &v1, 0, 0, verbose);
+    vec_str_clear(&v2);
+    vec_str_check_size_cap(counts, &v2, 0, 32, verbose);
     vec_str_free(&v2);
     vec_str_check_size_cap(counts, &v2, 0, 0, verbose);
 

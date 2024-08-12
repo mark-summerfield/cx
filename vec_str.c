@@ -61,5 +61,6 @@ char* vec_str_join(const vec* v, const char* sep) {
             p += SEP_SIZE;
         }
     }
+    *p = 0;
     return s;
 }

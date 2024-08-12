@@ -21,13 +21,18 @@ vec vec_alloc_(vec_alloc_args args) {
 }
 
 void vec_free(vec* v) {
-    for (size_t i = 0; i < v->_size; ++i) {
-        v->_destroy(v->_values[i]);
-    }
+    vec_clear(v);
     free(v->_values);
     v->_values = NULL;
     v->_size = 0;
     v->_cap = 0;
+}
+
+void vec_clear(vec* v) {
+    for (size_t i = 0; i < v->_size; ++i) {
+        v->_destroy(v->_values[i]);
+    }
+    v->_size = 0;
 }
 
 const void* vec_get(const vec* v, size_t index) {

@@ -25,6 +25,8 @@ void vec_int_free(vec_int* v) {
     v->_cap = 0;
 }
 
+inline void vec_int_clear(vec_int* v) { v->_size = 0; }
+
 VEC_INT_VALUE_T vec_int_get(const vec_int* v, size_t index) {
     assert_valid_index(v, index);
     return v->_values[index];
