@@ -1,8 +1,7 @@
 # TODO
-# (1) complete tests of all vec_int functions
-# (2) vec vec_str_alloc_split(const char* s, const char* sep)
-# (3) void vec_str_sort(vec* v) // no const!
-# (4) vec_bsearch_result vec_str_bsearch(const vec* v, const char* s)
+# (2) vec vec_str_alloc_split(const char* s, const char* sep, cmpfn cmp)
+# (3) void vec_str_sort(vec* v, cmpfn cmp) // no const!
+# (4) vec_found_index vec_str_search(const vec* v, const char* s, cmpfn cmp)
 #
 # (6) complete tests of all vec_str functions (start by copy/edit vec_int
 #     tests)

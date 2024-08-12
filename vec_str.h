@@ -76,7 +76,7 @@ void vec_str_sort(vec* v, cmpfn cmp);
 // Searches the vec using binary search: assumes that the vec is in
 // order, e.g., vec_str_sort() has been used with the given comparison
 // function. For a linear search of an unsorted vec, use vec_str_find.
-vec_found_index vec_str_bsearch(const vec* v, const char* s, cmpfn cmp);
+vec_found_index vec_str_search(const vec* v, const char* s, cmpfn cmp);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_size(v); ++i)
