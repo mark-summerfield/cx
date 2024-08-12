@@ -14,22 +14,23 @@ typedef int (*cmpfn)(void*, void*);
 #define bool_to_str(b) (b ? "true" : "false")
 
 #define typename(x) \
-    _Generic((x), _Bool: "bool", \
-    char: "char", \
-    signed char: "signed char", \
-    unsigned char: "unsigned char", \
-    short int: "short int", \
-    unsigned short int: "unsigned short int", \
-    int: "int", \
-    unsigned int: "unsigned int", \
-    long int: "long int", \
-    unsigned long int: "unsigned long int", \
-    long long int: "long long int", \
-    unsigned long long int: "unsigned long long int", \
-    float: "float", \
-    double: "double", \
-    long double: "long double", \
-    char *: "char*", \
-    void *: "void*", \
-    int *: "int*", \
-    default: "unknown")
+    _Generic((x), \
+        _Bool: "bool", \
+        char: "char", \
+        char*: "char*", \
+        double: "double", \
+        float: "float", \
+        int: "int", \
+        int*: "int*", \
+        long double: "long double", \
+        long int: "long int", \
+        long long int: "long long int", \
+        short int: "short int", \
+        signed char: "signed char", \
+        unsigned char: "unsigned char", \
+        unsigned int: "unsigned int", \
+        unsigned long int: "unsigned long int", \
+        unsigned long long int: "unsigned long long int", \
+        unsigned short int: "unsigned short int", \
+        void*: "void*", \
+        default: "unknown")
