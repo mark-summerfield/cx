@@ -94,13 +94,13 @@ void vec_int_push(vec_int* v, VEC_INT_VALUE_T value) {
     v->_values[v->_size++] = value;
 }
 
-vec_int_find_result vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
+maybe_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_values[i] == value) {
-            return (vec_int_find_result){.index = i, .found = true};
+            return (maybe_found_index){.index = i, .found = true};
         }
     }
-    return (vec_int_find_result){.index = 0, .found = false};
+    return (maybe_found_index){.index = 0, .found = false};
 }
 
 vec_int vec_int_copy(const vec_int* v) {
@@ -111,7 +111,7 @@ vec_int vec_int_copy(const vec_int* v) {
     return vc;
 }
 
-bool vec_int_eq(const vec_int* v1, const vec_int* v2) {
+bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
     if (v1->_size != v2->_size)
         return false;
     for (size_t i = 0; i < v1->_size; ++i) {

@@ -7,7 +7,7 @@
 void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
                             size_t capacity, bool verbose);
 void vec_int_match(counts_pair* counts, vec_int* v, char* expected);
-void vec_int_equal(counts_pair* counts, vec_int* v1, vec_int* v2);
+void vec_int_same(counts_pair* counts, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
 void vec_str_tests(counts_pair*, bool);
 
@@ -39,7 +39,7 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
         check_int_eq(counts, v, i);
     }
     vec_int_match(counts, &v1, "1 2 3 4 5 6 7 8 9");
-    vec_int_equal(counts, &v1, &v2);
+    vec_int_same(counts, &v1, &v2);
 
     vec_int_push(&v1, -99);
     vec_int_match(counts, &v1, "1 2 3 4 5 6 7 8 9 -99");
@@ -92,9 +92,9 @@ void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
         counts->ok++;
 }
 
-void vec_int_equal(counts_pair* counts, vec_int* v1, vec_int* v2) {
+void vec_int_same(counts_pair* counts, vec_int* v1, vec_int* v2) {
     counts->total++;
-    if (!vec_int_eq(v1, v2)) {
+    if (!vec_int_equal(v1, v2)) {
         fprintf(stderr, "FAIL: vec_int_eq() expected true, got false\n");
     } else
         counts->ok++;

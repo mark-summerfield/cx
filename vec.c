@@ -1,7 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec.h"
-#include "cx.h"
 #include <stdlib.h>
 
 #define assert_valid_index(v, index) \
@@ -107,13 +106,13 @@ void vec_push(vec* v, void* value) {
     v->_values[v->_size++] = value;
 }
 
-vec_find_result vec_find(const vec* v, void* value) {
+maybe_found_index vec_find(const vec* v, void* value) {
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_eq(v->_values[i], value)) {
-            return (vec_find_result){.index = i, .found = true};
+            return (maybe_found_index){.index = i, .found = true};
         }
     }
-    return (vec_find_result){.index = 0, .found = false};
+    return (maybe_found_index){.index = 0, .found = false};
 }
 
 vec vec_copy(const vec* v) {
@@ -125,7 +124,7 @@ vec vec_copy(const vec* v) {
     return vc;
 }
 
-bool vec_eq(const vec* v1, const vec* v2) {
+bool vec_equal(const vec* v1, const vec* v2) {
     if (v1->_eq != v2->_eq)
         return false;
     if (v1->_destroy != v2->_destroy)

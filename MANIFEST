@@ -1,8 +1,4 @@
 # TODO
-# (1) For all vec_METHOD create equiv
-#	#define vec_str_METHOD vec_METHOD
-#     so for vec_str every method starts 'vec_str'
-#
 # (2) vec vec_str_alloc_split(const char* s, const char* sep)
 # (3) void vec_str_sort(vec* v) // no const!
 # (4) vec_bsearch_result vec_str_bsearch(const vec* v, const char* s)

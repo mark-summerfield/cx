@@ -2,8 +2,7 @@
 
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
-#include <stdbool.h>
-#include <stddef.h>
+#include "cx.h"
 
 // A vector of owned void* values.
 // All data members are private; all accesses via functions.
@@ -88,20 +87,15 @@ void* vec_pop(vec* v);
 // vec takes ownership of the value (e.g., if char* then use strdup()).
 void vec_push(vec* v, void* value);
 
-typedef struct {
-    size_t index;
-    bool found;
-} vec_find_result;
-
 // Returns the index of value in the vec and true or 0 and false.
-vec_find_result vec_find(const vec* v, void* value);
+maybe_found_index vec_find(const vec* v, void* value);
 
 // Returns a deep copy of the vec including eq, cp, and destroy.
 vec vec_copy(const vec* v);
 
 // Returns true if the two vec's have the same values and eq, cp, and
 // destroy functions.
-bool vec_eq(const vec* v1, const vec* v2);
+bool vec_equal(const vec* v1, const vec* v2);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_size(v); ++i)

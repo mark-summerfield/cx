@@ -2,7 +2,7 @@
 
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
-#include <stdbool.h>
+#include "cx.h"
 #include <stdio.h>
 
 // Change to long or any other integer type if needed.
@@ -72,20 +72,15 @@ VEC_INT_VALUE_T vec_int_pop(vec_int* v);
 // increasing the vec_int's size (and cap) if necessary.
 void vec_int_push(vec_int* v, VEC_INT_VALUE_T value);
 
-typedef struct {
-    size_t index;
-    bool found;
-} vec_int_find_result;
-
 // Returns the index of the VEC_INT_VALUE_T value in the vec_int and true or
 // 0 and false.
-vec_int_find_result vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
+maybe_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
 
 // Returns a deep copy of the vec_int.
 vec_int vec_int_copy(const vec_int* v);
 
 // Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
-bool vec_int_eq(const vec_int* v1, const vec_int* v2);
+bool vec_int_equal(const vec_int* v1, const vec_int* v2);
 
 // Returns a string of space-separated VEC_INT_VALUE_T values.
 // The returned char* value is now owned by the caller.

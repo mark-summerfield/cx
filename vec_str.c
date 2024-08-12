@@ -54,12 +54,12 @@ char* vec_str_join(const vec* v, const char* sep) {
     return s;
 }
 
-void vec_str_sort(vec* v) {
+void vec_str_sort(vec* v, cmpfn cmp) {
     printf("TODO vec_str_sort"); // TODO
 }
 
-vec_str_bsearch_result vec_str_bsearch(const vec* v, const char* s) {
-    vec_str_bsearch_result result = {0, false};
+maybe_found_index vec_str_bsearch(const vec* v, const char* s, cmpfn cmp) {
+    maybe_found_index result = {0, false};
     printf("TODO vec_str_bsearch"); // TODO
     return result;
 }
