@@ -36,10 +36,6 @@ vec vec_alloc_(vec_alloc_args args);
 // is not usable after this.
 void vec_free(vec* v);
 
-// Clears the vec freeing its memory and also freeing every value. The vec
-// is usable after this (e.g., push() etc).
-void vec_clear(vec* v);
-
 // Returns true if the vec is empty.
 #define vec_isempty(v) ((v)->_size > 0)
 

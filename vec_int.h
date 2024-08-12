@@ -28,10 +28,6 @@ vec_int vec_int_alloc_cap(size_t cap);
 // after this.
 void vec_int_free(vec_int* v);
 
-// Clears the vec_int freeing its memory. The vec_int is usable after
-// this (e.g., push() etc).
-void vec_int_clear(vec_int* v);
-
 // Returns true if the vec_int is empty.
 #define vec_int_isempty(v) ((v)->_size > 0)
 

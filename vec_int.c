@@ -18,9 +18,7 @@ vec_int vec_int_alloc_cap(size_t cap) {
     return v;
 }
 
-inline void vec_int_free(vec_int* v) { vec_int_clear(v); }
-
-void vec_int_clear(vec_int* v) {
+void vec_int_free(vec_int* v) {
     free(v->_values);
     v->_values = NULL;
     v->_size = 0;

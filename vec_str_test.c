@@ -101,7 +101,7 @@ void vec_str_tests(counts_pair* counts, bool verbose) {
     check_int_eq(counts, found_index.index, 6);
     */
 
-    vec_str_clear(&v1);
+    vec_str_free(&v1);
     vec_str_check_size_cap(counts, &v1, 0, 0, verbose);
     vec_str_free(&v2);
     vec_str_check_size_cap(counts, &v2, 0, 0, verbose);
@@ -112,7 +112,7 @@ void vec_str_tests(counts_pair* counts, bool verbose) {
     vec v4 =
         vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
     vec_str_match(counts, &v4, "one|two|three|four|five|six");
-    vec_str_clear(&v4);
+    vec_str_free(&v4);
 }
 
 void vec_str_match(counts_pair* counts, const vec* v,

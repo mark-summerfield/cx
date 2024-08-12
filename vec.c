@@ -20,9 +20,7 @@ vec vec_alloc_(vec_alloc_args args) {
     return v;
 }
 
-inline void vec_free(vec* v) { vec_clear(v); }
-
-void vec_clear(vec* v) {
+void vec_free(vec* v) {
     for (size_t i = 0; i < v->_size; ++i) {
         v->_destroy(v->_values[i]);
     }

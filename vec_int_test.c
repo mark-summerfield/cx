@@ -89,7 +89,7 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
     check_bool_eq(counts, found_index.found, true);
     check_int_eq(counts, found_index.index, 6);
 
-    vec_int_clear(&v1);
+    vec_int_free(&v1);
     vec_int_check_size_cap(counts, &v1, 0, 0, verbose);
     vec_int_free(&v2);
     vec_int_check_size_cap(counts, &v2, 0, 0, verbose);
