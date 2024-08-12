@@ -41,6 +41,8 @@ const char* vec_str_get_last(const vec* v);
 
 #define vec_str_set(v, index, value) vec_set((v), (index), (value))
 
+#define vec_str_insert(v, index, value) vec_insert((v), (index), (value))
+
 // Sets the vec's char* value at position index to the given value and
 // returns the old char* value from that position.
 // vec takes ownership of the new value (e.g., use strdup()).
