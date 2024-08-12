@@ -6,9 +6,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-bool vec_str_eq(void* s, void* t);
+int vec_str_cmp(const void* s, const void* t);
 
-void* vec_str_cp(void* value);
+void* vec_str_copy_value(const void* value);
 
 void vec_str_destroy(void* value);
 
@@ -16,8 +16,8 @@ void vec_str_destroy(void* value);
 // VEC_INITIAL_CAP.
 #define vec_str_alloc(...)                                  \
     vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_CAP,     \
-                                .eq = vec_str_eq,           \
-                                .cp = vec_str_cp,           \
+                                .cmp = vec_str_cmp,         \
+                                .copy = vec_str_copy_value, \
                                 .destroy = vec_str_destroy, \
                                 __VA_ARGS__})
 
@@ -72,13 +72,13 @@ const char* vec_str_get_last(const vec* v);
 // The returned char* value is now owned by the caller.
 char* vec_str_join(const vec* v, const char* sep);
 
-// Sorts the vec in-place using the given comparison function.
-void vec_str_sort(vec* v, cmpfn cmp);
+// Sorts the vec in-place using the cmp comparison function.
+#define vec_str_sort(v) vec_sort((v))
 
 // Searches the vec using binary search: assumes that the vec is in
-// order, e.g., vec_str_sort() has been used with the given comparison
-// function. For a linear search of an unsorted vec, use vec_str_find.
-vec_found_index vec_str_search(const vec* v, const char* s, cmpfn cmp);
+// order, e.g., vec_str_sort() has been used with the cmp function. For
+// a linear search of an unsorted vec, use vec_str_find.
+#define vec_str_search(v, s) vec_search((v), (s))
 
 // To iterate:
 //  for (size_t i = 0; i < vec_size(v); ++i)

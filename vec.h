@@ -11,22 +11,22 @@ typedef struct vec {
     size_t _size; // This is "end", i.e., one past the last value
     size_t _cap;  // The size of the allocated array
     void** _values;
-    bool (*_eq)(void* a, void* b);
-    void* (*_cp)(void*);
+    int (*_cmp)(const void* a, const void* b);
+    void* (*_copy)(const void*);
     void (*_destroy)(void* value);
 } vec;
 
 typedef struct {
     size_t cap;
-    bool (*eq)(void* a, void* b);
-    void* (*cp)(void*);
+    int (*cmp)(const void* a, const void* b);
+    void* (*copy)(const void*);
     void (*destroy)(void* values);
 } vec_alloc_args;
 
 // Allocates a new vec of owned void* with default capacity of
 // VEC_INITIAL_CAP.
 // Set the initial capacity with .cap.
-// Caller must supply functions: eq to compare two values, cp to copy a
+// Caller must supply functions: cmp to compare two values, copy to copy a
 // value, and destroy to free a value.
 #define vec_alloc(...) \
     vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_CAP, __VA_ARGS__})
@@ -92,14 +92,22 @@ void vec_push(vec* v, void* value);
 
 // Returns the index of value in the vec and true or 0 and false.
 // Uses a linear search.
-vec_found_index vec_find(const vec* v, void* value);
+vec_found_index vec_find(const vec* v, const void* value);
 
-// Returns a deep copy of the vec including eq, cp, and destroy.
+// Returns a deep copy of the vec including cmp, copy, and destroy.
 vec vec_copy(const vec* v);
 
-// Returns true if the two vec's have the same values and eq, cp, and
+// Returns true if the two vec's have the same values and cmp, copy, and
 // destroy functions.
 bool vec_equal(const vec* v1, const vec* v2);
+
+// Sorts the vec in-place using the cmp function.
+void vec_sort(vec* v);
+
+// Searches the vec using binary search: assumes that the vec is in
+// order, e.g., vec_sort() has been used with the cmp function. For a
+// linear search of an unsorted vec, use vec_str_find.
+vec_found_index vec_str_search(const vec* v, const void* s);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_size(v); ++i)

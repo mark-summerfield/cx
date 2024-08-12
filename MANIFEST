@@ -1,8 +1,10 @@
 # TODO
-# (1) vec_str tests: replace remove take find
-# (2) void vec_str_sort(vec* v, cmpfn cmp) // no const!
-# (3) vec_found_index vec_str_search(const vec* v, const char* s, cmpfn cmp)
-# (4) vec_str tests: sort find search
+# (1) 
+#   - implement: vec_sort vec_search
+#   - implement using #defines: vec_str_sort vec_str_search
+#   - also implement: vec_int_sort vec_int_search
+# (2) vec_str tests: replace remove take find
+# (3) vec_str tests: sort find search
 #
 # (7) map with void* keys & values (based on rbt) + tests
 # (8) map_str with char* keys & char* values (based on map) + tests

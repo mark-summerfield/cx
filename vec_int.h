@@ -84,6 +84,14 @@ vec_int vec_int_copy(const vec_int* v);
 // Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
 bool vec_int_equal(const vec_int* v1, const vec_int* v2);
 
+// Sorts the vec_int in-place in ascending order.
+void vec_int_sort(vec_int* v);
+
+// Searches the vec_int using binary search: assumes that the vec_int is
+// in order, e.g., vec_int_sort() has been used. For a linear search of
+// an unsorted vec_int, use vec_int_find.
+vec_found_index vec_int_search(const vec_int* v, int i);
+
 // Returns a string of space-separated VEC_INT_VALUE_T values.
 // The returned char* value is now owned by the caller.
 char* vec_int_tostring(const vec_int* v);

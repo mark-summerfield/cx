@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool vec_str_eq(void* s, void* t) { return strcmp((s), (t)) == 0; }
+int vec_str_cmp(const void* s, const void* t) { return strcmp((s), (t)); }
 
 void vec_str_destroy(void* value) { free((char*)value); }
 
-void* vec_str_cp(void* value) { return strdup((char*)value); }
+void* vec_str_copy_value(const void* value) { return strdup((char*)value); }
 
 vec vec_str_alloc_split(const char* s, const char* sep) {
     assert(s && "can't split empty string");
@@ -62,14 +62,4 @@ char* vec_str_join(const vec* v, const char* sep) {
         }
     }
     return s;
-}
-
-void vec_str_sort(vec* v, cmpfn cmp) {
-    printf("TODO vec_str_sort"); // TODO
-}
-
-vec_found_index vec_str_search(const vec* v, const char* s, cmpfn cmp) {
-    vec_found_index result = {0, false};
-    printf("TODO vec_str_bsearch"); // TODO
-    return result;
 }

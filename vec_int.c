@@ -95,12 +95,15 @@ void vec_int_push(vec_int* v, VEC_INT_VALUE_T value) {
 }
 
 vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
+    vec_found_index found_index = {0, false};
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_values[i] == value) {
-            return (vec_found_index){.index = i, .found = true};
+            found_index.index = i;
+            found_index.found = true;
+            break;
         }
     }
-    return (vec_found_index){.index = 0, .found = false};
+    return found_index;
 }
 
 vec_int vec_int_copy(const vec_int* v) {
@@ -119,6 +122,14 @@ bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
             return false;
     }
     return true;
+}
+
+void vec_int_sort(vec_int* v) { printf("TODO vec_sort"); }
+
+vec_found_index vec_int_search(const vec_int* v, int i) {
+    vec_found_index found_index = {0, false};
+    printf("TODO vec_int_search");
+    return found_index;
 }
 
 char* vec_int_tostring(const vec_int* v) {
