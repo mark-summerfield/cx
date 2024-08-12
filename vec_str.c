@@ -58,8 +58,8 @@ void vec_str_sort(vec* v, cmpfn cmp) {
     printf("TODO vec_str_sort"); // TODO
 }
 
-maybe_found_index vec_str_bsearch(const vec* v, const char* s, cmpfn cmp) {
-    maybe_found_index result = {0, false};
+vec_found_index vec_str_bsearch(const vec* v, const char* s, cmpfn cmp) {
+    vec_found_index result = {0, false};
     printf("TODO vec_str_bsearch"); // TODO
     return result;
 }

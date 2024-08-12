@@ -7,6 +7,7 @@
 void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
                             size_t capacity, bool verbose);
 void vec_int_match(counts_pair* counts, vec_int* v, char* expected);
+void vec_int_check_bool(counts_pair* counts, bool actual, bool expected);
 void vec_int_same(counts_pair* counts, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
 void vec_str_tests(counts_pair*, bool);
@@ -54,8 +55,41 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
     x = vec_int_get_last(&v1);
     check_int_eq(counts, x, -99);
 
-    fprintf(stderr, "TODO vec_int_tests: vec_int_set vec_int_replace "
-                    "vec_int_remove vec_int_take vec_int_find\n"); // TODO
+    vec_int_set(&v1, 2, -33);
+    vec_int_match(counts, &v1, "1 2 -33 4 -555 5 6 7 8 9 -99");
+    vec_int_set(&v1, 10, 10);
+    vec_int_match(counts, &v1, "1 2 -33 4 -555 5 6 7 8 9 10");
+    vec_int_set(&v1, 0, 0);
+    vec_int_match(counts, &v1, "0 2 -33 4 -555 5 6 7 8 9 10");
+
+    x = vec_int_replace(&v1, 4, 111);
+    check_int_eq(counts, x, -555);
+    vec_int_match(counts, &v1, "0 2 -33 4 111 5 6 7 8 9 10");
+
+    vec_int_remove(&v1, 7);
+    vec_int_match(counts, &v1, "0 2 -33 4 111 5 6 8 9 10");
+    vec_int_remove(&v1, 7);
+    vec_int_match(counts, &v1, "0 2 -33 4 111 5 6 9 10");
+
+    x = vec_int_take(&v1, 0);
+    check_int_eq(counts, x, 0);
+    vec_int_match(counts, &v1, "2 -33 4 111 5 6 9 10");
+    x = vec_int_take(&v1, 7);
+    check_int_eq(counts, x, 10);
+    vec_int_match(counts, &v1, "2 -33 4 111 5 6 9");
+
+    vec_found_index found_index = vec_int_find(&v1, 8);
+    vec_int_check_bool(counts, found_index.found, false);
+    found_index = vec_int_find(&v1, 2);
+    vec_int_check_bool(counts, found_index.found, true);
+    check_int_eq(counts, found_index.index, 0);
+    found_index = vec_int_find(&v1, 111);
+    vec_int_check_bool(counts, found_index.found, true);
+    check_int_eq(counts, found_index.index, 3);
+    found_index = vec_int_find(&v1, 9);
+    vec_int_check_bool(counts, found_index.found, true);
+    check_int_eq(counts, found_index.index, 6);
+
     vec_int_clear(&v1);
     vec_int_check_size_cap(counts, &v1, 0, 0, verbose);
     vec_int_free(&v2);
@@ -68,12 +102,22 @@ void vec_int_match(counts_pair* counts, vec_int* v, char* expected) {
     free(out);
 }
 
-// TODO Comment out once tests complete.
+void vec_int_check_bool(counts_pair* counts, bool actual, bool expected) {
+    counts->total++;
+    if (actual != expected)
+        fprintf(stderr, "FAIL: vec_int_find() expected %s, got %s\n",
+                bool_to_str(expected), bool_to_str(actual));
+    else
+        counts->ok++;
+}
+
+/*
 void vec_int_print(vec_int* v) {
     char* out = vec_int_tostring(v);
     printf("%s\n", out);
     free(out);
 }
+*/
 
 void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
                             size_t capacity, bool verbose) {

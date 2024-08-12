@@ -15,4 +15,4 @@
 typedef struct {
     size_t index;
     bool found;
-} maybe_found_index;
+} vec_found_index;

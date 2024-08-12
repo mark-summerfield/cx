@@ -103,13 +103,13 @@ void vec_push(vec* v, void* value) {
     v->_values[v->_size++] = value;
 }
 
-maybe_found_index vec_find(const vec* v, void* value) {
+vec_found_index vec_find(const vec* v, void* value) {
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_eq(v->_values[i], value)) {
-            return (maybe_found_index){.index = i, .found = true};
+            return (vec_found_index){.index = i, .found = true};
         }
     }
-    return (maybe_found_index){.index = 0, .found = false};
+    return (vec_found_index){.index = 0, .found = false};
 }
 
 vec vec_copy(const vec* v) {

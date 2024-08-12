@@ -76,7 +76,7 @@ void vec_int_push(vec_int* v, VEC_INT_VALUE_T value);
 
 // Returns the index of the VEC_INT_VALUE_T value in the vec_int and true or
 // 0 and false.
-maybe_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
+vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
 
 // Returns a deep copy of the vec_int.
 vec_int vec_int_copy(const vec_int* v);

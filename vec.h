@@ -92,7 +92,7 @@ void vec_push(vec* v, void* value);
 
 // Returns the index of value in the vec and true or 0 and false.
 // Uses a linear search.
-maybe_found_index vec_find(const vec* v, void* value);
+vec_found_index vec_find(const vec* v, void* value);
 
 // Returns a deep copy of the vec including eq, cp, and destroy.
 vec vec_copy(const vec* v);
