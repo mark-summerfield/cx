@@ -121,7 +121,7 @@ void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
 void vec_int_same(counts_pair* counts, vec_int* v1, vec_int* v2) {
     counts->total++;
     if (!vec_int_equal(v1, v2)) {
-        fprintf(stderr, "FAIL: vec_int_eq() expected true, got false\n");
+        fprintf(stderr, "FAIL: vec_int_equal() expected true, got false\n");
     } else
         counts->ok++;
 }

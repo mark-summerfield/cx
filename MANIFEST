@@ -23,8 +23,8 @@ cx_util_test.h
 cx_util_test.c
 vec_int_test.h
 vec_int_test.c
-# TODO vec_str_test.h
-# TODO vec_str_test.c
+vec_str_test.h
+vec_str_test.c
 va_test.h
 va_test.c
 

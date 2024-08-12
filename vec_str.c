@@ -14,12 +14,22 @@ void* vec_str_cp(void* value) { return (void*)strdup((char*)value); }
 vec vec_str_alloc_split(const char* s, const char* sep) {
     assert(s && "can't split empty string");
     assert(sep && "can't split with empty sep");
-
-    printf("TODO vec_str_from_split\n"); // TODO
-    size_t size = 0;                     // TODO
-                                         // TODO
-    vec v = vec_str_alloc(.cap = size);
-    // TODO
+    size_t sep_size = strlen(sep);
+    vec v = vec_str_alloc();
+    const char* p = s;
+    const char* q = NULL;
+    while (true) {
+        if ((q = strstr(p, sep))) {
+            size_t n = q - p;
+            vec_str_push(&v, strndup(p, n));
+            p = q + sep_size;
+        } else {
+            if (p && strlen(p)) {
+                vec_str_push(&v, strdup(p));
+            }
+            break;
+        }
+    }
     return v;
 }
 

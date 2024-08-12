@@ -3,6 +3,7 @@
 #include "cx_util_test.h"
 #include "va_test.h"
 #include "vec_int_test.h"
+#include "vec_str_test.h"
 #include <stdio.h>
 
 void va_tests(counts_pair*);
@@ -12,7 +13,7 @@ int main(int argc, char** argv) {
     counts_pair counts = {0, 0};
     va_tests(&counts);
     vec_int_tests(&counts, verbose);
-    printf("TODO vec_str_tests(&counts, verbose);\n");
+    vec_str_tests(&counts, verbose);
     printf("%s %d/%d\n", (counts.ok == counts.total) ? "OK" : "FAIL",
            counts.ok, counts.total);
 }

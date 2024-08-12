@@ -113,8 +113,8 @@ vec_found_index vec_find(const vec* v, void* value) {
 }
 
 vec vec_copy(const vec* v) {
-    vec vc =
-        vec_alloc(.cap = v->_size, .eq = v->_eq, .destroy = v->_destroy);
+    vec vc = vec_alloc(.cap = v->_size, .eq = v->_eq, .cp = v->_cp,
+                       .destroy = v->_destroy);
     for (size_t i = 0; i < v->_size; ++i) {
         vec_push(&vc, v->_cp(v->_values[i]));
     }
