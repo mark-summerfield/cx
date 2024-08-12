@@ -12,22 +12,20 @@ typedef struct vec {
     size_t _cap;  // The size of the allocated array
     void** _values;
     bool (*_eq)(void* a, void* b);
-    void* (*_cp)(void*);
     void (*_destroy)(void* value);
 } vec;
 
 typedef struct {
     size_t cap;
     bool (*eq)(void* a, void* b);
-    void* (*cp)(void*);
     void (*destroy)(void* values);
 } vec_alloc_args;
 
 // Allocates a new vec of owned void* with default capacity of
 // VEC_INITIAL_SIZE.
 // Set the initial capacity with .cap.
-// Caller must supply functions: eq to compare two values, cp to deep
-// copy a value, and a destroy function to free a value.
+// Caller must supply functions: eq to compare two values, and destroy
+// to free a value.
 #define vec_alloc(...) \
     vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_SIZE, __VA_ARGS__})
 vec vec_alloc_(vec_alloc_args args);
@@ -94,11 +92,11 @@ void vec_push(vec* v, void* value);
 // Uses a linear search.
 vec_found_index vec_find(const vec* v, void* value);
 
-// Returns a deep copy of the vec including eq, cp, and destroy.
-vec vec_copy(const vec* v);
+// Returns a deep copy of the vec including eq and destroy.
+vec vec_copy(const vec* v, copyfn cp);
 
-// Returns true if the two vec's have the same values and eq, cp, and
-// destroy functions.
+// Returns true if the two vec's have the same values and eq and destroy
+// functions.
 bool vec_equal(const vec* v1, const vec* v2);
 
 // To iterate:

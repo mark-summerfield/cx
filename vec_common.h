@@ -16,3 +16,5 @@ typedef struct {
     size_t index;
     bool found;
 } vec_found_index;
+
+typedef void* (*copyfn)(void*);

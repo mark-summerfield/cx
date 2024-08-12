@@ -21,12 +21,6 @@ const char* WORDS[] = {
     "Ten",  "Zero"};
 
 void vec_str_tests(counts_pair* counts, bool verbose) {
-    vec v3 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
-    vec_str_match(counts, &v3, "one|two|three|four|five");
-    vec v4 =
-        vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
-    vec_str_match(counts, &v4, "one|two|three|four|five|six");
-
     vec v1 = vec_str_alloc(); // default of 32
     vec_str_check_size_cap(counts, &v1, 0, 32, verbose);
 
@@ -36,12 +30,10 @@ void vec_str_tests(counts_pair* counts, bool verbose) {
     counts->total++;
     size_t count = sizeof(WORDS) / sizeof(char*);
     for (int i = 0; i < count; ++i) {
-        printf("%d [%s] size=%zu cap=%zu\n", i, WORDS[i], vec_str_size(&v1),
-               vec_str_cap(&v1));
+        vec_str_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64, verbose);
         vec_str_push(&v1, strdup(WORDS[i]));
         if (i < 10)
             vec_str_push(&v2, strdup(WORDS[i]));
-        vec_str_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64, verbose);
     }
     counts->ok++;
 
@@ -113,6 +105,12 @@ void vec_str_tests(counts_pair* counts, bool verbose) {
     vec_str_free(&v2);
     vec_str_check_size_cap(counts, &v2, 0, 0, verbose);
     */
+
+    vec v3 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
+    vec_str_match(counts, &v3, "one|two|three|four|five");
+    vec v4 =
+        vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
+    vec_str_match(counts, &v4, "one|two|three|four|five|six");
 }
 
 void vec_str_match(counts_pair* counts, vec* v, char* expected) {

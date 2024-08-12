@@ -9,7 +9,7 @@ bool vec_str_eq(void* s, void* t) { return strcmp((s), (t)) == 0; }
 
 void vec_str_destroy(void* value) { free((char*)value); }
 
-void* vec_str_cp(void* value) { return (void*)strdup((char*)value); }
+void* vec_str_cp(void* value) { return strdup((char*)value); }
 
 vec vec_str_alloc_split(const char* s, const char* sep) {
     assert(s && "can't split empty string");
@@ -17,14 +17,14 @@ vec vec_str_alloc_split(const char* s, const char* sep) {
     size_t sep_size = strlen(sep);
     vec v = vec_str_alloc();
     const char* p = s;
-    const char* q = NULL;
-    while (true) {
-        if ((q = strstr(p, sep))) {
+    while (p) {
+        const char* q = strstr(p, sep);
+        if (q) {
             size_t n = q - p;
             vec_str_push(&v, strndup(p, n));
             p = q + sep_size;
         } else {
-            if (p && strlen(p)) {
+            if (strlen(p)) {
                 vec_str_push(&v, strdup(p));
             }
             break;
