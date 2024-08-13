@@ -12,16 +12,16 @@ void vec_str_destroy(void* value) { free((char*)value); }
 void* vec_str_cpy(const void* value) { return strdup((char*)value); }
 
 vec vec_str_alloc_split(const char* s, const char* sep) {
-    assert(s && "can't split empty string");
-    assert(sep && "can't split with empty sep");
+    assert(s && "can't split null string");
+    assert(sep && "can't split with null sep");
     size_t sep_size = strlen(sep);
+    assert(sep_size && "can't split with empty sep");
     vec v = vec_str_alloc();
     const char* p = s;
     while (p) {
         const char* q = strstr(p, sep);
         if (q) {
-            size_t n = q - p;
-            vec_str_push(&v, strndup(p, n));
+            vec_str_push(&v, strndup(p, q - p));
             p = q + sep_size;
         } else {
             if (strlen(p)) {

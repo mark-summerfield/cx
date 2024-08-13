@@ -1,12 +1,11 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "sx.h"
+#include "cx.h"
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
-#define assert_alloc(p) assert((p) && "failed to acquire memory")
 
 bool sx_ends(const char* s, const char* suffix) {
     size_t size = strlen(s);

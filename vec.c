@@ -24,7 +24,6 @@ void vec_free(vec* v) {
     vec_clear(v);
     free(v->_values);
     v->_values = NULL;
-    v->_size = 0;
     v->_cap = 0;
 }
 
@@ -55,6 +54,7 @@ void vec_insert(vec* v, size_t index, void* value) {
         vec_push(v, value);
         return;
     }
+    assert_valid_index(v, index);
     if (v->_size == v->_cap) {
         _vec_grow(v);
     }
@@ -72,15 +72,8 @@ void* vec_replace(vec* v, size_t index, void* value) {
     return old;
 }
 
-void vec_remove(vec* v, size_t index) {
-    assert_valid_index(v, index);
-    void* old = v->_values[index];
-    for (size_t i = index; i < v->_size; ++i) {
-        v->_values[i] = v->_values[i + 1];
-    }
-    v->_values[v->_size - 1] = NULL;
-    v->_size--;
-    v->_destroy(old);
+inline void vec_remove(vec* v, size_t index) {
+    v->_destroy(vec_take(v, index));
 }
 
 void* vec_take(vec* v, size_t index) {
@@ -89,8 +82,8 @@ void* vec_take(vec* v, size_t index) {
     for (size_t i = index; i < v->_size; ++i) {
         v->_values[i] = v->_values[i + 1];
     }
-    v->_values[v->_size - 1] = NULL;
     v->_size--;
+    v->_values[v->_size] = NULL;
     return old;
 }
 

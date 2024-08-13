@@ -38,7 +38,7 @@
 #define sx_begins(s, prefix) (strncmp((s), (prefix), strlen(prefix)) == 0)
 
 // Returns true if char* s begins with char* prefix, regardless of case
-#define sx_begins_fold(s, prefix)                                          \
+#define sx_begins_fold(s, prefix) \
     (strncasecmp((s), (prefix), strlen(prefix)) == 0)
 
 // Returns true if char* s ends with char* suffix
@@ -60,3 +60,27 @@ void sx_lowercase_ip(char*);
 
 // Returns new char* of given char*'s ASCII chars lowercased
 char* sx_new_lowercase(const char*);
+
+#define bool_to_str(b) ((b) ? "true" : "false")
+
+#define typename(x) \
+    _Generic((x), \
+        _Bool: "bool", \
+        char: "char", \
+        char*: "char*", \
+        double: "double", \
+        float: "float", \
+        int: "int", \
+        int*: "int*", \
+        long double: "long double", \
+        long int: "long int", \
+        long long int: "long long int", \
+        short int: "short int", \
+        signed char: "signed char", \
+        unsigned char: "unsigned char", \
+        unsigned int: "unsigned int", \
+        unsigned long int: "unsigned long int", \
+        unsigned long long int: "unsigned long long int", \
+        unsigned short int: "unsigned short int", \
+        void*: "void*", \
+        default: "unknown")

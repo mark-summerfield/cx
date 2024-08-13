@@ -5,17 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define assert_valid_index(v, index) \
-    assert((index) < (v)->_size && "index out of range")
-
 void _vec_int_grow(vec_int* v);
 
 vec_int vec_int_alloc_cap(size_t cap) {
     cap = cap ? cap : 32;
     VEC_INT_VALUE_T* values = malloc(cap * sizeof(VEC_INT_VALUE_T));
     assert_alloc(values);
-    vec_int v = {._size = 0, ._cap = cap, ._values = values};
-    return v;
+    return (vec_int){._size = 0, ._cap = cap, ._values = values};
 }
 
 void vec_int_free(vec_int* v) {
@@ -46,6 +42,7 @@ void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
         vec_int_push(v, value);
         return;
     }
+    assert_valid_index(v, index);
     if (v->_size == v->_cap) {
         _vec_int_grow(v);
     }
@@ -75,10 +72,7 @@ void vec_int_remove(vec_int* v, size_t index) {
 VEC_INT_VALUE_T vec_int_take(vec_int* v, size_t index) {
     assert_valid_index(v, index);
     VEC_INT_VALUE_T old = v->_values[index];
-    for (size_t i = index; i < v->_size; ++i) {
-        v->_values[i] = v->_values[i + 1];
-    }
-    v->_size--;
+    vec_int_remove(v, index);
     return old;
 }
 

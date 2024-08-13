@@ -1,5 +1,4 @@
 # TODO
-# (0) docs
 # (1) 
 #   - implement: vec_sort vec_search
 #   - implement using #defines: vec_str_sort vec_str_search
@@ -19,18 +18,6 @@
 #
 # (15) str (based on vec)? + tests
 
-cx_test.c
-cx_util_test.h
-cx_util_test.c
-vec_int_test.h
-vec_int_test.c
-vec_str_test.h
-vec_str_test.c
-sx_test.h
-sx_test.c
-va_test.h
-va_test.c
-
 cx.h
 vec_common.h
 vec.h
@@ -44,6 +31,18 @@ sx.h
 sx.c
 
 vaargs.h
+
+cx_test.c
+cx_util_test.h
+cx_util_test.c
+vec_int_test.h
+vec_int_test.c
+vec_str_test.h
+vec_str_test.c
+sx_test.h
+sx_test.c
+va_test.h
+va_test.c
 
 SConstruct
 
