@@ -47,6 +47,11 @@ vaargs.h
 
 SConstruct
 
+doc.adoc
+doc.rb
+doc.css
+doc.sh
+
 st.sh
 
 # vim: syn=yaml
