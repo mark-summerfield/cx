@@ -91,18 +91,6 @@ void vec_int_push(vec_int* v, VEC_INT_VALUE_T value) {
     v->_values[v->_size++] = value;
 }
 
-vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
-    vec_found_index found_index = {0, false};
-    for (size_t i = 0; i < v->_size; ++i) {
-        if (v->_values[i] == value) {
-            found_index.index = i;
-            found_index.found = true;
-            break;
-        }
-    }
-    return found_index;
-}
-
 vec_int vec_int_copy(const vec_int* v) {
     vec_int vc = vec_int_alloc_cap(v->_size);
     for (size_t i = 0; i < v->_size; ++i) {
@@ -119,6 +107,18 @@ bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
             return false;
     }
     return true;
+}
+
+vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
+    vec_found_index found_index = {0, false};
+    for (size_t i = 0; i < v->_size; ++i) {
+        if (v->_values[i] == value) {
+            found_index.index = i;
+            found_index.found = true;
+            break;
+        }
+    }
+    return found_index;
 }
 
 VEC_INT_VALUE_T intcmp(const void* a, const void* b) {

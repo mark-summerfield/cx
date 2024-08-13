@@ -27,9 +27,9 @@ vec vec_str_alloc_split(const char* s, const char* sep);
 
 #define vec_str_free(v) vec_free((v))
 #define vec_str_clear(v) vec_clear((v))
-#define vec_str_isempty(v) ((v)->_size == 0)
-#define vec_str_size(v) ((v)->_size)
-#define vec_str_cap(v) ((v)->_cap)
+#define vec_str_isempty(v) vec_isempty((v))
+#define vec_str_size(v) vec_size((v))
+#define vec_str_cap(v) vec_cap((v))
 
 // Returns the vec's char* value at position index.
 // vec retains ownership, so do not delete the value.
@@ -63,7 +63,6 @@ const char* vec_str_get_last(const vec* v);
 #define vec_str_pop(v) (char*)vec_pop((v))
 
 #define vec_str_push(v, value) vec_push((v), (value))
-#define vec_str_find(v, value) vec_find((v), (value))
 #define vec_str_copy(v) vec_copy((v))
 #define vec_str_equal(v1, v2) vec_equal((v1), (v2))
 
@@ -71,6 +70,8 @@ const char* vec_str_get_last(const vec* v);
 // sep is NULL they are joined with no separator.
 // The returned char* value is now owned by the caller.
 char* vec_str_join(const vec* v, const char* sep);
+
+#define vec_str_find(v, value) vec_find((v), (value))
 
 // Sorts the vec in-place using the cmp comparison function.
 #define vec_str_sort(v) vec_sort((v))

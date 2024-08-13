@@ -89,16 +89,16 @@ void* vec_pop(vec* v);
 // vec takes ownership of the value (e.g., if char* then use strdup()).
 void vec_push(vec* v, void* value);
 
-// Returns the index of value in the vec and true or 0 and false.
-// Uses a linear search.
-vec_found_index vec_find(const vec* v, const void* value);
-
 // Returns a deep copy of the vec including cmp, cpy, and destroy.
 vec vec_copy(const vec* v);
 
 // Returns true if the two vec's have the same values and cmp, cpy, and
 // destroy functions.
 bool vec_equal(const vec* v1, const vec* v2);
+
+// Returns the index of value in the vec and true or 0 and false.
+// Uses a linear search.
+vec_found_index vec_find(const vec* v, const void* value);
 
 // Sorts the vec in-place using the cmp function.
 void vec_sort(vec* v);

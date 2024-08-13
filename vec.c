@@ -101,18 +101,6 @@ void vec_push(vec* v, void* value) {
     v->_values[v->_size++] = value;
 }
 
-vec_found_index vec_find(const vec* v, const void* value) {
-    vec_found_index found_index = {0, false};
-    for (size_t i = 0; i < v->_size; ++i) {
-        if (v->_cmp(v->_values[i], value) == 0) {
-            found_index.index = i;
-            found_index.found = true;
-            break;
-        }
-    }
-    return found_index;
-}
-
 vec vec_copy(const vec* v) {
     vec vc =
         vec_alloc(.cap = v->_size ? v->_size : VEC_INITIAL_CAP,
@@ -132,6 +120,18 @@ bool vec_equal(const vec* v1, const vec* v2) {
             return false;
     }
     return true;
+}
+
+vec_found_index vec_find(const vec* v, const void* value) {
+    vec_found_index found_index = {0, false};
+    for (size_t i = 0; i < v->_size; ++i) {
+        if (v->_cmp(v->_values[i], value) == 0) {
+            found_index.index = i;
+            found_index.found = true;
+            break;
+        }
+    }
+    return found_index;
 }
 
 void vec_sort(vec* v) {

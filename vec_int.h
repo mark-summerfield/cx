@@ -73,15 +73,15 @@ VEC_INT_VALUE_T vec_int_pop(vec_int* v);
 // increasing the vec_int's size (and cap) if necessary.
 void vec_int_push(vec_int* v, VEC_INT_VALUE_T value);
 
-// Returns the index of the VEC_INT_VALUE_T value in the vec_int and true or
-// 0 and false.
-vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
-
 // Returns a deep copy of the vec_int.
 vec_int vec_int_copy(const vec_int* v);
 
 // Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
 bool vec_int_equal(const vec_int* v1, const vec_int* v2);
+
+// Returns the index of the VEC_INT_VALUE_T value in the vec_int and true or
+// 0 and false.
+vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
 
 VEC_INT_VALUE_T intcmp(const void* a, const void* b);
 
