@@ -134,8 +134,8 @@ void vec_int_sort(vec_int* v) {
 vec_found_index vec_int_search(const vec_int* v, VEC_INT_VALUE_T i) {
     vec_found_index found_index = {0, false};
     if (v->_size) {
-        VEC_INT_VALUE_T* p = bsearch(&i, v->_values, v->_size,
-                                     sizeof(VEC_INT_VALUE_T), intcmp);
+        const VEC_INT_VALUE_T* p = bsearch(&i, v->_values, v->_size,
+                                           sizeof(VEC_INT_VALUE_T), intcmp);
         if (p) {
             found_index.index = p - v->_values;
             found_index.found = true;
