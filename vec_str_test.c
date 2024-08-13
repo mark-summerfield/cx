@@ -6,11 +6,11 @@
 #include <string.h>
 
 void vec_str_check_size_cap(counts_pair* counts, const vec* v, size_t size,
-                            size_t capacity, bool verbose);
+                            size_t capacity);
 void vec_str_match(counts_pair* counts, const vec* v, const char* expected);
 void vec_str_same(counts_pair* counts, const vec* v1, const vec* v2);
 void vec_str_print(const vec* v);
-void vec_str_tests(counts_pair*, bool);
+void vec_str_tests(counts_pair*);
 
 const char* WORDS[] = {
     "One",  "Zulu",    "Victor", "Romeo",  "Sierra",   "Whiskey", "X-ray",
@@ -20,27 +20,27 @@ const char* WORDS[] = {
     "Echo", "Foxtrot", "Seven",  "Eight",  "Charlie",  "Nine",    "Bravo",
     "Ten",  "Zero"};
 
-void vec_str_tests(counts_pair* counts, bool verbose) {
+void vec_str_tests(counts_pair* counts) {
     vec v1 = vec_str_alloc(); // default of 32
-    vec_str_check_size_cap(counts, &v1, 0, 32, verbose);
+    vec_str_check_size_cap(counts, &v1, 0, 32);
 
     vec v2 = vec_str_copy(&v1);
-    vec_str_check_size_cap(counts, &v1, 0, 32, verbose);
+    vec_str_check_size_cap(counts, &v1, 0, 32);
 
     counts->total++;
     size_t WORD_COUNT = sizeof(WORDS) / sizeof(char*);
     for (int i = 0; i < WORD_COUNT; ++i) {
-        vec_str_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64, verbose);
+        vec_str_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64);
         vec_str_push(&v1, strdup(WORDS[i]));
         if (i < 10) {
-            vec_str_check_size_cap(counts, &v2, i, 32, verbose);
+            vec_str_check_size_cap(counts, &v2, i, 32);
             vec_str_push(&v2, strdup(WORDS[i]));
         }
     }
     counts->ok++;
 
-    vec_str_check_size_cap(counts, &v1, WORD_COUNT, 64, verbose);
-    vec_str_check_size_cap(counts, &v2, 10, 32, verbose);
+    vec_str_check_size_cap(counts, &v1, WORD_COUNT, 64);
+    vec_str_check_size_cap(counts, &v2, 10, 32);
     const char* V2 =
         "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa";
     vec_str_match(counts, &v2, V2);
@@ -102,18 +102,18 @@ void vec_str_tests(counts_pair* counts, bool verbose) {
     */
 
     vec_str_clear(&v1);
-    vec_str_check_size_cap(counts, &v1, 0, 64, verbose);
+    vec_str_check_size_cap(counts, &v1, 0, 64);
     vec_str_push(&v1, strdup("more"));
     const char* more = vec_str_get(&v1, 0);
     check_str_eq(counts, more, "more");
     vec_str_match(counts, &v1, "more");
-    vec_str_check_size_cap(counts, &v1, 1, 64, verbose);
+    vec_str_check_size_cap(counts, &v1, 1, 64);
     vec_str_free(&v1);
-    vec_str_check_size_cap(counts, &v1, 0, 0, verbose);
+    vec_str_check_size_cap(counts, &v1, 0, 0);
     vec_str_clear(&v2);
-    vec_str_check_size_cap(counts, &v2, 0, 32, verbose);
+    vec_str_check_size_cap(counts, &v2, 0, 32);
     vec_str_free(&v2);
-    vec_str_check_size_cap(counts, &v2, 0, 0, verbose);
+    vec_str_check_size_cap(counts, &v2, 0, 0);
 
     vec v3 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
     vec_str_match(counts, &v3, "one|two|three|four|five");
@@ -132,7 +132,7 @@ void vec_str_match(counts_pair* counts, const vec* v,
 }
 
 void vec_str_check_size_cap(counts_pair* counts, const vec* v, size_t size,
-                            size_t capacity, bool verbose) {
+                            size_t capacity) {
     counts->total++;
     if (vec_str_size(v) != size) {
         fprintf(stderr, "FAIL: vec_str_size() expected %zu, got %zu\n",

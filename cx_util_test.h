@@ -4,7 +4,7 @@
 
 #include <stdbool.h>
 
-typedef struct counts_pair {
+typedef struct {
     int total;
     int ok;
 } counts_pair;

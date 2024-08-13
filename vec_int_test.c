@@ -5,30 +5,30 @@
 #include <stdlib.h>
 
 void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
-                            size_t capacity, bool verbose);
+                            size_t capacity);
 void vec_int_match(counts_pair* counts, vec_int* v, char* expected);
 void vec_int_same(counts_pair* counts, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
 void vec_str_tests(counts_pair*, bool);
 
-void vec_int_tests(counts_pair* counts, bool verbose) {
+void vec_int_tests(counts_pair* counts) {
     vec_int v1 = vec_int_alloc(); // default of 32
-    vec_int_check_size_cap(counts, &v1, 0, 32, verbose);
+    vec_int_check_size_cap(counts, &v1, 0, 32);
 
     vec_int v2 = vec_int_copy(&v1);
-    vec_int_check_size_cap(counts, &v1, 0, 32, verbose);
+    vec_int_check_size_cap(counts, &v1, 0, 32);
 
     counts->total++;
     for (int i = 1; i <= 35; ++i) {
         vec_int_push(&v1, i);
         if (i < 10)
             vec_int_push(&v2, i);
-        vec_int_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64, verbose);
+        vec_int_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64);
     }
     counts->ok++;
 
-    vec_int_check_size_cap(counts, &v1, 35, 64, verbose);
-    vec_int_check_size_cap(counts, &v2, 9, 32, verbose);
+    vec_int_check_size_cap(counts, &v1, 35, 64);
+    vec_int_check_size_cap(counts, &v2, 9, 32);
     vec_int_match(counts, &v1,
                   "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 "
                   "20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35");
@@ -90,15 +90,15 @@ void vec_int_tests(counts_pair* counts, bool verbose) {
     check_int_eq(counts, found_index.index, 6);
 
     vec_int_clear(&v1);
-    vec_int_check_size_cap(counts, &v1, 0, 64, verbose);
+    vec_int_check_size_cap(counts, &v1, 0, 64);
     vec_int_push(&v1, -19);
     vec_int_match(counts, &v1, "-19");
     vec_int_free(&v1);
-    vec_int_check_size_cap(counts, &v1, 0, 0, verbose);
+    vec_int_check_size_cap(counts, &v1, 0, 0);
     vec_int_clear(&v2);
-    vec_int_check_size_cap(counts, &v2, 0, 32, verbose);
+    vec_int_check_size_cap(counts, &v2, 0, 32);
     vec_int_free(&v2);
-    vec_int_check_size_cap(counts, &v2, 0, 0, verbose);
+    vec_int_check_size_cap(counts, &v2, 0, 0);
 }
 
 void vec_int_match(counts_pair* counts, vec_int* v, char* expected) {
@@ -108,7 +108,7 @@ void vec_int_match(counts_pair* counts, vec_int* v, char* expected) {
 }
 
 void vec_int_check_size_cap(counts_pair* counts, vec_int* v, size_t size,
-                            size_t capacity, bool verbose) {
+                            size_t capacity) {
     counts->total++;
     if (vec_int_size(v) != size) {
         fprintf(stderr, "FAIL: vec_int_size() expected %zu, got %zu\n",

@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "cx_util_test.h"
+#include "sx_test.h"
 #include "va_test.h"
 #include "vec_int_test.h"
 #include "vec_str_test.h"
@@ -8,12 +9,12 @@
 
 void va_tests(counts_pair*);
 
-int main(int argc, char** argv) {
-    bool verbose = argc > 1;
+int main() {
     counts_pair counts = {0, 0};
     va_tests(&counts);
-    vec_int_tests(&counts, verbose);
-    vec_str_tests(&counts, verbose);
+    sx_tests(&counts);
+    vec_int_tests(&counts);
+    vec_str_tests(&counts);
     printf("%s %d/%d\n", (counts.ok == counts.total) ? "OK" : "FAIL",
            counts.ok, counts.total);
 }

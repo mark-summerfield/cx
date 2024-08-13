@@ -151,7 +151,7 @@ char* vec_int_tostring(const vec_int* v) {
             s = p;
         }
     }
-    s[pos - 1] = '\0'; // avoid trailing space
+    s[pos - 1] = 0; // avoid trailing space
     return s;
 }
 

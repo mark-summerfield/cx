@@ -7,7 +7,7 @@
 
 // A vector of owned void* values.
 // All data members are private; all accesses via functions.
-typedef struct vec {
+typedef struct {
     size_t _size; // This is "end", i.e., one past the last value
     size_t _cap;  // The size of the allocated array
     void** _values;

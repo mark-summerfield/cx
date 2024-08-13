@@ -1,4 +1,5 @@
 # TODO
+# (0) docs
 # (1) 
 #   - implement: vec_sort vec_search
 #   - implement using #defines: vec_str_sort vec_str_search
@@ -25,6 +26,8 @@ vec_int_test.h
 vec_int_test.c
 vec_str_test.h
 vec_str_test.c
+sx_test.h
+sx_test.c
 va_test.h
 va_test.c
 
@@ -36,6 +39,9 @@ vec_str.h
 vec_str.c
 vec_int.h
 vec_int.c
+
+sx.h
+sx.c
 
 vaargs.h
 

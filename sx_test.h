@@ -4,4 +4,4 @@
 
 #include "cx_util_test.h"
 
-void vec_str_tests(counts_pair* counts);
+void sx_tests(counts_pair* counts);
