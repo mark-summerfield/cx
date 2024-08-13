@@ -4,4 +4,4 @@
 
 #include "cx_util_test.h"
 
-void sx_tests(counts_pair* counts);
+void sx_tests(tinfo* tinfo);

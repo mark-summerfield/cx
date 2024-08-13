@@ -1,10 +1,8 @@
 # TODO
-# (1) 
-#   - implement: vec_sort vec_search
-#   - implement using #defines: vec_str_sort vec_str_search
-#   - also implement: vec_int_sort vec_int_search
-# (2) vec_str tests: replace remove take find
-# (3) vec_str tests: sort find search
+# (1) vec_int tests: replace remove take find
+# (2) vec_int tests: sort find search
+# (3) vec_str tests: replace remove take find
+# (4) vec_str tests: sort find search
 #
 # (7) map with void* keys & values (based on rbt) + tests
 # (8) map_str with char* keys & char* values (based on map) + tests

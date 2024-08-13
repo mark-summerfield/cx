@@ -6,27 +6,28 @@
 #include <stdio.h>
 #include <string.h>
 
-void check_str_eq(counts_pair* counts, const char* s, const char* t) {
-    counts->total++;
+void check_str_eq(tinfo* tinfo, const char* s, const char* t) {
+    tinfo->total++;
     if (strcmp((s), (t)) != 0) {
-        fprintf(stderr, "FAIL: expected\n\t\"%s\", got\n\t\"%s\"\n", s, t);
+        fprintf(stderr, "FAIL: %s expected\n\t\"%s\", got\n\t\"%s\"\n",
+                tinfo->tag, s, t);
     } else
-        counts->ok++;
+        tinfo->ok++;
 }
 
-void check_int_eq(counts_pair* counts, int a, int b) {
-    counts->total++;
+void check_int_eq(tinfo* tinfo, int a, int b) {
+    tinfo->total++;
     if (a != b) {
-        fprintf(stderr, "FAIL: expected %d, got %d\n", a, b);
+        fprintf(stderr, "FAIL: %s expected %d, got %d\n", tinfo->tag, a, b);
     } else
-        counts->ok++;
+        tinfo->ok++;
 }
 
-void check_bool_eq(counts_pair* counts, bool actual, bool expected) {
-    counts->total++;
+void check_bool_eq(tinfo* tinfo, bool actual, bool expected) {
+    tinfo->total++;
     if (actual != expected)
-        fprintf(stderr, "FAIL: expected %s, got %s\n",
+        fprintf(stderr, "FAIL: %s expected %s, got %s\n", tinfo->tag,
                 bool_to_str(expected), bool_to_str(actual));
     else
-        counts->ok++;
+        tinfo->ok++;
 }

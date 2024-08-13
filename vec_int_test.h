@@ -4,4 +4,4 @@
 
 #include "cx_util_test.h"
 
-void vec_int_tests(counts_pair* counts);
+void vec_int_tests(tinfo* tinfo);

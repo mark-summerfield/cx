@@ -5,12 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-void vec_str_check_size_cap(counts_pair* counts, const vec* v, size_t size,
+void vec_str_check_size_cap(tinfo* tinfo, const vec* v, size_t size,
                             size_t capacity);
-void vec_str_match(counts_pair* counts, const vec* v, const char* expected);
-void vec_str_same(counts_pair* counts, const vec* v1, const vec* v2);
+void vec_str_match(tinfo* tinfo, const vec* v, const char* expected);
+void vec_str_same(tinfo* tinfo, const vec* v1, const vec* v2);
 void vec_str_print(const vec* v);
-void vec_str_tests(counts_pair*);
+void vec_str_tests(tinfo*);
 
 const char* WORDS[] = {
     "One",  "Zulu",    "Victor", "Romeo",  "Sierra",   "Whiskey", "X-ray",
@@ -20,138 +20,160 @@ const char* WORDS[] = {
     "Echo", "Foxtrot", "Seven",  "Eight",  "Charlie",  "Nine",    "Bravo",
     "Ten",  "Zero"};
 
-void vec_str_tests(counts_pair* counts) {
+void vec_str_tests(tinfo* tinfo) {
     vec v1 = vec_str_alloc(); // default of 32
-    vec_str_check_size_cap(counts, &v1, 0, 32);
+    vec_str_check_size_cap(tinfo, &v1, 0, 32);
 
     vec v2 = vec_str_copy(&v1);
-    vec_str_check_size_cap(counts, &v1, 0, 32);
+    vec_str_check_size_cap(tinfo, &v1, 0, 32);
 
-    counts->total++;
+    tinfo->total++;
     size_t WORD_COUNT = sizeof(WORDS) / sizeof(char*);
     for (int i = 0; i < WORD_COUNT; ++i) {
-        vec_str_check_size_cap(counts, &v1, i, i <= 32 ? 32 : 64);
+        vec_str_check_size_cap(tinfo, &v1, i, i <= 32 ? 32 : 64);
         vec_str_push(&v1, strdup(WORDS[i]));
         if (i < 10) {
-            vec_str_check_size_cap(counts, &v2, i, 32);
+            vec_str_check_size_cap(tinfo, &v2, i, 32);
             vec_str_push(&v2, strdup(WORDS[i]));
         }
     }
-    counts->ok++;
+    tinfo->ok++;
 
-    vec_str_check_size_cap(counts, &v1, WORD_COUNT, 64);
-    vec_str_check_size_cap(counts, &v2, 10, 32);
+    vec_str_check_size_cap(tinfo, &v1, WORD_COUNT, 64);
+    vec_str_check_size_cap(tinfo, &v2, 10, 32);
     const char* V2 =
         "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa";
-    vec_str_match(counts, &v2, V2);
+    vec_str_match(tinfo, &v2, V2);
 
     for (int i = WORD_COUNT - 1; i > 9; --i) {
         char* s = vec_str_pop(&v1);
-        check_str_eq(counts, s, WORDS[i]);
+        check_str_eq(tinfo, s, WORDS[i]);
         free(s);
     }
-    vec_str_match(counts, &v1, V2);
-    vec_str_same(counts, &v1, &v2);
+    vec_str_match(tinfo, &v1, V2);
+    vec_str_same(tinfo, &v1, &v2);
 
     vec_str_push(&v1, strdup("alpha"));
     const char* s1 = vec_str_get_last(&v1);
-    check_str_eq(counts, s1, "alpha");
+    check_str_eq(tinfo, s1, "alpha");
     vec_str_insert(&v1, 4, strdup("beta"));
     const char* s2 = vec_str_get(&v1, 4);
-    check_str_eq(counts, s2, "beta");
+    check_str_eq(tinfo, s2, "beta");
     const char* s0 = vec_str_get(&v1, 0);
-    check_str_eq(counts, s0, "One");
+    check_str_eq(tinfo, s0, "One");
     const char* s5 = vec_str_get(&v1, 5);
-    check_str_eq(counts, s5, "Sierra");
+    check_str_eq(tinfo, s5, "Sierra");
     const char* s6 = vec_str_get(&v1, 6);
-    check_str_eq(counts, s6, "Whiskey");
+    check_str_eq(tinfo, s6, "Whiskey");
     vec_str_set(&v1, 6, strdup("gamma"));
     const char* s6a = vec_str_get(&v1, 6);
-    check_str_eq(counts, s6a, "gamma");
+    check_str_eq(tinfo, s6a, "gamma");
     vec_str_set(&v1, 0, strdup("A0"));
     const char* s0a = vec_str_get(&v1, 0);
-    check_str_eq(counts, s0a, "A0");
+    check_str_eq(tinfo, s0a, "A0");
     /* TODO
+    vec_str_insert(&v1, 0, 21);
+    vec_str_match(tinfo, &v1, "21 1 2 3 4 -555 5 6 7 8 9 -99");
+
+    vec_str_insert(&v1, 0, 17);
+    vec_str_match(tinfo, &v1, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
+
+    int x = vec_str_get(&v1, 0);
+    check_int_eq(tinfo, x, 17);
+    x = vec_str_get(&v1, 4);
+    check_int_eq(tinfo, x, 3);
+    x = vec_str_get_last(&v1);
+    check_int_eq(tinfo, x, -99);
+
+    vec_str_remove(&v1, 1);
+    vec_str_match(tinfo, &v1, "17 1 2 3 4 -555 5 6 7 8 9 -99");
+
+    vec_str_remove(&v1, 0);
+    vec_str_match(tinfo, &v1, "1 2 3 4 -555 5 6 7 8 9 -99");
     x = vec_str_replace(&v1, 4, 111);
-    check_int_eq(counts, x, -555);
-    vec_str_match(counts, &v1, "0 2 -33 4 111 5 6 7 8 9 10");
+    check_int_eq(tinfo, x, -555);
+    vec_str_match(tinfo, &v1, "0 2 -33 4 111 5 6 7 8 9 10");
 
     vec_str_remove(&v1, 7);
-    vec_str_match(counts, &v1, "0 2 -33 4 111 5 6 8 9 10");
+    vec_str_match(tinfo, &v1, "0 2 -33 4 111 5 6 8 9 10");
     vec_str_remove(&v1, 7);
-    vec_str_match(counts, &v1, "0 2 -33 4 111 5 6 9 10");
+    vec_str_match(tinfo, &v1, "0 2 -33 4 111 5 6 9 10");
 
     x = vec_str_take(&v1, 0);
-    check_int_eq(counts, x, 0);
-    vec_str_match(counts, &v1, "2 -33 4 111 5 6 9 10");
+    check_int_eq(tinfo, x, 0);
+    vec_str_match(tinfo, &v1, "2 -33 4 111 5 6 9 10");
     x = vec_str_take(&v1, 7);
-    check_int_eq(counts, x, 10);
-    vec_str_match(counts, &v1, "2 -33 4 111 5 6 9");
+    check_int_eq(tinfo, x, 10);
+    vec_str_match(tinfo, &v1, "2 -33 4 111 5 6 9");
 
     vec_found_index found_index = vec_str_find(&v1, 8);
-    check_bool_eq(counts, found_index.found, false);
+    check_bool_eq(tinfo, found_index.found, false);
+
     found_index = vec_str_find(&v1, 2);
-    check_bool_eq(counts, found_index.found, true);
-    check_int_eq(counts, found_index.index, 0);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 0);
+
     found_index = vec_str_find(&v1, 111);
-    check_bool_eq(counts, found_index.found, true);
-    check_int_eq(counts, found_index.index, 3);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 3);
+
     found_index = vec_str_find(&v1, 9);
-    check_bool_eq(counts, found_index.found, true);
-    check_int_eq(counts, found_index.index, 6);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 6);
     */
 
     vec_str_clear(&v1);
-    vec_str_check_size_cap(counts, &v1, 0, 64);
+    vec_str_check_size_cap(tinfo, &v1, 0, 64);
     vec_str_push(&v1, strdup("more"));
     const char* more = vec_str_get(&v1, 0);
-    check_str_eq(counts, more, "more");
-    vec_str_match(counts, &v1, "more");
-    vec_str_check_size_cap(counts, &v1, 1, 64);
+    check_str_eq(tinfo, more, "more");
+    vec_str_match(tinfo, &v1, "more");
+    vec_str_check_size_cap(tinfo, &v1, 1, 64);
     vec_str_free(&v1);
-    vec_str_check_size_cap(counts, &v1, 0, 0);
+    vec_str_check_size_cap(tinfo, &v1, 0, 0);
     vec_str_clear(&v2);
-    vec_str_check_size_cap(counts, &v2, 0, 32);
+    vec_str_check_size_cap(tinfo, &v2, 0, 32);
     vec_str_free(&v2);
-    vec_str_check_size_cap(counts, &v2, 0, 0);
+    vec_str_check_size_cap(tinfo, &v2, 0, 0);
 
     vec v3 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
-    vec_str_match(counts, &v3, "one|two|three|four|five");
+    vec_str_match(tinfo, &v3, "one|two|three|four|five");
     vec_str_free(&v3);
     vec v4 =
         vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
-    vec_str_match(counts, &v4, "one|two|three|four|five|six");
+    vec_str_match(tinfo, &v4, "one|two|three|four|five|six");
     vec_str_free(&v4);
 }
 
-void vec_str_match(counts_pair* counts, const vec* v,
-                   const char* expected) {
+void vec_str_match(tinfo* tinfo, const vec* v, const char* expected) {
     char* out = vec_str_join(v, "|");
-    check_str_eq(counts, out, expected);
+    check_str_eq(tinfo, out, expected);
     free(out);
 }
 
-void vec_str_check_size_cap(counts_pair* counts, const vec* v, size_t size,
+void vec_str_check_size_cap(tinfo* tinfo, const vec* v, size_t size,
                             size_t capacity) {
-    counts->total++;
+    tinfo->total++;
     if (vec_str_size(v) != size) {
-        fprintf(stderr, "FAIL: vec_str_size() expected %zu, got %zu\n",
-                size, vec_str_size(v));
+        fprintf(stderr, "FAIL: %s vec_str_size() expected %zu, got %zu\n",
+                tinfo->tag, size, vec_str_size(v));
     } else
-        counts->ok++;
+        tinfo->ok++;
 
-    counts->total++;
+    tinfo->total++;
     if (vec_str_cap(v) != capacity) {
-        fprintf(stderr, "FAIL: vec_str_cap() expected %zu, got %zu\n",
-                capacity, vec_str_cap(v));
+        fprintf(stderr, "FAIL: %s vec_str_cap() expected %zu, got %zu\n",
+                tinfo->tag, capacity, vec_str_cap(v));
     } else
-        counts->ok++;
+        tinfo->ok++;
 }
 
-void vec_str_same(counts_pair* counts, const vec* v1, const vec* v2) {
-    counts->total++;
+void vec_str_same(tinfo* tinfo, const vec* v1, const vec* v2) {
+    tinfo->total++;
     if (!vec_str_equal(v1, v2)) {
-        fprintf(stderr, "FAIL: vec_str_equal() expected true, got false\n");
+        fprintf(stderr,
+                "FAIL: %s vec_str_equal() expected true, got false\n",
+                tinfo->tag);
     } else
-        counts->ok++;
+        tinfo->ok++;
 }

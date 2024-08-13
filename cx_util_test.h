@@ -8,8 +8,8 @@ typedef struct {
     char* tag;
     int total;
     int ok;
-} counts_pair;
+} tinfo;
 
-void check_str_eq(counts_pair* counts, const char* s, const char* t);
-void check_int_eq(counts_pair* counts, int a, int b);
-void check_bool_eq(counts_pair* counts, bool actual, bool expected);
+void check_str_eq(tinfo* tinfo, const char* s, const char* t);
+void check_int_eq(tinfo* tinfo, int a, int b);
+void check_bool_eq(tinfo* tinfo, bool actual, bool expected);
