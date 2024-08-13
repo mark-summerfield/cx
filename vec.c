@@ -60,6 +60,8 @@ void vec_insert(vec* v, size_t index, void* value) {
     }
     for (size_t i = v->_size - 1; i >= index; --i) {
         v->_values[i + 1] = v->_values[i];
+        if (!i) // if i == 0, --i will wrap!
+            break;
     }
     v->_values[index] = value;
     v->_size++;
@@ -133,12 +135,20 @@ bool vec_equal(const vec* v1, const vec* v2) {
 }
 
 void vec_sort(vec* v) {
-    printf("TODO vec_sort"); // TODO
+    if (v->_size) {
+        qsort(v->_values, v->_size, sizeof(void*), v->_cmp);
+    }
 }
 
 vec_found_index vec_search(const vec* v, const void* s) {
     vec_found_index found_index = {0, false};
-    printf("TODO vec_search"); // TODO
+    if (v->_size) {
+        void* p = bsearch(s, v->_values, v->_size, sizeof(void*), v->_cmp);
+        if (p) {
+            found_index.index = (size_t)(p - v->_values[0]);
+            found_index.found = true;
+        }
+    }
     return found_index;
 }
 

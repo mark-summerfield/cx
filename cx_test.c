@@ -10,10 +10,14 @@
 void va_tests(counts_pair*);
 
 int main() {
-    counts_pair counts = {0, 0};
+    counts_pair counts = {"", 0, 0};
+    counts.tag = "va_tests";
     va_tests(&counts);
+    counts.tag = "sx_tests";
     sx_tests(&counts);
+    counts.tag = "vec_int_tests";
     vec_int_tests(&counts);
+    counts.tag = "vec_str_tests";
     vec_str_tests(&counts);
     printf("%s %d/%d\n", (counts.ok == counts.total) ? "OK" : "FAIL",
            counts.ok, counts.total);

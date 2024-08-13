@@ -47,12 +47,24 @@ void vec_int_tests(counts_pair* counts) {
     vec_int_insert(&v1, 4, -555);
     vec_int_match(counts, &v1, "1 2 3 4 -555 5 6 7 8 9 -99");
 
+    vec_int_insert(&v1, 0, 21);
+    vec_int_match(counts, &v1, "21 1 2 3 4 -555 5 6 7 8 9 -99");
+
+    vec_int_insert(&v1, 0, 17);
+    vec_int_match(counts, &v1, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
+
     int x = vec_int_get(&v1, 0);
-    check_int_eq(counts, x, 1);
+    check_int_eq(counts, x, 17);
     x = vec_int_get(&v1, 4);
-    check_int_eq(counts, x, -555);
+    check_int_eq(counts, x, 6);
     x = vec_int_get_last(&v1);
     check_int_eq(counts, x, -99);
+
+    vec_int_remove(&v1, 1);
+    vec_int_match(counts, &v1, "17 1 2 3 4 -555 5 6 7 8 9 -99");
+
+    vec_int_remove(&v1, 0);
+    vec_int_match(counts, &v1, "1 2 3 4 -555 5 6 7 8 9 -99");
 
     vec_int_set(&v1, 2, -33);
     vec_int_match(counts, &v1, "1 2 -33 4 -555 5 6 7 8 9 -99");

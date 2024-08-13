@@ -83,6 +83,8 @@ vec_int vec_int_copy(const vec_int* v);
 // Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
 bool vec_int_equal(const vec_int* v1, const vec_int* v2);
 
+VEC_INT_VALUE_T intcmp(const void* a, const void* b);
+
 // Sorts the vec_int in-place in ascending order.
 void vec_int_sort(vec_int* v);
 

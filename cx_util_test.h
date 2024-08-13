@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 typedef struct {
+    char* tag;
     int total;
     int ok;
 } counts_pair;

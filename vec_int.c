@@ -2,6 +2,7 @@
 
 #include "vec_int.h"
 #include "cx.h"
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -48,6 +49,8 @@ void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
     }
     for (size_t i = v->_size - 1; i >= index; --i) {
         v->_values[i + 1] = v->_values[i];
+        if (!i) // if i == 0, --i will wrap!
+            break;
     }
     v->_values[index] = value;
     v->_size++;
@@ -118,11 +121,26 @@ bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
     return true;
 }
 
-void vec_int_sort(vec_int* v) { printf("TODO vec_sort"); }
+VEC_INT_VALUE_T intcmp(const void* a, const void* b) {
+    return (*(VEC_INT_VALUE_T*)a - *(VEC_INT_VALUE_T*)b);
+}
 
-vec_found_index vec_int_search(const vec_int* v, int i) {
+void vec_int_sort(vec_int* v) {
+    if (v->_size) {
+        qsort(v->_values, v->_size, sizeof(VEC_INT_VALUE_T), intcmp);
+    }
+}
+
+vec_found_index vec_int_search(const vec_int* v, VEC_INT_VALUE_T i) {
     vec_found_index found_index = {0, false};
-    printf("TODO vec_int_search");
+    if (v->_size) {
+        VEC_INT_VALUE_T* p = bsearch(&i, v->_values, v->_size,
+                                     sizeof(VEC_INT_VALUE_T), intcmp);
+        if (p) {
+            found_index.index = (size_t)(p - v->_values[0]);
+            found_index.found = true;
+        }
+    }
     return found_index;
 }
 
