@@ -1,20 +1,18 @@
 # TODO
-# (1) vec_int tests: replace remove take find
-# (2) vec_int tests: sort find search
-# (3) vec_str tests: replace remove take find
-# (4) vec_str tests: sort find search
+# (1) vec_str tests: replace remove take find
+# (2) vec_str tests: sort find search
 #
-# (7) map with void* keys & values (based on rbt) + tests
-# (8) map_str with char* keys & char* values (based on map) + tests
-# (9) set with void* keys (based on rbt) + tests
-# (10) set_str with char* keys (based on set) + tests
-# (11) set_int with int keys (based on or copy/edit of set) + tests
+# (3) map with void* keys & values (based on rbt) + tests
+# (4) map_str with char* keys & char* values (based on map) + tests
+# (5) set with void* keys (based on rbt) + tests
+# (6) set_str with char* keys (based on set) + tests
+# (7) set_int with int keys (based on or copy/edit of set) + tests
 #
-# (12) que (based on vec)? + tests
-# (13) lst (doubly-linked list)? + tests
-# (14) deq (based on list)? + tests
+# (8) que (based on vec)? + tests
+# (9) lst (doubly-linked list)? + tests
+# (10) deq (based on list)? + tests
 #
-# (15) str (based on vec)? + tests
+# (11) str (based on vec)? + tests
 
 cx.h
 vec_common.h

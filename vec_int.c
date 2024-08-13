@@ -137,7 +137,7 @@ vec_found_index vec_int_search(const vec_int* v, VEC_INT_VALUE_T i) {
         VEC_INT_VALUE_T* p = bsearch(&i, v->_values, v->_size,
                                      sizeof(VEC_INT_VALUE_T), intcmp);
         if (p) {
-            found_index.index = (size_t)(p - v->_values[0]);
+            found_index.index = p - v->_values;
             found_index.found = true;
         }
     }

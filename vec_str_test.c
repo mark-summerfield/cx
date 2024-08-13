@@ -78,6 +78,10 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_insert(&v1, 0, 17);
     vec_str_match(tinfo, &v1, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
 
+    vec_int v3 = vec_int_copy(&v1);
+    vec_int_check_size_cap(tinfo, &v3, vec_int_size(&v1),
+                           vec_int_size(&v1));
+
     int x = vec_str_get(&v1, 0);
     check_int_eq(tinfo, x, 17);
     x = vec_str_get(&v1, 4);
@@ -120,6 +124,28 @@ void vec_str_tests(tinfo* tinfo) {
     found_index = vec_str_find(&v1, 9);
     check_bool_eq(tinfo, found_index.found, true);
     check_int_eq(tinfo, found_index.index, 6);
+
+    vec_int_match(tinfo, &v3, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
+    vec_int_sort(&v3);
+    vec_int_match(tinfo, &v3, "-555 -99 1 2 3 4 5 6 7 8 9 17 21");
+
+    found_index = vec_int_search(&v3, 11);
+    check_bool_eq(tinfo, found_index.found, false);
+
+    found_index = vec_int_search(&v3, 21);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 12);
+
+    found_index = vec_int_search(&v3, -555);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 0);
+
+    found_index = vec_int_search(&v3, 7);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 8);
+
+    vec_str_free(&v3);
+    vec_str_check_size_cap(tinfo, &v3, 0, 0);
     */
 
     vec_str_clear(&v1);
@@ -136,13 +162,13 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_free(&v2);
     vec_str_check_size_cap(tinfo, &v2, 0, 0);
 
-    vec v3 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
-    vec_str_match(tinfo, &v3, "one|two|three|four|five");
-    vec_str_free(&v3);
-    vec v4 =
-        vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
-    vec_str_match(tinfo, &v4, "one|two|three|four|five|six");
+    vec v4 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
+    vec_str_match(tinfo, &v4, "one|two|three|four|five");
     vec_str_free(&v4);
+    vec v5 =
+        vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
+    vec_str_match(tinfo, &v5, "one|two|three|four|five|six");
+    vec_str_free(&v5);
 }
 
 void vec_str_match(tinfo* tinfo, const vec* v, const char* expected) {
