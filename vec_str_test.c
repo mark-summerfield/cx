@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_str_test.h"
+#include "sx.h"
 #include "vec_str.h"
 #include <stdlib.h>
 #include <string.h>
@@ -183,6 +184,16 @@ void vec_str_check_size_cap(tinfo* tinfo, const vec* v, size_t size,
     if (vec_str_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_str_size() expected %zu, got %zu\n",
                 tinfo->tag, size, vec_str_size(v));
+    } else
+        tinfo->ok++;
+
+    tinfo->total++;
+    if (vec_str_isempty(v) != (size == 0)) {
+        fprintf(
+            stderr,
+            "FAIL: %s vec_stry_isempty() expected %s, got %s size=%zu\n",
+            tinfo->tag, bool_to_str(size == 0),
+            bool_to_str(vec_str_isempty(v)), size);
     } else
         tinfo->ok++;
 

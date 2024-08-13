@@ -27,7 +27,7 @@ vec vec_str_alloc_split(const char* s, const char* sep);
 
 #define vec_str_free(v) vec_free((v))
 #define vec_str_clear(v) vec_clear((v))
-#define vec_str_isempty(v) ((v)->_size > 0)
+#define vec_str_isempty(v) ((v)->_size == 0)
 #define vec_str_size(v) ((v)->_size)
 #define vec_str_cap(v) ((v)->_cap)
 

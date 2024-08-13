@@ -40,7 +40,7 @@ void vec_free(vec* v);
 void vec_clear(vec* v);
 
 // Returns true if the vec is empty.
-#define vec_isempty(v) ((v)->_size > 0)
+#define vec_isempty(v) ((v)->_size == 0)
 
 // Returns the vec's size.
 #define vec_size(v) ((v)->_size)

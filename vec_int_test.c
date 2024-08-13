@@ -158,6 +158,15 @@ void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, size_t size,
         tinfo->ok++;
 
     tinfo->total++;
+    if (vec_int_isempty(v) != (size == 0)) {
+        fprintf(stderr,
+                "FAIL: %s vec_int_isempty() expected %s, got %s size=%zu\n",
+                tinfo->tag, bool_to_str(size == 0),
+                bool_to_str(vec_int_isempty(v)), size);
+    } else
+        tinfo->ok++;
+
+    tinfo->total++;
     if (vec_int_cap(v) != capacity) {
         fprintf(stderr, "FAIL: %s vec_int_cap() expected %zu, got %zu\n",
                 tinfo->tag, capacity, vec_int_cap(v));

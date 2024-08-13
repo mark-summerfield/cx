@@ -32,7 +32,7 @@ void vec_int_free(vec_int* v);
 void vec_int_clear(vec_int* v);
 
 // Returns true if the vec_int is empty.
-#define vec_int_isempty(v) ((v)->_size > 0)
+#define vec_int_isempty(v) ((v)->_size == 0)
 
 // Returns the vec_int's size.
 #define vec_int_size(v) ((v)->_size)
