@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 bool sx_ends(const char* s, const char* suffix) {
     size_t size = strlen(s);
@@ -61,4 +62,8 @@ char* sx_new_lowercase(const char* s) {
     }
     u[i] = 0;
     return u;
+}
+
+int strcmpvoid(const void* s, const void* t) {
+    return strcmp(*(const char**)s, *(const char**)t);
 }

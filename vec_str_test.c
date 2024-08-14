@@ -3,14 +3,15 @@
 #include "vec_str_test.h"
 #include "sx.h"
 #include "vec_str.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec* v, size_t size,
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, size_t size,
                             size_t capacity);
-void vec_str_match(tinfo* tinfo, const vec* v, const char* expected);
-void vec_str_same(tinfo* tinfo, const vec* v1, const vec* v2);
-void vec_str_print(const vec* v);
+void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected);
+void vec_str_same(tinfo* tinfo, const vec_str* v1, const vec_str* v2);
+void vec_str_print(const vec_str* v);
 void vec_str_tests(tinfo*);
 void vec_str_merge_tests(tinfo*);
 void vec_str_sort_tests(tinfo*);
@@ -27,10 +28,10 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_merge_tests(tinfo);
     vec_str_sort_tests(tinfo);
 
-    vec v1 = vec_str_alloc(); // default of 32
+    vec_str v1 = vec_str_alloc(); // default of 32
     vec_str_check_size_cap(tinfo, &v1, 0, 32);
 
-    vec v2 = vec_str_copy(&v1);
+    vec_str v2 = vec_str_copy(&v1);
     vec_str_check_size_cap(tinfo, &v1, 0, 32);
 
     tinfo->total++;
@@ -154,27 +155,27 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_free(&v2);
     vec_str_check_size_cap(tinfo, &v2, 0, 0);
 
-    vec v4 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
+    vec_str v4 = vec_str_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
     vec_str_match(tinfo, &v4, "one|two|three|four|five");
     vec_str_free(&v4);
-    vec v5 =
+    vec_str v5 =
         vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
     vec_str_match(tinfo, &v5, "one|two|three|four|five|six");
     vec_str_free(&v5);
 }
 
 void vec_str_merge_tests(tinfo* tinfo) {
-    vec v1 = vec_str_alloc(.cap = 7);
+    vec_str v1 = vec_str_alloc_cap(7);
     vec_str_check_size_cap(tinfo, &v1, 0, 7);
-    vec_push(&v1, strdup("one"));
-    vec_push(&v1, strdup("two"));
-    vec_push(&v1, strdup("three"));
-    vec_push(&v1, strdup("four"));
-    vec_push(&v1, strdup("five"));
+    vec_str_push(&v1, strdup("one"));
+    vec_str_push(&v1, strdup("two"));
+    vec_str_push(&v1, strdup("three"));
+    vec_str_push(&v1, strdup("four"));
+    vec_str_push(&v1, strdup("five"));
     vec_str_check_size_cap(tinfo, &v1, 5, 7);
     vec_str_match(tinfo, &v1, "one|two|three|four|five");
 
-    vec v2 =
+    vec_str v2 =
         vec_str_alloc_split("six\tseven\teight\tnine\tten\televen", "\t");
     vec_str_match(tinfo, &v2, "six|seven|eight|nine|ten|eleven");
     vec_str_check_size_cap(tinfo, &v2, 6, 32);
@@ -191,7 +192,7 @@ void vec_str_merge_tests(tinfo* tinfo) {
 }
 
 void vec_str_sort_tests(tinfo* tinfo) {
-    vec v1 = vec_str_alloc_split(
+    vec_str v1 = vec_str_alloc_split(
         "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa", "|");
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
@@ -212,13 +213,13 @@ void vec_str_sort_tests(tinfo* tinfo) {
     vec_str_free(&v1);
 }
 
-void vec_str_match(tinfo* tinfo, const vec* v, const char* expected) {
+void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected) {
     char* out = vec_str_join(v, "|");
     check_str_eq(tinfo, out, expected);
     free(out);
 }
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec* v, size_t size,
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, size_t size,
                             size_t capacity) {
     tinfo->total++;
     if (vec_str_size(v) != size) {
@@ -245,7 +246,7 @@ void vec_str_check_size_cap(tinfo* tinfo, const vec* v, size_t size,
         tinfo->ok++;
 }
 
-void vec_str_same(tinfo* tinfo, const vec* v1, const vec* v2) {
+void vec_str_same(tinfo* tinfo, const vec_str* v1, const vec_str* v2) {
     tinfo->total++;
     if (!vec_str_equal(v1, v2)) {
         fprintf(stderr,

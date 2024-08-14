@@ -1,26 +1,169 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_str.h"
-#include "cx.h"
+#include "sx.h"
 #include <stdlib.h>
 #include <string.h>
 
-int vec_str_cmp(const void* s, const void* t) {
-    assert(s && t && "unexpected void* NULL");
-    assert((const char**)s && (const char**)t && "unexpected char** NULL");
-    return strcmp(*(const char**)s, *(const char**)t);
+void _vec_str_grow(vec_str* v);
+
+vec_str vec_str_alloc_cap(size_t cap) {
+    char** values = malloc(cap * sizeof(char*));
+    assert_alloc(values);
+    return (vec_str){._size = 0, ._cap = cap, ._values = values};
 }
 
-void* vec_str_cpy(const void* value) { return strdup((char*)value); }
+void vec_str_free(vec_str* v) {
+    vec_str_clear(v);
+    free(v->_values);
+    v->_values = NULL;
+    v->_cap = 0;
+}
 
-void vec_str_destroy(void* value) { free((char*)value); }
+void vec_str_clear(vec_str* v) {
+    for (size_t i = 0; i < v->_size; ++i) {
+        free(v->_values[i]);
+    }
+    v->_size = 0;
+}
 
-vec vec_str_alloc_split(const char* s, const char* sep) {
+const char* vec_str_get(const vec_str* v, size_t index) {
+    assert_valid_index(v, index);
+    return v->_values[index];
+}
+
+inline const char* vec_str_get_last(const vec_str* v) {
+    return v->_values[v->_size - 1];
+}
+
+void vec_str_set(vec_str* v, size_t index, char* value) {
+    assert_valid_index(v, index);
+    free(v->_values[index]);
+    v->_values[index] = value;
+}
+
+void vec_str_insert(vec_str* v, size_t index, char* value) {
+    if (index == v->_size) { // add at the end
+        vec_str_push(v, value);
+        return;
+    }
+    assert_valid_index(v, index);
+    if (v->_size == v->_cap) {
+        _vec_str_grow(v);
+    }
+    for (size_t i = v->_size - 1; i >= index; --i) {
+        v->_values[i + 1] = v->_values[i];
+        if (!i) // if i == 0, --i will wrap!
+            break;
+    }
+    v->_values[index] = value;
+    v->_size++;
+}
+
+char* vec_str_replace(vec_str* v, size_t index, char* value) {
+    assert_valid_index(v, index);
+    char* old = v->_values[index];
+    v->_values[index] = value;
+    return old;
+}
+
+inline void vec_str_remove(vec_str* v, size_t index) {
+    free(vec_str_take(v, index));
+}
+
+char* vec_str_take(vec_str* v, size_t index) {
+    assert_valid_index(v, index);
+    char* old = v->_values[index];
+    for (size_t i = index; i < v->_size; ++i) {
+        v->_values[i] = v->_values[i + 1];
+    }
+    v->_size--;
+    v->_values[v->_size] = NULL;
+    return old;
+}
+
+char* vec_str_pop(vec_str* v) {
+    assert(v->_size > 0 && "can't pop empty vec_str");
+    return v->_values[--v->_size];
+}
+
+void vec_str_push(vec_str* v, char* value) {
+    if (v->_size == v->_cap) {
+        _vec_str_grow(v);
+    }
+    v->_values[v->_size++] = value;
+}
+
+vec_str vec_str_copy(const vec_str* v) {
+    vec_str vc = vec_str_alloc_cap(v->_size ? v->_size : VEC_INITIAL_CAP);
+    for (size_t i = 0; i < v->_size; ++i) {
+        vec_str_push(&vc, strdup(v->_values[i]));
+    }
+    return vc;
+}
+
+void vec_str_merge(vec_str* v1, vec_str* v2) {
+    if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
+        size_t cap = v1->_size + v2->_size;
+        char** p = realloc(v1->_values, cap * sizeof(char*));
+        assert_alloc(p);
+        v1->_values = p;
+        v1->_cap = cap;
+    }
+    for (size_t i = 0; i < v2->_size; ++i) {
+        v1->_values[v1->_size++] = v2->_values[i]; // push
+    }
+    free(v2->_values);
+    v2->_values = NULL;
+    v2->_cap = 0;
+    v2->_size = 0;
+}
+
+bool vec_str_equal(const vec_str* v1, const vec_str* v2) {
+    for (size_t i = 0; i < v1->_size; ++i) {
+        if (strcmp(v1->_values[i], v2->_values[i]))
+            return false;
+    }
+    return true;
+}
+
+vec_found_index vec_str_find(const vec_str* v, const char* value) {
+    vec_found_index found_index = {0, false};
+    for (size_t i = 0; i < v->_size; ++i) {
+        if (strcmp(v->_values[i], value) == 0) {
+            found_index.index = i;
+            found_index.found = true;
+            break;
+        }
+    }
+    return found_index;
+}
+
+void vec_str_sort(vec_str* v) {
+    if (v->_size) {
+        qsort(v->_values, v->_size, sizeof(char*), strcmpvoid);
+    }
+}
+
+vec_found_index vec_str_search(const vec_str* v, const char* s) {
+    vec_found_index found_index = {0, false};
+    if (v->_size) {
+        const char* p =
+            bsearch(s, v->_values, v->_size, sizeof(char*), strcmpvoid);
+        if (p) {
+            found_index.index = p - v->_values[0];
+            found_index.found = true;
+        }
+    }
+    return found_index;
+}
+
+vec_str vec_str_alloc_split(const char* s, const char* sep) {
     assert(s && "can't split null string");
     assert(sep && "can't split with null sep");
     size_t sep_size = strlen(sep);
     assert(sep_size && "can't split with empty sep");
-    vec v = vec_str_alloc();
+    vec_str v = vec_str_alloc();
     const char* p = s;
     while (p) {
         const char* q = strstr(p, sep);
@@ -37,8 +180,8 @@ vec vec_str_alloc_split(const char* s, const char* sep) {
     return v;
 }
 
-char* vec_str_join(const vec* v, const char* sep) {
-    const size_t VEC_SIZE = vec_size(v);
+char* vec_str_join(const vec_str* v, const char* sep) {
+    const size_t VEC_SIZE = vec_str_size(v);
     const size_t SEP_SIZE = sep ? strlen(sep) : 0;
     size_t total_size = 0;
     size_t sizes[VEC_SIZE];
@@ -63,4 +206,14 @@ char* vec_str_join(const vec* v, const char* sep) {
     }
     *p = 0;
     return s;
+}
+
+void _vec_str_grow(vec_str* v) {
+    const size_t BLOCK_SIZE = 1024 * 1024;
+    size_t cap =
+        (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
+    char** p = realloc(v->_values, cap * sizeof(char*));
+    assert_alloc(p);
+    v->_values = p;
+    v->_cap = cap;
 }

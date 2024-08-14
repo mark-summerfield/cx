@@ -11,13 +11,12 @@ vec vec_alloc_(vec_alloc_args args) {
     assert(args.destroy && "must provide a destroy function");
     void** values = malloc(args.cap * sizeof(void*));
     assert_alloc(values);
-    vec v = {._size = 0,
-             ._cap = args.cap,
-             ._values = values,
-             ._cmp = args.cmp,
-             ._cpy = args.cpy,
-             ._destroy = args.destroy};
-    return v;
+    return (vec){._size = 0,
+                 ._cap = args.cap,
+                 ._values = values,
+                 ._cmp = args.cmp,
+                 ._cpy = args.cpy,
+                 ._destroy = args.destroy};
 }
 
 void vec_free(vec* v) {

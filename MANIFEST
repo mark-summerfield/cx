@@ -1,10 +1,6 @@
 # TODO
-# (0)
-#   - cp vec_str* vec_str_void*
-#   - cp vec* vec_str
-#   - vi vec_str g/void\*/s//char*/gc & get rid of cmp,cpy,destroy
 # (1) vec_str tests:
-#	find sort search
+#	sort search
 #
 # (3) rbt with void* items
 #     - if item is struct* then it is an ordered map of key-values

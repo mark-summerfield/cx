@@ -61,6 +61,8 @@ void sx_lowercase_ip(char*);
 // Returns new char* of given char*'s ASCII chars lowercased
 char* sx_new_lowercase(const char*);
 
+int strcmpvoid(const void* s, const void* t);
+
 #define bool_to_str(b) ((b) ? "true" : "false")
 
 #define typename(x) \
