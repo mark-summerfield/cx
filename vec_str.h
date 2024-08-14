@@ -33,11 +33,11 @@ vec vec_str_alloc_split(const char* s, const char* sep);
 
 // Returns the vec's char* value at position index.
 // vec retains ownership, so do not delete the value.
-#define vec_str_get(v, index) (char*)vec_get((v), (index))
+#define vec_str_get(v, index) (const char*)vec_get((v), (index))
 
 // Returns the vec's char* value at its last valid index.
 // vec retains ownership, so do not delete the value.
-const char* vec_str_get_last(const vec* v);
+#define vec_str_get_last(v) (const char*)vec_get_last((v))
 
 #define vec_str_set(v, index, value) vec_set((v), (index), (value))
 

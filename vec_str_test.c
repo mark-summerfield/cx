@@ -60,59 +60,71 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_push(&v1, strdup("alpha"));
     const char* s1 = vec_str_get_last(&v1);
     check_str_eq(tinfo, s1, "alpha");
+    vec_str_match(
+        tinfo, &v1,
+        "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa|alpha");
+
     vec_str_insert(&v1, 4, strdup("beta"));
     const char* s2 = vec_str_get(&v1, 4);
     check_str_eq(tinfo, s2, "beta");
+    vec_str_match(tinfo, &v1,
+                  "One|Zulu|Victor|Romeo|beta|Sierra|Whiskey|X-ray|Two|"
+                  "India|Papa|alpha");
+
     const char* s0 = vec_str_get(&v1, 0);
     check_str_eq(tinfo, s0, "One");
     const char* s5 = vec_str_get(&v1, 5);
     check_str_eq(tinfo, s5, "Sierra");
     const char* s6 = vec_str_get(&v1, 6);
     check_str_eq(tinfo, s6, "Whiskey");
+
     vec_str_set(&v1, 6, strdup("gamma"));
     const char* s6a = vec_str_get(&v1, 6);
     check_str_eq(tinfo, s6a, "gamma");
+    vec_str_match(tinfo, &v1,
+                  "One|Zulu|Victor|Romeo|beta|Sierra|gamma|X-ray|Two|"
+                  "India|Papa|alpha");
+
     vec_str_set(&v1, 0, strdup("A0"));
     const char* s0a = vec_str_get(&v1, 0);
     check_str_eq(tinfo, s0a, "A0");
-    /* TODO
-    vec_str_insert(&v1, 0, 21);
-    vec_str_match(tinfo, &v1, "21 1 2 3 4 -555 5 6 7 8 9 -99");
+    vec_str_match(tinfo, &v1,
+                  "A0|Zulu|Victor|Romeo|beta|Sierra|gamma|X-ray|Two|"
+                  "India|Papa|alpha");
 
-    vec_str_insert(&v1, 0, 17);
-    vec_str_match(tinfo, &v1, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
+    vec_str_insert(&v1, 2, strdup("B2"));
+    const char* s2a = vec_str_get(&v1, 2);
+    check_str_eq(tinfo, s2a, "B2");
+    vec_str_match(tinfo, &v1,
+                  "A0|Zulu|B2|Victor|Romeo|beta|Sierra|gamma|X-ray|Two|"
+                  "India|Papa|alpha");
 
-    vec_int v3 = vec_int_copy(&v1);
-    vec_int_check_size_cap(tinfo, &v3, vec_int_size(&v1),
-                           vec_int_size(&v1));
-
-    int x = vec_str_get(&v1, 0);
-    check_int_eq(tinfo, x, 17);
-    x = vec_str_get(&v1, 4);
-    check_int_eq(tinfo, x, 3);
-    x = vec_str_get_last(&v1);
-    check_int_eq(tinfo, x, -99);
-
-    vec_str_remove(&v1, 1);
-    vec_str_match(tinfo, &v1, "17 1 2 3 4 -555 5 6 7 8 9 -99");
+    vec_str_remove(&v1, 4);
+    vec_str_match(tinfo, &v1,
+                  "A0|Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
+                  "India|Papa|alpha");
 
     vec_str_remove(&v1, 0);
-    vec_str_match(tinfo, &v1, "1 2 3 4 -555 5 6 7 8 9 -99");
-    x = vec_str_replace(&v1, 4, 111);
-    check_int_eq(tinfo, x, -555);
-    vec_str_match(tinfo, &v1, "0 2 -33 4 111 5 6 7 8 9 10");
+    vec_str_match(tinfo, &v1,
+                  "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
+                  "India|Papa|alpha");
 
-    vec_str_remove(&v1, 7);
-    vec_str_match(tinfo, &v1, "0 2 -33 4 111 5 6 8 9 10");
-    vec_str_remove(&v1, 7);
-    vec_str_match(tinfo, &v1, "0 2 -33 4 111 5 6 9 10");
+    vec_str_remove(&v1, vec_str_size(&v1) - 1);
+    vec_str_match(tinfo, &v1,
+                  "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
+                  "India|Papa");
 
-    x = vec_str_take(&v1, 0);
-    check_int_eq(tinfo, x, 0);
-    vec_str_match(tinfo, &v1, "2 -33 4 111 5 6 9 10");
-    x = vec_str_take(&v1, 7);
-    check_int_eq(tinfo, x, 10);
-    vec_str_match(tinfo, &v1, "2 -33 4 111 5 6 9");
+    vec_str_replace(&v1, 3, strdup("Hairy"));
+    vec_str_match(tinfo, &v1,
+                  "Zulu|B2|Victor|Hairy|Sierra|gamma|X-ray|Two|"
+                  "India|Papa");
+
+    char* x = vec_str_take(&v1, 1);
+    check_str_eq(tinfo, x, "B2");
+    free(x);
+
+    /* TODO
+
 
     vec_found_index found_index = vec_str_find(&v1, 8);
     check_bool_eq(tinfo, found_index.found, false);

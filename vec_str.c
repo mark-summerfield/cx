@@ -33,10 +33,6 @@ vec vec_str_alloc_split(const char* s, const char* sep) {
     return v;
 }
 
-inline const char* vec_str_get_last(const vec* v) {
-    return (char*)v->_values[v->_size - 1];
-}
-
 char* vec_str_join(const vec* v, const char* sep) {
     const size_t VEC_SIZE = vec_size(v);
     const size_t SEP_SIZE = sep ? strlen(sep) : 0;
