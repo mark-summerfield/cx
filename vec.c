@@ -114,6 +114,25 @@ vec vec_copy(const vec* v) {
     return vc;
 }
 
+void vec_merge(vec* v1, vec* v2) {
+    assert(v1->_cmp == v2->_cmp && v1->_cpy == v2->_cpy &&
+           v1->_destroy == v2->_destroy && "non-matching vecs");
+    if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
+        size_t cap = v1->_size + v2->_size;
+        void** p = realloc(v1->_values, cap * sizeof(void*));
+        assert_alloc(p);
+        v1->_values = p;
+        v1->_cap = cap;
+    }
+    for (size_t i = 0; i < v2->_size; ++i) {
+        v1->_values[v1->_size++] = v2->_values[i]; // push
+    }
+    free(v2->_values);
+    v2->_values = NULL;
+    v2->_cap = 0;
+    v2->_size = 0;
+}
+
 bool vec_equal(const vec* v1, const vec* v2) {
     if (v1->_cmp != v2->_cmp || v1->_cpy != v2->_cpy ||
         v1->_destroy != v2->_destroy || v1->_size != v2->_size)

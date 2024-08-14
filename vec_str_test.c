@@ -12,6 +12,7 @@ void vec_str_match(tinfo* tinfo, const vec* v, const char* expected);
 void vec_str_same(tinfo* tinfo, const vec* v1, const vec* v2);
 void vec_str_print(const vec* v);
 void vec_str_tests(tinfo*);
+void vec_str_merge_tests(tinfo*);
 
 const char* WORDS[] = {
     "One",  "Zulu",    "Victor", "Romeo",  "Sierra",   "Whiskey", "X-ray",
@@ -22,6 +23,8 @@ const char* WORDS[] = {
     "Ten",  "Zero"};
 
 void vec_str_tests(tinfo* tinfo) {
+    vec_str_merge_tests(tinfo);
+
     vec v1 = vec_str_alloc(); // default of 32
     vec_str_check_size_cap(tinfo, &v1, 0, 32);
 
@@ -170,6 +173,33 @@ void vec_str_tests(tinfo* tinfo) {
         vec_str_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
     vec_str_match(tinfo, &v5, "one|two|three|four|five|six");
     vec_str_free(&v5);
+}
+
+void vec_str_merge_tests(tinfo* tinfo) {
+    vec v1 = vec_str_alloc(.cap = 7);
+    vec_str_check_size_cap(tinfo, &v1, 0, 7);
+    vec_push(&v1, strdup("one"));
+    vec_push(&v1, strdup("two"));
+    vec_push(&v1, strdup("three"));
+    vec_push(&v1, strdup("four"));
+    vec_push(&v1, strdup("five"));
+    vec_str_check_size_cap(tinfo, &v1, 5, 7);
+    vec_str_match(tinfo, &v1, "one|two|three|four|five");
+
+    vec v2 =
+        vec_str_alloc_split("six\tseven\teight\tnine\tten\televen", "\t");
+    vec_str_match(tinfo, &v2, "six|seven|eight|nine|ten|eleven");
+    vec_str_check_size_cap(tinfo, &v2, 6, 32);
+
+    vec_str_merge(&v1, &v2);
+    vec_str_match(
+        tinfo, &v1,
+        "one|two|three|four|five|six|seven|eight|nine|ten|eleven");
+    vec_str_check_size_cap(tinfo, &v1, 11, 11);
+    vec_str_check_size_cap(tinfo, &v2, 0, 0);
+
+    // v2 already freed
+    vec_str_free(&v1);
 }
 
 void vec_str_match(tinfo* tinfo, const vec* v, const char* expected) {

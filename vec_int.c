@@ -99,6 +99,24 @@ vec_int vec_int_copy(const vec_int* v) {
     return vc;
 }
 
+void vec_int_merge(vec_int* v1, vec_int* v2) {
+    if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
+        size_t cap = v1->_size + v2->_size;
+        VEC_INT_VALUE_T* p =
+            realloc(v1->_values, cap * sizeof(VEC_INT_VALUE_T));
+        assert_alloc(p);
+        v1->_values = p;
+        v1->_cap = cap;
+    }
+    for (size_t i = 0; i < v2->_size; ++i) {
+        v1->_values[v1->_size++] = v2->_values[i]; // push
+    }
+    free(v2->_values);
+    v2->_values = NULL;
+    v2->_cap = 0;
+    v2->_size = 0;
+}
+
 bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
     if (v1->_size != v2->_size)
         return false;

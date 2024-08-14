@@ -92,6 +92,13 @@ void vec_push(vec* v, void* value);
 // Returns a deep copy of the vec including cmp, cpy, and destroy.
 vec vec_copy(const vec* v);
 
+// Moves all v2's values to the end of v1's values, after which v2 is
+// freed and must not be used again.
+// The two vec's must have the same cmp, cpy, and destroy methods.
+// Use case: an array of vec's each one of which is populated in its own
+// thread and at the end we want to merge all the vec's into one.
+void vec_merge(vec* v1, vec* v2);
+
 // Returns true if the two vec's have the same values and cmp, cpy, and
 // destroy functions.
 bool vec_equal(const vec* v1, const vec* v2);

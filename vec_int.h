@@ -76,6 +76,13 @@ void vec_int_push(vec_int* v, VEC_INT_VALUE_T value);
 // Returns a deep copy of the vec_int.
 vec_int vec_int_copy(const vec_int* v);
 
+// Moves all v2's values to the end of v1's values, after which v2 is
+// freed and must not be used again.
+// The two vec_int's must have the same cmp, cpy, and destroy methods.
+// Use case: an array of vec_int's each one of which is populated in its own
+// thread and at the end we want to merge all the vec_int's into one.
+void vec_int_merge(vec_int* v1, vec_int* v2);
+
 // Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
 bool vec_int_equal(const vec_int* v1, const vec_int* v2);
 

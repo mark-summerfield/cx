@@ -1,8 +1,6 @@
 # TODO
-# (0) (i) vec_str_append(v1, v2) // v2 is freed after: usecase merging
-#     (ii) vec_alloc_values(.cap=..., .values=T[]) ??
 # (1) vec_str tests:
-#	replace remove take find append alloc_values sort find search
+#	replace remove take find sort find search
 #
 # (3) rbt with void* items
 #     - if item is struct* then it is an ordered map of key-values

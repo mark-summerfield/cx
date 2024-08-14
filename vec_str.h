@@ -64,6 +64,7 @@ const char* vec_str_get_last(const vec* v);
 
 #define vec_str_push(v, value) vec_push((v), (value))
 #define vec_str_copy(v) vec_copy((v))
+#define vec_str_merge(v1, v2) vec_merge((v1), (v2))
 #define vec_str_equal(v1, v2) vec_equal((v1), (v2))
 
 // Returns a char* of all the vec's strings joined together with sep. If

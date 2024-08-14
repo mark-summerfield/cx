@@ -11,8 +11,11 @@ void vec_int_match(tinfo* tinfo, vec_int* v, char* expected);
 void vec_int_same(tinfo* tinfo, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
 void vec_str_tests(tinfo*, bool);
+void vec_int_merge_tests(tinfo* tinfo);
 
 void vec_int_tests(tinfo* tinfo) {
+    vec_int_merge_tests(tinfo);
+
     vec_int v1 = vec_int_alloc(); // default of 32
     vec_int_check_size_cap(tinfo, &v1, 0, 32);
 
@@ -140,6 +143,29 @@ void vec_int_tests(tinfo* tinfo) {
     vec_int_check_size_cap(tinfo, &v2, 0, 0);
     vec_int_free(&v3);
     vec_int_check_size_cap(tinfo, &v3, 0, 0);
+}
+
+void vec_int_merge_tests(tinfo* tinfo) {
+    vec_int v1 = vec_int_alloc_cap(7);
+    vec_int_check_size_cap(tinfo, &v1, 0, 7);
+    for (int i = 1; i < 6; ++i)
+        vec_int_push(&v1, i);
+    vec_int_check_size_cap(tinfo, &v1, 5, 7);
+    vec_int_match(tinfo, &v1, "1 2 3 4 5");
+
+    vec_int v2 = vec_int_alloc();
+    vec_int_check_size_cap(tinfo, &v2, 0, 32);
+    for (int i = 6; i < 12; ++i)
+        vec_int_push(&v2, i);
+    vec_int_check_size_cap(tinfo, &v2, 6, 32);
+    vec_int_match(tinfo, &v2, "6 7 8 9 10 11");
+
+    vec_int_merge(&v1, &v2);
+    vec_int_match(tinfo, &v1, "1 2 3 4 5 6 7 8 9 10 11");
+    vec_int_check_size_cap(tinfo, &v1, 11, 11);
+    vec_int_check_size_cap(tinfo, &v2, 0, 0);
+    // v2 already freed
+    vec_int_free(&v1);
 }
 
 void vec_int_match(tinfo* tinfo, vec_int* v, char* expected) {
