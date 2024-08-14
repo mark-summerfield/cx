@@ -1,5 +1,5 @@
 # TODO
-# (1) vec tests:
+# (1) vec tests: copy vec_str_test.[hc] & create a struct Pair to test on
 #	alloc free get get_last set insert replace remove pop copy merge
 #	equal find sort search
 #
