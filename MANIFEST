@@ -1,6 +1,7 @@
 # TODO
-# (1) vec_str tests:
-#	sort search
+# (1) vec tests:
+#	alloc free get get_last set insert replace remove pop copy merge
+#	equal find sort search
 #
 # (3) rbt with void* items
 #     - if item is struct* then it is an ordered map of key-values

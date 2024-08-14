@@ -17,6 +17,7 @@ typedef struct {
 // VEC_INITIAL_CAP.
 // Set the initial capacity with cap.
 vec_str vec_str_alloc_cap(size_t cap);
+
 #define vec_str_alloc() vec_str_alloc_cap(VEC_INITIAL_CAP)
 
 // Allocates a new vec of owned char*'s by splitting s on sep; neither

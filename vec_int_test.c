@@ -116,18 +116,30 @@ void vec_int_tests(tinfo* tinfo) {
     vec_int_sort(&v3);
     vec_int_match(tinfo, &v3, "-555 -99 1 2 3 4 5 6 7 8 9 17 21");
 
-    found_index = vec_int_search(&v3, 11);
+    vec_found_index search_index;
+    search_index = vec_int_search(&v3, 11);
+    check_bool_eq(tinfo, search_index.found, false);
+    found_index = vec_int_find(&v3, 11);
     check_bool_eq(tinfo, found_index.found, false);
 
-    found_index = vec_int_search(&v3, 21);
+    search_index = vec_int_search(&v3, 21);
+    check_bool_eq(tinfo, search_index.found, true);
+    check_int_eq(tinfo, search_index.index, 12);
+    found_index = vec_int_find(&v3, 21);
     check_bool_eq(tinfo, found_index.found, true);
     check_int_eq(tinfo, found_index.index, 12);
 
-    found_index = vec_int_search(&v3, -555);
+    search_index = vec_int_search(&v3, -555);
+    check_bool_eq(tinfo, search_index.found, true);
+    check_int_eq(tinfo, search_index.index, 0);
+    found_index = vec_int_find(&v3, -555);
     check_bool_eq(tinfo, found_index.found, true);
     check_int_eq(tinfo, found_index.index, 0);
 
-    found_index = vec_int_search(&v3, 7);
+    search_index = vec_int_search(&v3, 7);
+    check_bool_eq(tinfo, search_index.found, true);
+    check_int_eq(tinfo, search_index.index, 8);
+    found_index = vec_int_find(&v3, 7);
     check_bool_eq(tinfo, found_index.found, true);
     check_int_eq(tinfo, found_index.index, 8);
 

@@ -15,6 +15,8 @@ void vec_str_print(const vec_str* v);
 void vec_str_tests(tinfo*);
 void vec_str_merge_tests(tinfo*);
 void vec_str_sort_tests(tinfo*);
+void vec_check_found(tinfo* tinfo, const vec_found_index* i1,
+                     const vec_found_index* i2);
 
 const char* WORDS[] = {
     "One",  "Zulu",    "Victor", "Romeo",  "Sierra",   "Whiskey", "X-ray",
@@ -196,7 +198,19 @@ void vec_str_sort_tests(tinfo* tinfo) {
         "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa", "|");
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
-    // TODO find tests
+
+    vec_found_index found_index = vec_str_find(&v1, "Zulu");
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 0);
+    found_index = vec_str_find(&v1, "Papa");
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 8);
+    found_index = vec_str_find(&v1, "Sierra");
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 3);
+    found_index = vec_str_find(&v1, "sierra");
+    check_bool_eq(tinfo, found_index.found, false);
+
     vec_str_sort(&v1);
     vec_str_match(tinfo, &v1,
                   "Hairy|India|Papa|Sierra|Two|Victor|X-ray|Zulu|gamma");
@@ -209,7 +223,38 @@ void vec_str_sort_tests(tinfo* tinfo) {
     vec_str_match(
         tinfo, &v1,
         "Alpha|Hairy|India|Papa|Sierra|Two|Victor|X-ray|Zulu|gamma|kilo");
-    // TODO search tests
+
+    vec_found_index search_index;
+    found_index = vec_str_find(&v1, "Zulu");
+    search_index = vec_str_search(&v1, "Zulu");
+    vec_check_found(tinfo, &found_index, &search_index);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 8);
+    found_index = vec_str_find(&v1, "Papa");
+    search_index = vec_str_search(&v1, "Papa");
+    vec_check_found(tinfo, &found_index, &search_index);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 3);
+    found_index = vec_str_find(&v1, "Sierra");
+    search_index = vec_str_search(&v1, "Sierra");
+    vec_check_found(tinfo, &found_index, &search_index);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 4);
+    found_index = vec_str_find(&v1, "sierra");
+    search_index = vec_str_search(&v1, "sierra");
+    vec_check_found(tinfo, &found_index, &search_index);
+    check_bool_eq(tinfo, found_index.found, false);
+    found_index = vec_str_find(&v1, "Alpha");
+    search_index = vec_str_search(&v1, "Alpha");
+    vec_check_found(tinfo, &found_index, &search_index);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 0);
+    found_index = vec_str_find(&v1, "kilo");
+    search_index = vec_str_search(&v1, "kilo");
+    vec_check_found(tinfo, &found_index, &search_index);
+    check_bool_eq(tinfo, found_index.found, true);
+    check_int_eq(tinfo, found_index.index, 10);
+
     vec_str_free(&v1);
 }
 
@@ -254,4 +299,15 @@ void vec_str_same(tinfo* tinfo, const vec_str* v1, const vec_str* v2) {
                 tinfo->tag);
     } else
         tinfo->ok++;
+}
+
+void vec_check_found(tinfo* tinfo, const vec_found_index* i1,
+                     const vec_found_index* i2) {
+    tinfo->total++;
+    if ((i1->found == i2->found) &&
+        (!i1->found || (i1->index == i2->index))) {
+        tinfo->ok++;
+    } else {
+        fprintf(stderr, "FAIL: %s vec_str_search()\n", tinfo->tag);
+    }
 }

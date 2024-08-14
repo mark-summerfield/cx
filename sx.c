@@ -64,6 +64,6 @@ char* sx_new_lowercase(const char* s) {
     return u;
 }
 
-int strcmpvoid(const void* s, const void* t) {
+int sx_strcmp_void(const void* s, const void* t) {
     return strcmp(*(const char**)s, *(const char**)t);
 }

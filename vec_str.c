@@ -14,6 +14,7 @@ vec_str vec_str_alloc_cap(size_t cap) {
 }
 
 void vec_str_free(vec_str* v) {
+    assert_notnull(v);
     vec_str_clear(v);
     free(v->_values);
     v->_values = NULL;
@@ -21,6 +22,7 @@ void vec_str_free(vec_str* v) {
 }
 
 void vec_str_clear(vec_str* v) {
+    assert_notnull(v);
     for (size_t i = 0; i < v->_size; ++i) {
         free(v->_values[i]);
     }
@@ -28,21 +30,27 @@ void vec_str_clear(vec_str* v) {
 }
 
 const char* vec_str_get(const vec_str* v, size_t index) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     return v->_values[index];
 }
 
 inline const char* vec_str_get_last(const vec_str* v) {
+    assert_notnull(v);
     return v->_values[v->_size - 1];
 }
 
 void vec_str_set(vec_str* v, size_t index, char* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     assert_valid_index(v, index);
     free(v->_values[index]);
     v->_values[index] = value;
 }
 
 void vec_str_insert(vec_str* v, size_t index, char* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     if (index == v->_size) { // add at the end
         vec_str_push(v, value);
         return;
@@ -61,6 +69,8 @@ void vec_str_insert(vec_str* v, size_t index, char* value) {
 }
 
 char* vec_str_replace(vec_str* v, size_t index, char* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     assert_valid_index(v, index);
     char* old = v->_values[index];
     v->_values[index] = value;
@@ -68,10 +78,12 @@ char* vec_str_replace(vec_str* v, size_t index, char* value) {
 }
 
 inline void vec_str_remove(vec_str* v, size_t index) {
+    assert_notnull(v);
     free(vec_str_take(v, index));
 }
 
 char* vec_str_take(vec_str* v, size_t index) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     char* old = v->_values[index];
     for (size_t i = index; i < v->_size; ++i) {
@@ -83,11 +95,14 @@ char* vec_str_take(vec_str* v, size_t index) {
 }
 
 char* vec_str_pop(vec_str* v) {
+    assert_notnull(v);
     assert(v->_size > 0 && "can't pop empty vec_str");
     return v->_values[--v->_size];
 }
 
 void vec_str_push(vec_str* v, char* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     if (v->_size == v->_cap) {
         _vec_str_grow(v);
     }
@@ -95,6 +110,7 @@ void vec_str_push(vec_str* v, char* value) {
 }
 
 vec_str vec_str_copy(const vec_str* v) {
+    assert_notnull(v);
     vec_str vc = vec_str_alloc_cap(v->_size ? v->_size : VEC_INITIAL_CAP);
     for (size_t i = 0; i < v->_size; ++i) {
         vec_str_push(&vc, strdup(v->_values[i]));
@@ -103,6 +119,8 @@ vec_str vec_str_copy(const vec_str* v) {
 }
 
 void vec_str_merge(vec_str* v1, vec_str* v2) {
+    assert_notnull(v1);
+    assert_notnull(v2);
     if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
         size_t cap = v1->_size + v2->_size;
         char** p = realloc(v1->_values, cap * sizeof(char*));
@@ -120,6 +138,8 @@ void vec_str_merge(vec_str* v1, vec_str* v2) {
 }
 
 bool vec_str_equal(const vec_str* v1, const vec_str* v2) {
+    assert_notnull(v1);
+    assert_notnull(v2);
     for (size_t i = 0; i < v1->_size; ++i) {
         if (strcmp(v1->_values[i], v2->_values[i]))
             return false;
@@ -128,6 +148,8 @@ bool vec_str_equal(const vec_str* v1, const vec_str* v2) {
 }
 
 vec_found_index vec_str_find(const vec_str* v, const char* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     vec_found_index found_index = {0, false};
     for (size_t i = 0; i < v->_size; ++i) {
         if (strcmp(v->_values[i], value) == 0) {
@@ -140,27 +162,45 @@ vec_found_index vec_str_find(const vec_str* v, const char* value) {
 }
 
 void vec_str_sort(vec_str* v) {
+    assert_notnull(v);
     if (v->_size) {
-        qsort(v->_values, v->_size, sizeof(char*), strcmpvoid);
+        qsort(v->_values, v->_size, sizeof(char*), sx_strcmp_void);
     }
 }
 
+// NOTE
+//   const char* p = bsearch(s, v->_values, v->_size, sizeof(char*),
+//                           sx_strcmp_void);
+// This works fine for vec_int, but always segfaults in sx_strcmp_void
+// (which works fine for qsort()).
 vec_found_index vec_str_search(const vec_str* v, const char* s) {
+    assert_notnull(v);
+    assert_notnull(s);
     vec_found_index found_index = {0, false};
     if (v->_size) {
-        const char* p =
-            bsearch(s, v->_values, v->_size, sizeof(char*), strcmpvoid);
-        if (p) {
-            found_index.index = p - v->_values[0];
-            found_index.found = true;
+        size_t low = 0;
+        size_t high = v->_size - 1;
+        while (low <= high) {
+            size_t mid = low + ((high - low) / 2);
+            const char* value = v->_values[mid];
+            int cmp = strcmp(value, s);
+            if (cmp == 0) {
+                found_index.index = mid;
+                found_index.found = true;
+                break;
+            }
+            if (cmp < 0)
+                low = mid + 1;
+            else
+                high = mid - 1;
         }
     }
     return found_index;
 }
 
 vec_str vec_str_alloc_split(const char* s, const char* sep) {
-    assert(s && "can't split null string");
-    assert(sep && "can't split with null sep");
+    assert_notnull(s);
+    assert_notnull(sep);
     size_t sep_size = strlen(sep);
     assert(sep_size && "can't split with empty sep");
     vec_str v = vec_str_alloc();
@@ -181,6 +221,7 @@ vec_str vec_str_alloc_split(const char* s, const char* sep) {
 }
 
 char* vec_str_join(const vec_str* v, const char* sep) {
+    assert_notnull(v);
     const size_t VEC_SIZE = vec_str_size(v);
     const size_t SEP_SIZE = sep ? strlen(sep) : 0;
     size_t total_size = 0;

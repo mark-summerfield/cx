@@ -20,6 +20,7 @@ vec vec_alloc_(vec_alloc_args args) {
 }
 
 void vec_free(vec* v) {
+    assert_notnull(v);
     vec_clear(v);
     free(v->_values);
     v->_values = NULL;
@@ -27,6 +28,7 @@ void vec_free(vec* v) {
 }
 
 void vec_clear(vec* v) {
+    assert_notnull(v);
     for (size_t i = 0; i < v->_size; ++i) {
         v->_destroy(v->_values[i]);
     }
@@ -34,21 +36,27 @@ void vec_clear(vec* v) {
 }
 
 const void* vec_get(const vec* v, size_t index) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     return v->_values[index];
 }
 
 inline const void* vec_get_last(const vec* v) {
+    assert_notnull(v);
     return v->_values[v->_size - 1];
 }
 
 void vec_set(vec* v, size_t index, void* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     assert_valid_index(v, index);
     v->_destroy(v->_values[index]);
     v->_values[index] = value;
 }
 
 void vec_insert(vec* v, size_t index, void* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     if (index == v->_size) { // add at the end
         vec_push(v, value);
         return;
@@ -67,6 +75,8 @@ void vec_insert(vec* v, size_t index, void* value) {
 }
 
 void* vec_replace(vec* v, size_t index, void* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     assert_valid_index(v, index);
     void* old = v->_values[index];
     v->_values[index] = value;
@@ -74,10 +84,12 @@ void* vec_replace(vec* v, size_t index, void* value) {
 }
 
 inline void vec_remove(vec* v, size_t index) {
+    assert_notnull(v);
     v->_destroy(vec_take(v, index));
 }
 
 void* vec_take(vec* v, size_t index) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     void* old = v->_values[index];
     for (size_t i = index; i < v->_size; ++i) {
@@ -89,11 +101,14 @@ void* vec_take(vec* v, size_t index) {
 }
 
 void* vec_pop(vec* v) {
+    assert_notnull(v);
     assert(v->_size > 0 && "can't pop empty vec");
     return v->_values[--v->_size];
 }
 
 void vec_push(vec* v, void* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     if (v->_size == v->_cap) {
         _vec_grow(v);
     }
@@ -101,6 +116,7 @@ void vec_push(vec* v, void* value) {
 }
 
 vec vec_copy(const vec* v) {
+    assert_notnull(v);
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
     vec vc =
@@ -114,6 +130,8 @@ vec vec_copy(const vec* v) {
 }
 
 void vec_merge(vec* v1, vec* v2) {
+    assert_notnull(v1);
+    assert_notnull(v2);
     assert(v1->_cmp == v2->_cmp && v1->_cpy == v2->_cpy &&
            v1->_destroy == v2->_destroy && "non-matching vecs");
     if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
@@ -133,6 +151,8 @@ void vec_merge(vec* v1, vec* v2) {
 }
 
 bool vec_equal(const vec* v1, const vec* v2) {
+    assert_notnull(v1);
+    assert_notnull(v2);
     if (v1->_cmp != v2->_cmp || v1->_cpy != v2->_cpy ||
         v1->_destroy != v2->_destroy || v1->_size != v2->_size)
         return false;
@@ -144,6 +164,8 @@ bool vec_equal(const vec* v1, const vec* v2) {
 }
 
 vec_found_index vec_find(const vec* v, const void* value) {
+    assert_notnull(v);
+    assert_notnull(value);
     vec_found_index found_index = {0, false};
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_cmp(v->_values[i], value) == 0) {
@@ -156,12 +178,15 @@ vec_found_index vec_find(const vec* v, const void* value) {
 }
 
 void vec_sort(vec* v) {
+    assert_notnull(v);
     if (v->_size) {
         qsort(v->_values, v->_size, sizeof(v->_values[0]), v->_cmp);
     }
 }
 
 vec_found_index vec_search(const vec* v, const void* s) {
+    assert_notnull(v);
+    assert_notnull(s);
     vec_found_index found_index = {0, false};
     if (v->_size) {
         const void* p = bsearch(s, v->_values, v->_size,

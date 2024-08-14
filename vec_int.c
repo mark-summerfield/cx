@@ -25,20 +25,24 @@ void vec_int_free(vec_int* v) {
 inline void vec_int_clear(vec_int* v) { v->_size = 0; }
 
 VEC_INT_VALUE_T vec_int_get(const vec_int* v, size_t index) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     return v->_values[index];
 }
 
 inline VEC_INT_VALUE_T vec_int_get_last(const vec_int* v) {
+    assert_notnull(v);
     return v->_values[v->_size - 1];
 }
 
 void vec_int_set(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     v->_values[index] = value;
 }
 
 void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
+    assert_notnull(v);
     if (index == v->_size) { // add at the end
         vec_int_push(v, value);
         return;
@@ -58,6 +62,7 @@ void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
 
 VEC_INT_VALUE_T vec_int_replace(vec_int* v, size_t index,
                                 VEC_INT_VALUE_T value) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     VEC_INT_VALUE_T old = v->_values[index];
     v->_values[index] = value;
@@ -65,6 +70,7 @@ VEC_INT_VALUE_T vec_int_replace(vec_int* v, size_t index,
 }
 
 void vec_int_remove(vec_int* v, size_t index) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     for (size_t i = index; i < v->_size; ++i) {
         v->_values[i] = v->_values[i + 1];
@@ -73,6 +79,7 @@ void vec_int_remove(vec_int* v, size_t index) {
 }
 
 VEC_INT_VALUE_T vec_int_take(vec_int* v, size_t index) {
+    assert_notnull(v);
     assert_valid_index(v, index);
     VEC_INT_VALUE_T old = v->_values[index];
     vec_int_remove(v, index);
@@ -80,11 +87,13 @@ VEC_INT_VALUE_T vec_int_take(vec_int* v, size_t index) {
 }
 
 VEC_INT_VALUE_T vec_int_pop(vec_int* v) {
+    assert_notnull(v);
     assert(v->_size > 0 && "can't pop empty vec_int");
     return v->_values[--v->_size];
 }
 
 void vec_int_push(vec_int* v, VEC_INT_VALUE_T value) {
+    assert_notnull(v);
     if (v->_size == v->_cap) {
         _vec_int_grow(v);
     }
@@ -92,6 +101,7 @@ void vec_int_push(vec_int* v, VEC_INT_VALUE_T value) {
 }
 
 vec_int vec_int_copy(const vec_int* v) {
+    assert_notnull(v);
     vec_int vc = vec_int_alloc_cap(v->_size);
     for (size_t i = 0; i < v->_size; ++i) {
         vec_int_push(&vc, v->_values[i]);
@@ -100,6 +110,8 @@ vec_int vec_int_copy(const vec_int* v) {
 }
 
 void vec_int_merge(vec_int* v1, vec_int* v2) {
+    assert_notnull(v1);
+    assert_notnull(v2);
     if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
         size_t cap = v1->_size + v2->_size;
         VEC_INT_VALUE_T* p =
@@ -118,6 +130,8 @@ void vec_int_merge(vec_int* v1, vec_int* v2) {
 }
 
 bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
+    assert_notnull(v1);
+    assert_notnull(v2);
     if (v1->_size != v2->_size)
         return false;
     for (size_t i = 0; i < v1->_size; ++i) {
@@ -128,6 +142,7 @@ bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
 }
 
 vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
+    assert_notnull(v);
     vec_found_index found_index = {0, false};
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_values[i] == value) {
@@ -144,12 +159,14 @@ VEC_INT_VALUE_T intcmp(const void* a, const void* b) {
 }
 
 void vec_int_sort(vec_int* v) {
+    assert_notnull(v);
     if (v->_size) {
         qsort(v->_values, v->_size, sizeof(VEC_INT_VALUE_T), intcmp);
     }
 }
 
 vec_found_index vec_int_search(const vec_int* v, VEC_INT_VALUE_T i) {
+    assert_notnull(v);
     vec_found_index found_index = {0, false};
     if (v->_size) {
         const VEC_INT_VALUE_T* p = bsearch(&i, v->_values, v->_size,
@@ -163,6 +180,7 @@ vec_found_index vec_int_search(const vec_int* v, VEC_INT_VALUE_T i) {
 }
 
 char* vec_int_tostring(const vec_int* v) {
+    assert_notnull(v);
     const size_t BUF_SIZE = 128;
     const size_t VEC_SIZE = vec_int_size(v);
     size_t cap = VEC_SIZE * 4;
