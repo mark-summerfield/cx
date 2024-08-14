@@ -1,18 +1,21 @@
 # TODO
-# (1) vec_str tests: replace remove take find
-# (2) vec_str tests: sort find search
+# (0) (i) vec_str_append(v1, v2) // v2 is freed after: usecase merging
+#     (ii) vec_alloc_values(.cap=..., .values=T[]) ??
+# (1) vec_str tests:
+#	replace remove take find append alloc_values sort find search
 #
-# (3) map with void* keys & values (based on rbt) + tests
-# (4) map_str with char* keys & char* values (based on map) + tests
-# (5) set with void* keys (based on rbt) + tests
-# (6) set_str with char* keys (based on set) + tests
-# (7) set_int with int keys (based on or copy/edit of set) + tests
+# (3) rbt with void* items
+#     - if item is struct* then it is an ordered map of key-values
+#     rbt_str char* items - ordered set of char* (wrapper like vec_str)
+#     rbt_int int items - (modified copy of rbt like vec_int)
 #
-# (8) que (based on vec)? + tests
-# (9) lst (doubly-linked list)? + tests
-# (10) deq (based on list)? + tests
+# (4) hsh with void* items
+#     - as with rbt but based on hash table with linear probing
+# (5) que (based on vec)?
+# (6) lst (doubly-linked list)?
+# (7) deq (based on list)?
 #
-# (11) str (based on vec)? + tests
+# (8) str (based on vec)?
 
 cx.h
 vec_common.h
