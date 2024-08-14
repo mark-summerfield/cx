@@ -102,9 +102,12 @@ void vec_push(vec* v, void* value) {
 }
 
 vec vec_copy(const vec* v) {
+#pragma GCC diagnostic ignored "-Woverride-init"
+#pragma GCC diagnostic push
     vec vc =
         vec_alloc(.cap = v->_size ? v->_size : VEC_INITIAL_CAP,
                   .cmp = v->_cmp, .cpy = v->_cpy, .destroy = v->_destroy);
+#pragma GCC diagnostic pop
     for (size_t i = 0; i < v->_size; ++i) {
         vec_push(&vc, v->_cpy(v->_values[i]));
     }
@@ -146,7 +149,10 @@ vec_found_index vec_search(const vec* v, const void* s) {
         const void* p =
             bsearch(s, v->_values, v->_size, sizeof(void*), v->_cmp);
         if (p) {
+#pragma GCC diagnostic ignored "-Wpointer-arith"
+#pragma GCC diagnostic push
             found_index.index = p - v->_values[0];
+#pragma GCC diagnostic pop
             found_index.found = true;
         }
     }

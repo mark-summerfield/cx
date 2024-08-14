@@ -2,7 +2,7 @@ AddOption('--dbg', dest='dbg', action='store_true', default=False,
           help='Debug build')
 env = Environment()
 if GetOption('dbg'):
-    env.Append(CCFLAGS='-Wall -g')
+    env.Append(CCFLAGS='-Wall -Wextra -pedantic -g')
 else:
     env.Append(CCFLAGS='-Wall -O3 -DNDEBUG')
 

@@ -29,7 +29,7 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_check_size_cap(tinfo, &v1, 0, 32);
 
     tinfo->total++;
-    size_t WORD_COUNT = sizeof(WORDS) / sizeof(char*);
+    int WORD_COUNT = sizeof(WORDS) / sizeof(char*);
     for (int i = 0; i < WORD_COUNT; ++i) {
         vec_str_check_size_cap(tinfo, &v1, i, i <= 32 ? 32 : 64);
         vec_str_push(&v1, strdup(WORDS[i]));
