@@ -1,6 +1,6 @@
 # TODO
 # (1) vec_str tests:
-#	replace remove take find sort find search
+#	find sort search
 #
 # (3) rbt with void* items
 #     - if item is struct* then it is an ordered map of key-values
