@@ -158,15 +158,15 @@ vec_found_index vec_find(const vec* v, const void* value) {
 
 void vec_sort(vec* v) {
     if (v->_size) {
-        qsort(v->_values, v->_size, sizeof(void*), v->_cmp);
+        qsort(v->_values, v->_size, sizeof(v->_values[0]), v->_cmp);
     }
 }
 
 vec_found_index vec_search(const vec* v, const void* s) {
     vec_found_index found_index = {0, false};
     if (v->_size) {
-        const void* p =
-            bsearch(s, v->_values, v->_size, sizeof(void*), v->_cmp);
+        const void* p = bsearch(s, v->_values, v->_size,
+                                sizeof(v->_values[0]), v->_cmp);
         if (p) {
 #pragma GCC diagnostic ignored "-Wpointer-arith"
 #pragma GCC diagnostic push

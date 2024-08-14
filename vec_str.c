@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-int vec_str_cmp(const void* s, const void* t) { return strcmp((s), (t)); }
+int vec_str_cmp(const void* s, const void* t) {
+    return strcmp(*(const char**)s, *(const char**)t);
+}
 
 void* vec_str_cpy(const void* value) { return strdup((char*)value); }
 
