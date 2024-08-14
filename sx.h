@@ -68,6 +68,7 @@ char* sx_new_lowercase(const char*);
         _Bool: "bool", \
         char: "char", \
         char*: "char*", \
+        const char*: "const char*", \
         double: "double", \
         float: "float", \
         int: "int", \

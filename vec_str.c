@@ -6,6 +6,8 @@
 #include <string.h>
 
 int vec_str_cmp(const void* s, const void* t) {
+    assert(s && t && "unexpected void* NULL");
+    assert((const char**)s && (const char**)t && "unexpected char** NULL");
     return strcmp(*(const char**)s, *(const char**)t);
 }
 
