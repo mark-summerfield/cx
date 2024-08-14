@@ -59,8 +59,7 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_match(tinfo, &v1, V2);
     vec_str_check_size_cap(tinfo, &v1, 10, 64);
     vec_str_check_size_cap(tinfo, &v2, 10, 32);
-    // TODO reinstate
-    // vec_str_same(tinfo, &v1, &v2);
+    vec_str_same(tinfo, &v1, &v2);
 
     vec_str_push(&v1, strdup("alpha"));
     const char* s1 = vec_str_get_last(&v1);
