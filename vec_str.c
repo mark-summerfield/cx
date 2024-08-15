@@ -174,8 +174,7 @@ bool vec_str_search(const vec_str* v, const char* s, size_t* index) {
         size_t high = v->_size - 1;
         while (high && low <= high) {
             size_t mid = low + ((high - low) / 2);
-            const char* value = v->_values[mid];
-            int cmp = strcmp(value, s);
+            const int cmp = strcmp(v->_values[mid], s);
             if (cmp == 0) {
                 *index = mid;
                 return true;
