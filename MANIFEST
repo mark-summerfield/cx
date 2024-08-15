@@ -37,7 +37,7 @@ vec_str_test.h
 vec_str_test.c
 tag_test.h
 vec_test.h
-vec_test.c # TODO
+vec_test.c
 sx_test.h
 sx_test.c
 va_test.h
