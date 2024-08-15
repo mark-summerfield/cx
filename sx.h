@@ -61,7 +61,7 @@ void sx_lowercase_ip(char*);
 // Returns new char* of given char*'s ASCII chars lowercased
 char* sx_lowercase_alloc(const char*);
 
-void sx_qsort(char** array, size_t begin, size_t end);
+int sx_strcmp(const void* s, const void* t);
 
 #define bool_to_str(b) ((b) ? "true" : "false")
 

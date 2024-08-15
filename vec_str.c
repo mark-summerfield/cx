@@ -162,7 +162,7 @@ bool vec_str_find(const vec_str* v, const char* value, size_t* index) {
 
 void vec_str_sort(vec_str* v) {
     assert_notnull(v);
-    sx_qsort(v->_values, 0, v->_size - 1);
+    qsort(v->_values, v->_size, sizeof(char*), sx_strcmp);
 }
 
 bool vec_str_search(const vec_str* v, const char* s, size_t* index) {
@@ -170,19 +170,11 @@ bool vec_str_search(const vec_str* v, const char* s, size_t* index) {
     assert_notnull(s);
     assert_notnull(index);
     if (v->_size) {
-        size_t low = 0;
-        size_t high = v->_size - 1;
-        while (high && low <= high) {
-            size_t mid = low + ((high - low) / 2);
-            const int cmp = strcmp(v->_values[mid], s);
-            if (cmp == 0) {
-                *index = mid;
-                return true;
-            }
-            if (cmp < 0)
-                low = mid + 1;
-            else
-                high = mid - 1;
+        char** p =
+            bsearch(&s, v->_values, v->_size, sizeof(char*), sx_strcmp);
+        if (p) {
+            *index = p - v->_values;
+            return true;
         }
     }
     return false;

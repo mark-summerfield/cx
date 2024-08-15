@@ -61,8 +61,6 @@ bool tag_equal(const Tag* tag1, const Tag* tag2) {
     return tag1->id == tag2->id && (strcmp(tag1->name, tag2->name) == 0);
 }
 
-// Segfaults even though assert t1 && t2 && name1 && name2 && typename
-// of name1 and name2 is const char *.
 int tag_cmp(const void* t1, const void* t2) {
     const char* name1 = ((Tag*)t1)->name;
     const char* name2 = ((Tag*)t2)->name;
