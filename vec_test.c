@@ -21,9 +21,9 @@ void vec_merge_tests(tinfo*);
 void vec_sort_tests(tinfo*);
 
 void vec_tests(tinfo* tinfo) {
-    /*
     vec_merge_tests(tinfo);
     vec_sort_tests(tinfo);
+    /*
 
     vec v1 = vec_alloc(); // default of 32
     vec_check_size_cap(tinfo, &v1, 0, 32);
@@ -163,33 +163,59 @@ void vec_tests(tinfo* tinfo) {
 }
 
 void vec_merge_tests(tinfo* tinfo) {
-    vec v1 = vec_alloc(.cap = 7);
+    tag_make(true);
+    vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
+                       .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
-    vec_push(&v1, strdup("one"));
-    vec_push(&v1, strdup("two"));
-    vec_push(&v1, strdup("three"));
-    vec_push(&v1, strdup("four"));
-    vec_push(&v1, strdup("five"));
+    for (size_t i = 0; i < 5; ++i)
+        vec_push(&v1, tag_make(false));
     vec_check_size_cap(tinfo, &v1, 5, 7);
-    vec_match(tinfo, &v1, "one|two|three|four|five");
+    vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
 
-    /*
-    vec v2 = vec_alloc_split("six\tseven\teight\tnine\tten\televen", "\t");
-    vec_match(tinfo, &v2, "six|seven|eight|nine|ten|eleven");
-    vec_check_size_cap(tinfo, &v2, 6, 32);
+    vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
+                       .destroy = tag_free);
+    vec_check_size_cap(tinfo, &v2, 0, 11);
+    for (size_t i = 0; i < 6; ++i)
+        vec_push(&v2, tag_make(false));
+    vec_check_size_cap(tinfo, &v2, 6, 11);
+    vec_match(tinfo, &v2, "Af#105|Ag#106|Ah#107|Ai#108|Aj#109|Ak#110");
 
     vec_merge(&v1, &v2);
     vec_match(tinfo, &v1,
-              "one|two|three|four|five|six|seven|eight|nine|ten|eleven");
+              "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106|Ah#107|Ai#"
+              "108|Aj#109|Ak#110");
     vec_check_size_cap(tinfo, &v1, 11, 11);
     vec_check_size_cap(tinfo, &v2, 0, 0);
-    */
 
     // v2 already freed
     vec_free(&v1);
 }
 
 void vec_sort_tests(tinfo* tinfo) {
+    tag_make(true);
+    vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
+                       .destroy = tag_free);
+    vec_check_size_cap(tinfo, &v1, 0, 7);
+    for (size_t i = 0; i < 5; ++i)
+        vec_push(&v1, tag_make(false));
+    vec_insert(&v1, 0, tag_alloc("Zz#999", 999));
+    vec_insert(&v1, 2, tag_alloc("Ww#888", 888));
+    vec_insert(&v1, 4, tag_alloc("Ae#005", 5));
+    vec_insert(&v1, 6, tag_alloc("Aa#001", 1));
+    vec_check_size_cap(tinfo, &v1, 9, 14);
+    vec_match(
+        tinfo, &v1,
+        "Zz#999|Aa#100|Ww#888|Ab#101|Ae#005|Ac#102|Aa#001|Ad#103|Ae#104");
+
+    // TODO
+    /*
+    bool found;
+    size_t index;
+    found = vec_find(&v1, "Ae#005", &index);
+    check_bool_eq(tinfo, found, true);
+    check_int_eq(tinfo, index, 4);
+    */
+
     /*
     vec v1 = vec_alloc_split(
         "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa", "|");
@@ -257,11 +283,14 @@ void vec_sort_tests(tinfo* tinfo) {
 }
 
 void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
-    /*
-    char* out = vec_join(v, "|");
-    check_eq(tinfo, out, expected);
-    free(out);
-    */
+    char buf[1000];
+    size_t n = 0;
+    for (size_t i = 0; i < vec_size(v); i++) {
+        const Tag* tag = vec_get(v, i);
+        n += sprintf(&buf[n], "%s|", tag->name);
+    }
+    buf[n - 1] = 0;
+    check_str_eq(tinfo, &buf[0], expected);
 }
 
 void vec_check_size_cap(tinfo* tinfo, const vec* v, size_t size,

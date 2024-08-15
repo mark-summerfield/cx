@@ -1,4 +1,7 @@
 # TODO
+# (0) If can't get tag_cmp() working, try removing cmp & ∴ vec_find,
+#     vec_sort, vec_search, & show how these can be done using external
+#     functions in vec_test.[hc].
 # (1) vec tests: copy vec_str_test.[hc] & test on Tag type:
 #	alloc free get get_last set insert replace remove pop copy merge
 #	equal find sort search
@@ -41,7 +44,7 @@ vec_str_test.h
 vec_str_test.c
 tag_test.h
 vec_test.h
-vec_test.c
+vec_test.c # TODO
 sx_test.h
 sx_test.c
 va_test.h

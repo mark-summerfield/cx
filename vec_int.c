@@ -16,6 +16,7 @@ vec_int vec_int_alloc_cap(size_t cap) {
 }
 
 void vec_int_free(vec_int* v) {
+    assert_notnull(v);
     free(v->_values);
     v->_values = NULL;
     v->_size = 0;
