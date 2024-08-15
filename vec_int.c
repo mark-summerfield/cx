@@ -141,17 +141,16 @@ bool vec_int_equal(const vec_int* v1, const vec_int* v2) {
     return true;
 }
 
-vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value) {
+bool vec_int_find(const vec_int* v, VEC_INT_VALUE_T value, size_t* index) {
     assert_notnull(v);
-    vec_found_index found_index = {0, false};
+    assert_notnull(index);
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_values[i] == value) {
-            found_index.index = i;
-            found_index.found = true;
-            break;
+            *index = i;
+            return true;
         }
     }
-    return found_index;
+    return false;
 }
 
 VEC_INT_VALUE_T intcmp(const void* a, const void* b) {
@@ -165,18 +164,18 @@ void vec_int_sort(vec_int* v) {
     }
 }
 
-vec_found_index vec_int_search(const vec_int* v, VEC_INT_VALUE_T i) {
+bool vec_int_search(const vec_int* v, VEC_INT_VALUE_T i, size_t* index) {
     assert_notnull(v);
-    vec_found_index found_index = {0, false};
+    assert_notnull(index);
     if (v->_size) {
         const VEC_INT_VALUE_T* p = bsearch(&i, v->_values, v->_size,
                                            sizeof(VEC_INT_VALUE_T), intcmp);
         if (p) {
-            found_index.index = p - v->_values;
-            found_index.found = true;
+            *index = p - v->_values;
+            return true;
         }
     }
-    return found_index;
+    return false;
 }
 
 char* vec_int_tostring(const vec_int* v) {

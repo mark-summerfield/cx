@@ -102,9 +102,9 @@ void vec_merge(vec* v1, vec* v2);
 // destroy functions.
 bool vec_equal(const vec* v1, const vec* v2);
 
-// Returns the index of value in the vec and true or 0 and false.
+// Returns whether the value was found in the vec and if so, its index.
 // Uses a linear search.
-vec_found_index vec_find(const vec* v, const void* value);
+bool vec_find(const vec* v, const void* value, size_t* index);
 
 // Sorts the vec in-place using the cmp function.
 void vec_sort(vec* v);
@@ -112,7 +112,7 @@ void vec_sort(vec* v);
 // Searches the vec using binary search: assumes that the vec is in
 // order, e.g., vec_sort() has been used with the cmp function. For a
 // linear search of an unsorted vec, use vec_str_find.
-vec_found_index vec_search(const vec* v, const void* s);
+bool vec_search(const vec* v, const void* s, size_t* index);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_size(v); ++i)

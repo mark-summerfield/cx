@@ -98,9 +98,9 @@ bool vec_str_equal(const vec_str* v1, const vec_str* v2);
 // The returned char* value is now owned by the caller.
 char* vec_str_join(const vec_str* v, const char* sep);
 
-// Returns the index of value in the vec_str and true or 0 and false.
+// Returns whether the value was found in the vec and if so, its index.
 // Uses a linear search.
-vec_found_index vec_str_find(const vec_str* v, const char* value);
+bool vec_str_find(const vec_str* v, const char* value, size_t* index);
 
 // Sorts the vec_str in-place.
 void vec_str_sort(vec_str* v);
@@ -108,7 +108,7 @@ void vec_str_sort(vec_str* v);
 // Searches the vec_str using binary search: assumes that the vec_str is in
 // order, e.g., vec_str_sort() has been used. For a linear search of an
 // unsorted vec_str, use vec_str_find.
-vec_found_index vec_str_search(const vec_str* v, const char* s);
+bool vec_str_search(const vec_str* v, const char* s, size_t* index);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_str_size(v); ++i)

@@ -85,9 +85,9 @@ void vec_int_merge(vec_int* v1, vec_int* v2);
 // Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
 bool vec_int_equal(const vec_int* v1, const vec_int* v2);
 
-// Returns the index of the VEC_INT_VALUE_T value in the vec_int and true or
-// 0 and false.
-vec_found_index vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
+// Returns whether the value was found in the vec and if so, its index.
+// Uses a linear search.
+bool vec_int_find(const vec_int* v, VEC_INT_VALUE_T value, size_t* index);
 
 VEC_INT_VALUE_T intcmp(const void* a, const void* b);
 
@@ -97,7 +97,7 @@ void vec_int_sort(vec_int* v);
 // Searches the vec_int using binary search: assumes that the vec_int is
 // in order, e.g., vec_int_sort() has been used. For a linear search of
 // an unsorted vec_int, use vec_int_find.
-vec_found_index vec_int_search(const vec_int* v, int i);
+bool vec_int_search(const vec_int* v, int i, size_t* index);
 
 // Returns a string of space-separated VEC_INT_VALUE_T values.
 // The returned char* value is now owned by the caller.

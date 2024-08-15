@@ -147,18 +147,17 @@ bool vec_str_equal(const vec_str* v1, const vec_str* v2) {
     return true;
 }
 
-vec_found_index vec_str_find(const vec_str* v, const char* value) {
+bool vec_str_find(const vec_str* v, const char* value, size_t* index) {
     assert_notnull(v);
     assert_notnull(value);
-    vec_found_index found_index = {0, false};
+    assert_notnull(index);
     for (size_t i = 0; i < v->_size; ++i) {
         if (strcmp(v->_values[i], value) == 0) {
-            found_index.index = i;
-            found_index.found = true;
-            break;
+            *index = i;
+            return true;
         }
     }
-    return found_index;
+    return false;
 }
 
 void vec_str_sort(vec_str* v) {
@@ -173,10 +172,10 @@ void vec_str_sort(vec_str* v) {
 //                           sx_strcmp_void);
 // This works fine for vec_int, but always segfaults in sx_strcmp_void
 // (which works fine for qsort()).
-vec_found_index vec_str_search(const vec_str* v, const char* s) {
+bool vec_str_search(const vec_str* v, const char* s, size_t* index) {
     assert_notnull(v);
     assert_notnull(s);
-    vec_found_index found_index = {0, false};
+    assert_notnull(index);
     if (v->_size) {
         size_t low = 0;
         size_t high = v->_size - 1;
@@ -185,9 +184,8 @@ vec_found_index vec_str_search(const vec_str* v, const char* s) {
             const char* value = v->_values[mid];
             int cmp = strcmp(value, s);
             if (cmp == 0) {
-                found_index.index = mid;
-                found_index.found = true;
-                break;
+                *index = mid;
+                return true;
             }
             if (cmp < 0)
                 low = mid + 1;
@@ -195,7 +193,7 @@ vec_found_index vec_str_search(const vec_str* v, const char* s) {
                 high = mid - 1;
         }
     }
-    return found_index;
+    return false;
 }
 
 vec_str vec_str_alloc_split(const char* s, const char* sep) {

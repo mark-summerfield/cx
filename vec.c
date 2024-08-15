@@ -163,18 +163,17 @@ bool vec_equal(const vec* v1, const vec* v2) {
     return true;
 }
 
-vec_found_index vec_find(const vec* v, const void* value) {
+bool vec_find(const vec* v, const void* value, size_t* index) {
     assert_notnull(v);
     assert_notnull(value);
-    vec_found_index found_index = {0, false};
+    assert_notnull(index);
     for (size_t i = 0; i < v->_size; ++i) {
         if (v->_cmp(v->_values[i], value) == 0) {
-            found_index.index = i;
-            found_index.found = true;
-            break;
+            *index = i;
+            return true;
         }
     }
-    return found_index;
+    return false;
 }
 
 void vec_sort(vec* v) {
@@ -184,22 +183,22 @@ void vec_sort(vec* v) {
     }
 }
 
-vec_found_index vec_search(const vec* v, const void* s) {
+bool vec_search(const vec* v, const void* s, size_t* index) {
     assert_notnull(v);
     assert_notnull(s);
-    vec_found_index found_index = {0, false};
+    assert_notnull(index);
     if (v->_size) {
         const void* p = bsearch(s, v->_values, v->_size,
                                 sizeof(v->_values[0]), v->_cmp);
         if (p) {
 #pragma GCC diagnostic ignored "-Wpointer-arith"
 #pragma GCC diagnostic push
-            found_index.index = p - v->_values[0];
+            *index = p - v->_values[0];
 #pragma GCC diagnostic pop
-            found_index.found = true;
+            return true;
         }
     }
-    return found_index;
+    return false;
 }
 
 static void vec_grow(vec* v) {
