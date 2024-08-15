@@ -5,7 +5,10 @@
 
 static void vec_grow(vec* v);
 
-vec vec_alloc_(vec_alloc_args args) {
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic push
+// To satisfy clang-format: it *is* used, via a macro in vec.h
+[[maybe_unused]] vec vec_alloc_(vec_alloc_args args) {
     assert(args.cpy && "must provide a cpy function");
     assert(args.destroy && "must provide a destroy function");
     void** values = malloc(args.cap * sizeof(void*));
@@ -16,6 +19,7 @@ vec vec_alloc_(vec_alloc_args args) {
                  ._cpy = args.cpy,
                  ._destroy = args.destroy};
 }
+#pragma GCC diagnostic pop
 
 void vec_free(vec* v) {
     assert_notnull(v);

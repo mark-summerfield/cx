@@ -31,143 +31,101 @@ static bool vec_tag_equal(const vec* v1, const vec* v2);
 void vec_tests(tinfo* tinfo) {
     vec_merge_tests(tinfo);
     vec_sort_tests(tinfo);
-    /*
 
-    vec v1 = vec_alloc(); // default of 32
-    vec_check_size_cap(tinfo, &v1, 0, 32);
+    tag_make(true);
+    vec v1 = vec_alloc(.cap = 5, .cpy = tag_copy, .destroy = tag_free);
+    vec_check_size_cap(tinfo, &v1, 0, 5);
 
     vec v2 = vec_copy(&v1);
-    vec_check_size_cap(tinfo, &v1, 0, 32);
+    vec_check_size_cap(tinfo, &v1, 0, 5);
 
-    tinfo->total++;
-    int WORD_COUNT = sizeof(WORDS) / sizeof(char*);
-    for (int i = 0; i < WORD_COUNT; ++i) {
-        vec_check_size_cap(tinfo, &v1, i, i <= 32 ? 32 : 64);
-        vec_push(&v1, strdup(WORDS[i]));
-        if (i < 10) {
-            vec_check_size_cap(tinfo, &v2, i, 32);
-            vec_push(&v2, strdup(WORDS[i]));
-        }
-    }
-    tinfo->ok++;
-
-    vec_check_size_cap(tinfo, &v1, WORD_COUNT, 64);
-    vec_check_size_cap(tinfo, &v2, 10, 32);
-    const char* V2 =
-        "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa";
-    vec_match(tinfo, &v2, V2);
-
-    for (int i = WORD_COUNT - 1; i > 9; --i) {
-        char* s = vec_pop(&v1);
-        check_eq(tinfo, s, WORDS[i]);
-        free(s);
-    }
-    vec_match(tinfo, &v1, V2);
-    vec_check_size_cap(tinfo, &v1, 10, 64);
-    vec_check_size_cap(tinfo, &v2, 10, 32);
+    for (size_t i = 0; i < 7; ++i)
+        vec_push(&v1, tag_make(false));
+    vec_check_size_cap(tinfo, &v1, 7, 10);
+    vec_match(tinfo, &v1,
+              "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
+    vec_free(&v2);
+    v2 = vec_copy(&v1);
+    vec_check_size_cap(tinfo, &v2, 7, 7);
+    vec_match(tinfo, &v2,
+              "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     vec_same(tinfo, &v1, &v2);
+    check_bool_eq(tinfo, vec_tag_equal(&v1, &v2), true);
 
-    vec_push(&v1, strdup("alpha"));
-    const char* s1 = vec_get_last(&v1);
-    check_eq(tinfo, s1, "alpha");
-    vec_match(
-        tinfo, &v1,
-        "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa|alpha");
+    Tag* t1 = vec_pop(&v1);
+    check_str_eq(tinfo, t1->name, "Ag#106");
+    check_int_eq(tinfo, t1->id, 106);
+    tag_free(t1);
 
-    vec_insert(&v1, 4, strdup("beta"));
-    const char* s2 = vec_get(&v1, 4);
-    check_eq(tinfo, s2, "beta");
-    vec_match(tinfo, &v1,
-                  "One|Zulu|Victor|Romeo|beta|Sierra|Whiskey|X-ray|Two|"
-                  "India|Papa|alpha");
+    t1 = vec_pop(&v1);
+    check_str_eq(tinfo, t1->name, "Af#105");
+    check_int_eq(tinfo, t1->id, 105);
+    tag_free(t1);
+    t1 = NULL;
 
-    const char* s0 = vec_get(&v1, 0);
-    check_eq(tinfo, s0, "One");
-    const char* s5 = vec_get(&v1, 5);
-    check_eq(tinfo, s5, "Sierra");
-    const char* s6 = vec_get(&v1, 6);
-    check_eq(tinfo, s6, "Whiskey");
+    vec_check_size_cap(tinfo, &v1, 5, 10);
+    vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
+    check_bool_eq(tinfo, vec_tag_equal(&v1, &v2), false);
 
-    vec_set(&v1, 6, strdup("gamma"));
-    const char* s6a = vec_get(&v1, 6);
-    check_eq(tinfo, s6a, "gamma");
-    vec_match(tinfo, &v1,
-                  "One|Zulu|Victor|Romeo|beta|Sierra|gamma|X-ray|Two|"
-                  "India|Papa|alpha");
+    const Tag* t2 = vec_get(&v1, 0);
+    check_str_eq(tinfo, t2->name, "Aa#100");
+    check_int_eq(tinfo, t2->id, 100);
 
-    vec_set(&v1, 0, strdup("A0"));
-    const char* s0a = vec_get(&v1, 0);
-    check_eq(tinfo, s0a, "A0");
-    vec_match(tinfo, &v1,
-                  "A0|Zulu|Victor|Romeo|beta|Sierra|gamma|X-ray|Two|"
-                  "India|Papa|alpha");
+    t2 = vec_get_last(&v1);
+    check_str_eq(tinfo, t2->name, "Ae#104");
+    check_int_eq(tinfo, t2->id, 104);
 
-    vec_insert(&v1, 2, strdup("B2"));
-    const char* s2a = vec_get(&v1, 2);
-    check_eq(tinfo, s2a, "B2");
-    vec_match(tinfo, &v1,
-                  "A0|Zulu|B2|Victor|Romeo|beta|Sierra|gamma|X-ray|Two|"
-                  "India|Papa|alpha");
+    t2 = vec_get(&v1, 2);
+    check_str_eq(tinfo, t2->name, "Ac#102");
+    check_int_eq(tinfo, t2->id, 102);
 
-    vec_remove(&v1, 4);
-    vec_match(tinfo, &v1,
-                  "A0|Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
-                  "India|Papa|alpha");
+    vec_set(&v1, 0, tag_make(false));
+    vec_set(&v1, vec_size(&v1) - 1, tag_make(false));
+    vec_set(&v1, 3, tag_make(false));
+    vec_push(&v1, tag_make(false));
+    vec_check_size_cap(tinfo, &v1, 6, 10);
+    vec_match(tinfo, &v1, "Ah#107|Ab#101|Ac#102|Aj#109|Ai#108|Ak#110");
+
+    t1 = vec_replace(&v1, 0, tag_make(false));
+    tag_free(t1);
+    t1 = vec_replace(&v1, 4, tag_make(false));
+    tag_free(t1);
+    t1 = vec_replace(&v1, vec_size(&v1) - 1, tag_make(false));
+    tag_free(t1);
+    vec_check_size_cap(tinfo, &v1, 6, 10);
+    vec_match(tinfo, &v1, "Al#111|Ab#101|Ac#102|Aj#109|Am#112|An#113");
 
     vec_remove(&v1, 0);
-    vec_match(tinfo, &v1,
-                  "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
-                  "India|Papa|alpha");
+    vec_check_size_cap(tinfo, &v1, 5, 10);
+    vec_match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112|An#113");
 
     vec_remove(&v1, vec_size(&v1) - 1);
-    vec_match(tinfo, &v1,
-                  "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
-                  "India|Papa");
+    vec_check_size_cap(tinfo, &v1, 4, 10);
+    vec_match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112");
 
-    vec_replace(&v1, 3, strdup("Hairy"));
-    vec_match(tinfo, &v1,
-                  "Zulu|B2|Victor|Hairy|Sierra|gamma|X-ray|Two|"
-                  "India|Papa");
-    char* x = vec_take(&v1, 1);
-    check_eq(tinfo, x, "B2");
-    free(x);
-    vec_match(tinfo, &v1,
-                  "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
+    vec_remove(&v1, 1);
+    vec_check_size_cap(tinfo, &v1, 3, 10);
+    vec_match(tinfo, &v1, "Ab#101|Aj#109|Am#112");
 
-    vec_found_index found_index = vec_find(&v1, "Two");
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 6);
-    found_index = vec_find(&v1, "two");
-    check_bool_eq(tinfo, found_index.found, false);
-    found_index = vec_find(&v1, "Papa");
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 8);
-    found_index = vec_find(&v1, "Zulu");
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 0);
+    vec_remove(&v1, 0);
+    vec_check_size_cap(tinfo, &v1, 2, 10);
+    vec_match(tinfo, &v1, "Aj#109|Am#112");
+
+    vec_remove(&v1, 0);
+    vec_check_size_cap(tinfo, &v1, 1, 10);
+    vec_match(tinfo, &v1, "Am#112");
+
+    vec_remove(&v1, 0);
+    vec_check_size_cap(tinfo, &v1, 0, 10);
 
     vec_clear(&v1);
-    vec_check_size_cap(tinfo, &v1, 0, 64);
-    vec_push(&v1, strdup("more"));
-    const char* more = vec_get(&v1, 0);
-    check_eq(tinfo, more, "more");
-    vec_match(tinfo, &v1, "more");
-    vec_check_size_cap(tinfo, &v1, 1, 64);
+    vec_check_size_cap(tinfo, &v1, 0, 10);
     vec_free(&v1);
     vec_check_size_cap(tinfo, &v1, 0, 0);
     vec_clear(&v2);
-    vec_check_size_cap(tinfo, &v2, 0, 32);
+    vec_check_size_cap(tinfo, &v2, 0, 7);
     vec_free(&v2);
     vec_check_size_cap(tinfo, &v2, 0, 0);
-
-    vec v4 = vec_alloc_split("one\ttwo\tthree\tfour\tfive", "\t");
-    vec_match(tinfo, &v4, "one|two|three|four|five");
-    vec_free(&v4);
-    vec v5 =
-        vec_alloc_split("oneSEPtwoSEPthreeSEPfourSEPfiveSEPsix", "SEP");
-    vec_match(tinfo, &v5, "one|two|three|four|five|six");
-    vec_free(&v5);
-    */
 }
 
 void vec_merge_tests(tinfo* tinfo) {

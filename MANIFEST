@@ -1,7 +1,5 @@
 # TODO
-# (1) vec tests: alloc free get_last set replace remove pop copy 
-#
-# (2) set types
+# (1) set types
 #	- set void* (e.g., struct KeyValue, in effect a map)
 #	- set_int
 #	- set_str
