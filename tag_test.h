@@ -1,10 +1,15 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 #pragma once
 
-struct Tag {
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
     char* name; // caller owns
     long id;
-};
+} Tag;
+
+#define _TAG_BUF_SZ 20
 
 // caller owns
 Tag tag_make() {
@@ -12,7 +17,11 @@ Tag tag_make() {
     static char N2 = 'a';
     static char N3 = 'a';
     static long ID = 1000;
-    Tag tag = {sprintf("%c%c%c#%ld", N1, N2, N3++), ID++};
+    char buf[_TAG_BUF_SZ];
+    size_t n = sprintf(&buf[0], "%c%c%c#%ld", N1, N2, N3, ID);
+    Tag tag = {strndup(&buf[0], n), ID};
+    N3++;
+    ID++;
     if (N3 > 'z') {
         N3 = 'a';
         N2++;
@@ -21,7 +30,7 @@ Tag tag_make() {
             N1++;
             if (N1 > 'Z') {
                 N1 = 'A';
-                ID += 1000;
+                ID += 999;
             }
         }
     }
@@ -35,5 +44,7 @@ void tag_free(Tag* tag) {
 
 // caller owns
 char* tag_tostring(Tag* tag) {
-    return sprintf("\"%s\"#%ld", tag->name, tag->id);
+    char buf[_TAG_BUF_SZ];
+    size_t n = sprintf(&buf[0], "\"%s\"#%ld", tag->name, tag->id);
+    return strndup(&buf[0], n);
 }

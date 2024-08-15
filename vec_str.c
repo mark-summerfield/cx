@@ -180,7 +180,7 @@ vec_found_index vec_str_search(const vec_str* v, const char* s) {
     if (v->_size) {
         size_t low = 0;
         size_t high = v->_size - 1;
-        while (low <= high) {
+        while (high && low <= high) {
             size_t mid = low + ((high - low) / 2);
             const char* value = v->_values[mid];
             int cmp = strcmp(value, s);

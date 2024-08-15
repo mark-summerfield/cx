@@ -33,11 +33,15 @@ vaargs.h
 cx_test.c
 cx_util_test.h
 cx_util_test.c
-tag_test.h # NOTE for vec_test.[hc]
+vec_common_test.h
+vec_common_test.c
 vec_int_test.h
 vec_int_test.c
 vec_str_test.h
 vec_str_test.c
+tag_test.h
+vec_test.h
+vec_test.c
 sx_test.h
 sx_test.c
 va_test.h

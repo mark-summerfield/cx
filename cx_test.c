@@ -19,6 +19,8 @@ int main() {
     vec_int_tests(&tinfo);
     tinfo.tag = "vec_str_tests";
     vec_str_tests(&tinfo);
+    tinfo.tag = "vec_tests";
+    vec_tests(&tinfo);
     printf("%s %d/%d\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL",
            tinfo.ok, tinfo.total);
 }
