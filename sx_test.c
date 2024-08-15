@@ -4,26 +4,26 @@
 #include <stdlib.h>
 #include <string.h>
 
-void sx_test_new_uppercase(tinfo*);
+void sx_test_uppercase_alloc(tinfo*);
 void sx_test_uppercase_ip(tinfo*);
-void sx_test_new_lowercase(tinfo*);
+void sx_test_lowercase_alloc(tinfo*);
 void sx_test_lowercase_ip(tinfo*);
 void sx_test_begins_ends(tinfo*);
 void sx_test_comparisons(tinfo*);
 
 void sx_tests(tinfo* tinfo) {
-    sx_test_new_uppercase(tinfo);
+    sx_test_uppercase_alloc(tinfo);
     sx_test_uppercase_ip(tinfo);
-    sx_test_new_lowercase(tinfo);
+    sx_test_lowercase_alloc(tinfo);
     sx_test_lowercase_ip(tinfo);
     sx_test_begins_ends(tinfo);
     sx_test_comparisons(tinfo);
 }
 
-void sx_test_new_uppercase(tinfo* tinfo) {
+void sx_test_uppercase_alloc(tinfo* tinfo) {
     const char* original = "this is a test";
     const char* expected = "THIS IS A TEST";
-    char* actual = sx_new_uppercase(original);
+    char* actual = sx_uppercase_alloc(original);
     check_str_eq(tinfo, expected, actual);
     free(actual);
 }
@@ -35,10 +35,10 @@ void sx_test_uppercase_ip(tinfo* tinfo) {
     check_str_eq(tinfo, expected, original);
 }
 
-void sx_test_new_lowercase(tinfo* tinfo) {
+void sx_test_lowercase_alloc(tinfo* tinfo) {
     const char* original = "THIS IS A TEST";
     const char* expected = "this is a test";
-    char* actual = sx_new_lowercase(original);
+    char* actual = sx_lowercase_alloc(original);
     check_str_eq(tinfo, expected, actual);
     free(actual);
 }
