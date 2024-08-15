@@ -162,16 +162,9 @@ bool vec_str_find(const vec_str* v, const char* value, size_t* index) {
 
 void vec_str_sort(vec_str* v) {
     assert_notnull(v);
-    if (v->_size) {
-        qsort(v->_values, v->_size, sizeof(char*), sx_strcmp_void);
-    }
+    sx_qsort(v->_values, 0, v->_size - 1);
 }
 
-// NOTE
-//   const char* p = bsearch(s, v->_values, v->_size, sizeof(char*),
-//                           sx_strcmp_void);
-// This works fine for vec_int, but always segfaults in sx_strcmp_void
-// (which works fine for qsort()).
 bool vec_str_search(const vec_str* v, const char* s, size_t* index) {
     assert_notnull(v);
     assert_notnull(s);

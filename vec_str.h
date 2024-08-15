@@ -112,4 +112,4 @@ bool vec_str_search(const vec_str* v, const char* s, size_t* index);
 
 // To iterate:
 //  for (size_t i = 0; i < vec_str_size(v); ++i)
-//      const MyType* value = (MyType*)vec_str_get(v, i);
+//      const char* value = vec_str_get(v, i);

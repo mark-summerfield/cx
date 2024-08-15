@@ -1,18 +1,13 @@
 # TODO
-# (0) If can't get tag_cmp() working, try removing cmp & ∴ vec_find,
-#     vec_sort, vec_search, & show how these can be done using external
-#     functions in vec_test.[hc].
-# (1) vec tests: copy vec_str_test.[hc] & test on Tag type:
-#	alloc free get get_last set insert replace remove pop copy merge
-#	equal find sort search
+# (1) vec tests: alloc free get_last set replace remove pop copy 
 #
 # (2) set types
 #	- set void* (e.g., struct KeyValue, in effect a map)
 #	- set_int
 #	- set_str
-#     based on some kind of b?tree (or fall back to rbt?)
+#     all based on rbt
 #
-# (3) hsh with void* items - as with set but based on hash table
+# (3) hsh with void* items - as with set but based on hash table?
 # (4) que (based on vec)?
 # (5) lst (doubly-linked list)?
 # (6) deq (based on list)?

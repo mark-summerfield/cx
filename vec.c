@@ -6,7 +6,6 @@
 static void vec_grow(vec* v);
 
 vec vec_alloc_(vec_alloc_args args) {
-    assert(args.cmp && "must provide a cmp function");
     assert(args.cpy && "must provide a cpy function");
     assert(args.destroy && "must provide a destroy function");
     void** values = malloc(args.cap * sizeof(void*));
@@ -14,7 +13,6 @@ vec vec_alloc_(vec_alloc_args args) {
     return (vec){._size = 0,
                  ._cap = args.cap,
                  ._values = values,
-                 ._cmp = args.cmp,
                  ._cpy = args.cpy,
                  ._destroy = args.destroy};
 }
@@ -119,9 +117,8 @@ vec vec_copy(const vec* v) {
     assert_notnull(v);
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
-    vec vc =
-        vec_alloc(.cap = v->_size ? v->_size : VEC_INITIAL_CAP,
-                  .cmp = v->_cmp, .cpy = v->_cpy, .destroy = v->_destroy);
+    vec vc = vec_alloc(.cap = v->_size ? v->_size : VEC_INITIAL_CAP,
+                       .cpy = v->_cpy, .destroy = v->_destroy);
 #pragma GCC diagnostic pop
     for (size_t i = 0; i < v->_size; ++i) {
         vec_push(&vc, v->_cpy(v->_values[i]));
@@ -132,8 +129,8 @@ vec vec_copy(const vec* v) {
 void vec_merge(vec* v1, vec* v2) {
     assert_notnull(v1);
     assert_notnull(v2);
-    assert(v1->_cmp == v2->_cmp && v1->_cpy == v2->_cpy &&
-           v1->_destroy == v2->_destroy && "non-matching vecs");
+    assert(v1->_cpy == v2->_cpy && v1->_destroy == v2->_destroy &&
+           "non-matching vecs");
     if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
         size_t cap = v1->_size + v2->_size;
         void** p = realloc(v1->_values, cap * sizeof(void*));
@@ -148,57 +145,6 @@ void vec_merge(vec* v1, vec* v2) {
     v2->_values = NULL;
     v2->_cap = 0;
     v2->_size = 0;
-}
-
-bool vec_equal(const vec* v1, const vec* v2) {
-    assert_notnull(v1);
-    assert_notnull(v2);
-    if (v1->_cmp != v2->_cmp || v1->_cpy != v2->_cpy ||
-        v1->_destroy != v2->_destroy || v1->_size != v2->_size)
-        return false;
-    for (size_t i = 0; i < v1->_size; ++i) {
-        if (v1->_cmp(v1->_values[i], v2->_values[i]))
-            return false;
-    }
-    return true;
-}
-
-bool vec_find(const vec* v, const void* value, size_t* index) {
-    assert_notnull(v);
-    assert_notnull(value);
-    assert_notnull(index);
-    for (size_t i = 0; i < v->_size; ++i) {
-        if (v->_cmp(v->_values[i], value) == 0) {
-            *index = i;
-            return true;
-        }
-    }
-    return false;
-}
-
-void vec_sort(vec* v) {
-    assert_notnull(v);
-    if (v->_size) {
-        qsort(v->_values, v->_size, sizeof(v->_values[0]), v->_cmp);
-    }
-}
-
-bool vec_search(const vec* v, const void* s, size_t* index) {
-    assert_notnull(v);
-    assert_notnull(s);
-    assert_notnull(index);
-    if (v->_size) {
-        const void* p = bsearch(s, v->_values, v->_size,
-                                sizeof(v->_values[0]), v->_cmp);
-        if (p) {
-#pragma GCC diagnostic ignored "-Wpointer-arith"
-#pragma GCC diagnostic push
-            *index = p - v->_values[0];
-#pragma GCC diagnostic pop
-            return true;
-        }
-    }
-    return false;
 }
 
 static void vec_grow(vec* v) {

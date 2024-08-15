@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+static int partition(char** array, size_t low, size_t high);
+static void swap(char** array, size_t i, size_t j);
+
 bool sx_ends(const char* s, const char* suffix) {
     size_t size = strlen(s);
     if (size < strlen(suffix))
@@ -64,6 +67,32 @@ char* sx_lowercase_alloc(const char* s) {
     return u;
 }
 
-int sx_strcmp_void(const void* s, const void* t) {
-    return strcmp(*(const char**)s, *(const char**)t);
+void sx_qsort(char** array, size_t low, size_t high) {
+    if (low < high) {
+        size_t partition_index = partition(array, low, high);
+        sx_qsort(array, low, partition_index - 1);
+        sx_qsort(array, partition_index + 1, high);
+    }
+}
+
+static int partition(char** array, size_t low, size_t high) {
+    const char* pivot = array[low];
+    size_t i = low;
+    size_t j = high;
+    while (i < j) {
+        while (i <= high - 1 && (strcmp(array[i], pivot) <= 0))
+            i++;
+        while (j >= low + 1 && (strcmp(array[j], pivot) > 0))
+            j--;
+        if (i < j)
+            swap(array, i, j);
+    }
+    swap(array, low, j);
+    return j;
+}
+
+static void swap(char** array, size_t i, size_t j) {
+    char* t = array[i];
+    array[i] = array[j];
+    array[j] = t;
 }

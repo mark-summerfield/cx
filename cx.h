@@ -7,3 +7,5 @@
 #define assert_alloc(p) assert((p) && "failed to acquire memory")
 
 #define assert_notnull(p) assert((p) && "unexpected NULL pointer")
+
+typedef long long usize;

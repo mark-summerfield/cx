@@ -5,6 +5,7 @@
 #include "va_test.h"
 #include "vec_int_test.h"
 #include "vec_str_test.h"
+#include "vec_test.h"
 #include <stdio.h>
 
 void va_tests(tinfo*);
