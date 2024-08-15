@@ -3,7 +3,7 @@
 #include "vec.h"
 #include <stdlib.h>
 
-void _vec_grow(vec* v);
+static void vec_grow(vec* v);
 
 vec vec_alloc_(vec_alloc_args args) {
     assert(args.cmp && "must provide a cmp function");
@@ -63,7 +63,7 @@ void vec_insert(vec* v, size_t index, void* value) {
     }
     assert_valid_index(v, index);
     if (v->_size == v->_cap) {
-        _vec_grow(v);
+        vec_grow(v);
     }
     for (size_t i = v->_size - 1; i >= index; --i) {
         v->_values[i + 1] = v->_values[i];
@@ -110,7 +110,7 @@ void vec_push(vec* v, void* value) {
     assert_notnull(v);
     assert_notnull(value);
     if (v->_size == v->_cap) {
-        _vec_grow(v);
+        vec_grow(v);
     }
     v->_values[v->_size++] = value;
 }
@@ -202,7 +202,7 @@ vec_found_index vec_search(const vec* v, const void* s) {
     return found_index;
 }
 
-void _vec_grow(vec* v) {
+static void vec_grow(vec* v) {
     const size_t BLOCK_SIZE = 1024 * 1024;
     size_t cap =
         (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;

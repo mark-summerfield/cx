@@ -30,7 +30,7 @@ void sx_uppercase_ip(char* s) {
     }
 }
 
-char* sx_new_uppercase(const char* s) {
+char* sx_uppercase_alloc(const char* s) {
     assert(s && "can't uppercase NULL");
     char* u = malloc(strlen(s) + 1);
     assert_alloc(u);
@@ -51,7 +51,7 @@ void sx_lowercase_ip(char* s) {
     }
 }
 
-char* sx_new_lowercase(const char* s) {
+char* sx_lowercase_alloc(const char* s) {
     assert(s && "can't lowercase NULL");
     char* u = malloc(strlen(s) + 1);
     assert_alloc(u);

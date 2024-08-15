@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void _vec_int_grow(vec_int* v);
+static void vec_int_grow(vec_int* v);
 
 vec_int vec_int_alloc_cap(size_t cap) {
     cap = cap ? cap : 32;
@@ -49,7 +49,7 @@ void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
     }
     assert_valid_index(v, index);
     if (v->_size == v->_cap) {
-        _vec_int_grow(v);
+        vec_int_grow(v);
     }
     for (size_t i = v->_size - 1; i >= index; --i) {
         v->_values[i + 1] = v->_values[i];
@@ -95,7 +95,7 @@ VEC_INT_VALUE_T vec_int_pop(vec_int* v) {
 void vec_int_push(vec_int* v, VEC_INT_VALUE_T value) {
     assert_notnull(v);
     if (v->_size == v->_cap) {
-        _vec_int_grow(v);
+        vec_int_grow(v);
     }
     v->_values[v->_size++] = value;
 }
@@ -203,7 +203,7 @@ char* vec_int_tostring(const vec_int* v) {
     return s;
 }
 
-void _vec_int_grow(vec_int* v) {
+static void vec_int_grow(vec_int* v) {
     const size_t BLOCK_SIZE = 1024 * 1024;
     size_t cap =
         (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;

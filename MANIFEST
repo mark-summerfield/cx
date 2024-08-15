@@ -1,20 +1,20 @@
 # TODO
-# (1) vec tests: copy vec_str_test.[hc] & create a struct Pair to test on
+# (1) vec tests: copy vec_str_test.[hc] & test on Tag type:
 #	alloc free get get_last set insert replace remove pop copy merge
 #	equal find sort search
 #
-# (3) rbt with void* items
-#     - if item is struct* then it is an ordered map of key-values
-#     rbt_str char* items - ordered set of char* (wrapper like vec_str)
-#     rbt_int int items - (modified copy of rbt like vec_int)
+# (2) set types
+#	- set void* (e.g., struct KeyValue, in effect a map)
+#	- set_int
+#	- set_str
+#     based on some kind of b?tree (or fall back to rbt?)
 #
-# (4) hsh with void* items
-#     - as with rbt but based on hash table with linear probing
-# (5) que (based on vec)?
-# (6) lst (doubly-linked list)?
-# (7) deq (based on list)?
+# (3) hsh with void* items - as with set but based on hash table
+# (4) que (based on vec)?
+# (5) lst (doubly-linked list)?
+# (6) deq (based on list)?
 #
-# (8) str (based on vec)?
+# (7) str (based on vec)?
 
 cx.h
 vec_common.h
@@ -33,6 +33,7 @@ vaargs.h
 cx_test.c
 cx_util_test.h
 cx_util_test.c
+tag_test.h # NOTE for vec_test.[hc]
 vec_int_test.h
 vec_int_test.c
 vec_str_test.h

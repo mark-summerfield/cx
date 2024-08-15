@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void _vec_str_grow(vec_str* v);
+static void vec_str_grow(vec_str* v);
 
 vec_str vec_str_alloc_cap(size_t cap) {
     char** values = malloc(cap * sizeof(char*));
@@ -57,7 +57,7 @@ void vec_str_insert(vec_str* v, size_t index, char* value) {
     }
     assert_valid_index(v, index);
     if (v->_size == v->_cap) {
-        _vec_str_grow(v);
+        vec_str_grow(v);
     }
     for (size_t i = v->_size - 1; i >= index; --i) {
         v->_values[i + 1] = v->_values[i];
@@ -104,7 +104,7 @@ void vec_str_push(vec_str* v, char* value) {
     assert_notnull(v);
     assert_notnull(value);
     if (v->_size == v->_cap) {
-        _vec_str_grow(v);
+        vec_str_grow(v);
     }
     v->_values[v->_size++] = value;
 }
@@ -249,7 +249,7 @@ char* vec_str_join(const vec_str* v, const char* sep) {
     return s;
 }
 
-void _vec_str_grow(vec_str* v) {
+static void vec_str_grow(vec_str* v) {
     const size_t BLOCK_SIZE = 1024 * 1024;
     size_t cap =
         (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;

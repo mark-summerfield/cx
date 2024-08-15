@@ -1,5 +1,5 @@
-#pragma once
 // Copyright © 2024 Mark Summerfield. All rights reserved.
+#pragma once
 
 #include <stdbool.h>
 #include <string.h>
@@ -53,13 +53,13 @@ bool sx_ends_fold(const char*, const char*);
 void sx_uppercase_ip(char*);
 
 // Returns new char* of given char*'s ASCII chars uppercased
-char* sx_new_uppercase(const char*);
+char* sx_uppercase_alloc(const char*);
 
 // Modifies char*'s text in-place converting ASCII lowercase to lowercase
 void sx_lowercase_ip(char*);
 
 // Returns new char* of given char*'s ASCII chars lowercased
-char* sx_new_lowercase(const char*);
+char* sx_lowercase_alloc(const char*);
 
 int sx_strcmp_void(const void* s, const void* t);
 
