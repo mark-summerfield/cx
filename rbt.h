@@ -48,15 +48,20 @@ void rbt_clear(rbt* t);
 // Returns the rbt's size.
 #define rbt_size(t) ((t)->_size)
 
-// Inserts the value in order.
+// Adds the value in order. If the value was already present, deletes the
+// old value and replaces it with the new and returns false; otherwise
+// inserts the new value and returns true. (This allows for the use of
+// key-value values, i.e., maps, where this function matches on the key and
+// replaces the value.)
 // rbt takes ownership of the new value (e.g., if char* then use strdup()).
-void rbt_add(rbt* t, const void* value);
+bool rbt_add(rbt* t, const void* value);
 
 // Removes and frees the given value and returns true; or does nothing
 // (if the value isn't in the rbt) and returns false.
 bool rbt_remove(rbt* t, const void* value);
 
-// Returns true and sets tree_value if value is in the rbt.
+// Returns true and sets tree_value if value is in the rbt. The tree retains
+// ownership so tree_value must not be freed.
 bool rbt_find(const rbt* t, const void* value, void* tree_value);
 
 // Returns true if value is in the rbt.

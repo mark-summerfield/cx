@@ -41,10 +41,11 @@ void rbt_delete_node(rbt_node* node, void (*destroy)(void* value)) {
     }
 }
 
-void rbt_add(rbt* t, const void* value) {
+bool rbt_add(rbt* t, const void* value) {
     assert_notnull(t);
     assert_notnull(value);
     // TODO
+    return false;
 }
 
 inline bool rbt_remove(rbt* t, const void* value) {
