@@ -22,10 +22,7 @@ void vec_sort_tests(tinfo*);
 
 static bool vec_tag_find(const vec* v, const char* name, size_t* index);
 static void vec_tag_sort(vec* v);
-static void tags_qsort(void** array, usize low, usize high);
-static int partition(void** array, usize low, usize high);
-static void swap(void** array, usize i, usize j);
-static bool vec_tag_search(const vec* v, const char* s, size_t* index);
+static bool vec_tag_search(const vec* v, const Tag* tag, size_t* index);
 static bool vec_tag_equal(const vec* v1, const vec* v2);
 
 void vec_tests(tinfo* tinfo) {
@@ -209,19 +206,23 @@ void vec_sort_tests(tinfo* tinfo) {
     found = vec_tag_find(&v1, "Xy#000", &index);
     check_bool_eq(tinfo, found, false);
 
-    found = vec_tag_search(&v1, "Ae#005", &index);
+    Tag tag = {"Ae#005", 0};
+    found = vec_tag_search(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 5);
 
-    found = vec_tag_search(&v1, "Zz#999", &index);
+    tag.name = "Zz#999";
+    found = vec_tag_search(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 8);
 
-    found = vec_tag_search(&v1, "Ae#104", &index);
+    tag.name = "Ae#104";
+    found = vec_tag_search(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 6);
 
-    found = vec_tag_search(&v1, "Xy#000", &index);
+    tag.name = "Xy#000";
+    found = vec_tag_search(&v1, &tag, &index);
     check_bool_eq(tinfo, found, false);
 
     vec_free(&v1);
@@ -289,60 +290,19 @@ bool vec_tag_find(const vec* v, const char* name, size_t* index) {
 
 static void vec_tag_sort(vec* v) {
     assert_notnull(v);
-    tags_qsort(v->_values, 0, v->_size - 1);
+    qsort(v->_values, v->_size, sizeof(Tag*), tag_cmp);
 }
 
-static void tags_qsort(void** array, usize low, usize high) {
-    if (low < high) {
-        usize partition_index = partition(array, low, high);
-        tags_qsort(array, low, partition_index - 1);
-        tags_qsort(array, partition_index + 1, high);
-    }
-}
-
-static int partition(void** array, usize low, usize high) {
-    const char* pivot = ((const Tag*)array[low])->name;
-    usize i = low;
-    usize j = high;
-    while (i < j) {
-        while (i <= high - 1 &&
-               (strcmp(((const Tag*)array[i])->name, pivot) <= 0))
-            i++;
-        while (j >= low + 1 &&
-               (strcmp(((const Tag*)array[j])->name, pivot) > 0))
-            j--;
-        if (i < j)
-            swap(array, i, j);
-    }
-    swap(array, low, j);
-    return j;
-}
-
-static void swap(void** array, usize i, usize j) {
-    void* t = array[i];
-    array[i] = array[j];
-    array[j] = t;
-}
-
-static bool vec_tag_search(const vec* v, const char* s, size_t* index) {
+static bool vec_tag_search(const vec* v, const Tag* tag, size_t* index) {
     assert_notnull(v);
-    assert_notnull(s);
+    assert_notnull(tag);
     assert_notnull(index);
     if (v->_size) {
-        size_t low = 0;
-        size_t high = v->_size - 1;
-        while (high && low <= high) {
-            size_t mid = low + ((high - low) / 2);
-            const Tag* tag = v->_values[mid];
-            int cmp = strcmp(tag->name, s);
-            if (cmp == 0) {
-                *index = mid;
-                return true;
-            }
-            if (cmp < 0)
-                low = mid + 1;
-            else
-                high = mid - 1;
+        void** p =
+            bsearch(&tag, v->_values, v->_size, sizeof(Tag*), tag_cmp);
+        if (p) {
+            *index = p - v->_values;
+            return true;
         }
     }
     return false;

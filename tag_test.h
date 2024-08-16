@@ -62,9 +62,7 @@ bool tag_equal(const Tag* tag1, const Tag* tag2) {
 }
 
 int tag_cmp(const void* t1, const void* t2) {
-    const char* name1 = ((Tag*)t1)->name;
-    const char* name2 = ((Tag*)t2)->name;
-    return strcmp(name1, name2);
+    return strcmp((*(const Tag**)t1)->name, (*(const Tag**)t2)->name);
 }
 
 // caller owns
