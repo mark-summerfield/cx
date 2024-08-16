@@ -50,17 +50,17 @@ void rbt_clear(rbt* t);
 
 // Inserts the value in order.
 // rbt takes ownership of the new value (e.g., if char* then use strdup()).
-void rbt_insert(rbt* t, void* value);
+void rbt_add(rbt* t, const void* value);
+
+// Removes and frees the given value and returns true; or does nothing
+// (if the value isn't in the rbt) and returns false.
+bool rbt_remove(rbt* t, const void* value);
 
 // Returns true and sets tree_value if value is in the rbt.
 bool rbt_find(const rbt* t, const void* value, void* tree_value);
 
 // Returns true if value is in the rbt.
 bool rbt_contains(rbt* t, const void* value);
-
-// Removes and frees the given value and returns true; or does nothing
-// (if the value isn't in the rbt) and returns false.
-bool rbt_remove(rbt* t, void* value);
 
 // Returns a deep copy of the rbt including cmp, cpy, and destroy.
 rbt rbt_copy(const rbt* t);
@@ -69,11 +69,33 @@ rbt rbt_copy(const rbt* t);
 // cpy, and destroy.
 bool rbt_equal(const rbt* t1, const rbt* t2);
 
-// Applies the given fn function to every node in the tree in order.
+// Applies the given apply function to every node in the tree in order.
 // For example, given an rbt of Tags:
 //  void print_node(const void* node) {
 //      Tag *tag = node; // cast
 //      printf("%s (%ld)\n", tag->name, tag->id);
 //  }
 //  rbt_iterate(&tag_tree, print_node);
-void rbt_iterate(const rbt* t, void (*fn)(const void*));
+void rbt_iterate(const rbt* t, void (*apply)(const void*));
+
+// Returns a new rbt that contains the values which are in t1 that are
+// not in t2.
+rbt rbt_difference(const rbt* t1, const rbt* t2);
+
+// Returns a new rbt that contains the values which are in t1 or in
+// t2—but not in both.
+rbt rbt_symmetric_difference(const rbt* t1, const rbt* t2);
+
+// Returns a new rbt that contains the values that t1 and t2 have in common.
+rbt rbt_intersection(const rbt* t1, const rbt* t2);
+
+// Returns a new rbt that contains the values from t1 and from t2 (with
+// no duplicates of course).
+rbt rbt_union(const rbt* t1, const rbt* t2);
+
+// Adds every value from t2 to t1 (with no duplicates).
+void rbt_unite(rbt* t1, const rbt* t2);
+
+// TODO rbt_isdisjoint
+// TODO rbt_issubsetof
+// TODO rbt_issupersetof

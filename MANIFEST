@@ -1,12 +1,12 @@
 # TODO
-# (1) set types
+# (1) rbt types
 #	see ~/app/golib/zOld/rbset/rbset.go
-#	- set void* (e.g., struct KeyValue, in effect a map)
-#	- set_int
-#	- set_str
-#     all based on rbt
+#	see ~/app/golib/rbtree/rbtree.go
+#	- rbt void* (e.g., struct KeyValue, in effect a map)
+#	- rbt_int
+#	- rbt_str
 #
-# (3) hsh with void* items - as with set but based on hash table?
+# (3) hsh with void* items - as with rbt but based on hash table?
 # (4) que (based on vec)?
 # (5) lst (doubly-linked list)?
 # (6) deq (based on list)?

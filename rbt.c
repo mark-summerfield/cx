@@ -3,7 +3,13 @@
 #include "rbt.h"
 #include <stdlib.h>
 
-static void rbt_apply(const _rbt_node* node, void (*fn)(const void*));
+#define assert_compatible                                  \
+    assert(t1->_cmp == t2->_cmp && t1->_cpy == t2->_cpy && \
+           t1->_destroy != t2->_destroy)
+
+static void rbt_iterate_node(const _rbt_node* node,
+                             void (*apply)(const void*));
+void rbt_delete_node(_rbt_node* node, void (*destroy)(void* value));
 
 rbt rbt_alloc(rbt_alloc_args args) {
     assert(args.cmp && "must provide a cmp function");
@@ -16,25 +22,32 @@ rbt rbt_alloc(rbt_alloc_args args) {
                  ._destroy = args.destroy};
 }
 
-void rbt_free(rbt* t) {
-    assert_notnull(t);
-    rbt_clear(t);
-    // TODO
-}
+inline void rbt_free(rbt* t) { rbt_clear(t); }
 
 void rbt_clear(rbt* t) {
     assert_notnull(t);
-    // TODO
+    rbt_delete_node(t->_root, t->_destroy);
     t->_size = 0;
 }
 
-void rbt_insert(rbt* t, void* value) {
+void rbt_delete_node(_rbt_node* node, void (*destroy)(void* value)) {
+    if (node) {
+        rbt_delete_node(node->_left, destroy);
+        rbt_delete_node(node->_right, destroy);
+        node->_left = NULL;
+        node->_right = NULL;
+        destroy(node->_value);
+        node->_value = NULL;
+    }
+}
+
+void rbt_add(rbt* t, const void* value) {
     assert_notnull(t);
     assert_notnull(value);
     // TODO
 }
 
-inline bool rbt_remove(rbt* t, void* value) {
+inline bool rbt_remove(rbt* t, const void* value) {
     assert_notnull(t);
     // TODO
     return false;
@@ -42,13 +55,10 @@ inline bool rbt_remove(rbt* t, void* value) {
 
 rbt rbt_copy(const rbt* t) {
     assert_notnull(t);
-#pragma GCC diagnostic ignored "-Woverride-init"
-#pragma GCC diagnostic push
-    rbt vc = rbt_alloc((rbt_alloc_args){
+    rbt tc = rbt_alloc((rbt_alloc_args){
         .cmp = t->_cmp, .cpy = t->_cpy, .destroy = t->_destroy});
-#pragma GCC diagnostic pop
     // TODO
-    return vc;
+    return tc;
 }
 
 bool rbt_equal(const rbt* v1, const rbt* v2) {
@@ -72,16 +82,54 @@ inline bool rbt_contains(rbt* t, const void* value) {
     return rbt_find(t, value, NULL);
 }
 
-inline void rbt_iterate(const rbt* t, void (*fn)(const void*)) {
+inline void rbt_iterate(const rbt* t, void (*apply)(const void*)) {
     assert_notnull(t);
     if (t->_size)
-        rbt_apply(t->_root, fn);
+        rbt_iterate_node(t->_root, apply);
 }
 
-static void rbt_apply(const _rbt_node* node, void (*fn)(const void*)) {
+static void rbt_iterate_node(const _rbt_node* node,
+                             void (*apply)(const void*)) {
     if (!node)
         return;
-    rbt_apply(node->_left, fn);
-    fn(node->_value);
-    rbt_apply(node->_right, fn);
+    rbt_iterate_node(node->_left, apply);
+    apply(node->_value);
+    rbt_iterate_node(node->_right, apply);
+}
+
+rbt rbt_difference(const rbt* t1, const rbt* t2) {
+    assert_compatible;
+    rbt t = rbt_alloc((rbt_alloc_args){
+        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    // TODO
+    return t;
+}
+
+rbt rbt_symmetric_difference(const rbt* t1, const rbt* t2) {
+    assert_compatible;
+    rbt t = rbt_alloc((rbt_alloc_args){
+        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    // TODO
+    return t;
+}
+
+rbt rbt_intersection(const rbt* t1, const rbt* t2) {
+    assert_compatible;
+    rbt t = rbt_alloc((rbt_alloc_args){
+        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    // TODO
+    return t;
+}
+
+rbt rbt_union(const rbt* t1, const rbt* t2) {
+    assert_compatible;
+    rbt t = rbt_alloc((rbt_alloc_args){
+        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    // TODO
+    return t;
+}
+
+void rbt_unite(rbt* t1, const rbt* t2) {
+    assert_compatible;
+    // TODO
 }
