@@ -79,6 +79,10 @@ bool rbt_equal(const rbt* t1, const rbt* t2);
 // TODO add void*context or int i to apply function?
 void rbt_visit(const rbt* t, void (*apply)(const void*));
 
+// TODO uncomment or remove
+// Provides read-only access to the root if visit() isn't sufficient.
+// const void** rbt_borrow_root(const rbt* t);
+
 // Returns a new rbt that contains the values which are in t1 that are
 // not in t2.
 rbt rbt_difference(const rbt* t1, const rbt* t2);

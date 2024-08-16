@@ -97,6 +97,8 @@ static void rbt_visit_node(const rbt_node* node,
     rbt_visit_node(node->_right, apply);
 }
 
+// inline const void** rbt_borrow_root(const rbt* t) { return t->_root; }
+
 rbt rbt_difference(const rbt* t1, const rbt* t2) {
     assert_compatible;
     rbt t = rbt_alloc((rbt_alloc_args){
