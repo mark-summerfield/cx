@@ -1,5 +1,9 @@
 # TODO
 # (1) rbt types
+#	see red-black-tree1.c
+#	https://www.learnc.net/c-data-structures/c-red-black-tree/
+#	https://www.geeksforgeeks.org/introduction-to-red-black-tree/?ref=header_outind
+#	see https://github.com/xieqing/red-black-tree
 #	see ~/app/golib/zOld/rbset/rbset.go
 #	see ~/app/golib/rbtree/rbtree.go
 #	NOTE for deletions I will need to call t->_destroy(node->_value)
