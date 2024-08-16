@@ -1,5 +1,6 @@
 # TODO
 # (1) set types
+#	see ~/app/golib/zOld/rbset/rbset.go
 #	- set void* (e.g., struct KeyValue, in effect a map)
 #	- set_int
 #	- set_str
@@ -13,6 +14,8 @@
 # (7) str (based on vec)?
 
 cx.h
+rbt.h
+rbt.c
 vec_common.h
 vec.h
 vec.c
