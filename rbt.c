@@ -7,9 +7,9 @@
     assert(t1->_cmp == t2->_cmp && t1->_cpy == t2->_cpy && \
            t1->_destroy != t2->_destroy)
 
-static void rbt_iterate_node(const _rbt_node* node,
-                             void (*apply)(const void*));
-void rbt_delete_node(_rbt_node* node, void (*destroy)(void* value));
+static void rbt_visit_node(const rbt_node* node,
+                           void (*apply)(const void*));
+void rbt_delete_node(rbt_node* node, void (*destroy)(void* value));
 
 rbt rbt_alloc(rbt_alloc_args args) {
     assert(args.cmp && "must provide a cmp function");
@@ -30,7 +30,7 @@ void rbt_clear(rbt* t) {
     t->_size = 0;
 }
 
-void rbt_delete_node(_rbt_node* node, void (*destroy)(void* value)) {
+void rbt_delete_node(rbt_node* node, void (*destroy)(void* value)) {
     if (node) {
         rbt_delete_node(node->_left, destroy);
         rbt_delete_node(node->_right, destroy);
@@ -82,19 +82,19 @@ inline bool rbt_contains(rbt* t, const void* value) {
     return rbt_find(t, value, NULL);
 }
 
-inline void rbt_iterate(const rbt* t, void (*apply)(const void*)) {
+inline void rbt_visit(const rbt* t, void (*apply)(const void*)) {
     assert_notnull(t);
     if (t->_size)
-        rbt_iterate_node(t->_root, apply);
+        rbt_visit_node(t->_root, apply);
 }
 
-static void rbt_iterate_node(const _rbt_node* node,
-                             void (*apply)(const void*)) {
+static void rbt_visit_node(const rbt_node* node,
+                           void (*apply)(const void*)) {
     if (!node)
         return;
-    rbt_iterate_node(node->_left, apply);
+    rbt_visit_node(node->_left, apply);
     apply(node->_value);
-    rbt_iterate_node(node->_right, apply);
+    rbt_visit_node(node->_right, apply);
 }
 
 rbt rbt_difference(const rbt* t1, const rbt* t2) {

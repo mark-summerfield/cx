@@ -5,24 +5,24 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef struct _rbt_node _rbt_node;
+typedef struct rbt_node rbt_node;
 
 // A red-black tree of owned void* values.
 // All data members are private; all accesses via functions.
 typedef struct {
-    _rbt_node* _root;
+    rbt_node* _root;
     size_t _size;
     int (*_cmp)(const void*, const void*);
     void* (*_cpy)(const void*);
     void (*_destroy)(void* value);
 } rbt;
 
-typedef struct _rbt_node {
+typedef struct rbt_node {
     void* _value;
-    _rbt_node* _left;
-    _rbt_node* _right;
+    rbt_node* _left;
+    rbt_node* _right;
     bool _red;
-} _rbt_node;
+} rbt_node;
 
 typedef struct {
     int (*cmp)(const void*, const void*);
@@ -75,8 +75,9 @@ bool rbt_equal(const rbt* t1, const rbt* t2);
 //      Tag *tag = node; // cast
 //      printf("%s (%ld)\n", tag->name, tag->id);
 //  }
-//  rbt_iterate(&tag_tree, print_node);
-void rbt_iterate(const rbt* t, void (*apply)(const void*));
+//  rbt_visit(&tag_tree, print_node);
+// TODO add void*context or int i to apply function?
+void rbt_visit(const rbt* t, void (*apply)(const void*));
 
 // Returns a new rbt that contains the values which are in t1 that are
 // not in t2.
