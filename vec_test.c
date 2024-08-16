@@ -20,17 +20,13 @@ void vec_tests(tinfo*);
 void vec_merge_tests(tinfo*);
 void vec_sort_tests(tinfo*);
 
-static bool vec_tag_find(const vec* v, const char* name, size_t* index);
-static void vec_tag_sort(vec* v);
-static bool vec_tag_search(const vec* v, const Tag* tag, size_t* index);
-static bool vec_tag_equal(const vec* v1, const vec* v2);
-
 void vec_tests(tinfo* tinfo) {
     vec_merge_tests(tinfo);
     vec_sort_tests(tinfo);
 
     tag_make(true);
-    vec v1 = vec_alloc(.cap = 5, .cpy = tag_copy, .destroy = tag_free);
+    vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .cpy = tag_copy,
+                       .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 5);
 
     vec v2 = vec_copy(&v1);
@@ -47,7 +43,7 @@ void vec_tests(tinfo* tinfo) {
     vec_match(tinfo, &v2,
               "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     vec_same(tinfo, &v1, &v2);
-    check_bool_eq(tinfo, vec_tag_equal(&v1, &v2), true);
+    check_bool_eq(tinfo, vec_equal(&v1, &v2), true);
 
     Tag* t1 = vec_pop(&v1);
     check_str_eq(tinfo, t1->name, "Ag#106");
@@ -62,7 +58,7 @@ void vec_tests(tinfo* tinfo) {
 
     vec_check_size_cap(tinfo, &v1, 5, 10);
     vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
-    check_bool_eq(tinfo, vec_tag_equal(&v1, &v2), false);
+    check_bool_eq(tinfo, vec_equal(&v1, &v2), false);
 
     const Tag* t2 = vec_get(&v1, 0);
     check_str_eq(tinfo, t2->name, "Aa#100");
@@ -127,14 +123,16 @@ void vec_tests(tinfo* tinfo) {
 
 void vec_merge_tests(tinfo* tinfo) {
     tag_make(true);
-    vec v1 = vec_alloc(.cap = 7, .cpy = tag_copy, .destroy = tag_free);
+    vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
+                       .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
     for (size_t i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
     vec_check_size_cap(tinfo, &v1, 5, 7);
     vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
 
-    vec v2 = vec_alloc(.cap = 11, .cpy = tag_copy, .destroy = tag_free);
+    vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
+                       .destroy = tag_free);
     vec_check_size_cap(tinfo, &v2, 0, 11);
     for (size_t i = 0; i < 6; ++i)
         vec_push(&v2, tag_make(false));
@@ -154,7 +152,8 @@ void vec_merge_tests(tinfo* tinfo) {
 
 void vec_sort_tests(tinfo* tinfo) {
     tag_make(true);
-    vec v1 = vec_alloc(.cap = 7, .cpy = tag_copy, .destroy = tag_free);
+    vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
+                       .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
     for (size_t i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
@@ -169,60 +168,69 @@ void vec_sort_tests(tinfo* tinfo) {
 
     bool found;
     size_t index;
+    Tag tag = {"", 0};
 
-    found = vec_tag_find(&v1, "Ae#005", &index);
+    tag.name = "Ae#005";
+    found = vec_find(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 4);
 
-    found = vec_tag_find(&v1, "Zz#999", &index);
+    tag.name = "Zz#999";
+    found = vec_find(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 0);
 
-    found = vec_tag_find(&v1, "Ae#104", &index);
+    tag.name = "Ae#104";
+    found = vec_find(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 8);
 
-    found = vec_tag_find(&v1, "Xy#000", &index);
+    tag.name = "Xy#000";
+    found = vec_find(&v1, &tag, &index);
     check_bool_eq(tinfo, found, false);
 
-    vec_tag_sort(&v1);
+    vec_sort(&v1);
     vec_check_size_cap(tinfo, &v1, 9, 14);
     vec_match(
         tinfo, &v1,
         "Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#888|Zz#999");
 
-    found = vec_tag_find(&v1, "Ae#005", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 5);
-
-    found = vec_tag_find(&v1, "Zz#999", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 8);
-
-    found = vec_tag_find(&v1, "Ae#104", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 6);
-
-    found = vec_tag_find(&v1, "Xy#000", &index);
-    check_bool_eq(tinfo, found, false);
-
-    Tag tag = {"Ae#005", 0};
-    found = vec_tag_search(&v1, &tag, &index);
+    tag.name = "Ae#005";
+    found = vec_find(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 5);
 
     tag.name = "Zz#999";
-    found = vec_tag_search(&v1, &tag, &index);
+    found = vec_find(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 8);
 
     tag.name = "Ae#104";
-    found = vec_tag_search(&v1, &tag, &index);
+    found = vec_find(&v1, &tag, &index);
     check_bool_eq(tinfo, found, true);
     check_int_eq(tinfo, index, 6);
 
     tag.name = "Xy#000";
-    found = vec_tag_search(&v1, &tag, &index);
+    found = vec_find(&v1, &tag, &index);
+    check_bool_eq(tinfo, found, false);
+
+    tag.name = "Ae#005";
+    found = vec_search(&v1, &tag, &index);
+    check_bool_eq(tinfo, found, true);
+    check_int_eq(tinfo, index, 5);
+
+    tag.name = "Zz#999";
+    found = vec_search(&v1, &tag, &index);
+    check_bool_eq(tinfo, found, true);
+    check_int_eq(tinfo, index, 8);
+
+    tag.name = "Ae#104";
+    found = vec_search(&v1, &tag, &index);
+    check_bool_eq(tinfo, found, true);
+    check_int_eq(tinfo, index, 6);
+
+    tag.name = "Xy#000";
+    found = vec_search(&v1, &tag, &index);
     check_bool_eq(tinfo, found, false);
 
     vec_free(&v1);
@@ -267,58 +275,11 @@ void vec_check_size_cap(tinfo* tinfo, const vec* v, size_t size,
 
 void vec_same(tinfo* tinfo, const vec* v1, const vec* v2) {
     tinfo->total++;
-    if (!vec_tag_equal(v1, v2)) {
+    if (!vec_equal(v1, v2)) {
         fprintf(stderr, "FAIL: %s vec_equal() expected true, got false\n",
                 tinfo->tag);
     } else
         tinfo->ok++;
-}
-
-bool vec_tag_find(const vec* v, const char* name, size_t* index) {
-    assert_notnull(v);
-    assert_notnull(name);
-    assert_notnull(index);
-    for (size_t i = 0; i < vec_size(v); ++i) {
-        const Tag* tag = vec_get(v, i);
-        if (strcmp(name, tag->name) == 0) {
-            *index = i;
-            return true;
-        }
-    }
-    return false;
-}
-
-static void vec_tag_sort(vec* v) {
-    assert_notnull(v);
-    qsort(v->_values, v->_size, sizeof(Tag*), tag_cmp);
-}
-
-static bool vec_tag_search(const vec* v, const Tag* tag, size_t* index) {
-    assert_notnull(v);
-    assert_notnull(tag);
-    assert_notnull(index);
-    if (v->_size) {
-        void** p =
-            bsearch(&tag, v->_values, v->_size, sizeof(Tag*), tag_cmp);
-        if (p) {
-            *index = p - v->_values;
-            return true;
-        }
-    }
-    return false;
-}
-
-static bool vec_tag_equal(const vec* v1, const vec* v2) {
-    assert_notnull(v1);
-    assert_notnull(v2);
-    if (v1->_cpy != v2->_cpy || v1->_destroy != v2->_destroy ||
-        v1->_size != v2->_size)
-        return false;
-    for (size_t i = 0; i < v1->_size; ++i) {
-        if (!tag_equal(v1->_values[i], v2->_values[i]))
-            return false;
-    }
-    return true;
 }
 
 #pragma GCC diagnostic pop

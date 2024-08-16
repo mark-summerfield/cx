@@ -98,7 +98,7 @@ bool vec_str_equal(const vec_str* v1, const vec_str* v2);
 // The returned char* value is now owned by the caller.
 char* vec_str_join(const vec_str* v, const char* sep);
 
-// Returns whether the value was found in the vec and if so, its index.
+// Returns whether the value was found in the vec and if so, sets its index.
 // Uses a linear search.
 bool vec_str_find(const vec_str* v, const char* value, size_t* index);
 

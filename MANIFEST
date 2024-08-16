@@ -1,6 +1,5 @@
 # TODO
-# (1) apply bsearch & qsort fix to vec_test.[hc] &
-#     if successful put find sort search back into vec.[hc]?
+# (1) put find sort search back into vec.[hc]
 # (2) set types
 #	- set void* (e.g., struct KeyValue, in effect a map)
 #	- set_int

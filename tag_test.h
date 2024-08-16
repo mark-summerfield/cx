@@ -55,12 +55,10 @@ void tag_free(void* t) {
     tag->name = NULL;
 }
 
-bool tag_equal(const Tag* tag1, const Tag* tag2) {
-    assert_notnull(tag1);
-    assert_notnull(tag2);
-    return tag1->id == tag2->id && (strcmp(tag1->name, tag2->name) == 0);
-}
-
+// Each void* argument is actually a pointer to a pointer, so first we
+// must cast to pointer to pointer to the actual type, then we must
+// dereference the outer pointer to get the inner pointer which is
+// actually used.
 int tag_cmp(const void* t1, const void* t2) {
     return strcmp((*(const Tag**)t1)->name, (*(const Tag**)t2)->name);
 }

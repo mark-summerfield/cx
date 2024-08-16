@@ -85,7 +85,7 @@ void vec_int_merge(vec_int* v1, vec_int* v2);
 // Returns true if the two vec_int's have the same VEC_INT_VALUE_T values.
 bool vec_int_equal(const vec_int* v1, const vec_int* v2);
 
-// Returns whether the value was found in the vec and if so, its index.
+// Returns whether the value was found in the vec and if so, sets its index.
 // Uses a linear search.
 bool vec_int_find(const vec_int* v, VEC_INT_VALUE_T value, size_t* index);
 

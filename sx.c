@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Each void* argument is actually a pointer to a pointer, so first we
+// must cast to pointer to pointer to the actual type, then we must
+// dereference the outer pointer to get the inner pointer which is
+// actually used.
 int sx_strcmp(const void* s, const void* t) {
     return strcmp(*(const char**)s, *(const char**)t);
 }

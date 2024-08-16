@@ -86,4 +86,5 @@ int sx_strcmp(const void* s, const void* t);
         unsigned long long int: "unsigned long long int", \
         unsigned short int: "unsigned short int", \
         void*: "void*", \
+        const void*: "const void*", \
         default: "unknown")
