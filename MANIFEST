@@ -2,6 +2,7 @@
 # (1) rbt types
 #	see ~/app/golib/zOld/rbset/rbset.go
 #	see ~/app/golib/rbtree/rbtree.go
+#	NOTE for deletions I will need to call t->_destroy(node->_value)
 #	- rbt void* (e.g., struct KeyValue, in effect a map)
 #	- rbt_int
 #	- rbt_str
