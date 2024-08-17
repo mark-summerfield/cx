@@ -155,6 +155,24 @@ void vec_int_tests(tinfo* tinfo) {
     vec_int_add(&v3, 11);
     vec_int_match(tinfo, &v3,
                   "-711 -555 -99 1 2 3 4 5 6 7 8 9 11 11 17 21 45");
+    vec_int_add(&v3, 12);
+    vec_int_match(tinfo, &v3,
+                  "-711 -555 -99 1 2 3 4 5 6 7 8 9 11 11 12 17 21 45");
+    vec_int_add(&v3, -822);
+    vec_int_match(tinfo, &v3,
+                  "-822 -711 -555 -99 1 2 3 4 5 6 7 8 9 11 11 12 17 21 45");
+    vec_int_add(&v3, 57);
+    vec_int_match(
+        tinfo, &v3,
+        "-822 -711 -555 -99 1 2 3 4 5 6 7 8 9 11 11 12 17 21 45 57");
+    vec_int_add(&v3, 10);
+    vec_int_match(
+        tinfo, &v3,
+        "-822 -711 -555 -99 1 2 3 4 5 6 7 8 9 10 11 11 12 17 21 45 57");
+    vec_int_add(&v3, 10);
+    vec_int_match(
+        tinfo, &v3,
+        "-822 -711 -555 -99 1 2 3 4 5 6 7 8 9 10 10 11 11 12 17 21 45 57");
 
     vec_int_clear(&v1);
     vec_int_check_size_cap(tinfo, &v1, 0, 64);
