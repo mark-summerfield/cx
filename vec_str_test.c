@@ -274,6 +274,25 @@ void vec_str_sort_tests(tinfo* tinfo) {
     check_bool_eq(tinfo, found_index.found, true);
     check_int_eq(tinfo, found_index.index, 10);
 
+    vec_str_match(
+        tinfo, &v1,
+        "Alpha|Hairy|India|Papa|Sierra|Two|Victor|X-ray|Zulu|gamma|kilo");
+    vec_str_add(&v1, strdup("Aardvark"));
+    vec_str_match(tinfo, &v1,
+                  "Aardvark|Alpha|Hairy|India|Papa|Sierra|Two|Victor|X-ray|"
+                  "Zulu|gamma|kilo");
+    vec_str_add(&v1, strdup("limbo"));
+    vec_str_match(tinfo, &v1,
+                  "Aardvark|Alpha|Hairy|India|Papa|Sierra|Two|Victor|X-ray|"
+                  "Zulu|gamma|kilo|limbo");
+    vec_str_add(&v1, strdup("Oscar"));
+    vec_str_match(tinfo, &v1,
+                  "Aardvark|Alpha|Hairy|India|Oscar|Papa|Sierra|Two|Victor|"
+                  "X-ray|Zulu|gamma|kilo|limbo");
+    vec_str_add(&v1, strdup("Oscar"));
+    vec_str_match(tinfo, &v1,
+                  "Aardvark|Alpha|Hairy|India|Oscar|Oscar|Papa|Sierra|Two|"
+                  "Victor|X-ray|Zulu|gamma|kilo|limbo");
     vec_str_free(&v1);
 }
 

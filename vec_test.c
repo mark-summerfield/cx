@@ -233,6 +233,26 @@ void vec_sort_tests(tinfo* tinfo) {
     found = vec_search(&v1, &tag, &index);
     check_bool_eq(tinfo, found, false);
 
+    vec_match(
+        tinfo, &v1,
+        "Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#888|Zz#999");
+    vec_add(&v1, tag_alloc("Aa#000", 0));
+    vec_match(tinfo, &v1,
+              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
+              "888|Zz#999");
+    vec_add(&v1, tag_alloc("zz#999", 0));
+    vec_match(tinfo, &v1,
+              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
+              "888|Zz#999|zz#999");
+    vec_add(&v1, tag_alloc("Af#200", 0));
+    vec_match(tinfo, &v1,
+              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
+              "Af#200|Ww#888|Zz#999|zz#999");
+    vec_add(&v1, tag_alloc("Af#200", 0));
+    vec_match(tinfo, &v1,
+              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
+              "Af#200|Af#200|Ww#888|Zz#999|zz#999");
+
     vec_free(&v1);
 }
 

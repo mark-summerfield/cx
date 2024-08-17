@@ -65,9 +65,15 @@ const void* vec_get_last(const vec* v);
 void vec_set(vec* v, size_t index, void* value);
 
 // Inserts the value at position index and moves succeeding values up
-// (right), increasing the vec's size (and cap if necessary).
+// (right), increasing the vec's size (and cap if necessary): O(n).
+// Use add to insert into a sorted vec.
 // vec takes ownership of the new value (e.g., if char* then use strdup()).
 void vec_insert(vec* v, size_t index, void* value);
+
+// Adds the value in order (in a sorted vec) and moves succeeding values up
+// (right), increasing the vec's size (and cap if necessary): O(n).
+// vec takes ownership of the new value (e.g., if char* then use strdup()).
+void vec_add(vec* v, void* value);
 
 // Sets the vec's value at position index to the given value and returns
 // the old value from that position.
@@ -75,20 +81,21 @@ void vec_insert(vec* v, size_t index, void* value);
 // The returned value is now owned by the caller.
 void* vec_replace(vec* v, size_t index, void* value);
 
-// Removes and frees the value at the given index and closes up the gap.
+// Removes and frees the value at the given index and closes up the gap:
+// O(n).
 void vec_remove(vec* v, size_t index);
 
 // Returns and removes the value at the given index and closes up the
 // gap.
-// The returned value is now owned by the caller.
+// The returned value is now owned by the caller: O(n).
 void* vec_take(vec* v, size_t index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
-// The returned value is now owned by the caller.
+// The returned value is now owned by the caller: O(1).
 void* vec_pop(vec* v);
 
 // Pushes a new value onto the end of the vec, increasing the vec's size
-// (and cap if necessary).
+// (and cap if necessary): O(1).
 // vec takes ownership of the value (e.g., if char* then use strdup()).
 void vec_push(vec* v, void* value);
 

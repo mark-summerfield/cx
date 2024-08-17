@@ -53,10 +53,14 @@ const char* vec_str_get_last(const vec_str* v);
 void vec_str_set(vec_str* v, size_t index, char* value);
 
 // Inserts the value at position index and moves succeeding values up
-// (right), increasing the vec_str's size (and cap if necessary).
-// vec_str takes ownership of the new value (e.g., if char* then use
-// strdup()).
+// (right), increasing the vec_str's size (and cap if necessary): O(n).
+// vec_str takes ownership of the new value (e.g., use strdup()).
 void vec_str_insert(vec_str* v, size_t index, char* value);
+
+// Adds the value in order (in a sorted vec) and moves succeeding values up
+// (right), increasing the vec's size (and cap if necessary): O(n).
+// vec takes ownership of the new value (e.g., use strdup()).
+void vec_str_add(vec_str* v, char* value);
 
 // Sets the vec_str's value at position index to the given value and returns
 // the old value from that position.
@@ -64,21 +68,22 @@ void vec_str_insert(vec_str* v, size_t index, char* value);
 // strdup()). The returned value is now owned by the caller.
 char* vec_str_replace(vec_str* v, size_t index, char* value);
 
-// Removes and frees the value at the given index and closes up the gap.
+// Removes and frees the value at the given index and closes up the gap:
+// O(n).
 void vec_str_remove(vec_str* v, size_t index);
 
 // Returns and removes the value at the given index and closes up the
-// gap.
+// gap: O(n).
 // The returned value is now owned by the caller.
 char* vec_str_take(vec_str* v, size_t index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
-// The returned value is now owned by the caller.
+// The returned value is now owned by the caller: O(1).
 char* vec_str_pop(vec_str* v);
 
 // Pushes a new value onto the end of the vec_str, increasing the vec_str's
-// size (and cap if necessary). vec_str takes ownership of the value (e.g.,
-// if char* then use strdup()).
+// size (and cap if necessary): O(1). vec_str takes ownership of the value
+// (e.g., if char* then use strdup()).
 void vec_str_push(vec_str* v, char* value);
 
 // Returns a deep copy of the vec_str.

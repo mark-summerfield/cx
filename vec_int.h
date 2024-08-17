@@ -49,27 +49,31 @@ VEC_INT_VALUE_T vec_int_get_last(const vec_int* v);
 void vec_int_set(vec_int* v, size_t index, VEC_INT_VALUE_T value);
 
 // Inserts the VEC_INT_VALUE_T at position index and moves succeeding values
-// up (right), increasing the vec_int's size (and cap if necessary).
+// up (right), increasing the vec_int's size (and cap if necessary): O(n).
 void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value);
+
+// Adds the value in order (in a sorted vec) and moves succeeding values up
+// (right), increasing the vec's size (and cap if necessary): O(n).
+void vec_int_add(vec_int* v, VEC_INT_VALUE_T value);
 
 // Sets the vec_int's value at position index to the given VEC_INT_VALUE_T
 // and returns the old VEC_INT_VALUE_T value from that position.
 VEC_INT_VALUE_T vec_int_replace(vec_int* v, size_t index,
                                 VEC_INT_VALUE_T value);
 
-// Removes the value at the given index and closes up the gap.
+// Removes the value at the given index and closes up the gap: O(n).
 void vec_int_remove(vec_int* v, size_t index);
 
 // Returns and removes the VEC_INT_VALUE_T value at the given index and
-// closes up the gap.
+// closes up the gap: O(n).
 VEC_INT_VALUE_T vec_int_take(vec_int* v, size_t index);
 
 // Removes and returns the last VEC_INT_VALUE_T value. Only use if
-// v.isempty() is false.
+// v.isempty() is false: O(1).
 VEC_INT_VALUE_T vec_int_pop(vec_int* v);
 
 // Pushes a new VEC_INT_VALUE_T value onto the end of the vec_int,
-// increasing the vec_int's size (and cap) if necessary.
+// increasing the vec_int's size (and cap) if necessary: O(1).
 void vec_int_push(vec_int* v, VEC_INT_VALUE_T value);
 
 // Returns a deep copy of the vec_int.

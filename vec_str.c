@@ -68,6 +68,26 @@ void vec_str_insert(vec_str* v, size_t index, char* value) {
     v->_size++;
 }
 
+void vec_str_add(vec_str* v, char* value) {
+    assert_notnull(v);
+    assert_notnull(value);
+    size_t high = v->_size - 1;
+    if (!v->_size || strcmp(v->_values[high], value) <= 0) {
+        vec_str_push(v,
+                     value); // vec is empty -or- nonempty and value >= high
+    } else {
+        size_t low = 0;
+        while (low < high) {
+            size_t mid = (low + high) / 2;
+            if (strcmp(v->_values[mid], value) > 0)
+                high = mid;
+            else
+                low = mid + 1;
+        }
+        vec_str_insert(v, low, value);
+    }
+}
+
 char* vec_str_replace(vec_str* v, size_t index, char* value) {
     assert_notnull(v);
     assert_notnull(value);

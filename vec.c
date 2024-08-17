@@ -75,6 +75,25 @@ void vec_insert(vec* v, size_t index, void* value) {
     v->_size++;
 }
 
+void vec_add(vec* v, void* value) {
+    assert_notnull(v);
+    assert_notnull(value);
+    size_t high = v->_size - 1;
+    if (!v->_size || v->_cmp(&v->_values[high], &value) <= 0) {
+        vec_push(v, value); // vec is empty -or- nonempty and value >= high
+    } else {
+        size_t low = 0;
+        while (low < high) {
+            size_t mid = (low + high) / 2;
+            if (v->_cmp(&v->_values[mid], &value) > 0)
+                high = mid;
+            else
+                low = mid + 1;
+        }
+        vec_insert(v, low, value);
+    }
+}
+
 void* vec_replace(vec* v, size_t index, void* value) {
     assert_notnull(v);
     assert_notnull(value);

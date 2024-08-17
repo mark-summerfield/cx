@@ -61,6 +61,26 @@ void vec_int_insert(vec_int* v, size_t index, VEC_INT_VALUE_T value) {
     v->_size++;
 }
 
+void vec_int_add(vec_int* v, VEC_INT_VALUE_T value) {
+    assert_notnull(v);
+    assert_notnull(value);
+    size_t high = v->_size - 1;
+    if (!v->_size || v->_values[high] <= value) {
+        vec_int_push(v,
+                     value); // vec is empty -or- nonempty and value >= high
+    } else {
+        size_t low = 0;
+        while (low < high) {
+            size_t mid = (low + high) / 2;
+            if (v->_values[mid] > value)
+                high = mid;
+            else
+                low = mid + 1;
+        }
+        vec_int_insert(v, low, value);
+    }
+}
+
 VEC_INT_VALUE_T vec_int_replace(vec_int* v, size_t index,
                                 VEC_INT_VALUE_T value) {
     assert_notnull(v);
