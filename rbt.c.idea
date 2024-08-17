@@ -136,3 +136,5 @@ void rbt_unite(rbt* t1, const rbt* t2) {
     assert_compatible;
     // TODO
 }
+
+// vim: syn=c

@@ -1,26 +1,28 @@
 # TODO
-# (1) rbt types
-#	see red-black-tree1.c
-#	https://www.learnc.net/c-data-structures/c-red-black-tree/
-#	https://www.geeksforgeeks.org/introduction-to-red-black-tree/?ref=header_outind
-#	see https://github.com/xieqing/red-black-tree
-#	see ~/app/golib/zOld/rbset/rbset.go
-#	see ~/app/golib/rbtree/rbtree.go
-#	NOTE for deletions I will need to call t->_destroy(node->_value)
-#	- rbt void* (e.g., struct KeyValue, in effect a map)
-#	- rbt_int
-#	- rbt_str
+# rbt types
+#   https://www.learnc.net/c-data-structures/c-red-black-tree/
+#   https://www.geeksforgeeks.org/introduction-to-red-black-tree/?ref=header_outind
+#   see https://github.com/xieqing/red-black-tree
+#   see ~/app/golib/zOld/rbset/rbset.go
+#   see ~/app/golib/rbtree/rbtree.go
+#   NOTE for deletions I will need to call t->_destroy(node->_value)
+#   - set_str (this and vector are all that's needed for wordladder)
 #
-# (3) hsh with void* items - as with rbt but based on hash table?
-# (4) que (based on vec)?
-# (5) lst (doubly-linked list)?
-# (6) deq (based on list)?
-#
-# (7) str (based on vec)?
+# Only do this as needed:
+#   - hsh with void* items - as with rbt but based on hash table?
+#   - que (based on vec)?
+#   - lst (doubly-linked list)?
+#   - deq (based on list)?
+#   - str (based on vec)?
+#   - set_int (rbt; see set_str) 
+#   - map_str_str (rbt; see set_str)?
+#   - map_str_any (rbt; see set_str)?
+#   - map_int_any (rbt; see set_str)?
+#   etc.
 
 cx.h
-rbt.h
-rbt.c
+set_str.h
+set_str.c
 vec_common.h
 vec.h
 vec.c
@@ -28,6 +30,9 @@ vec_str.h
 vec_str.c
 vec_int.h
 vec_int.c
+
+rbt.h.idea
+rbt.c.idea
 
 sx.h
 sx.c

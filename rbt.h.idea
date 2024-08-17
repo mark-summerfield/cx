@@ -109,3 +109,5 @@ void rbt_unite(rbt* t1, const rbt* t2);
 // TODO rbt_isdisjoint
 // TODO rbt_issubsetof
 // TODO rbt_issupersetof
+
+// vim: syn=c
