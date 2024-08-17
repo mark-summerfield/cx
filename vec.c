@@ -44,6 +44,7 @@ const void* vec_get(const vec* v, size_t index) {
 
 inline const void* vec_get_last(const vec* v) {
     assert_notnull(v);
+    assert_nonempty(v);
     return v->_values[v->_size - 1];
 }
 
@@ -105,7 +106,7 @@ void* vec_replace(vec* v, size_t index, void* value) {
 
 inline void vec_remove(vec* v, size_t index) {
     assert_notnull(v);
-    v->_destroy(vec_take(v, index));
+    v->_destroy(vec_take(v, index)); // vec_take checks index
 }
 
 void* vec_take(vec* v, size_t index) {
@@ -122,7 +123,7 @@ void* vec_take(vec* v, size_t index) {
 
 void* vec_pop(vec* v) {
     assert_notnull(v);
-    assert(v->_size > 0 && "can't pop empty vec");
+    assert_nonempty(v);
     return v->_values[--v->_size];
 }
 

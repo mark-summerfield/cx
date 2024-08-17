@@ -37,6 +37,7 @@ const char* vec_str_get(const vec_str* v, size_t index) {
 
 inline const char* vec_str_get_last(const vec_str* v) {
     assert_notnull(v);
+    assert_nonempty(v);
     return v->_values[v->_size - 1];
 }
 
@@ -116,7 +117,7 @@ char* vec_str_take(vec_str* v, size_t index) {
 
 char* vec_str_pop(vec_str* v) {
     assert_notnull(v);
-    assert(v->_size > 0 && "can't pop empty vec_str");
+    assert_nonempty(v);
     return v->_values[--v->_size];
 }
 

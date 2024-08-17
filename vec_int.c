@@ -33,6 +33,7 @@ VEC_INT_VALUE_T vec_int_get(const vec_int* v, size_t index) {
 
 inline VEC_INT_VALUE_T vec_int_get_last(const vec_int* v) {
     assert_notnull(v);
+    assert_nonempty(v);
     return v->_values[v->_size - 1];
 }
 
@@ -109,7 +110,7 @@ VEC_INT_VALUE_T vec_int_take(vec_int* v, size_t index) {
 
 VEC_INT_VALUE_T vec_int_pop(vec_int* v) {
     assert_notnull(v);
-    assert(v->_size > 0 && "can't pop empty vec_int");
+    assert_nonempty(v);
     return v->_values[--v->_size];
 }
 
