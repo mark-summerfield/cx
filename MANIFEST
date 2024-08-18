@@ -1,7 +1,10 @@
 # TODO
+# - size_t → ptrdiff_t for loops & array/char* indexes
+#
 # rbt types
+#   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
 #   see ~/app/golib/zOld/rbset/rbset.go
-#   see ~/app/golib/rbtree/rbtree.go
+#   see rb.c
 #   NOTE for deletions I will need to call t->_destroy(node->_value)
 #   - set_str (this and vector are all that's needed for wordladder)
 #
