@@ -26,12 +26,12 @@ typedef struct set_str_node {
 // value, and destroy to free a value.
 set_str set_str_alloc();
 
+// Calls destroy on all the set_str's values.
+void set_str_clear(set_str* t);
+
 // Destroys the set_str freeing its memory and also freeing every value. The
 // set_str is not usable after this.
 inline void set_str_free(set_str* t) { set_str_clear(t); }
-
-// Calls destroy on all the set_str's values.
-void set_str_clear(set_str* t);
 
 // Returns true if the set_str is empty.
 #define set_str_isempty(t) ((t)->_size == 0)
@@ -39,13 +39,10 @@ void set_str_clear(set_str* t);
 // Returns the set_str's size.
 #define set_str_size(t) ((t)->_size)
 
-// Adds the value in order. If the value was already present, deletes the
-// old value and replaces it with the new and returns false; otherwise
-// inserts the new value and returns true. (This allows for the use of
-// key-value values, i.e., maps, where this function matches on the key and
-// replaces the value.)
+// Adds the value in order. If the value was already present, does nothing
+// and returns false; otherwise inserts the new value and returns true.
 // set_str takes ownership of the new value (e.g., use strdup()).
-bool set_str_add(set_str* t, const char* value);
+bool set_str_add(set_str* t, char* value);
 
 // Removes and frees the given value and returns true; or does nothing
 // (if the value isn't in the set_str) and returns false.
@@ -60,15 +57,14 @@ set_str set_str_copy(const set_str* t);
 // Returns true if the two set_str's have the same values.
 bool set_str_equal(const set_str* t1, const set_str* t2);
 
-// Applies the given apply function to every node in the tree in order.
-// For example, given an set_str:
-//  void print_node(const char* node) {
-//      char *s = node; // cast
-//      printf("%s\n", s);
+// Calls the given visit function on every node in the tree in order.
+// For example, given a set_str, myset:
+//  void print_value(const char* value) {
+//      printf("%s\n", value);
 //  }
-//  set_str_visit(&tag_tree, print_node);
+//  set_str_visitor(&myset, print_value);
 // TODO add char*context or int i to apply function?
-void set_str_visit(const set_str* t, void (*apply)(const char*));
+void set_str_visitor(const set_str* t, void (*visit)(const char*));
 
 // TODO uncomment or remove
 // Provides read-only access to the root if visit() isn't sufficient.

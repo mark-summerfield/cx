@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 static void set_str_visit_node(const set_str_node* node,
-                               void (*apply)(const char*));
+                               void (*visit)(const char*));
 void set_str_delete_node(set_str_node* node);
 
 set_str set_str_alloc() {
@@ -31,7 +31,7 @@ void set_str_delete_node(set_str_node* node) {
     }
 }
 
-bool set_str_add(set_str* t, const char* value) {
+bool set_str_add(set_str* t, char* value) {
     assert_notnull(t);
     assert_notnull(value);
     // TODO
@@ -65,19 +65,19 @@ bool set_str_contains(set_str* t, const char* value) {
     return false;
 }
 
-void set_str_visit(const set_str* t, void (*apply)(const char*)) {
+void set_str_visitor(const set_str* t, void (*visit)(const char*)) {
     assert_notnull(t);
     if (t->_size)
-        set_str_visit_node(t->_root, apply);
+        set_str_visit_node(t->_root, visit);
 }
 
 static void set_str_visit_node(const set_str_node* node,
-                               void (*apply)(const char*)) {
+                               void (*visit)(const char*)) {
     if (!node)
         return;
-    set_str_visit_node(node->_left, apply);
-    apply(node->_value);
-    set_str_visit_node(node->_right, apply);
+    set_str_visit_node(node->_left, visit);
+    visit(node->_value);
+    set_str_visit_node(node->_right, visit);
 }
 
 // inline const char** set_str_borrow_root(const set_str* t) { return

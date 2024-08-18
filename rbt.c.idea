@@ -9,7 +9,7 @@
 
 static void rbt_visit_node(const rbt_node* node,
                            void (*apply)(const void*));
-void rbt_delete_node(rbt_node* node, void (*destroy)(void* value));
+void rbt_delete_node(rbt_node* node, void (*destroy)(void* item));
 
 rbt rbt_alloc(rbt_alloc_args args) {
     assert(args.cmp && "must provide a cmp function");
@@ -30,25 +30,25 @@ void rbt_clear(rbt* t) {
     t->_size = 0;
 }
 
-void rbt_delete_node(rbt_node* node, void (*destroy)(void* value)) {
+void rbt_delete_node(rbt_node* node, void (*destroy)(void* item)) {
     if (node) {
         rbt_delete_node(node->_left, destroy);
         rbt_delete_node(node->_right, destroy);
         node->_left = NULL;
         node->_right = NULL;
-        destroy(node->_value);
-        node->_value = NULL;
+        destroy(node->_item);
+        node->_item = NULL;
     }
 }
 
-bool rbt_add(rbt* t, const void* value) {
+bool rbt_add(rbt* t, const void* item) {
     assert_notnull(t);
-    assert_notnull(value);
+    assert_notnull(item);
     // TODO
     return false;
 }
 
-inline bool rbt_remove(rbt* t, const void* value) {
+inline bool rbt_remove(rbt* t, const void* item) {
     assert_notnull(t);
     // TODO
     return false;
@@ -72,30 +72,31 @@ bool rbt_equal(const rbt* v1, const rbt* v2) {
     return true;
 }
 
-bool rbt_find(const rbt* t, const void* value, void* tree_value) {
+bool rbt_find(const rbt* t, void* item) {
     assert_notnull(t);
-    assert_notnull(value);
-    // TODO tree_value may be NULL in which case not assigned to
+    assert_notnull(item);
+    // TODO searches for an item whose key equals item.key & if found
+    // populates item.value with the found value (as a borrow).
     return false;
 }
 
-inline bool rbt_contains(rbt* t, const void* value) {
-    return rbt_find(t, value, NULL);
+inline bool rbt_contains(rbt* t, const void* item) {
+    return rbt_find(t, item, NULL);
 }
 
-inline void rbt_visit(const rbt* t, void (*apply)(const void*)) {
+inline void rbt_visitor(const rbt* t, void (*visit)(const void*)) {
     assert_notnull(t);
     if (t->_size)
-        rbt_visit_node(t->_root, apply);
+        rbt_visit_node(t->_root, visit);
 }
 
 static void rbt_visit_node(const rbt_node* node,
-                           void (*apply)(const void*)) {
+                           void (*visit)(const void*)) {
     if (!node)
         return;
-    rbt_visit_node(node->_left, apply);
-    apply(node->_value);
-    rbt_visit_node(node->_right, apply);
+    rbt_visit_node(node->_left, visit);
+    visit(node->_item);
+    rbt_visit_node(node->_right, visit);
 }
 
 // inline const void** rbt_borrow_root(const rbt* t) { return t->_root; }
