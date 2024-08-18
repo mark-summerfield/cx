@@ -67,10 +67,8 @@ void vec_insert(vec* v, size_t index, void* value) {
     if (v->_size == v->_cap) {
         vec_grow(v);
     }
-    for (size_t i = v->_size - 1; i >= index; --i) {
-        v->_values[i + 1] = v->_values[i];
-        if (!i) // if i == 0, --i will wrap!
-            break;
+    for (size_t i = v->_size; i > index; --i) {
+        v->_values[i] = v->_values[i - 1];
     }
     v->_values[index] = value;
     v->_size++;
