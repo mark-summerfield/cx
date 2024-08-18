@@ -65,7 +65,7 @@ bool set_str_contains(set_str* t, const char* value) {
     return false;
 }
 
-void set_str_visitor(const set_str* t, void (*visit)(const char*)) {
+void set_str_visit_all(const set_str* t, void (*visit)(const char*)) {
     assert_notnull(t);
     if (t->_size)
         set_str_visit_node(t->_root, visit);

@@ -84,7 +84,7 @@ inline bool rbt_contains(rbt* t, const void* item) {
     return rbt_find(t, item, NULL);
 }
 
-inline void rbt_visitor(const rbt* t, void (*visit)(const void*)) {
+inline void rbt_visit_all(const rbt* t, void (*visit)(const void*)) {
     assert_notnull(t);
     if (t->_size)
         rbt_visit_node(t->_root, visit);

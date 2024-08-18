@@ -62,9 +62,9 @@ bool set_str_equal(const set_str* t1, const set_str* t2);
 //  void print_value(const char* value) {
 //      printf("%s\n", value);
 //  }
-//  set_str_visitor(&myset, print_value);
+//  set_str_visit_all(&myset, print_value);
 // TODO add char*context or int i to apply function?
-void set_str_visitor(const set_str* t, void (*visit)(const char*));
+void set_str_visit_all(const set_str* t, void (*visit)(const char*));
 
 // TODO uncomment or remove
 // Provides read-only access to the root if visit() isn't sufficient.
