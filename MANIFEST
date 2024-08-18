@@ -4,7 +4,7 @@
 # rbt types
 #   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
 #   see ~/app/golib/zOld/rbset/rbset.go
-#   see rb.c
+#   see rb.c.eg & compare with set_str.c
 #   NOTE for deletions I will need to call t->_destroy(node->_value)
 #   - set_str (this and vector are all that's needed for wordladder)
 #
