@@ -4,21 +4,20 @@
 #   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
 #   see ~/app/golib/zOld/rbset/rbset.go
 #   see rb.c & compare with set_int.c
-#   - set_int (much easier to test than set_str)
+#   - set_int (e) (much easier to test than set_str)
 #	TODO can now test by using set_int_to_vec() and then
 #	vec_int_tostring()
-#   - set_str (this and vector are all that's needed for wordladder)
+#   - set_str (e) (this and vector are all that's needed for wordladder)
 #
 # Only do this as needed:
-#   - hsh with void* items - as with rbt but based on hash table?
-#   - que (based on vec)?
-#   - lst (doubly-linked list)?
-#   - deq (based on list)?
-#   - str (based on vec)?
-#   - set_int (rbt; see set_str) 
-#   - map_str_str (rbt; see set_str)?
-#   - map_str_any (rbt; see set_str)?
-#   - map_int_any (rbt; see set_str)?
+#   - hsh (h) with void* items - as with rbt but based on hash table?
+#   - que (q) (based on vec)?
+#   - lst (t) (doubly-linked list)?
+#   - deq (d) (based on list)?
+#   - str (s) (based on vec)?
+#   - map_str_str (m) (rbt; see set_str)?
+#   - map_str_any (m) (rbt; see set_str)?
+#   - map_int_any (m) (rbt; see set_str)?
 #   etc.
 
 cx.h
