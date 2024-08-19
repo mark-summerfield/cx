@@ -9,7 +9,7 @@
 #define VEC_NOT_FOUND ((int)-1)
 
 // index must be a variable or literal, not an expression!
-#define assert_valid_index(me, index) \
-    assert(0 <= (index) && (index) < (me)->_size && "index out of range")
+#define assert_valid_index(v, index) \
+    assert(0 <= (index) && (index) < (v)->_size && "index out of range")
 
-#define assert_nonempty(me) assert((me)->_size && "empty vec");
+#define assert_nonempty(v) assert((v)->_size && "empty vec");

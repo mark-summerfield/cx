@@ -117,16 +117,17 @@ void vec_int_push(vec_int* me, int value) {
 
 vec_int vec_int_copy(const vec_int* me) {
     assert_notnull(me);
-    vec_int vc = vec_int_alloc_cap(me->_size);
+    vec_int out = vec_int_alloc_cap(me->_size);
     for (int i = 0; i < me->_size; ++i)
-        vec_int_push(&vc, me->_values[i]);
-    return vc;
+        vec_int_push(&out, me->_values[i]);
+    return out;
 }
 
 void vec_int_merge(vec_int* me, vec_int* them) {
     assert_notnull(me);
     assert_notnull(them);
-    if ((me->_cap - me->_size) < them->_size) { // me doesn't have enough cap
+    if ((me->_cap - me->_size) <
+        them->_size) { // me doesn't have enough cap
         int cap = me->_size + them->_size;
         int* p = realloc(me->_values, cap * sizeof(int));
         assert_alloc(p);
@@ -192,28 +193,29 @@ char* vec_int_tostring(const vec_int* me) {
     const int BUF_SIZE = 128;
     const int VEC_SIZE = vec_int_size(me);
     int cap = VEC_SIZE * 4;
-    char* s = malloc(cap);
-    assert_alloc(s);
+    char* out = malloc(cap);
+    assert_alloc(out);
     int pos = 0;
     char buf[BUF_SIZE];
     for (int i = 0; i < VEC_SIZE; ++i) {
         size_t n = snprintf(buf, BUF_SIZE, "%d ", vec_int_get(me, i));
-        strncpy(&s[pos], buf, n);
+        strncpy(&out[pos], buf, n);
         pos += n;
         if (pos + 4 > cap) {
             cap *= 2;
-            char* p = realloc(s, cap);
+            char* p = realloc(out, cap);
             assert_alloc(p);
-            s = p;
+            out = p;
         }
     }
-    s[pos - 1] = 0; // avoid trailing space
-    return s;
+    out[pos - 1] = 0; // avoid trailing space
+    return out;
 }
 
 static void vec_int_grow(vec_int* me) {
     const int BLOCK_SIZE = 1024 * 1024;
-    int cap = (me->_cap < BLOCK_SIZE) ? me->_cap * 2 : me->_cap + BLOCK_SIZE;
+    int cap =
+        (me->_cap < BLOCK_SIZE) ? me->_cap * 2 : me->_cap + BLOCK_SIZE;
     int* p = realloc(me->_values, cap * sizeof(int));
     assert_alloc(p);
     me->_values = p;

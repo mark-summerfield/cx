@@ -21,12 +21,6 @@ typedef struct set_str_node {
     bool _red;
 } set_str_node;
 
-typedef struct {
-    int i;
-    int size;
-    char* value;
-} set_str_visit_data;
-
 // Allocates a new empty set_str of owned char* values.
 // Caller must supply functions: cmp to compare values, cpy to copy a
 // value, and destroy to free a value.
@@ -62,16 +56,6 @@ set_str set_str_copy(const set_str* me);
 
 // Returns true if the two set_str's have the same values.
 bool set_str_equal(const set_str* me, const set_str* them);
-
-// Calls the given visit function on every node in the tree in order.
-// For example, given a set_str, meset:
-//  void print_value(const set_str_visit_data* data) {
-//      printf("%d/%d: %%s\n", data->i, data->size, data->value);
-//  }
-//  set_str_visit_all(&meset, print_value);
-// TODO add char*context or int i to apply function?
-void set_str_visit_all(const set_str* me,
-                       void (*visit)(const set_str_visit_data*));
 
 // Returns a new set_str that contains the values which are in me that are
 // not in them.

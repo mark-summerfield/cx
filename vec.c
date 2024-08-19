@@ -133,13 +133,13 @@ vec vec_copy(const vec* me) {
     assert_notnull(me);
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
-    vec vc =
-        vec_alloc(.cap = me->_size ? me->_size : VEC_INITIAL_CAP,
-                  .cmp = me->_cmp, .cpy = me->_cpy, .destroy = me->_destroy);
+    vec out = vec_alloc(.cap = me->_size ? me->_size : VEC_INITIAL_CAP,
+                        .cmp = me->_cmp, .cpy = me->_cpy,
+                        .destroy = me->_destroy);
 #pragma GCC diagnostic pop
     for (int i = 0; i < me->_size; ++i)
-        vec_push(&vc, me->_cpy(me->_values[i]));
-    return vc;
+        vec_push(&out, me->_cpy(me->_values[i]));
+    return out;
 }
 
 void vec_merge(vec* me, vec* them) {
@@ -147,7 +147,8 @@ void vec_merge(vec* me, vec* them) {
     assert_notnull(them);
     assert(me->_cmp == them->_cmp && me->_cpy == them->_cpy &&
            me->_destroy == them->_destroy && "non-matching vecs");
-    if ((me->_cap - me->_size) < them->_size) { // me doesn't have enough cap
+    if ((me->_cap - me->_size) <
+        them->_size) { // me doesn't have enough cap
         int cap = me->_size + them->_size;
         void** p = realloc(me->_values, cap * sizeof(void*));
         assert_alloc(p);
@@ -202,8 +203,8 @@ int vec_search(const vec* me, const void* value) {
     assert_notnull(me);
     assert_notnull(value);
     if (me->_size) {
-        void** p =
-            bsearch(&value, me->_values, me->_size, sizeof(void*), me->_cmp);
+        void** p = bsearch(&value, me->_values, me->_size, sizeof(void*),
+                           me->_cmp);
         if (p)
             return p - me->_values;
     }
@@ -212,7 +213,8 @@ int vec_search(const vec* me, const void* value) {
 
 static void vec_grow(vec* me) {
     const int BLOCK_SIZE = 1024 * 1024;
-    int cap = (me->_cap < BLOCK_SIZE) ? me->_cap * 2 : me->_cap + BLOCK_SIZE;
+    int cap =
+        (me->_cap < BLOCK_SIZE) ? me->_cap * 2 : me->_cap + BLOCK_SIZE;
     void** p = realloc(me->_values, cap * sizeof(void*));
     assert_alloc(p);
     me->_values = p;

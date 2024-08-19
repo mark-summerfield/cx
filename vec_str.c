@@ -125,16 +125,18 @@ void vec_str_push(vec_str* me, char* value) {
 
 vec_str vec_str_copy(const vec_str* me) {
     assert_notnull(me);
-    vec_str vc = vec_str_alloc_cap(me->_size ? me->_size : VEC_INITIAL_CAP);
+    vec_str out =
+        vec_str_alloc_cap(me->_size ? me->_size : VEC_INITIAL_CAP);
     for (int i = 0; i < me->_size; ++i)
-        vec_str_push(&vc, strdup(me->_values[i]));
-    return vc;
+        vec_str_push(&out, strdup(me->_values[i]));
+    return out;
 }
 
 void vec_str_merge(vec_str* me, vec_str* them) {
     assert_notnull(me);
     assert_notnull(them);
-    if ((me->_cap - me->_size) < them->_size) { // me doesn't have enough cap
+    if ((me->_cap - me->_size) <
+        them->_size) { // me doesn't have enough cap
         int cap = me->_size + them->_size;
         char** p = realloc(me->_values, cap * sizeof(char*));
         assert_alloc(p);
@@ -199,20 +201,20 @@ vec_str vec_str_alloc_split(const char* s, const char* sep) {
     assert_notnull(sep);
     int sep_size = strlen(sep);
     assert(sep_size && "can't split with empty sep");
-    vec_str me = vec_str_alloc();
+    vec_str out = vec_str_alloc();
     const char* p = s;
     while (p) {
         const char* q = strstr(p, sep);
         if (q) {
-            vec_str_push(&me, strndup(p, q - p));
+            vec_str_push(&out, strndup(p, q - p));
             p = q + sep_size;
         } else {
             if (strlen(p))
-                vec_str_push(&me, strdup(p));
+                vec_str_push(&out, strdup(p));
             break;
         }
     }
-    return me;
+    return out;
 }
 
 char* vec_str_join(const vec_str* me, const char* sep) {
@@ -228,9 +230,9 @@ char* vec_str_join(const vec_str* me, const char* sep) {
     }
     total_size -= SEP_SIZE; // don't want one at the end
     total_size++;           // allow for \0
-    char* s = malloc(total_size);
-    assert_alloc(s);
-    char* p = s;
+    char* out = malloc(total_size);
+    assert_alloc(out);
+    char* p = out;
     for (int i = 0; i < VEC_SIZE; ++i) {
         int size = sizes[i];
         strncpy(p, strndup(vec_str_get(me, i), size), size);
@@ -241,12 +243,13 @@ char* vec_str_join(const vec_str* me, const char* sep) {
         }
     }
     *p = 0;
-    return s;
+    return out;
 }
 
 static void vec_str_grow(vec_str* me) {
     const int BLOCK_SIZE = 1024 * 1024;
-    int cap = (me->_cap < BLOCK_SIZE) ? me->_cap * 2 : me->_cap + BLOCK_SIZE;
+    int cap =
+        (me->_cap < BLOCK_SIZE) ? me->_cap * 2 : me->_cap + BLOCK_SIZE;
     char** p = realloc(me->_values, cap * sizeof(char*));
     assert_alloc(p);
     me->_values = p;
