@@ -1,9 +1,6 @@
 # TODO
-# - size_t → ptrdiff_t for loops & array/char* indexes
-# - size → count
 #
 # vec*:
-#   - find/search return ptrdiff_t with -1 not found
 #   - ptrdiff_t vec*find_last(vec* v, void* what) 
 #   - const void** vec*values(const vec* v) // for fast iteration
 #
