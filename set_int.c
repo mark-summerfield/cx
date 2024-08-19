@@ -16,8 +16,7 @@ static void color_flip(set_int_node* node);
 static set_int_node* add_rotation(set_int_node* node);
 static set_int_node* rotate_left(set_int_node* node);
 static set_int_node* rotate_right(set_int_node* node);
-// TODO RETHINK
-// static void visit_node(const set_int_node* node, void (*visit)(int));
+static void to_vec(set_int_node* node, vec_int* v);
 static void delete_node_and_children(set_int_node* node);
 
 set_int set_int_alloc() {
@@ -27,11 +26,11 @@ set_int set_int_alloc() {
     };
 }
 
-void set_int_clear(set_int* v) {
-    assert_notnull(v);
-    delete_node_and_children(v->_root);
-    v->_root = NULL;
-    v->_size = 0;
+void set_int_clear(set_int* e) {
+    assert_notnull(e);
+    delete_node_and_children(e->_root);
+    e->_root = NULL;
+    e->_size = 0;
 }
 
 static void delete_node_and_children(set_int_node* node) {
@@ -42,13 +41,13 @@ static void delete_node_and_children(set_int_node* node) {
     }
 }
 
-bool set_int_add(set_int* v, int value) {
-    assert_notnull(v);
+bool set_int_add(set_int* e, int value) {
+    assert_notnull(e);
     assert_notnull(value);
-    node_and_flag nodeflag = add(v->_root, value);
+    node_and_flag nodeflag = add(e->_root, value);
     nodeflag.node->_red = false;
     if (nodeflag.flag)
-        v->_size++;
+        e->_size++;
     return nodeflag.flag;
 }
 
@@ -120,97 +119,71 @@ static set_int_node* node_alloc(int value) {
     return node;
 }
 
-bool set_int_remove(set_int* v, int value) {
-    assert_notnull(v);
+bool set_int_remove(set_int* e, int value) {
+    assert_notnull(e);
     // TODO
     return false;
 }
 
-set_int set_int_copy(const set_int* v) {
-    assert_notnull(v);
+set_int set_int_copy(const set_int* e) {
+    assert_notnull(e);
     set_int tc = set_int_alloc();
     // TODO
     return tc;
 }
 
-bool set_int_equal(const set_int* v1, const set_int* v2) {
-    assert_notnull(v1);
-    assert_notnull(v2);
-    if (v1->_size != v2->_size)
+bool set_int_equal(const set_int* e1, const set_int* e2) {
+    assert_notnull(e1);
+    assert_notnull(e2);
+    if (e1->_size != e2->_size)
         return false;
     // TODO
     return true;
 }
 
-bool set_int_contains(set_int* v, int value) {
+bool set_int_contains(set_int* e, int value) {
     // TODO use iteration
     return false;
 }
 
-void set_int_visit_all(const set_int* v,
-                       void (*visit)(const set_int_visit_data*)) {
-    assert_notnull(v);
-    if (v->_size) {
-        set_int_visit_data data = {v->_root, 0, v->_size, v->_root->value};
-        // visit_node(visit, &data); // TODO RETHINK
+set_int set_int_difference(const set_int* e1, const set_int* e2) {
+    set_int e = set_int_alloc();
+    // TODO
+    return e;
+}
+
+set_int set_int_symmetric_difference(const set_int* e1, const set_int* e2) {
+    set_int e = set_int_alloc();
+    // TODO
+    return e;
+}
+
+set_int set_int_intersection(const set_int* e1, const set_int* e2) {
+    set_int e = set_int_alloc();
+    // TODO
+    return e;
+}
+
+set_int set_int_union(const set_int* e1, const set_int* e2) {
+    set_int e = set_int_alloc();
+    // TODO
+    return e;
+}
+
+void set_int_unite(set_int* e1, const set_int* e2) {
+    // TODO
+}
+
+vec_int set_int_to_vec(const set_int* e) {
+    vec_int v = vec_int_alloc_cap(e->_size);
+    to_vec(e->_root, &v);
+    return v;
+}
+
+static void to_vec(set_int_node* node, vec_int* v) {
+    if (node) {
+        to_vec(node->_left, v);
+        vec_int_push(v, node->value);
+        to_vec(node->_right, v);
     }
-}
-
-// TODO RETHINK
-/*
-static void visit_node(void (*visit)(const set_int_visit_data*),
-                       set_int_visit_data* data) {
-    if (!data->node)
-        return;
-    set_int_node* left = data->node->_left;
-    set_int_node* right = data->node->_left;
-    int value = data->node->value;
-    data->node = left;
-    visit_node(node->_left, visit);
-
-    visit(node->value);
-
-    data->node = right;
-    visit_node(node->_right, visit);
-}
-*/
-
-set_int set_int_difference(const set_int* v1, const set_int* v2) {
-    set_int v = set_int_alloc();
-    // TODO
-    return v;
-}
-
-set_int set_int_symmetric_difference(const set_int* v1, const set_int* v2) {
-    set_int v = set_int_alloc();
-    // TODO
-    return v;
-}
-
-set_int set_int_intersection(const set_int* v1, const set_int* v2) {
-    set_int v = set_int_alloc();
-    // TODO
-    return v;
-}
-
-set_int set_int_union(const set_int* v1, const set_int* v2) {
-    set_int v = set_int_alloc();
-    // TODO
-    return v;
-}
-
-void set_int_unite(set_int* v1, const set_int* v2) {
-    // TODO
-}
-
-const set_int_node* set_int_root(set_int* v) {
-    return NULL; // TODO
-}
-
-inline const char* set_int_tostring(const set_int* v) {
-    return set_int_tostring_range(v, 0, v->_size - 1);
-}
-
-const char* set_int_tostring_range(const set_int* v, int begin, int end) {
-    return NULL; // TODO
 }

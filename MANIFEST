@@ -5,7 +5,8 @@
 #   see ~/app/golib/zOld/rbset/rbset.go
 #   see rb.c & compare with set_int.c
 #   - set_int (much easier to test than set_str)
-#	TODO get visit working so I can print values & therefore can test
+#	TODO can now test by using set_int_to_vec() and then
+#	vec_int_tostring()
 #   - set_str (this and vector are all that's needed for wordladder)
 #
 # Only do this as needed:
