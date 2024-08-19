@@ -8,7 +8,7 @@
 // All data members are private; all accesses via functions.
 //
 // To see an example of how to use store an arbitrary struct type in a
-// vec see tag_test.h for the Tag struct and vec_test.[hc] for usage
+// Vec see tag_test.h for the Tag struct and vec_test.[hc] for usage
 // examples.
 typedef struct {
     int _size; // This is "end", i.e., one past the last value
@@ -17,120 +17,120 @@ typedef struct {
     int (*_cmp)(const void*, const void*);
     void* (*_cpy)(const void*);
     void (*_destroy)(void* value);
-} vec;
+} Vec;
 
 typedef struct {
     int cap;
     int (*cmp)(const void*, const void*);
     void* (*cpy)(const void*);
     void (*destroy)(void* values);
-} vec_alloc_args;
+} VecAllocArgs;
 
-// Allocates a new vec of owned void* with default capacity of
+// Allocates a new Vec of owned void* with default capacity of
 // VEC_INITIAL_CAP.
 // Set the initial capacity with .cap.
 // Caller must supply functions: cmp to compare values (for find, sort,
 // and search), cpy to copy a value, and destroy to free a value.
 #define vec_alloc(...) \
-    vec_alloc_((vec_alloc_args){.cap = VEC_INITIAL_CAP, __VA_ARGS__})
-vec vec_alloc_(vec_alloc_args args);
+    vec_alloc_((VecAllocArgs){.cap = VEC_INITIAL_CAP, __VA_ARGS__})
+Vec vec_alloc_(VecAllocArgs args);
 
-// Destroys the vec freeing its memory and also freeing every value. The vec
+// Destroys the Vec freeing its memory and also freeing every value. The Vec
 // is not usable after this.
-void vec_free(vec* me);
+void vec_free(Vec* vec);
 
-// Calls destroy on all the vec's values.
-void vec_clear(vec* me);
+// Calls destroy on all the Vec's values.
+void vec_clear(Vec* vec);
 
-// Returns true if the vec is empty.
-#define vec_isempty(me) ((me)->_size == 0)
+// Returns true if the Vec is empty.
+#define vec_isempty(vec) ((vec)->_size == 0)
 
-// Returns the vec's size.
-#define vec_size(me) ((me)->_size)
+// Returns the Vec's size.
+#define vec_size(vec) ((vec)->_size)
 
-// Returns the vec's capacity.
-#define vec_cap(me) ((me)->_cap)
+// Returns the Vec's capacity.
+#define vec_cap(vec) ((vec)->_cap)
 
-// Returns the vec's value at position index.
-// vec retains ownership, so do not delete the value.
-const void* vec_get(const vec* me, int index);
+// Returns the Vec's value at position index.
+// Vec retains ownership, so do not delete the value.
+const void* vec_get(const Vec* vec, int index);
 
-// Returns the vec's value at its last valid index.
-// vec retains ownership, so do not delete the value.
-const void* vec_get_last(const vec* me);
+// Returns the Vec's value at its last valid index.
+// Vec retains ownership, so do not delete the value.
+const void* vec_get_last(const Vec* vec);
 
-// Sets the vec's value at position index to the given value.
-// vec takes ownership of the new value (e.g., if char* then use strdup())
+// Sets the Vec's value at position index to the given value.
+// Vec takes ownership of the new value (e.g., if char* then use strdup())
 // and frees the old value.
-void vec_set(vec* me, int index, void* value);
+void vec_set(Vec* vec, int index, void* value);
 
 // Inserts the value at position index and moves succeeding values up
-// (right), increasing the vec's size (and cap if necessary): O(n).
-// Use add to insert into a sorted vec.
-// vec takes ownership of the new value (e.g., if char* then use strdup()).
-void vec_insert(vec* me, int index, void* value);
+// (right), increasing the Vec's size (and cap if necessary): O(n).
+// Use add to insert into a sorted Vec.
+// Vec takes ownership of the new value (e.g., if char* then use strdup()).
+void vec_insert(Vec* vec, int index, void* value);
 
-// Adds the value in order (in a sorted vec) and moves succeeding values up
-// (right), increasing the vec's size (and cap if necessary): O(n).
-// vec takes ownership of the new value (e.g., if char* then use strdup()).
-void vec_add(vec* me, void* value);
+// Adds the value in order (in a sorted Vec) and moves succeeding values up
+// (right), increasing the Vec's size (and cap if necessary): O(n).
+// Vec takes ownership of the new value (e.g., if char* then use strdup()).
+void vec_add(Vec* vec, void* value);
 
-// Sets the vec's value at position index to the given value and returns
+// Sets the Vec's value at position index to the given value and returns
 // the old value from that position.
-// vec takes ownership of the new value (e.g., if char* then use strdup()).
+// Vec takes ownership of the new value (e.g., if char* then use strdup()).
 // The returned value is now owned by the caller.
-void* vec_replace(vec* me, int index, void* value);
+void* vec_replace(Vec* vec, int index, void* value);
 
 // Removes and frees the value at the given index and closes up the gap:
 // O(n).
-void vec_remove(vec* me, int index);
+void vec_remove(Vec* vec, int index);
 
 // Returns and removes the value at the given index and closes up the
 // gap.
 // The returned value is now owned by the caller: O(n).
-void* vec_take(vec* me, int index);
+void* vec_take(Vec* vec, int index);
 
-// Removes and returns the last value. Only use if me.isempty() is false.
+// Removes and returns the last value. Only use if vec.isempty() is false.
 // The returned value is now owned by the caller: O(1).
-void* vec_pop(vec* me);
+void* vec_pop(Vec* vec);
 
-// Pushes a new value onto the end of the vec, increasing the vec's size
+// Pushes a new value onto the end of the Vec, increasing the Vec's size
 // (and cap if necessary): O(1).
-// vec takes ownership of the value (e.g., if char* then use strdup()).
-void vec_push(vec* me, void* value);
+// Vec takes ownership of the value (e.g., if char* then use strdup()).
+void vec_push(Vec* vec, void* value);
 
-// Returns a deep copy of the vec including cmp, cpy, and destroy.
-vec vec_copy(const vec* me);
+// Returns a deep copy of the Vec including cmp, cpy, and destroy.
+Vec vec_copy(const Vec* vec);
 
-// Moves all them's values to the end of me's values, after which them is
+// Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.
-// The two vec's must have the same cmp, cpy, and destroy methods.
-// Use case: an array of vec's each one of which is populated in its own
-// thread and at the end we want to merge all the vec's into one.
-void vec_merge(vec* me, vec* them);
+// The two Vec's must have the same cmp, cpy, and destroy methods.
+// Use case: an array of Vec's each one of which is populated in its own
+// thread and at the end we want to merge all the Vec's into one.
+void vec_merge(Vec* vec1, Vec* vec2);
 
-// Returns true if the two vec's have the same values and the same cmp,
+// Returns true if the two Vec's have the same values and the same cmp,
 // cpy, and destroy.
-bool vec_equal(const vec* me, const vec* them);
+bool vec_equal(const Vec* vec1, const Vec* vec2);
 
-// Returns the index where the value was found in the vec or
+// Returns the index where the value was found in the Vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
-int vec_find(const vec* me, const void* value);
+int vec_find(const Vec* vec, const void* value);
 
-// Returns the last index where the value was found in the vec or
+// Returns the last index where the value was found in the Vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
-int vec_find_last(const vec* me, const void* value);
+int vec_find_last(const Vec* vec, const void* value);
 
-// Sorts the vec in-place using the cmp function.
+// Sorts the Vec in-place using the cmp function.
 // See tag_test.h's tag_cmp and sx.c's sx_strcmp functions for examples
 // of how to create a cmp function.
-void vec_sort(vec* me);
+void vec_sort(Vec* vec);
 
-// Returns the index where the value was found in the vec or
+// Returns the index where the value was found in the Vec or
 // VEC_NOT_FOUND (-1). Uses a binary search that assumes vec_sort() has
 // been used.
-int vec_search(const vec* me, const void* value);
+int vec_search(const Vec* vec, const void* value);
 
 // To iterate:
-//      for (int i = 0; i < vec_size(me); ++i)
-//          const MyType* value = vec_get(me, i);
+//      for (int i = 0; i < vec_size(vec); ++i)
+//          const MyType* value = vec_get(vec, i);

@@ -12,10 +12,10 @@
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, int size, int cap);
-void vec_match(tinfo* tinfo, const vec* v, const char* expected);
-void vec_same(tinfo* tinfo, const vec* v1, const vec* v2);
-void vec_print(const vec* v);
+void vec_check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap);
+void vec_match(tinfo* tinfo, const Vec* v, const char* expected);
+void vec_same(tinfo* tinfo, const Vec* v1, const Vec* v2);
+void vec_print(const Vec* v);
 void vec_tests(tinfo*);
 void vec_merge_tests(tinfo*);
 void vec_sort_tests(tinfo*);
@@ -25,11 +25,11 @@ void vec_tests(tinfo* tinfo) {
     vec_sort_tests(tinfo);
 
     tag_make(true);
-    vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .cpy = tag_copy,
+    Vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 5);
 
-    vec v2 = vec_copy(&v1);
+    Vec v2 = vec_copy(&v1);
     vec_check_size_cap(tinfo, &v1, 0, 5);
 
     for (int i = 0; i < 7; ++i)
@@ -123,7 +123,7 @@ void vec_tests(tinfo* tinfo) {
 
 void vec_merge_tests(tinfo* tinfo) {
     tag_make(true);
-    vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
+    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
@@ -131,7 +131,7 @@ void vec_merge_tests(tinfo* tinfo) {
     vec_check_size_cap(tinfo, &v1, 5, 7);
     vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
 
-    vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
+    Vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v2, 0, 11);
     for (int i = 0; i < 6; ++i)
@@ -152,7 +152,7 @@ void vec_merge_tests(tinfo* tinfo) {
 
 void vec_sort_tests(tinfo* tinfo) {
     tag_make(true);
-    vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
+    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
@@ -254,8 +254,8 @@ void vec_sort_tests(tinfo* tinfo) {
     vec_free(&v1);
 }
 
-void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
-    char buf[1000] = {0}; // guarantee start with NUL if vec is empty
+void vec_match(tinfo* tinfo, const Vec* v, const char* expected) {
+    char buf[1000] = {0}; // guarantee start with NUL if Vec is empty
     int n = 0;
     for (int i = 0; i < vec_size(v); ++i) {
         const Tag* tag = vec_get(v, i);
@@ -266,7 +266,7 @@ void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
     check_str_eq(tinfo, &buf[0], expected);
 }
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, int size, int cap) {
+void vec_check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
     tinfo->total++;
     if (vec_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_size() expected %d, got %d\n",
@@ -291,7 +291,7 @@ void vec_check_size_cap(tinfo* tinfo, const vec* v, int size, int cap) {
         tinfo->ok++;
 }
 
-void vec_same(tinfo* tinfo, const vec* v1, const vec* v2) {
+void vec_same(tinfo* tinfo, const Vec* v1, const Vec* v2) {
     tinfo->total++;
     if (!vec_equal(v1, v2)) {
         fprintf(stderr, "FAIL: %s vec_equal() expected true, got false\n",

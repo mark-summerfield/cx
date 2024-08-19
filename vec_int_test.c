@@ -6,20 +6,20 @@
 #include "vec_int.h"
 #include <stdlib.h>
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size, int cap);
-void vec_int_match(tinfo* tinfo, vec_int* v, char* expected);
-void vec_int_same(tinfo* tinfo, vec_int* v1, vec_int* v2);
-void vec_int_print(vec_int* v);
+void vec_int_check_size_cap(tinfo* tinfo, VecInt* v, int size, int cap);
+void vec_int_match(tinfo* tinfo, VecInt* v, char* expected);
+void vec_int_same(tinfo* tinfo, VecInt* v1, VecInt* v2);
+void vec_int_print(VecInt* v);
 void vec_str_tests(tinfo*, bool);
 void vec_int_merge_tests(tinfo* tinfo);
 
 void vec_int_tests(tinfo* tinfo) {
     vec_int_merge_tests(tinfo);
 
-    vec_int v1 = vec_int_alloc(); // default of 32
+    VecInt v1 = vec_int_alloc(); // default of 32
     vec_int_check_size_cap(tinfo, &v1, 0, 32);
 
-    vec_int v2 = vec_int_copy(&v1);
+    VecInt v2 = vec_int_copy(&v1);
     vec_int_check_size_cap(tinfo, &v1, 0, 32);
 
     tinfo->total++;
@@ -57,7 +57,7 @@ void vec_int_tests(tinfo* tinfo) {
     vec_int_insert(&v1, 0, 17);
     vec_int_match(tinfo, &v1, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
 
-    vec_int v3 = vec_int_copy(&v1);
+    VecInt v3 = vec_int_copy(&v1);
     vec_int_check_size_cap(tinfo, &v3, vec_int_size(&v1),
                            vec_int_size(&v1));
 
@@ -190,14 +190,14 @@ void vec_int_tests(tinfo* tinfo) {
 }
 
 void vec_int_merge_tests(tinfo* tinfo) {
-    vec_int v1 = vec_int_alloc_cap(7);
+    VecInt v1 = vec_int_alloc_cap(7);
     vec_int_check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 1; i < 6; ++i)
         vec_int_push(&v1, i);
     vec_int_check_size_cap(tinfo, &v1, 5, 7);
     vec_int_match(tinfo, &v1, "1 2 3 4 5");
 
-    vec_int v2 = vec_int_alloc();
+    VecInt v2 = vec_int_alloc();
     vec_int_check_size_cap(tinfo, &v2, 0, 32);
     for (int i = 6; i < 12; ++i)
         vec_int_push(&v2, i);
@@ -212,13 +212,13 @@ void vec_int_merge_tests(tinfo* tinfo) {
     vec_int_free(&v1);
 }
 
-void vec_int_match(tinfo* tinfo, vec_int* v, char* expected) {
+void vec_int_match(tinfo* tinfo, VecInt* v, char* expected) {
     char* out = vec_int_tostring(v);
     check_str_eq(tinfo, out, expected);
     free(out);
 }
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size, int cap) {
+void vec_int_check_size_cap(tinfo* tinfo, VecInt* v, int size, int cap) {
     tinfo->total++;
     if (vec_int_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_int_size() expected %d, got %d\n",
@@ -243,7 +243,7 @@ void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size, int cap) {
         tinfo->ok++;
 }
 
-void vec_int_same(tinfo* tinfo, vec_int* v1, vec_int* v2) {
+void vec_int_same(tinfo* tinfo, VecInt* v1, VecInt* v2) {
     tinfo->total++;
     if (!vec_int_equal(v1, v2)) {
         fprintf(stderr,

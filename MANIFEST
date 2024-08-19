@@ -24,8 +24,6 @@
 cx.h
 set_int.h
 set_int.c
-set_str.h
-set_str.c
 vec_common.h
 vec.h
 vec.c
@@ -34,6 +32,8 @@ vec_str.c
 vec_int.h
 vec_int.c
 
+set_str.h.idea
+set_str.c.idea
 rbt.h.idea
 rbt.c.idea
 

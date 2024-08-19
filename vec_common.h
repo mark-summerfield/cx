@@ -6,10 +6,10 @@
 #include <stddef.h>
 
 #define VEC_INITIAL_CAP 32
-#define VEC_NOT_FOUND ((int)-1)
+#define VEC_NOT_FOUND -1
 
 // index must be a variable or literal, not an expression!
-#define assert_valid_index(v, index) \
-    assert(0 <= (index) && (index) < (v)->_size && "index out of range")
+#define assert_valid_index(vec, index) \
+    assert(0 <= (index) && (index) < (vec)->_size && "index out of range")
 
-#define assert_nonempty(v) assert((v)->_size && "empty vec");
+#define assert_nonempty(vec) assert((vec)->_size && "empty vec");
