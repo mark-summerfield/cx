@@ -112,5 +112,13 @@ cx_size vec_int_search(const vec_int* v, int i);
 char* vec_int_tostring(const vec_int* v);
 
 // To iterate:
-//  for (cx_size i = 0; i < vec_int_size(v); ++i)
-//      VEC_INT_VALUE_T value = vec_int_get(v, i);
+//      for (cx_size i = 0; i < vec_int_size(v); ++i)
+//          int value = vec_int_get(v, i);
+// -or- work directly on values:
+//      const int* values = vec_int_borrow_values(v);
+//      for (cx_size i = 0; i < vec_int_size(v); ++i) {
+//          int value = values[i];
+//      }
+
+// Returns direct access to underlying values: use with care!
+const int* vec_int_borrow_values(const vec_int* v);

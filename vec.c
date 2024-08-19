@@ -210,6 +210,10 @@ cx_size vec_search(const vec* v, const void* value) {
     return VEC_NOT_FOUND;
 }
 
+const void** vec_borrow_values(const vec* v) {
+    return (const void**)v->_values;
+}
+
 static void vec_grow(vec* v) {
     const cx_size BLOCK_SIZE = 1024 * 1024;
     cx_size cap =

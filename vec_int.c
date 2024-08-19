@@ -215,6 +215,8 @@ char* vec_int_tostring(const vec_int* v) {
     return s;
 }
 
+const int* vec_int_borrow_values(const vec_int* v) { return v->_values; }
+
 static void vec_int_grow(vec_int* v) {
     const cx_size BLOCK_SIZE = 1024 * 1024;
     cx_size cap =

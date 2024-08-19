@@ -132,5 +132,13 @@ void vec_sort(vec* v);
 cx_size vec_search(const vec* v, const void* value);
 
 // To iterate:
-//  for (cx_size i = 0; i < vec_size(v); ++i)
-//      const MyType* value = vec_get(v, i);
+//      for (cx_size i = 0; i < vec_size(v); ++i)
+//          const MyType* value = vec_get(v, i);
+// -or- work directly on values:
+//      const void** values = vec_borrow_values(v);
+//      for (cx_size i = 0; i < vec_size(v); ++i) {
+//          const MyType* value = values[i];
+//      }
+
+// Returns direct access to underlying values: use with care!
+const void** vec_borrow_values(const vec* v);

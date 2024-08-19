@@ -1,8 +1,5 @@
 # TODO
 #
-# vec*:
-#   - const void** vec*values(const vec* v) // for fast iteration
-#
 # rbt types
 #   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
 #   see ~/app/golib/zOld/rbset/rbset.go
