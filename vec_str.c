@@ -244,8 +244,6 @@ char* vec_str_join(const vec_str* v, const char* sep) {
     return s;
 }
 
-const char** vec_str_borrow_values(const vec_str* v) { return v->_values; }
-
 static void vec_str_grow(vec_str* v) {
     const cx_size BLOCK_SIZE = 1024 * 1024;
     cx_size cap =

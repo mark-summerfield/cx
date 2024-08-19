@@ -122,11 +122,3 @@ cx_size vec_str_search(const vec_str* v, const char* s);
 // To iterate:
 //      for (cx_size i = 0; i < vec_str_size(v); ++i)
 //          const char* value = vec_str_get(v, i);
-// -or- work directly on values:
-//      const char** values = vec_str_borrow_values(v);
-//      for (cx_size i = 0; i < vec_str_size(v); ++i) {
-//          const char* value = values[i];
-//      }
-
-// Returns direct access to underlying values: use with care!
-const char** vec_str_borrow_values(const vec_str* v);
