@@ -80,7 +80,10 @@ void set_int_unite(set_int* e1, const set_int* e2);
 // Returns root for efficient iteration.
 const set_int_node* set_int_get_root(set_int* e);
 
-// Returns an vec_int copy of all the set's values in order.
+// Returns an vec_int which the caller owns and that has a copy of all the
+// set's values in order.
+// See the source of this function and its helper to see how to iterate a
+// set.
 vec_int set_int_to_vec(const set_int* e);
 
 // TODO set_int_isdisjoint
