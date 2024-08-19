@@ -26,8 +26,8 @@ void set_str_delete_node(set_str_node* node) {
         set_str_delete_node(node->_right);
         node->_left = NULL;
         node->_right = NULL;
-        free(node->_value);
-        node->_value = NULL;
+        free(node->value);
+        node->value = NULL;
     }
 }
 
@@ -61,24 +61,33 @@ bool set_str_equal(const set_str* v1, const set_str* v2) {
 }
 
 bool set_str_contains(set_str* t, const char* value) {
-    // TODO
+    // TODO use iteration
     return false;
 }
 
-void set_str_visit_all(const set_str* t, void (*visit)(const char*)) {
+void set_str_visit_all(const set_str* t,
+                       void (*visit)(const set_str_visit_data*)) {
     assert_notnull(t);
-    if (t->_size)
-        set_str_visit_node(t->_root, visit);
+    if (t->_size) { // TODO iterative algorithm
+        set_str_visit_data data = {0, t->_size, NULL};
+        // At each iteration: before: data.value = node->value;
+        //  -iterate-
+        // At each iteration: avter: data.i++;
+        //
+        // set_str_visit_node(t->_root, visit); // TODO delete
+    }
 }
 
+/* TODO delete
 static void set_str_visit_node(const set_str_node* node,
                                void (*visit)(const char*)) {
     if (!node)
         return;
     set_str_visit_node(node->_left, visit);
-    visit(node->_value);
+    visit(node->value);
     set_str_visit_node(node->_right, visit);
 }
+*/
 
 // inline const char** set_str_borrow_root(const set_str* t) { return
 // t->_root; }
@@ -109,4 +118,17 @@ set_str set_str_union(const set_str* t1, const set_str* t2) {
 
 void set_str_unite(set_str* t1, const set_str* t2) {
     // TODO
+}
+
+const set_str_node* set_str_root(set_str* t) {
+    return NULL; // TODO
+}
+
+inline const char* set_str_tostring(const set_str* t) {
+    return set_str_tostring_range(t, 0, t->_size - 1);
+}
+
+const char* set_str_tostring_range(const set_str* t, ptrdiff_t begin,
+                                   ptrdiff_t end) {
+    return NULL; // TODO
 }

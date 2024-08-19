@@ -6,7 +6,14 @@ if GetOption('dbg'):
 else:
     env.Append(CCFLAGS='-Wall -O3 -DNDEBUG')
 
-app = env.Program('cx_test', Glob('*.c'))
+FILES = Glob('*test.c') + [
+    'set_str.c',
+    'sx.c',
+    'vec.c',
+    'vec_int.c',
+    'vec_str.c',
+    ]
+app = env.Program('cx_test', FILES)
 
 Default(app)
 appname = str(app[0])

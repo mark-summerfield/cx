@@ -15,11 +15,17 @@ typedef struct {
 } set_str;
 
 typedef struct set_str_node {
-    char* _value;
+    char* value;
     set_str_node* _left;
     set_str_node* _right;
     bool _red;
 } set_str_node;
+
+typedef struct {
+    char* value;
+    ptrdiff_t i;
+    ptrdiff_t size;
+} set_str_visit_data;
 
 // Allocates a new empty set_str of owned char* values.
 // Caller must supply functions: cmp to compare values, cpy to copy a
@@ -59,12 +65,13 @@ bool set_str_equal(const set_str* t1, const set_str* t2);
 
 // Calls the given visit function on every node in the tree in order.
 // For example, given a set_str, myset:
-//  void print_value(const char* value) {
-//      printf("%s\n", value);
+//  void print_value(const set_str_visit_data* data) {
+//      printf("%td/%td: %%s\n", data->i, data->size, data->value);
 //  }
 //  set_str_visit_all(&myset, print_value);
 // TODO add char*context or int i to apply function?
-void set_str_visit_all(const set_str* t, void (*visit)(const char*));
+void set_str_visit_all(const set_str* t,
+                       void (*visit)(const set_str_visit_data*));
 
 // TODO uncomment or remove
 // Provides read-only access to the root if visit() isn't sufficient.
@@ -88,6 +95,16 @@ set_str set_str_union(const set_str* t1, const set_str* t2);
 
 // Adds every value from t2 to t1 (with no duplicates).
 void set_str_unite(set_str* t1, const set_str* t2);
+
+// Returns root for efficient iteration.
+const set_str_node* set_str_root(set_str* t);
+
+// For debugging: caller owns returned char*.
+const char* set_str_tostring(const set_str* t);
+
+// For debugging: caller owns returned char*.
+const char* set_str_tostring_range(const set_str* t, ptrdiff_t begin,
+                                   ptrdiff_t end);
 
 // TODO set_str_isdisjoint
 // TODO set_str_issubsetof
