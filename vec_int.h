@@ -11,13 +11,13 @@ typedef int VEC_INT_VALUE_T;
 // A vector of VEC_INT_VALUE_T values.
 // All data members are private; all accesses via functions.
 typedef struct {
-    ptrdiff_t _count; // This is "end", i.e., one past the last value
-    ptrdiff_t _cap;   // The size of the allocated array
+    SSIZE_T _size; // This is "end", i.e., one past the last value
+    SSIZE_T _cap;  // The size of the allocated array
     VEC_INT_VALUE_T* _values;
 } vec_int;
 
 // Allocates a new empty vec_int with the given capacity.
-vec_int vec_int_alloc_cap(ptrdiff_t cap);
+vec_int vec_int_alloc_cap(SSIZE_T cap);
 
 // Allocates a new empty vec_int with a default capacity of
 // VEC_INITIAL_CAP.
@@ -31,26 +31,26 @@ void vec_int_free(vec_int* v);
 void vec_int_clear(vec_int* v);
 
 // Returns true if the vec_int is empty.
-#define vec_int_isempty(v) ((v)->_count == 0)
+#define vec_int_isempty(v) ((v)->_size == 0)
 
 // Returns the vec_int's size.
-#define vec_int_count(v) ((v)->_count)
+#define vec_int_size(v) ((v)->_size)
 
 // Returns the vec_int's capacity.
 #define vec_int_cap(v) ((v)->_cap)
 
 // Returns the vec_int's VEC_INT_VALUE_T value at position index.
-VEC_INT_VALUE_T vec_int_get(const vec_int* v, ptrdiff_t index);
+VEC_INT_VALUE_T vec_int_get(const vec_int* v, SSIZE_T index);
 
 // Returns the vec_int's VEC_INT_VALUE_T value at its last valid index.
 VEC_INT_VALUE_T vec_int_get_last(const vec_int* v);
 
 // Sets the vec_int's value at position index to the given VEC_INT_VALUE_T.
-void vec_int_set(vec_int* v, ptrdiff_t index, VEC_INT_VALUE_T value);
+void vec_int_set(vec_int* v, SSIZE_T index, VEC_INT_VALUE_T value);
 
 // Inserts the VEC_INT_VALUE_T at position index and moves succeeding values
 // up (right), increasing the vec_int's size (and cap if necessary): O(n).
-void vec_int_insert(vec_int* v, ptrdiff_t index, VEC_INT_VALUE_T value);
+void vec_int_insert(vec_int* v, SSIZE_T index, VEC_INT_VALUE_T value);
 
 // Adds the value in order (in a sorted vec) and moves succeeding values up
 // (right), increasing the vec's size (and cap if necessary): O(n).
@@ -58,15 +58,15 @@ void vec_int_add(vec_int* v, VEC_INT_VALUE_T value);
 
 // Sets the vec_int's value at position index to the given VEC_INT_VALUE_T
 // and returns the old VEC_INT_VALUE_T value from that position.
-VEC_INT_VALUE_T vec_int_replace(vec_int* v, ptrdiff_t index,
+VEC_INT_VALUE_T vec_int_replace(vec_int* v, SSIZE_T index,
                                 VEC_INT_VALUE_T value);
 
 // Removes the value at the given index and closes up the gap: O(n).
-void vec_int_remove(vec_int* v, ptrdiff_t index);
+void vec_int_remove(vec_int* v, SSIZE_T index);
 
 // Returns and removes the VEC_INT_VALUE_T value at the given index and
 // closes up the gap: O(n).
-VEC_INT_VALUE_T vec_int_take(vec_int* v, ptrdiff_t index);
+VEC_INT_VALUE_T vec_int_take(vec_int* v, SSIZE_T index);
 
 // Removes and returns the last VEC_INT_VALUE_T value. Only use if
 // v.isempty() is false: O(1).
@@ -91,7 +91,7 @@ bool vec_int_equal(const vec_int* v1, const vec_int* v2);
 
 // Returns the index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
-ptrdiff_t vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
+SSIZE_T vec_int_find(const vec_int* v, VEC_INT_VALUE_T value);
 
 VEC_INT_VALUE_T intcmp(const void* a, const void* b);
 
@@ -101,12 +101,12 @@ void vec_int_sort(vec_int* v);
 // Returns the index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a binary search that assumes vec_int_sort() has
 // been used.
-ptrdiff_t vec_int_search(const vec_int* v, int i);
+SSIZE_T vec_int_search(const vec_int* v, int i);
 
 // Returns a string of space-separated VEC_INT_VALUE_T values.
 // The returned char* value is now owned by the caller.
 char* vec_int_tostring(const vec_int* v);
 
 // To iterate:
-//  for (ptrdiff_t i = 0; i < vec_int_count(v); ++i)
+//  for (SSIZE_T i = 0; i < vec_int_size(v); ++i)
 //      VEC_INT_VALUE_T value = vec_int_get(v, i);

@@ -12,8 +12,8 @@
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, ptrdiff_t count,
-                        ptrdiff_t capacity);
+void vec_check_size_cap(tinfo* tinfo, const vec* v, SSIZE_T size,
+                        SSIZE_T capacity);
 void vec_match(tinfo* tinfo, const vec* v, const char* expected);
 void vec_same(tinfo* tinfo, const vec* v1, const vec* v2);
 void vec_print(const vec* v);
@@ -33,7 +33,7 @@ void vec_tests(tinfo* tinfo) {
     vec v2 = vec_copy(&v1);
     vec_check_size_cap(tinfo, &v1, 0, 5);
 
-    for (ptrdiff_t i = 0; i < 7; ++i)
+    for (SSIZE_T i = 0; i < 7; ++i)
         vec_push(&v1, tag_make(false));
     vec_check_size_cap(tinfo, &v1, 7, 10);
     vec_match(tinfo, &v1,
@@ -74,7 +74,7 @@ void vec_tests(tinfo* tinfo) {
     check_int_eq(tinfo, t2->id, 102);
 
     vec_set(&v1, 0, tag_make(false));
-    vec_set(&v1, vec_count(&v1) - 1, tag_make(false));
+    vec_set(&v1, vec_size(&v1) - 1, tag_make(false));
     vec_set(&v1, 3, tag_make(false));
     vec_push(&v1, tag_make(false));
     vec_check_size_cap(tinfo, &v1, 6, 10);
@@ -84,7 +84,7 @@ void vec_tests(tinfo* tinfo) {
     tag_free(t1);
     t1 = vec_replace(&v1, 4, tag_make(false));
     tag_free(t1);
-    t1 = vec_replace(&v1, vec_count(&v1) - 1, tag_make(false));
+    t1 = vec_replace(&v1, vec_size(&v1) - 1, tag_make(false));
     tag_free(t1);
     vec_check_size_cap(tinfo, &v1, 6, 10);
     vec_match(tinfo, &v1, "Al#111|Ab#101|Ac#102|Aj#109|Am#112|An#113");
@@ -93,7 +93,7 @@ void vec_tests(tinfo* tinfo) {
     vec_check_size_cap(tinfo, &v1, 5, 10);
     vec_match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112|An#113");
 
-    vec_remove(&v1, vec_count(&v1) - 1);
+    vec_remove(&v1, vec_size(&v1) - 1);
     vec_check_size_cap(tinfo, &v1, 4, 10);
     vec_match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112");
 
@@ -127,7 +127,7 @@ void vec_merge_tests(tinfo* tinfo) {
     vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
-    for (ptrdiff_t i = 0; i < 5; ++i)
+    for (SSIZE_T i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
     vec_check_size_cap(tinfo, &v1, 5, 7);
     vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
@@ -135,7 +135,7 @@ void vec_merge_tests(tinfo* tinfo) {
     vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v2, 0, 11);
-    for (ptrdiff_t i = 0; i < 6; ++i)
+    for (SSIZE_T i = 0; i < 6; ++i)
         vec_push(&v2, tag_make(false));
     vec_check_size_cap(tinfo, &v2, 6, 11);
     vec_match(tinfo, &v2, "Af#105|Ag#106|Ah#107|Ai#108|Aj#109|Ak#110");
@@ -156,7 +156,7 @@ void vec_sort_tests(tinfo* tinfo) {
     vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
-    for (ptrdiff_t i = 0; i < 5; ++i)
+    for (SSIZE_T i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
     vec_insert(&v1, 0, tag_alloc("Zz#999", 999));
     vec_insert(&v1, 2, tag_alloc("Ww#888", 888));
@@ -167,7 +167,7 @@ void vec_sort_tests(tinfo* tinfo) {
         tinfo, &v1,
         "Zz#999|Aa#100|Ww#888|Ab#101|Ae#005|Ac#102|Aa#001|Ad#103|Ae#104");
 
-    ptrdiff_t index;
+    SSIZE_T index;
     Tag tag = {"", 0};
 
     tag.name = "Ae#005";
@@ -249,8 +249,8 @@ void vec_sort_tests(tinfo* tinfo) {
 
 void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
     char buf[1000];
-    ptrdiff_t n = 0; // clang-format warnings are wrong
-    for (ptrdiff_t i = 0; i < vec_count(v); ++i) {
+    SSIZE_T n = 0; // clang-format warnings are wrong
+    for (SSIZE_T i = 0; i < vec_size(v); ++i) {
         const Tag* tag = vec_get(v, i);
         n += sprintf(&buf[n], "%s|", tag->name);
     }
@@ -258,27 +258,27 @@ void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
     check_str_eq(tinfo, &buf[0], expected);
 }
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, ptrdiff_t count,
-                        ptrdiff_t capacity) {
+void vec_check_size_cap(tinfo* tinfo, const vec* v, SSIZE_T size,
+                        SSIZE_T capacity) {
     tinfo->total++;
-    if (vec_count(v) != count) {
-        fprintf(stderr, "FAIL: %s vec_count() expected %td, got %td\n",
-                tinfo->tag, count, vec_count(v));
+    if (vec_size(v) != size) {
+        fprintf(stderr, "FAIL: %s vec_size() expected %d, got %d\n",
+                tinfo->tag, size, vec_size(v));
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_isempty(v) != (count == 0)) {
+    if (vec_isempty(v) != (size == 0)) {
         fprintf(stderr,
-                "FAIL: %s vecy_isempty() expected %s, got %s count=%td\n",
-                tinfo->tag, bool_to_str(count == 0),
-                bool_to_str(vec_isempty(v)), count);
+                "FAIL: %s vecy_isempty() expected %s, got %s size=%d\n",
+                tinfo->tag, bool_to_str(size == 0),
+                bool_to_str(vec_isempty(v)), size);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (vec_cap(v) != capacity) {
-        fprintf(stderr, "FAIL: %s vec_cap() expected %td, got %td\n",
+        fprintf(stderr, "FAIL: %s vec_cap() expected %d, got %d\n",
                 tinfo->tag, capacity, vec_cap(v));
     } else
         tinfo->ok++;

@@ -11,8 +11,8 @@
 // vec see tag_test.h for the Tag struct and vec_test.[hc] for usage
 // examples.
 typedef struct {
-    ptrdiff_t _count; // This is "end", i.e., one past the last value
-    ptrdiff_t _cap;   // The size of the allocated array
+    SSIZE_T _size; // This is "end", i.e., one past the last value
+    SSIZE_T _cap;  // The size of the allocated array
     void** _values;
     int (*_cmp)(const void*, const void*);
     void* (*_cpy)(const void*);
@@ -20,7 +20,7 @@ typedef struct {
 } vec;
 
 typedef struct {
-    ptrdiff_t cap;
+    SSIZE_T cap;
     int (*cmp)(const void*, const void*);
     void* (*cpy)(const void*);
     void (*destroy)(void* values);
@@ -43,17 +43,17 @@ void vec_free(vec* v);
 void vec_clear(vec* v);
 
 // Returns true if the vec is empty.
-#define vec_isempty(v) ((v)->_count == 0)
+#define vec_isempty(v) ((v)->_size == 0)
 
 // Returns the vec's size.
-#define vec_count(v) ((v)->_count)
+#define vec_size(v) ((v)->_size)
 
 // Returns the vec's capacity.
 #define vec_cap(v) ((v)->_cap)
 
 // Returns the vec's value at position index.
 // vec retains ownership, so do not delete the value.
-const void* vec_get(const vec* v, ptrdiff_t index);
+const void* vec_get(const vec* v, SSIZE_T index);
 
 // Returns the vec's value at its last valid index.
 // vec retains ownership, so do not delete the value.
@@ -62,13 +62,13 @@ const void* vec_get_last(const vec* v);
 // Sets the vec's value at position index to the given value.
 // vec takes ownership of the new value (e.g., if char* then use strdup())
 // and frees the old value.
-void vec_set(vec* v, ptrdiff_t index, void* value);
+void vec_set(vec* v, SSIZE_T index, void* value);
 
 // Inserts the value at position index and moves succeeding values up
 // (right), increasing the vec's size (and cap if necessary): O(n).
 // Use add to insert into a sorted vec.
 // vec takes ownership of the new value (e.g., if char* then use strdup()).
-void vec_insert(vec* v, ptrdiff_t index, void* value);
+void vec_insert(vec* v, SSIZE_T index, void* value);
 
 // Adds the value in order (in a sorted vec) and moves succeeding values up
 // (right), increasing the vec's size (and cap if necessary): O(n).
@@ -79,16 +79,16 @@ void vec_add(vec* v, void* value);
 // the old value from that position.
 // vec takes ownership of the new value (e.g., if char* then use strdup()).
 // The returned value is now owned by the caller.
-void* vec_replace(vec* v, ptrdiff_t index, void* value);
+void* vec_replace(vec* v, SSIZE_T index, void* value);
 
 // Removes and frees the value at the given index and closes up the gap:
 // O(n).
-void vec_remove(vec* v, ptrdiff_t index);
+void vec_remove(vec* v, SSIZE_T index);
 
 // Returns and removes the value at the given index and closes up the
 // gap.
 // The returned value is now owned by the caller: O(n).
-void* vec_take(vec* v, ptrdiff_t index);
+void* vec_take(vec* v, SSIZE_T index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
 // The returned value is now owned by the caller: O(1).
@@ -115,7 +115,7 @@ bool vec_equal(const vec* v1, const vec* v2);
 
 // Returns the index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
-ptrdiff_t vec_find(const vec* v, const void* value);
+SSIZE_T vec_find(const vec* v, const void* value);
 
 // Sorts the vec in-place using the cmp function.
 // See tag_test.h's tag_cmp and sx.c's sx_strcmp functions for examples
@@ -125,8 +125,8 @@ void vec_sort(vec* v);
 // Returns the index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a binary search that assumes vec_sort() has
 // been used.
-ptrdiff_t vec_search(const vec* v, const void* value);
+SSIZE_T vec_search(const vec* v, const void* value);
 
 // To iterate:
-//  for (ptrdiff_t i = 0; i < vec_count(v); ++i)
+//  for (SSIZE_T i = 0; i < vec_size(v); ++i)
 //      const MyType* value = vec_get(v, i);

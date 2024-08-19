@@ -9,7 +9,7 @@ void set_str_delete_node(set_str_node* node);
 
 set_str set_str_alloc() {
     return (set_str){
-        ._count = 0,
+        ._size = 0,
         ._root = NULL,
     };
 }
@@ -17,7 +17,7 @@ set_str set_str_alloc() {
 void set_str_clear(set_str* t) {
     assert_notnull(t);
     set_str_delete_node(t->_root);
-    t->_count = 0;
+    t->_size = 0;
 }
 
 void set_str_delete_node(set_str_node* node) {
@@ -54,7 +54,7 @@ set_str set_str_copy(const set_str* t) {
 bool set_str_equal(const set_str* v1, const set_str* v2) {
     assert_notnull(v1);
     assert_notnull(v2);
-    if (v1->_count != v2->_count)
+    if (v1->_size != v2->_size)
         return false;
     // TODO
     return true;
@@ -68,8 +68,8 @@ bool set_str_contains(set_str* t, const char* value) {
 void set_str_visit_all(const set_str* t,
                        void (*visit)(const set_str_visit_data*)) {
     assert_notnull(t);
-    if (t->_count) { // TODO iterative algorithm
-        set_str_visit_data data = {0, t->_count, NULL};
+    if (t->_size) { // TODO iterative algorithm
+        set_str_visit_data data = {0, t->_size, NULL};
         // At each iteration: before: data.value = node->value;
         //  -iterate-
         // At each iteration: avter: data.i++;
@@ -125,10 +125,10 @@ const set_str_node* set_str_root(set_str* t) {
 }
 
 inline const char* set_str_tostring(const set_str* t) {
-    return set_str_tostring_range(t, 0, t->_count - 1);
+    return set_str_tostring_range(t, 0, t->_size - 1);
 }
 
-const char* set_str_tostring_range(const set_str* t, ptrdiff_t begin,
-                                   ptrdiff_t end) {
+const char* set_str_tostring_range(const set_str* t, SSIZE_T begin,
+                                   SSIZE_T end) {
     return NULL; // TODO
 }

@@ -6,8 +6,8 @@
 #include "vec_int.h"
 #include <stdlib.h>
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, ptrdiff_t count,
-                            ptrdiff_t capacity);
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, SSIZE_T size,
+                            SSIZE_T capacity);
 void vec_int_match(tinfo* tinfo, vec_int* v, char* expected);
 void vec_int_same(tinfo* tinfo, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
@@ -59,8 +59,8 @@ void vec_int_tests(tinfo* tinfo) {
     vec_int_match(tinfo, &v1, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
 
     vec_int v3 = vec_int_copy(&v1);
-    vec_int_check_size_cap(tinfo, &v3, vec_int_count(&v1),
-                           vec_int_count(&v1));
+    vec_int_check_size_cap(tinfo, &v3, vec_int_size(&v1),
+                           vec_int_size(&v1));
 
     int x = vec_int_get(&v1, 0);
     check_int_eq(tinfo, x, 17);
@@ -98,7 +98,7 @@ void vec_int_tests(tinfo* tinfo) {
     check_int_eq(tinfo, x, 10);
     vec_int_match(tinfo, &v1, "2 -33 4 111 5 6 9");
 
-    ptrdiff_t index;
+    SSIZE_T index;
     index = vec_int_find(&v1, 8);
     vec_check_found(tinfo, index, VEC_NOT_FOUND);
 
@@ -208,28 +208,27 @@ void vec_int_match(tinfo* tinfo, vec_int* v, char* expected) {
     free(out);
 }
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, ptrdiff_t count,
-                            ptrdiff_t capacity) {
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, SSIZE_T size,
+                            SSIZE_T capacity) {
     tinfo->total++;
-    if (vec_int_count(v) != count) {
-        fprintf(stderr, "FAIL: %s vec_int_count() expected %td, got %td\n",
-                tinfo->tag, count, vec_int_count(v));
+    if (vec_int_size(v) != size) {
+        fprintf(stderr, "FAIL: %s vec_int_size() expected %d, got %d\n",
+                tinfo->tag, size, vec_int_size(v));
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_int_isempty(v) != (count == 0)) {
-        fprintf(
-            stderr,
-            "FAIL: %s vec_int_isempty() expected %s, got %s count=%td\n",
-            tinfo->tag, bool_to_str(count == 0),
-            bool_to_str(vec_int_isempty(v)), count);
+    if (vec_int_isempty(v) != (size == 0)) {
+        fprintf(stderr,
+                "FAIL: %s vec_int_isempty() expected %s, got %s size=%d\n",
+                tinfo->tag, bool_to_str(size == 0),
+                bool_to_str(vec_int_isempty(v)), size);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (vec_int_cap(v) != capacity) {
-        fprintf(stderr, "FAIL: %s vec_int_cap() expected %td, got %td\n",
+        fprintf(stderr, "FAIL: %s vec_int_cap() expected %d, got %d\n",
                 tinfo->tag, capacity, vec_int_cap(v));
     } else
         tinfo->ok++;

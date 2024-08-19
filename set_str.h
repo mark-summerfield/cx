@@ -11,7 +11,7 @@ typedef struct set_str_node set_str_node;
 // All data members are private; all accesses via functions.
 typedef struct {
     set_str_node* _root;
-    ptrdiff_t _count;
+    SSIZE_T _size;
 } set_str;
 
 typedef struct set_str_node {
@@ -23,8 +23,8 @@ typedef struct set_str_node {
 
 typedef struct {
     char* value;
-    ptrdiff_t i;
-    ptrdiff_t size;
+    SSIZE_T i;
+    SSIZE_T size;
 } set_str_visit_data;
 
 // Allocates a new empty set_str of owned char* values.
@@ -40,10 +40,10 @@ void set_str_clear(set_str* t);
 inline void set_str_free(set_str* t) { set_str_clear(t); }
 
 // Returns true if the set_str is empty.
-#define set_str_isempty(t) ((t)->_count == 0)
+#define set_str_isempty(t) ((t)->_size == 0)
 
 // Returns the set_str's size.
-#define set_str_size(t) ((t)->_count)
+#define set_str_size(t) ((t)->_size)
 
 // Adds the value in order. If the value was already present, does nothing
 // and returns false; otherwise inserts the new value and returns true.
@@ -66,7 +66,7 @@ bool set_str_equal(const set_str* t1, const set_str* t2);
 // Calls the given visit function on every node in the tree in order.
 // For example, given a set_str, myset:
 //  void print_value(const set_str_visit_data* data) {
-//      printf("%td/%td: %%s\n", data->i, data->size, data->value);
+//      printf("%d/%d: %%s\n", data->i, data->size, data->value);
 //  }
 //  set_str_visit_all(&myset, print_value);
 // TODO add char*context or int i to apply function?
@@ -103,8 +103,8 @@ const set_str_node* set_str_root(set_str* t);
 const char* set_str_tostring(const set_str* t);
 
 // For debugging: caller owns returned char*.
-const char* set_str_tostring_range(const set_str* t, ptrdiff_t begin,
-                                   ptrdiff_t end);
+const char* set_str_tostring_range(const set_str* t, SSIZE_T begin,
+                                   SSIZE_T end);
 
 // TODO set_str_isdisjoint
 // TODO set_str_issubsetof

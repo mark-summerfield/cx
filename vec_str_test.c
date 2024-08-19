@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, ptrdiff_t count,
-                            ptrdiff_t capacity);
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, SSIZE_T size,
+                            SSIZE_T capacity);
 void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected);
 void vec_str_same(tinfo* tinfo, const vec_str* v1, const vec_str* v2);
 void vec_str_print(const vec_str* v);
@@ -115,7 +115,7 @@ void vec_str_tests(tinfo* tinfo) {
                   "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
                   "India|Papa|alpha");
 
-    vec_str_remove(&v1, vec_str_count(&v1) - 1);
+    vec_str_remove(&v1, vec_str_size(&v1) - 1);
     vec_str_match(tinfo, &v1,
                   "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
                   "India|Papa");
@@ -130,7 +130,7 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
 
-    ptrdiff_t index;
+    SSIZE_T index;
     index = vec_str_find(&v1, "Two");
     vec_check_found(tinfo, index, 6);
     index = vec_str_find(&v1, "two");
@@ -196,7 +196,7 @@ void vec_str_sort_tests(tinfo* tinfo) {
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
 
-    ptrdiff_t index;
+    SSIZE_T index;
     index = vec_str_find(&v1, "Zulu");
     vec_check_found(tinfo, index, 0);
     index = vec_str_find(&v1, "Papa");
@@ -277,28 +277,27 @@ void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected) {
     free(out);
 }
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, ptrdiff_t count,
-                            ptrdiff_t capacity) {
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, SSIZE_T size,
+                            SSIZE_T capacity) {
     tinfo->total++;
-    if (vec_str_count(v) != count) {
-        fprintf(stderr, "FAIL: %s vec_str_count() expected %td, got %td\n",
-                tinfo->tag, count, vec_str_count(v));
+    if (vec_str_size(v) != size) {
+        fprintf(stderr, "FAIL: %s vec_str_size() expected %d, got %d\n",
+                tinfo->tag, size, vec_str_size(v));
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_str_isempty(v) != (count == 0)) {
-        fprintf(
-            stderr,
-            "FAIL: %s vec_stry_isempty() expected %s, got %s count=%td\n",
-            tinfo->tag, bool_to_str(count == 0),
-            bool_to_str(vec_str_isempty(v)), count);
+    if (vec_str_isempty(v) != (size == 0)) {
+        fprintf(stderr,
+                "FAIL: %s vec_stry_isempty() expected %s, got %s size=%d\n",
+                tinfo->tag, bool_to_str(size == 0),
+                bool_to_str(vec_str_isempty(v)), size);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (vec_str_cap(v) != capacity) {
-        fprintf(stderr, "FAIL: %s vec_str_cap() expected %td, got %td\n",
+        fprintf(stderr, "FAIL: %s vec_str_cap() expected %d, got %d\n",
                 tinfo->tag, capacity, vec_str_cap(v));
     } else
         tinfo->ok++;

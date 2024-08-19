@@ -3,6 +3,8 @@
 
 #include <assert.h>
 
+typedef int SSIZE_T;
+
 // Use after malloc or realloc
 #define assert_alloc(p) assert((p) && "failed to acquire memory")
 
