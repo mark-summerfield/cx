@@ -7,15 +7,15 @@
 // A vector of owned char* values.
 // All data members are private; all accesses via functions.
 typedef struct {
-    size_t _size; // This is "end", i.e., one past the last value
-    size_t _cap;  // The size of the allocated array
+    ptrdiff_t _count; // This is "end", i.e., one past the last value
+    ptrdiff_t _cap;   // The size of the allocated array
     char** _values;
 } vec_str;
 
 // Allocates a new vec_str of owned char* with default capacity of
 // VEC_INITIAL_CAP.
 // Set the initial capacity with cap.
-vec_str vec_str_alloc_cap(size_t cap);
+vec_str vec_str_alloc_cap(ptrdiff_t cap);
 
 #define vec_str_alloc() vec_str_alloc_cap(VEC_INITIAL_CAP)
 
@@ -31,17 +31,17 @@ void vec_str_free(vec_str* v);
 void vec_str_clear(vec_str* v);
 
 // Returns true if the vec_str is empty.
-#define vec_str_isempty(v) ((v)->_size == 0)
+#define vec_str_isempty(v) ((v)->_count == 0)
 
 // Returns the vec_str's size.
-#define vec_str_size(v) ((v)->_size)
+#define vec_str_count(v) ((v)->_count)
 
 // Returns the vec_str's capacity.
 #define vec_str_cap(v) ((v)->_cap)
 
 // Returns the vec_str's value at position index.
 // vec_str retains ownership, so do not delete the value.
-const char* vec_str_get(const vec_str* v, size_t index);
+const char* vec_str_get(const vec_str* v, ptrdiff_t index);
 
 // Returns the vec_str's value at its last valid index.
 // vec_str retains ownership, so do not delete the value.
@@ -50,12 +50,12 @@ const char* vec_str_get_last(const vec_str* v);
 // Sets the vec_str's value at position index to the given value.
 // vec_str takes ownership of the new value (e.g., if char* then use
 // strdup()) and frees the old value.
-void vec_str_set(vec_str* v, size_t index, char* value);
+void vec_str_set(vec_str* v, ptrdiff_t index, char* value);
 
 // Inserts the value at position index and moves succeeding values up
 // (right), increasing the vec_str's size (and cap if necessary): O(n).
 // vec_str takes ownership of the new value (e.g., use strdup()).
-void vec_str_insert(vec_str* v, size_t index, char* value);
+void vec_str_insert(vec_str* v, ptrdiff_t index, char* value);
 
 // Adds the value in order (in a sorted vec) and moves succeeding values up
 // (right), increasing the vec's size (and cap if necessary): O(n).
@@ -66,16 +66,16 @@ void vec_str_add(vec_str* v, char* value);
 // the old value from that position.
 // vec_str takes ownership of the new value (e.g., if char* then use
 // strdup()). The returned value is now owned by the caller.
-char* vec_str_replace(vec_str* v, size_t index, char* value);
+char* vec_str_replace(vec_str* v, ptrdiff_t index, char* value);
 
 // Removes and frees the value at the given index and closes up the gap:
 // O(n).
-void vec_str_remove(vec_str* v, size_t index);
+void vec_str_remove(vec_str* v, ptrdiff_t index);
 
 // Returns and removes the value at the given index and closes up the
 // gap: O(n).
 // The returned value is now owned by the caller.
-char* vec_str_take(vec_str* v, size_t index);
+char* vec_str_take(vec_str* v, ptrdiff_t index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
 // The returned value is now owned by the caller: O(1).
@@ -103,18 +103,18 @@ bool vec_str_equal(const vec_str* v1, const vec_str* v2);
 // The returned char* value is now owned by the caller.
 char* vec_str_join(const vec_str* v, const char* sep);
 
-// Returns whether the value was found in the vec and if so, sets its index.
-// Uses a linear search.
-bool vec_str_find(const vec_str* v, const char* value, size_t* index);
+// Returns the index where the value was found in the vec or
+// VEC_NOT_FOUND (-1). Uses a linear search.
+ptrdiff_t vec_str_find(const vec_str* v, const char* value);
 
 // Sorts the vec_str in-place.
 void vec_str_sort(vec_str* v);
 
-// Searches the vec_str using binary search: assumes that the vec_str is in
-// order, e.g., vec_str_sort() has been used. For a linear search of an
-// unsorted vec_str, use vec_str_find.
-bool vec_str_search(const vec_str* v, const char* s, size_t* index);
+// Returns the index where the value was found in the vec or
+// VEC_NOT_FOUND (-1). Uses a binary search that assumes vec_str_sort() has
+// been used.
+ptrdiff_t vec_str_search(const vec_str* v, const char* s);
 
 // To iterate:
-//  for (size_t i = 0; i < vec_str_size(v); ++i)
+//  for (ptrdiff_t i = 0; i < vec_str_count(v); ++i)
 //      const char* value = vec_str_get(v, i);

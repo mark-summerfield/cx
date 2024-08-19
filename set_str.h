@@ -11,7 +11,7 @@ typedef struct set_str_node set_str_node;
 // All data members are private; all accesses via functions.
 typedef struct {
     set_str_node* _root;
-    size_t _size;
+    ptrdiff_t _count;
 } set_str;
 
 typedef struct set_str_node {
@@ -40,10 +40,10 @@ void set_str_clear(set_str* t);
 inline void set_str_free(set_str* t) { set_str_clear(t); }
 
 // Returns true if the set_str is empty.
-#define set_str_isempty(t) ((t)->_size == 0)
+#define set_str_isempty(t) ((t)->_count == 0)
 
 // Returns the set_str's size.
-#define set_str_size(t) ((t)->_size)
+#define set_str_size(t) ((t)->_count)
 
 // Adds the value in order. If the value was already present, does nothing
 // and returns false; otherwise inserts the new value and returns true.

@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, size_t size,
-                            size_t capacity);
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, ptrdiff_t count,
+                            ptrdiff_t capacity);
 void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected);
 void vec_str_same(tinfo* tinfo, const vec_str* v1, const vec_str* v2);
 void vec_str_print(const vec_str* v);
@@ -115,7 +115,7 @@ void vec_str_tests(tinfo* tinfo) {
                   "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
                   "India|Papa|alpha");
 
-    vec_str_remove(&v1, vec_str_size(&v1) - 1);
+    vec_str_remove(&v1, vec_str_count(&v1) - 1);
     vec_str_match(tinfo, &v1,
                   "Zulu|B2|Victor|beta|Sierra|gamma|X-ray|Two|"
                   "India|Papa");
@@ -130,19 +130,15 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
 
-    bool found;
-    size_t index;
-    found = vec_str_find(&v1, "Two", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 6);
-    found = vec_str_find(&v1, "two", &index);
-    check_bool_eq(tinfo, found, false);
-    found = vec_str_find(&v1, "Papa", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 8);
-    found = vec_str_find(&v1, "Zulu", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 0);
+    ptrdiff_t index;
+    index = vec_str_find(&v1, "Two");
+    vec_check_found(tinfo, index, 6);
+    index = vec_str_find(&v1, "two");
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    index = vec_str_find(&v1, "Papa");
+    vec_check_found(tinfo, index, 8);
+    index = vec_str_find(&v1, "Zulu");
+    vec_check_found(tinfo, index, 0);
 
     vec_str_clear(&v1);
     vec_str_check_size_cap(tinfo, &v1, 0, 64);
@@ -200,19 +196,15 @@ void vec_str_sort_tests(tinfo* tinfo) {
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
 
-    bool found;
-    size_t index;
-    found = vec_str_find(&v1, "Zulu", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 0);
-    found = vec_str_find(&v1, "Papa", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 8);
-    found = vec_str_find(&v1, "Sierra", &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 3);
-    found = vec_str_find(&v1, "Sierrb", &index);
-    check_bool_eq(tinfo, found, false);
+    ptrdiff_t index;
+    index = vec_str_find(&v1, "Zulu");
+    vec_check_found(tinfo, index, 0);
+    index = vec_str_find(&v1, "Papa");
+    vec_check_found(tinfo, index, 8);
+    index = vec_str_find(&v1, "Sierra");
+    vec_check_found(tinfo, index, 3);
+    index = vec_str_find(&v1, "Sierrb");
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
 
     vec_str_sort(&v1);
     vec_str_match(tinfo, &v1,
@@ -227,52 +219,35 @@ void vec_str_sort_tests(tinfo* tinfo) {
         tinfo, &v1,
         "Alpha|Hairy|India|Papa|Sierra|Two|Victor|X-ray|Zulu|gamma|kilo");
 
-    found = vec_str_find(&v1, "Zulu", &index);
-    vec_found_index search_index = {index, found};
-    found = vec_str_search(&v1, "Zulu", &index);
-    vec_found_index found_index = {index, found};
-    vec_check_found(tinfo, &found_index, &search_index);
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 8);
+    index = vec_str_find(&v1, "Zulu");
+    vec_check_found(tinfo, index, 8);
+    index = vec_str_search(&v1, "Zulu");
+    vec_check_found(tinfo, index, 8);
 
-    found = vec_str_find(&v1, "Papa", &index);
-    found_index = (vec_found_index){index, found};
-    found = vec_str_search(&v1, "Papa", &index);
-    search_index = (vec_found_index){index, found};
-    vec_check_found(tinfo, &found_index, &search_index);
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 3);
+    index = vec_str_find(&v1, "Papa");
+    vec_check_found(tinfo, index, 3);
+    index = vec_str_search(&v1, "Papa");
+    vec_check_found(tinfo, index, 3);
 
-    found = vec_str_find(&v1, "Sierra", &index);
-    found_index = (vec_found_index){index, found};
-    found = vec_str_search(&v1, "Sierra", &index);
-    search_index = (vec_found_index){index, found};
-    vec_check_found(tinfo, &found_index, &search_index);
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 4);
+    index = vec_str_find(&v1, "Sierra");
+    vec_check_found(tinfo, index, 4);
+    index = vec_str_search(&v1, "Sierra");
+    vec_check_found(tinfo, index, 4);
 
-    found = vec_str_find(&v1, "Sierrb", &index);
-    found_index = (vec_found_index){index, found};
-    found = vec_str_search(&v1, "Sierrb", &index);
-    search_index = (vec_found_index){index, found};
-    vec_check_found(tinfo, &found_index, &search_index);
-    check_bool_eq(tinfo, found_index.found, false);
+    index = vec_str_find(&v1, "Sierrb");
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    index = vec_str_search(&v1, "Sierrb");
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
 
-    found = vec_str_find(&v1, "Alpha", &index);
-    found_index = (vec_found_index){index, found};
-    found = vec_str_search(&v1, "Alpha", &index);
-    search_index = (vec_found_index){index, found};
-    vec_check_found(tinfo, &found_index, &search_index);
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 0);
+    index = vec_str_find(&v1, "Alpha");
+    vec_check_found(tinfo, index, 0);
+    index = vec_str_search(&v1, "Alpha");
+    vec_check_found(tinfo, index, 0);
 
-    found = vec_str_find(&v1, "kilo", &index);
-    found_index = (vec_found_index){index, found};
-    found = vec_str_search(&v1, "kilo", &index);
-    search_index = (vec_found_index){index, found};
-    vec_check_found(tinfo, &found_index, &search_index);
-    check_bool_eq(tinfo, found_index.found, true);
-    check_int_eq(tinfo, found_index.index, 10);
+    index = vec_str_find(&v1, "kilo");
+    vec_check_found(tinfo, index, 10);
+    index = vec_str_search(&v1, "kilo");
+    vec_check_found(tinfo, index, 10);
 
     vec_str_match(
         tinfo, &v1,
@@ -302,28 +277,28 @@ void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected) {
     free(out);
 }
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, size_t size,
-                            size_t capacity) {
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, ptrdiff_t count,
+                            ptrdiff_t capacity) {
     tinfo->total++;
-    if (vec_str_size(v) != size) {
-        fprintf(stderr, "FAIL: %s vec_str_size() expected %zu, got %zu\n",
-                tinfo->tag, size, vec_str_size(v));
+    if (vec_str_count(v) != count) {
+        fprintf(stderr, "FAIL: %s vec_str_count() expected %td, got %td\n",
+                tinfo->tag, count, vec_str_count(v));
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_str_isempty(v) != (size == 0)) {
+    if (vec_str_isempty(v) != (count == 0)) {
         fprintf(
             stderr,
-            "FAIL: %s vec_stry_isempty() expected %s, got %s size=%zu\n",
-            tinfo->tag, bool_to_str(size == 0),
-            bool_to_str(vec_str_isempty(v)), size);
+            "FAIL: %s vec_stry_isempty() expected %s, got %s count=%td\n",
+            tinfo->tag, bool_to_str(count == 0),
+            bool_to_str(vec_str_isempty(v)), count);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (vec_str_cap(v) != capacity) {
-        fprintf(stderr, "FAIL: %s vec_str_cap() expected %zu, got %zu\n",
+        fprintf(stderr, "FAIL: %s vec_str_cap() expected %td, got %td\n",
                 tinfo->tag, capacity, vec_str_cap(v));
     } else
         tinfo->ok++;

@@ -1,5 +1,6 @@
 # TODO
 # - size_t → ptrdiff_t for loops & array/char* indexes
+# - size → count
 #
 # vec*:
 #   - find/search return ptrdiff_t with -1 not found

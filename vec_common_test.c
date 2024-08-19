@@ -3,13 +3,12 @@
 #include "vec_common_test.h"
 #include <stdio.h>
 
-void vec_check_found(tinfo* tinfo, const vec_found_index* i1,
-                     const vec_found_index* i2) {
+void vec_check_found(tinfo* tinfo, const ptrdiff_t i1, const ptrdiff_t i2) {
     tinfo->total++;
-    if ((i1->found == i2->found) &&
-        (!i1->found || (i1->index == i2->index))) {
+    if (i1 == i2) {
         tinfo->ok++;
     } else {
-        fprintf(stderr, "FAIL: %s vec_search()\n", tinfo->tag);
+        fprintf(stderr, "FAIL: %s vec_{find,search}() %td != %td\n",
+                tinfo->tag, i1, i2);
     }
 }

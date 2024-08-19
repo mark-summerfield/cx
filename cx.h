@@ -7,5 +7,3 @@
 #define assert_alloc(p) assert((p) && "failed to acquire memory")
 
 #define assert_notnull(p) assert((p) && "unexpected NULL pointer")
-
-// #define assert_safe_sub(zu) assert(((zu) > 0) && "size_t sub wrap error")

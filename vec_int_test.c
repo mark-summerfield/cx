@@ -2,11 +2,12 @@
 
 #include "vec_int_test.h"
 #include "sx.h"
+#include "vec_common_test.h"
 #include "vec_int.h"
 #include <stdlib.h>
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, size_t size,
-                            size_t capacity);
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, ptrdiff_t count,
+                            ptrdiff_t capacity);
 void vec_int_match(tinfo* tinfo, vec_int* v, char* expected);
 void vec_int_same(tinfo* tinfo, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
@@ -58,8 +59,8 @@ void vec_int_tests(tinfo* tinfo) {
     vec_int_match(tinfo, &v1, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
 
     vec_int v3 = vec_int_copy(&v1);
-    vec_int_check_size_cap(tinfo, &v3, vec_int_size(&v1),
-                           vec_int_size(&v1));
+    vec_int_check_size_cap(tinfo, &v3, vec_int_count(&v1),
+                           vec_int_count(&v1));
 
     int x = vec_int_get(&v1, 0);
     check_int_eq(tinfo, x, 17);
@@ -97,52 +98,42 @@ void vec_int_tests(tinfo* tinfo) {
     check_int_eq(tinfo, x, 10);
     vec_int_match(tinfo, &v1, "2 -33 4 111 5 6 9");
 
-    size_t index;
-    bool found;
-    found = vec_int_find(&v1, 8, &index);
-    check_bool_eq(tinfo, found, false);
+    ptrdiff_t index;
+    index = vec_int_find(&v1, 8);
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
 
-    found = vec_int_find(&v1, 2, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 0);
+    index = vec_int_find(&v1, 2);
+    vec_check_found(tinfo, index, 0);
 
-    found = vec_int_find(&v1, 111, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 3);
+    index = vec_int_find(&v1, 111);
+    vec_check_found(tinfo, index, 3);
 
-    found = vec_int_find(&v1, 9, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 6);
+    index = vec_int_find(&v1, 9);
+    vec_check_found(tinfo, index, 6);
 
     vec_int_match(tinfo, &v3, "17 21 1 2 3 4 -555 5 6 7 8 9 -99");
     vec_int_sort(&v3);
     vec_int_match(tinfo, &v3, "-555 -99 1 2 3 4 5 6 7 8 9 17 21");
 
-    found = vec_int_search(&v3, 11, &index);
-    check_bool_eq(tinfo, found, false);
-    found = vec_int_find(&v3, 11, &index);
-    check_bool_eq(tinfo, found, false);
+    index = vec_int_search(&v3, 11);
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    index = vec_int_find(&v3, 11);
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
 
-    found = vec_int_search(&v3, 21, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 12);
-    found = vec_int_find(&v3, 21, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 12);
+    index = vec_int_search(&v3, 21);
+    vec_check_found(tinfo, index, 12);
+    index = vec_int_find(&v3, 21);
+    vec_check_found(tinfo, index, 12);
 
-    found = vec_int_search(&v3, -555, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 0);
-    found = vec_int_find(&v3, -555, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 0);
+    index = vec_int_search(&v3, -555);
+    vec_check_found(tinfo, index, 0);
+    index = vec_int_find(&v3, -555);
+    vec_check_found(tinfo, index, 0);
 
-    found = vec_int_search(&v3, 7, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 8);
-    found = vec_int_find(&v3, 7, &index);
-    check_bool_eq(tinfo, found, true);
-    check_int_eq(tinfo, index, 8);
+    index = vec_int_search(&v3, 7);
+    vec_check_found(tinfo, index, 8);
+    index = vec_int_find(&v3, 7);
+    vec_check_found(tinfo, index, 8);
 
     vec_int_match(tinfo, &v3, "-555 -99 1 2 3 4 5 6 7 8 9 17 21");
     vec_int_add(&v3, -711);
@@ -217,27 +208,28 @@ void vec_int_match(tinfo* tinfo, vec_int* v, char* expected) {
     free(out);
 }
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, size_t size,
-                            size_t capacity) {
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, ptrdiff_t count,
+                            ptrdiff_t capacity) {
     tinfo->total++;
-    if (vec_int_size(v) != size) {
-        fprintf(stderr, "FAIL: %s vec_int_size() expected %zu, got %zu\n",
-                tinfo->tag, size, vec_int_size(v));
+    if (vec_int_count(v) != count) {
+        fprintf(stderr, "FAIL: %s vec_int_count() expected %td, got %td\n",
+                tinfo->tag, count, vec_int_count(v));
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_int_isempty(v) != (size == 0)) {
-        fprintf(stderr,
-                "FAIL: %s vec_int_isempty() expected %s, got %s size=%zu\n",
-                tinfo->tag, bool_to_str(size == 0),
-                bool_to_str(vec_int_isempty(v)), size);
+    if (vec_int_isempty(v) != (count == 0)) {
+        fprintf(
+            stderr,
+            "FAIL: %s vec_int_isempty() expected %s, got %s count=%td\n",
+            tinfo->tag, bool_to_str(count == 0),
+            bool_to_str(vec_int_isempty(v)), count);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (vec_int_cap(v) != capacity) {
-        fprintf(stderr, "FAIL: %s vec_int_cap() expected %zu, got %zu\n",
+        fprintf(stderr, "FAIL: %s vec_int_cap() expected %td, got %td\n",
                 tinfo->tag, capacity, vec_int_cap(v));
     } else
         tinfo->ok++;
