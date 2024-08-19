@@ -19,9 +19,9 @@ typedef struct {
 } rbt;
 
 typedef struct rbt_node {
-    void* _item;
-    rbt_node* _left;
-    rbt_node* _right;
+    void* value;
+    rbt_node* left;
+    rbt_node* right;
     bool _red;
 } rbt_node;
 
@@ -38,16 +38,16 @@ rbt rbt_alloc(rbt_alloc_args args);
 
 // Destroys the rbt freeing its memory and also freeing every item. The rbt
 // is not usable after this.
-void rbt_free(rbt* t);
+void rbt_free(rbt* my);
 
 // Calls destroy on all the rbt's items.
-void rbt_clear(rbt* t);
+void rbt_clear(rbt* my);
 
 // Returns true if the rbt is empty.
-#define rbt_isempty(t) ((t)->_size == 0)
+#define rbt_isempty(my) ((my)->_size == 0)
 
 // Returns the rbt's size.
-#define rbt_size(t) ((t)->_size)
+#define rbt_size(my) ((my)->_size)
 
 // Adds the item in key order. If the item's key was already present,
 // deletes the old item and replaces it with the new and returns false;
@@ -55,26 +55,26 @@ void rbt_clear(rbt* t);
 // the use of key-item items, i.e., maps, where this function matches
 // on the key and in effect replaces the item's value.)
 // rbt takes ownership of the new item (e.g., if char* then use strdup()).
-bool rbt_add(rbt* t, const void* item);
+bool rbt_add(rbt* my, const void* item);
 
 // Removes and frees the given item (matching by key) and returns true;
-// or does nothing (if the item isn't in the rbt) and returns false.
-bool rbt_remove(rbt* t, const void* item);
+// or does nothing (if the item isn'my in the rbt) and returns false.
+bool rbt_remove(rbt* my, const void* item);
 
 // Returns true and sets the item's value to the found item's value
 // if item is in the rbt matching by its key.
 // The tree retains ownership so item must not be freed.
-bool rbt_find(const rbt* t, void* item);
+bool rbt_find(const rbt* my, void* item);
 
 // Returns true if item is in the rbt matching by its key.
-bool rbt_contains(rbt* t, const void* item);
+bool rbt_contains(rbt* my, const void* item);
 
 // Returns a deep copy of the rbt including cmp, cpy, and destroy.
-rbt rbt_copy(const rbt* t);
+rbt rbt_copy(const rbt* my);
 
 // Returns true if the two rbt's have the same items and the same cmp,
 // cpy, and destroy.
-bool rbt_equal(const rbt* t1, const rbt* t2);
+bool rbt_equal(const rbt* my, const rbt* their);
 
 // Calls the given visit function on every node in the tree in order.
 // For example, given an rbt of Tags where key is a char* key and id is a
@@ -85,29 +85,29 @@ bool rbt_equal(const rbt* t1, const rbt* t2);
 //  }
 //  rbt_visit_all(&tag_tree, print_node);
 // TODO add void*context or int i to visit function?
-void rbt_visit_all(const rbt* t, void (*visit)(const void*));
+void rbt_visit_all(const rbt* my, void (*visit)(const void*));
 
 // TODO uncomment or remove
-// Provides read-only access to the root if visit() isn't sufficient.
-// const void** rbt_borrow_root(const rbt* t);
+// Provides read-only access to the root if visit() isn'my sufficient.
+// const void** rbt_borrow_root(const rbt* my);
 
-// Returns a new rbt that contains the items which are in t1 that are
-// not in t2.
-rbt rbt_difference(const rbt* t1, const rbt* t2);
+// Returns a new rbt that contains the items which are in my that are
+// not in their.
+rbt rbt_difference(const rbt* my, const rbt* their);
 
-// Returns a new rbt that contains the items which are in t1 or in
-// t2—but not in both.
-rbt rbt_symmetric_difference(const rbt* t1, const rbt* t2);
+// Returns a new rbt that contains the items which are in my or in
+// their—but not in both.
+rbt rbt_symmetric_difference(const rbt* my, const rbt* their);
 
-// Returns a new rbt that contains the items that t1 and t2 have in common.
-rbt rbt_intersection(const rbt* t1, const rbt* t2);
+// Returns a new rbt that contains the items that my and their have in common.
+rbt rbt_intersection(const rbt* my, const rbt* their);
 
-// Returns a new rbt that contains the items from t1 and from t2 (with
+// Returns a new rbt that contains the items from my and from their (with
 // no duplicates of course).
-rbt rbt_union(const rbt* t1, const rbt* t2);
+rbt rbt_union(const rbt* my, const rbt* their);
 
-// Adds every item from t2 to t1 (with no duplicates).
-void rbt_unite(rbt* t1, const rbt* t2);
+// Adds every item from their to my (with no duplicates).
+void rbt_unite(rbt* my, const rbt* their);
 
 // TODO rbt_isdisjoint
 // TODO rbt_issubsetof

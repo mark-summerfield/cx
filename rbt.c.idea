@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 #define assert_compatible                                  \
-    assert(t1->_cmp == t2->_cmp && t1->_cpy == t2->_cpy && \
-           t1->_destroy != t2->_destroy)
+    assert(my->_cmp == their->_cmp && my->_cpy == their->_cpy && \
+           my->_destroy != their->_destroy)
 
 static void rbt_visit_node(const rbt_node* node,
                            void (*apply)(const void*));
@@ -22,42 +22,42 @@ rbt rbt_alloc(rbt_alloc_args args) {
                  ._destroy = args.destroy};
 }
 
-inline void rbt_free(rbt* t) { rbt_clear(t); }
+inline void rbt_free(rbt* my) { rbt_clear(my); }
 
-void rbt_clear(rbt* t) {
-    assert_notnull(t);
-    rbt_delete_node(t->_root, t->_destroy);
-    t->_size = 0;
+void rbt_clear(rbt* my) {
+    assert_notnull(my);
+    rbt_delete_node(my->_root, my->_destroy);
+    my->_size = 0;
 }
 
 void rbt_delete_node(rbt_node* node, void (*destroy)(void* item)) {
     if (node) {
-        rbt_delete_node(node->_left, destroy);
-        rbt_delete_node(node->_right, destroy);
-        node->_left = NULL;
-        node->_right = NULL;
-        destroy(node->_item);
-        node->_item = NULL;
+        rbt_delete_node(node->left, destroy);
+        rbt_delete_node(node->right, destroy);
+        node->left = NULL;
+        node->right = NULL;
+        destroy(node->value);
+        node->value = NULL;
     }
 }
 
-bool rbt_add(rbt* t, const void* item) {
-    assert_notnull(t);
+bool rbt_add(rbt* my, const void* item) {
+    assert_notnull(my);
     assert_notnull(item);
     // TODO
     return false;
 }
 
-inline bool rbt_remove(rbt* t, const void* item) {
-    assert_notnull(t);
+inline bool rbt_remove(rbt* my, const void* item) {
+    assert_notnull(my);
     // TODO
     return false;
 }
 
-rbt rbt_copy(const rbt* t) {
-    assert_notnull(t);
+rbt rbt_copy(const rbt* my) {
+    assert_notnull(my);
     rbt tc = rbt_alloc((rbt_alloc_args){
-        .cmp = t->_cmp, .cpy = t->_cpy, .destroy = t->_destroy});
+        .cmp = my->_cmp, .cpy = my->_cpy, .destroy = my->_destroy});
     // TODO
     return tc;
 }
@@ -72,68 +72,68 @@ bool rbt_equal(const rbt* v1, const rbt* v2) {
     return true;
 }
 
-bool rbt_find(const rbt* t, void* item) {
-    assert_notnull(t);
+bool rbt_find(const rbt* my, void* item) {
+    assert_notnull(my);
     assert_notnull(item);
     // TODO searches for an item whose key equals item.key & if found
     // populates item.value with the found value (as a borrow).
     return false;
 }
 
-inline bool rbt_contains(rbt* t, const void* item) {
-    return rbt_find(t, item, NULL);
+inline bool rbt_contains(rbt* my, const void* item) {
+    return rbt_find(my, item, NULL);
 }
 
-inline void rbt_visit_all(const rbt* t, void (*visit)(const void*)) {
-    assert_notnull(t);
-    if (t->_size)
-        rbt_visit_node(t->_root, visit);
+inline void rbt_visit_all(const rbt* my, void (*visit)(const void*)) {
+    assert_notnull(my);
+    if (my->_size)
+        rbt_visit_node(my->_root, visit);
 }
 
 static void rbt_visit_node(const rbt_node* node,
                            void (*visit)(const void*)) {
     if (!node)
         return;
-    rbt_visit_node(node->_left, visit);
-    visit(node->_item);
-    rbt_visit_node(node->_right, visit);
+    rbt_visit_node(node->left, visit);
+    visit(node->value);
+    rbt_visit_node(node->right, visit);
 }
 
-// inline const void** rbt_borrow_root(const rbt* t) { return t->_root; }
+// inline const void** rbt_borrow_root(const rbt* my) { return my->_root; }
 
-rbt rbt_difference(const rbt* t1, const rbt* t2) {
+rbt rbt_difference(const rbt* my, const rbt* their) {
     assert_compatible;
-    rbt t = rbt_alloc((rbt_alloc_args){
-        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    rbt my = rbt_alloc((rbt_alloc_args){
+        .cmp = my->_cmp, .cpy = my->_cpy, .destroy = my->_destroy});
     // TODO
-    return t;
+    return my;
 }
 
-rbt rbt_symmetric_difference(const rbt* t1, const rbt* t2) {
+rbt rbt_symmetric_difference(const rbt* my, const rbt* their) {
     assert_compatible;
-    rbt t = rbt_alloc((rbt_alloc_args){
-        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    rbt my = rbt_alloc((rbt_alloc_args){
+        .cmp = my->_cmp, .cpy = my->_cpy, .destroy = my->_destroy});
     // TODO
-    return t;
+    return my;
 }
 
-rbt rbt_intersection(const rbt* t1, const rbt* t2) {
+rbt rbt_intersection(const rbt* my, const rbt* their) {
     assert_compatible;
-    rbt t = rbt_alloc((rbt_alloc_args){
-        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    rbt my = rbt_alloc((rbt_alloc_args){
+        .cmp = my->_cmp, .cpy = my->_cpy, .destroy = my->_destroy});
     // TODO
-    return t;
+    return my;
 }
 
-rbt rbt_union(const rbt* t1, const rbt* t2) {
+rbt rbt_union(const rbt* my, const rbt* their) {
     assert_compatible;
-    rbt t = rbt_alloc((rbt_alloc_args){
-        .cmp = t1->_cmp, .cpy = t1->_cpy, .destroy = t1->_destroy});
+    rbt my = rbt_alloc((rbt_alloc_args){
+        .cmp = my->_cmp, .cpy = my->_cpy, .destroy = my->_destroy});
     // TODO
-    return t;
+    return my;
 }
 
-void rbt_unite(rbt* t1, const rbt* t2) {
+void rbt_unite(rbt* my, const rbt* their) {
     assert_compatible;
     // TODO
 }

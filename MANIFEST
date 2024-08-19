@@ -6,7 +6,8 @@
 #   see rb.c & compare with set_int.c
 #   - set_int (e) (much easier to test than set_str)
 #	TODO can now test by using set_int_to_vec() and then
-#	vec_int_tostring()
+#	vec_int_tostring():
+#	. what happens with duplicate adds?
 #   - set_str (e) (this and vector are all that's needed for wordladder)
 #
 # Only do this as needed:

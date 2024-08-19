@@ -3,7 +3,7 @@
 #include "vec.h"
 #include <stdlib.h>
 
-static void vec_grow(vec* v);
+static void vec_grow(vec* me);
 
 // This *is* used, via a macro in vec.h; clang-format gets confused.
 vec vec_alloc_(vec_alloc_args args) {
@@ -20,201 +20,201 @@ vec vec_alloc_(vec_alloc_args args) {
                  ._destroy = args.destroy};
 }
 
-void vec_free(vec* v) {
-    assert_notnull(v);
-    vec_clear(v);
-    free(v->_values);
-    v->_values = NULL;
-    v->_cap = 0;
+void vec_free(vec* me) {
+    assert_notnull(me);
+    vec_clear(me);
+    free(me->_values);
+    me->_values = NULL;
+    me->_cap = 0;
 }
 
-void vec_clear(vec* v) {
-    assert_notnull(v);
-    for (int i = 0; i < v->_size; ++i)
-        v->_destroy(v->_values[i]);
-    v->_size = 0;
+void vec_clear(vec* me) {
+    assert_notnull(me);
+    for (int i = 0; i < me->_size; ++i)
+        me->_destroy(me->_values[i]);
+    me->_size = 0;
 }
 
-const void* vec_get(const vec* v, int index) {
-    assert_notnull(v);
-    assert_valid_index(v, index);
-    return v->_values[index];
+const void* vec_get(const vec* me, int index) {
+    assert_notnull(me);
+    assert_valid_index(me, index);
+    return me->_values[index];
 }
 
-inline const void* vec_get_last(const vec* v) {
-    assert_notnull(v);
-    assert_nonempty(v);
-    return v->_values[v->_size - 1];
+inline const void* vec_get_last(const vec* me) {
+    assert_notnull(me);
+    assert_nonempty(me);
+    return me->_values[me->_size - 1];
 }
 
-void vec_set(vec* v, int index, void* value) {
-    assert_notnull(v);
+void vec_set(vec* me, int index, void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    assert_valid_index(v, index);
-    v->_destroy(v->_values[index]);
-    v->_values[index] = value;
+    assert_valid_index(me, index);
+    me->_destroy(me->_values[index]);
+    me->_values[index] = value;
 }
 
-void vec_insert(vec* v, int index, void* value) {
-    assert_notnull(v);
+void vec_insert(vec* me, int index, void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    if (index == v->_size) { // add at the end
-        vec_push(v, value);
+    if (index == me->_size) { // add at the end
+        vec_push(me, value);
         return;
     }
-    assert_valid_index(v, index);
-    if (v->_size == v->_cap)
-        vec_grow(v);
-    for (int i = v->_size; i > index; --i)
-        v->_values[i] = v->_values[i - 1];
-    v->_values[index] = value;
-    v->_size++;
+    assert_valid_index(me, index);
+    if (me->_size == me->_cap)
+        vec_grow(me);
+    for (int i = me->_size; i > index; --i)
+        me->_values[i] = me->_values[i - 1];
+    me->_values[index] = value;
+    me->_size++;
 }
 
-void vec_add(vec* v, void* value) {
-    assert_notnull(v);
+void vec_add(vec* me, void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    int high = v->_size - 1;
-    if (!v->_size || v->_cmp(&v->_values[high], &value) <= 0) {
-        vec_push(v, value); // vec is empty -or- nonempty and value >= high
+    int high = me->_size - 1;
+    if (!me->_size || me->_cmp(&me->_values[high], &value) <= 0) {
+        vec_push(me, value); // vec is empty -or- nonempty and value >= high
     } else {
         int low = 0;
         while (low < high) {
             int mid = (low + high) / 2;
-            if (v->_cmp(&v->_values[mid], &value) > 0)
+            if (me->_cmp(&me->_values[mid], &value) > 0)
                 high = mid;
             else
                 low = mid + 1;
         }
-        vec_insert(v, low, value);
+        vec_insert(me, low, value);
     }
 }
 
-void* vec_replace(vec* v, int index, void* value) {
-    assert_notnull(v);
+void* vec_replace(vec* me, int index, void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    assert_valid_index(v, index);
-    void* old = v->_values[index];
-    v->_values[index] = value;
+    assert_valid_index(me, index);
+    void* old = me->_values[index];
+    me->_values[index] = value;
     return old;
 }
 
-inline void vec_remove(vec* v, int index) {
-    assert_notnull(v);
-    v->_destroy(vec_take(v, index)); // vec_take checks index
+inline void vec_remove(vec* me, int index) {
+    assert_notnull(me);
+    me->_destroy(vec_take(me, index)); // vec_take checks index
 }
 
-void* vec_take(vec* v, int index) {
-    assert_notnull(v);
-    assert_valid_index(v, index);
-    void* old = v->_values[index];
-    for (int i = index; i < v->_size; ++i)
-        v->_values[i] = v->_values[i + 1];
-    v->_size--;
-    v->_values[v->_size] = NULL;
+void* vec_take(vec* me, int index) {
+    assert_notnull(me);
+    assert_valid_index(me, index);
+    void* old = me->_values[index];
+    for (int i = index; i < me->_size; ++i)
+        me->_values[i] = me->_values[i + 1];
+    me->_size--;
+    me->_values[me->_size] = NULL;
     return old;
 }
 
-void* vec_pop(vec* v) {
-    assert_notnull(v);
-    assert_nonempty(v);
-    return v->_values[--v->_size];
+void* vec_pop(vec* me) {
+    assert_notnull(me);
+    assert_nonempty(me);
+    return me->_values[--me->_size];
 }
 
-void vec_push(vec* v, void* value) {
-    assert_notnull(v);
+void vec_push(vec* me, void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    if (v->_size == v->_cap)
-        vec_grow(v);
-    v->_values[v->_size++] = value;
+    if (me->_size == me->_cap)
+        vec_grow(me);
+    me->_values[me->_size++] = value;
 }
 
-vec vec_copy(const vec* v) {
-    assert_notnull(v);
+vec vec_copy(const vec* me) {
+    assert_notnull(me);
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
     vec vc =
-        vec_alloc(.cap = v->_size ? v->_size : VEC_INITIAL_CAP,
-                  .cmp = v->_cmp, .cpy = v->_cpy, .destroy = v->_destroy);
+        vec_alloc(.cap = me->_size ? me->_size : VEC_INITIAL_CAP,
+                  .cmp = me->_cmp, .cpy = me->_cpy, .destroy = me->_destroy);
 #pragma GCC diagnostic pop
-    for (int i = 0; i < v->_size; ++i)
-        vec_push(&vc, v->_cpy(v->_values[i]));
+    for (int i = 0; i < me->_size; ++i)
+        vec_push(&vc, me->_cpy(me->_values[i]));
     return vc;
 }
 
-void vec_merge(vec* v1, vec* v2) {
-    assert_notnull(v1);
-    assert_notnull(v2);
-    assert(v1->_cmp == v2->_cmp && v1->_cpy == v2->_cpy &&
-           v1->_destroy == v2->_destroy && "non-matching vecs");
-    if ((v1->_cap - v1->_size) < v2->_size) { // v1 doesn't have enough cap
-        int cap = v1->_size + v2->_size;
-        void** p = realloc(v1->_values, cap * sizeof(void*));
+void vec_merge(vec* me, vec* them) {
+    assert_notnull(me);
+    assert_notnull(them);
+    assert(me->_cmp == them->_cmp && me->_cpy == them->_cpy &&
+           me->_destroy == them->_destroy && "non-matching vecs");
+    if ((me->_cap - me->_size) < them->_size) { // me doesn't have enough cap
+        int cap = me->_size + them->_size;
+        void** p = realloc(me->_values, cap * sizeof(void*));
         assert_alloc(p);
-        v1->_values = p;
-        v1->_cap = cap;
+        me->_values = p;
+        me->_cap = cap;
     }
-    for (int i = 0; i < v2->_size; ++i)
-        v1->_values[v1->_size++] = v2->_values[i]; // push
-    free(v2->_values);
-    v2->_values = NULL;
-    v2->_cap = 0;
-    v2->_size = 0;
+    for (int i = 0; i < them->_size; ++i)
+        me->_values[me->_size++] = them->_values[i]; // push
+    free(them->_values);
+    them->_values = NULL;
+    them->_cap = 0;
+    them->_size = 0;
 }
 
-bool vec_equal(const vec* v1, const vec* v2) {
-    assert_notnull(v1);
-    assert_notnull(v2);
-    if (v1->_size != v2->_size || v1->_cmp != v2->_cmp ||
-        v1->_cpy != v2->_cpy || v1->_destroy != v2->_destroy)
+bool vec_equal(const vec* me, const vec* them) {
+    assert_notnull(me);
+    assert_notnull(them);
+    if (me->_size != them->_size || me->_cmp != them->_cmp ||
+        me->_cpy != them->_cpy || me->_destroy != them->_destroy)
         return false;
-    for (int i = 0; i < v1->_size; ++i)
-        if (v1->_cmp(&v1->_values[i], &v2->_values[i]))
+    for (int i = 0; i < me->_size; ++i)
+        if (me->_cmp(&me->_values[i], &them->_values[i]))
             return false;
     return true;
 }
 
-int vec_find(const vec* v, const void* value) {
-    assert_notnull(v);
+int vec_find(const vec* me, const void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    for (int i = 0; i < v->_size; ++i)
-        if (v->_cmp(&v->_values[i], &value) == 0)
+    for (int i = 0; i < me->_size; ++i)
+        if (me->_cmp(&me->_values[i], &value) == 0)
             return i;
     return VEC_NOT_FOUND;
 }
 
-int vec_find_last(const vec* v, const void* value) {
-    assert_notnull(v);
+int vec_find_last(const vec* me, const void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    for (int i = v->_size - 1; i >= 0; --i)
-        if (v->_cmp(&v->_values[i], &value) == 0)
+    for (int i = me->_size - 1; i >= 0; --i)
+        if (me->_cmp(&me->_values[i], &value) == 0)
             return i;
     return VEC_NOT_FOUND;
 }
 
-void vec_sort(vec* v) {
-    assert_notnull(v);
-    if (v->_size)
-        qsort(v->_values, v->_size, sizeof(void*), v->_cmp);
+void vec_sort(vec* me) {
+    assert_notnull(me);
+    if (me->_size)
+        qsort(me->_values, me->_size, sizeof(void*), me->_cmp);
 }
 
-int vec_search(const vec* v, const void* value) {
-    assert_notnull(v);
+int vec_search(const vec* me, const void* value) {
+    assert_notnull(me);
     assert_notnull(value);
-    if (v->_size) {
+    if (me->_size) {
         void** p =
-            bsearch(&value, v->_values, v->_size, sizeof(void*), v->_cmp);
+            bsearch(&value, me->_values, me->_size, sizeof(void*), me->_cmp);
         if (p)
-            return p - v->_values;
+            return p - me->_values;
     }
     return VEC_NOT_FOUND;
 }
 
-static void vec_grow(vec* v) {
+static void vec_grow(vec* me) {
     const int BLOCK_SIZE = 1024 * 1024;
-    int cap = (v->_cap < BLOCK_SIZE) ? v->_cap * 2 : v->_cap + BLOCK_SIZE;
-    void** p = realloc(v->_values, cap * sizeof(void*));
+    int cap = (me->_cap < BLOCK_SIZE) ? me->_cap * 2 : me->_cap + BLOCK_SIZE;
+    void** p = realloc(me->_values, cap * sizeof(void*));
     assert_alloc(p);
-    v->_values = p;
-    v->_cap = cap;
+    me->_values = p;
+    me->_cap = cap;
 }
