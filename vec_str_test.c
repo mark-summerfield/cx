@@ -9,7 +9,7 @@
 #include <string.h>
 
 void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, int size,
-                            int capacity);
+                            int cap);
 void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected);
 void vec_str_same(tinfo* tinfo, const vec_str* v1, const vec_str* v2);
 void vec_str_print(const vec_str* v);
@@ -284,7 +284,7 @@ void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected) {
 }
 
 void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, int size,
-                            int capacity) {
+                            int cap) {
     tinfo->total++;
     if (vec_str_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_str_size() expected %d, got %d\n",
@@ -302,9 +302,9 @@ void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, int size,
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_str_cap(v) != capacity) {
+    if (vec_str_cap(v) != cap) {
         fprintf(stderr, "FAIL: %s vec_str_cap() expected %d, got %d\n",
-                tinfo->tag, capacity, vec_str_cap(v));
+                tinfo->tag, cap, vec_str_cap(v));
     } else
         tinfo->ok++;
 }

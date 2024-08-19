@@ -4,18 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct {
-    set_int_node* node;
-    bool flag;
-} node_and_flag;
-
-static node_and_flag add(set_int_node* root, int value);
+static set_int_node* add(set_int_node* root, int value, bool* added);
 static set_int_node* node_alloc(int value);
 static bool is_red(set_int_node* node);
 static void color_flip(set_int_node* node);
 static set_int_node* add_rotation(set_int_node* node);
-static set_int_node* rotateleft(set_int_node* node);
-static set_int_node* rotateright(set_int_node* node);
+static set_int_node* rotate_left(set_int_node* node);
+static set_int_node* rotate_right(set_int_node* node);
 static void to_vec(set_int_node* node, vec_int* out);
 static void delete_node_and_children(set_int_node* node);
 
@@ -44,33 +39,26 @@ static void delete_node_and_children(set_int_node* node) {
 bool set_int_add(set_int* me, int value) {
     assert_notnull(me);
     assert_notnull(value);
-    node_and_flag nodeflag = add(me->_root, value);
-    me->_root = nodeflag.node;
+    bool added = false;
+    me->_root = add(me->_root, value, &added);
     me->_root->_red = false;
-    if (nodeflag.flag)
+    if (added)
         me->_size++;
-    return nodeflag.flag;
+    return added;
 }
 
-static node_and_flag add(set_int_node* root, int value) {
-    node_and_flag nodeflag = {root, false};
-    nodeflag.flag = false;
-    if (!root) { // If element was in the tree it would go here
-        nodeflag.node = node_alloc(value);
-        nodeflag.flag = true;
-        return nodeflag;
+static set_int_node* add(set_int_node* node, int value, bool* added) {
+    if (!node) { // If value was in the tree it would go here
+        *added = true;
+        return node_alloc(value);
     }
-    if (is_red(root->left) && is_red(root->right))
-        color_flip(root);
-    if (value < root->value) {
-        nodeflag = add(root->left, value);
-        root->left = nodeflag.node;
-    } else if (value > root->value) {
-        nodeflag = add(root->right, value);
-        root->right = nodeflag.node;
-    }
-    nodeflag.node = add_rotation(root);
-    return nodeflag;
+    if (is_red(node->left) && is_red(node->right))
+        color_flip(node);
+    if (value < node->value)
+        node->left = add(node->left, value, added);
+    else if (value > node->value)
+        node->right = add(node->right, value, added);
+    return add_rotation(node);
 }
 
 static bool is_red(set_int_node* node) {
@@ -87,13 +75,13 @@ static void color_flip(set_int_node* node) {
 
 static set_int_node* add_rotation(set_int_node* node) {
     if (is_red(node->right) && !is_red(node->left))
-        node = rotateleft(node);
+        node = rotate_left(node);
     if (is_red(node->left) && is_red(node->left->left))
-        node = rotateright(node);
+        node = rotate_right(node);
     return node;
 }
 
-static set_int_node* rotateleft(set_int_node* node) {
+static set_int_node* rotate_left(set_int_node* node) {
     set_int_node* x = node->right;
     node->right = x->left;
     x->left = node;
@@ -102,7 +90,7 @@ static set_int_node* rotateleft(set_int_node* node) {
     return x;
 }
 
-static set_int_node* rotateright(set_int_node* node) {
+static set_int_node* rotate_right(set_int_node* node) {
     set_int_node* x = node->left;
     node->left = x->right;
     x->right = node;
@@ -153,7 +141,8 @@ set_int set_int_difference(const set_int* me, const set_int* them) {
     return out;
 }
 
-set_int set_int_symmetric_difference(const set_int* me, const set_int* them) {
+set_int set_int_symmetric_difference(const set_int* me,
+                                     const set_int* them) {
     set_int out = set_int_alloc();
     // TODO
     return out;

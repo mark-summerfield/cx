@@ -12,8 +12,7 @@
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, int size,
-                        int capacity);
+void vec_check_size_cap(tinfo* tinfo, const vec* v, int size, int cap);
 void vec_match(tinfo* tinfo, const vec* v, const char* expected);
 void vec_same(tinfo* tinfo, const vec* v1, const vec* v2);
 void vec_print(const vec* v);
@@ -256,18 +255,18 @@ void vec_sort_tests(tinfo* tinfo) {
 }
 
 void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
-    char buf[1000];
-    int n = 0; // clang-format warnings are wrong
+    char buf[1000] = {0}; // guarantee start with NUL if vec is empty
+    int n = 0;
     for (int i = 0; i < vec_size(v); ++i) {
         const Tag* tag = vec_get(v, i);
         n += sprintf(&buf[n], "%s|", tag->name);
     }
-    buf[n - 1] = 0;
+    if (n)
+        buf[n - 1] = 0;
     check_str_eq(tinfo, &buf[0], expected);
 }
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, int size,
-                        int capacity) {
+void vec_check_size_cap(tinfo* tinfo, const vec* v, int size, int cap) {
     tinfo->total++;
     if (vec_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_size() expected %d, got %d\n",
@@ -285,9 +284,9 @@ void vec_check_size_cap(tinfo* tinfo, const vec* v, int size,
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_cap(v) != capacity) {
+    if (vec_cap(v) != cap) {
         fprintf(stderr, "FAIL: %s vec_cap() expected %d, got %d\n",
-                tinfo->tag, capacity, vec_cap(v));
+                tinfo->tag, cap, vec_cap(v));
     } else
         tinfo->ok++;
 }

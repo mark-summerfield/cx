@@ -6,8 +6,7 @@
 #include "vec_int.h"
 #include <stdlib.h>
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size,
-                            int capacity);
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size, int cap);
 void vec_int_match(tinfo* tinfo, vec_int* v, char* expected);
 void vec_int_same(tinfo* tinfo, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
@@ -219,8 +218,7 @@ void vec_int_match(tinfo* tinfo, vec_int* v, char* expected) {
     free(out);
 }
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size,
-                            int capacity) {
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size, int cap) {
     tinfo->total++;
     if (vec_int_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_int_size() expected %d, got %d\n",
@@ -238,9 +236,9 @@ void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, int size,
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_int_cap(v) != capacity) {
+    if (vec_int_cap(v) != cap) {
         fprintf(stderr, "FAIL: %s vec_int_cap() expected %d, got %d\n",
-                tinfo->tag, capacity, vec_int_cap(v));
+                tinfo->tag, cap, vec_int_cap(v));
     } else
         tinfo->ok++;
 }
