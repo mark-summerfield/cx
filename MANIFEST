@@ -3,8 +3,9 @@
 # rbt types
 #   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
 #   see ~/app/golib/zOld/rbset/rbset.go
-#   see rb.c & compare with set_str.c
-#   NOTE for deletions I will need to call t->_destroy(node->_value)
+#   see rb.c & compare with set_int.c
+#   - set_int (much easier to test than set_str)
+#	TODO get visit working so I can print values & therefore can test
 #   - set_str (this and vector are all that's needed for wordladder)
 #
 # Only do this as needed:
@@ -20,6 +21,8 @@
 #   etc.
 
 cx.h
+set_int.h
+set_int.c
 set_str.h
 set_str.c
 vec_common.h

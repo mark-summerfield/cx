@@ -27,11 +27,11 @@ set_str set_str_alloc() {
     };
 }
 
-void set_str_clear(set_str* t) {
-    assert_notnull(t);
-    set_str_delete_node_and_children(t->_root);
-    t->_root = NULL;
-    t->_size = 0;
+void set_str_clear(set_str* v) {
+    assert_notnull(v);
+    set_str_delete_node_and_children(v->_root);
+    v->_root = NULL;
+    v->_size = 0;
 }
 
 void set_str_delete_node_and_children(set_str_node* node) {
@@ -43,13 +43,13 @@ void set_str_delete_node_and_children(set_str_node* node) {
     }
 }
 
-bool set_str_add(set_str* t, char* value) {
-    assert_notnull(t);
+bool set_str_add(set_str* v, char* value) {
+    assert_notnull(v);
     assert_notnull(value);
-    node_and_flag nodeflag = add(t->_root, value);
+    node_and_flag nodeflag = add(v->_root, value);
     nodeflag.node->_red = false;
     if (nodeflag.flag)
-        t->_size++;
+        v->_size++;
     return nodeflag.flag;
 }
 
@@ -122,14 +122,14 @@ static set_str_node* node_alloc(char* value) {
     return node;
 }
 
-bool set_str_remove(set_str* t, const char* value) {
-    assert_notnull(t);
+bool set_str_remove(set_str* v, const char* value) {
+    assert_notnull(v);
     // TODO
     return false;
 }
 
-set_str set_str_copy(const set_str* t) {
-    assert_notnull(t);
+set_str set_str_copy(const set_str* v) {
+    assert_notnull(v);
     set_str tc = set_str_alloc();
     // TODO
     return tc;
@@ -144,74 +144,69 @@ bool set_str_equal(const set_str* v1, const set_str* v2) {
     return true;
 }
 
-bool set_str_contains(set_str* t, const char* value) {
+bool set_str_contains(set_str* v, const char* value) {
     // TODO use iteration
     return false;
 }
 
-void set_str_visit_all(const set_str* t,
+void set_str_visit_all(const set_str* v,
                        void (*visit)(const set_str_visit_data*)) {
-    assert_notnull(t);
-    if (t->_size) { // TODO iterative algorithm
-        set_str_visit_data data = {0, t->_size, NULL};
+    assert_notnull(v);
+    if (v->_size) { // TODO iterative algorithm
+        set_str_visit_data data = {0, v->_size, NULL};
         // At each iteration: before: data.value = node->value;
         //  -iterate-
         // At each iteration: avter: data.i++;
         //
-        // set_str_visit_node(t->_root, visit); // TODO delete
+        // set_str_visit_node(v->_root, visit); // TODO delete
     }
 }
 
-/* TODO delete
 static void set_str_visit_node(const set_str_node* node,
-                               void (*visit)(const char*)) {
+                               void (*visit)(const set_str_visit_data*)) {
     if (!node)
         return;
     set_str_visit_node(node->_left, visit);
-    visit(node->value);
+    visit(data); // TODO
     set_str_visit_node(node->_right, visit);
 }
-*/
 
-// inline const char** set_str_borrow_root(const set_str* t) { return
-// t->_root; }
-
-set_str set_str_difference(const set_str* t1, const set_str* t2) {
-    set_str t = set_str_alloc();
+set_str set_str_difference(const set_str* v1, const set_str* v2) {
+    set_str v = set_str_alloc();
     // TODO
-    return t;
+    return v;
 }
 
-set_str set_str_symmetric_difference(const set_str* t1, const set_str* t2) {
-    set_str t = set_str_alloc();
+set_str set_str_symmetric_difference(const set_str* v1, const set_str* v2) {
+    set_str v = set_str_alloc();
     // TODO
-    return t;
+    return v;
 }
 
-set_str set_str_intersection(const set_str* t1, const set_str* t2) {
-    set_str t = set_str_alloc();
+set_str set_str_intersection(const set_str* v1, const set_str* v2) {
+    set_str v = set_str_alloc();
     // TODO
-    return t;
+    return v;
 }
 
-set_str set_str_union(const set_str* t1, const set_str* t2) {
-    set_str t = set_str_alloc();
+set_str set_str_union(const set_str* v1, const set_str* v2) {
+    set_str v = set_str_alloc();
     // TODO
-    return t;
+    return v;
 }
 
-void set_str_unite(set_str* t1, const set_str* t2) {
+void set_str_unite(set_str* v1, const set_str* v2) {
     // TODO
 }
 
-const set_str_node* set_str_root(set_str* t) {
+const set_str_node* set_str_root(set_str* v) {
     return NULL; // TODO
 }
 
-inline const char* set_str_tostring(const set_str* t) {
-    return set_str_tostring_range(t, 0, t->_size - 1);
+inline const char* set_str_tostring(const set_str* v) {
+    return set_str_tostring_range(v, 0, v->_size - 1);
 }
 
-const char* set_str_tostring_range(const set_str* t, int begin, int end) {
+const char* set_str_tostring_range(const set_str* v, int begin, int end) {
     return NULL; // TODO
 }
