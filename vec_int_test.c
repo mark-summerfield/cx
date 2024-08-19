@@ -6,8 +6,8 @@
 #include "vec_int.h"
 #include <stdlib.h>
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, SSIZE_T size,
-                            SSIZE_T capacity);
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, cx_size size,
+                            cx_size capacity);
 void vec_int_match(tinfo* tinfo, vec_int* v, char* expected);
 void vec_int_same(tinfo* tinfo, vec_int* v1, vec_int* v2);
 void vec_int_print(vec_int* v);
@@ -98,14 +98,20 @@ void vec_int_tests(tinfo* tinfo) {
     check_int_eq(tinfo, x, 10);
     vec_int_match(tinfo, &v1, "2 -33 4 111 5 6 9");
 
-    SSIZE_T index;
+    cx_size index;
     index = vec_int_find(&v1, 8);
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+
+    index = vec_int_find_last(&v1, 8);
     vec_check_found(tinfo, index, VEC_NOT_FOUND);
 
     index = vec_int_find(&v1, 2);
     vec_check_found(tinfo, index, 0);
 
     index = vec_int_find(&v1, 111);
+    vec_check_found(tinfo, index, 3);
+
+    index = vec_int_find_last(&v1, 111);
     vec_check_found(tinfo, index, 3);
 
     index = vec_int_find(&v1, 9);
@@ -165,6 +171,11 @@ void vec_int_tests(tinfo* tinfo) {
         tinfo, &v3,
         "-822 -711 -555 -99 1 2 3 4 5 6 7 8 9 10 10 11 11 12 17 21 45 57");
 
+    index = vec_int_find(&v3, 11);
+    vec_check_found(tinfo, index, 15);
+    index = vec_int_find_last(&v3, 11);
+    vec_check_found(tinfo, index, 16);
+
     vec_int_clear(&v1);
     vec_int_check_size_cap(tinfo, &v1, 0, 64);
     vec_int_push(&v1, -19);
@@ -208,8 +219,8 @@ void vec_int_match(tinfo* tinfo, vec_int* v, char* expected) {
     free(out);
 }
 
-void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, SSIZE_T size,
-                            SSIZE_T capacity) {
+void vec_int_check_size_cap(tinfo* tinfo, vec_int* v, cx_size size,
+                            cx_size capacity) {
     tinfo->total++;
     if (vec_int_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_int_size() expected %d, got %d\n",

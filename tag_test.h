@@ -34,7 +34,7 @@ Tag* tag_make(bool reset) {
         return NULL;
     }
     char buf[_TAG_BUF_SZ];
-    SSIZE_T n = sprintf(&buf[0], "%c%c#%ld", N1, N2, ID);
+    cx_size n = sprintf(&buf[0], "%c%c#%ld", N1, N2, ID);
     Tag* tag = malloc(sizeof(Tag));
     tag->name = strndup(&buf[0], n);
     tag->id = ID++;
@@ -78,6 +78,6 @@ void* tag_copy(const void* old) {
 char* tag_tostring(Tag* tag) {
     assert_notnull(tag);
     char buf[_TAG_BUF_SZ];
-    SSIZE_T n = sprintf(&buf[0], "\"%s\"#%ld", tag->name, tag->id);
+    cx_size n = sprintf(&buf[0], "\"%s\"#%ld", tag->name, tag->id);
     return strndup(&buf[0], n);
 }

@@ -7,15 +7,15 @@
 // A vector of owned char* values.
 // All data members are private; all accesses via functions.
 typedef struct {
-    SSIZE_T _size; // This is "end", i.e., one past the last value
-    SSIZE_T _cap;  // The size of the allocated array
+    cx_size _size; // This is "end", i.e., one past the last value
+    cx_size _cap;  // The size of the allocated array
     char** _values;
 } vec_str;
 
 // Allocates a new vec_str of owned char* with default capacity of
 // VEC_INITIAL_CAP.
 // Set the initial capacity with cap.
-vec_str vec_str_alloc_cap(SSIZE_T cap);
+vec_str vec_str_alloc_cap(cx_size cap);
 
 #define vec_str_alloc() vec_str_alloc_cap(VEC_INITIAL_CAP)
 
@@ -41,7 +41,7 @@ void vec_str_clear(vec_str* v);
 
 // Returns the vec_str's value at position index.
 // vec_str retains ownership, so do not delete the value.
-const char* vec_str_get(const vec_str* v, SSIZE_T index);
+const char* vec_str_get(const vec_str* v, cx_size index);
 
 // Returns the vec_str's value at its last valid index.
 // vec_str retains ownership, so do not delete the value.
@@ -50,12 +50,12 @@ const char* vec_str_get_last(const vec_str* v);
 // Sets the vec_str's value at position index to the given value.
 // vec_str takes ownership of the new value (e.g., if char* then use
 // strdup()) and frees the old value.
-void vec_str_set(vec_str* v, SSIZE_T index, char* value);
+void vec_str_set(vec_str* v, cx_size index, char* value);
 
 // Inserts the value at position index and moves succeeding values up
 // (right), increasing the vec_str's size (and cap if necessary): O(n).
 // vec_str takes ownership of the new value (e.g., use strdup()).
-void vec_str_insert(vec_str* v, SSIZE_T index, char* value);
+void vec_str_insert(vec_str* v, cx_size index, char* value);
 
 // Adds the value in order (in a sorted vec) and moves succeeding values up
 // (right), increasing the vec's size (and cap if necessary): O(n).
@@ -66,16 +66,16 @@ void vec_str_add(vec_str* v, char* value);
 // the old value from that position.
 // vec_str takes ownership of the new value (e.g., if char* then use
 // strdup()). The returned value is now owned by the caller.
-char* vec_str_replace(vec_str* v, SSIZE_T index, char* value);
+char* vec_str_replace(vec_str* v, cx_size index, char* value);
 
 // Removes and frees the value at the given index and closes up the gap:
 // O(n).
-void vec_str_remove(vec_str* v, SSIZE_T index);
+void vec_str_remove(vec_str* v, cx_size index);
 
 // Returns and removes the value at the given index and closes up the
 // gap: O(n).
 // The returned value is now owned by the caller.
-char* vec_str_take(vec_str* v, SSIZE_T index);
+char* vec_str_take(vec_str* v, cx_size index);
 
 // Removes and returns the last value. Only use if v.isempty() is false.
 // The returned value is now owned by the caller: O(1).
@@ -105,7 +105,11 @@ char* vec_str_join(const vec_str* v, const char* sep);
 
 // Returns the index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
-SSIZE_T vec_str_find(const vec_str* v, const char* value);
+cx_size vec_str_find(const vec_str* v, const char* value);
+
+// Returns the last index where the value was found in the vec or
+// VEC_NOT_FOUND (-1). Uses a linear search.
+cx_size vec_str_find_last(const vec_str* v, const char* value);
 
 // Sorts the vec_str in-place.
 void vec_str_sort(vec_str* v);
@@ -113,8 +117,8 @@ void vec_str_sort(vec_str* v);
 // Returns the index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a binary search that assumes vec_str_sort() has
 // been used.
-SSIZE_T vec_str_search(const vec_str* v, const char* s);
+cx_size vec_str_search(const vec_str* v, const char* s);
 
 // To iterate:
-//  for (SSIZE_T i = 0; i < vec_str_size(v); ++i)
+//  for (cx_size i = 0; i < vec_str_size(v); ++i)
 //      const char* value = vec_str_get(v, i);

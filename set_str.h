@@ -11,7 +11,7 @@ typedef struct set_str_node set_str_node;
 // All data members are private; all accesses via functions.
 typedef struct {
     set_str_node* _root;
-    SSIZE_T _size;
+    cx_size _size;
 } set_str;
 
 typedef struct set_str_node {
@@ -23,8 +23,8 @@ typedef struct set_str_node {
 
 typedef struct {
     char* value;
-    SSIZE_T i;
-    SSIZE_T size;
+    cx_size i;
+    cx_size size;
 } set_str_visit_data;
 
 // Allocates a new empty set_str of owned char* values.
@@ -103,8 +103,8 @@ const set_str_node* set_str_root(set_str* t);
 const char* set_str_tostring(const set_str* t);
 
 // For debugging: caller owns returned char*.
-const char* set_str_tostring_range(const set_str* t, SSIZE_T begin,
-                                   SSIZE_T end);
+const char* set_str_tostring_range(const set_str* t, cx_size begin,
+                                   cx_size end);
 
 // TODO set_str_isdisjoint
 // TODO set_str_issubsetof

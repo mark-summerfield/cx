@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, SSIZE_T size,
-                            SSIZE_T capacity);
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, cx_size size,
+                            cx_size capacity);
 void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected);
 void vec_str_same(tinfo* tinfo, const vec_str* v1, const vec_str* v2);
 void vec_str_print(const vec_str* v);
@@ -130,7 +130,7 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
 
-    SSIZE_T index;
+    cx_size index;
     index = vec_str_find(&v1, "Two");
     vec_check_found(tinfo, index, 6);
     index = vec_str_find(&v1, "two");
@@ -139,6 +139,12 @@ void vec_str_tests(tinfo* tinfo) {
     vec_check_found(tinfo, index, 8);
     index = vec_str_find(&v1, "Zulu");
     vec_check_found(tinfo, index, 0);
+    index = vec_str_find_last(&v1, "two");
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    index = vec_str_find_last(&v1, "Zulu");
+    vec_check_found(tinfo, index, 0);
+    index = vec_str_find_last(&v1, "Two");
+    vec_check_found(tinfo, index, 6);
 
     vec_str_clear(&v1);
     vec_str_check_size_cap(tinfo, &v1, 0, 64);
@@ -196,7 +202,7 @@ void vec_str_sort_tests(tinfo* tinfo) {
     vec_str_match(tinfo, &v1,
                   "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa");
 
-    SSIZE_T index;
+    cx_size index;
     index = vec_str_find(&v1, "Zulu");
     vec_check_found(tinfo, index, 0);
     index = vec_str_find(&v1, "Papa");
@@ -277,8 +283,8 @@ void vec_str_match(tinfo* tinfo, const vec_str* v, const char* expected) {
     free(out);
 }
 
-void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, SSIZE_T size,
-                            SSIZE_T capacity) {
+void vec_str_check_size_cap(tinfo* tinfo, const vec_str* v, cx_size size,
+                            cx_size capacity) {
     tinfo->total++;
     if (vec_str_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_str_size() expected %d, got %d\n",

@@ -3,7 +3,7 @@
 #include "vec_common_test.h"
 #include <stdio.h>
 
-void vec_check_found(tinfo* tinfo, const SSIZE_T i1, const SSIZE_T i2) {
+void vec_check_found(tinfo* tinfo, const cx_size i1, const cx_size i2) {
     tinfo->total++;
     if (i1 == i2) {
         tinfo->ok++;

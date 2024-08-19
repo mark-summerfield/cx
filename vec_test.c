@@ -12,8 +12,8 @@
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, SSIZE_T size,
-                        SSIZE_T capacity);
+void vec_check_size_cap(tinfo* tinfo, const vec* v, cx_size size,
+                        cx_size capacity);
 void vec_match(tinfo* tinfo, const vec* v, const char* expected);
 void vec_same(tinfo* tinfo, const vec* v1, const vec* v2);
 void vec_print(const vec* v);
@@ -33,7 +33,7 @@ void vec_tests(tinfo* tinfo) {
     vec v2 = vec_copy(&v1);
     vec_check_size_cap(tinfo, &v1, 0, 5);
 
-    for (SSIZE_T i = 0; i < 7; ++i)
+    for (cx_size i = 0; i < 7; ++i)
         vec_push(&v1, tag_make(false));
     vec_check_size_cap(tinfo, &v1, 7, 10);
     vec_match(tinfo, &v1,
@@ -127,7 +127,7 @@ void vec_merge_tests(tinfo* tinfo) {
     vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
-    for (SSIZE_T i = 0; i < 5; ++i)
+    for (cx_size i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
     vec_check_size_cap(tinfo, &v1, 5, 7);
     vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
@@ -135,7 +135,7 @@ void vec_merge_tests(tinfo* tinfo) {
     vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v2, 0, 11);
-    for (SSIZE_T i = 0; i < 6; ++i)
+    for (cx_size i = 0; i < 6; ++i)
         vec_push(&v2, tag_make(false));
     vec_check_size_cap(tinfo, &v2, 6, 11);
     vec_match(tinfo, &v2, "Af#105|Ag#106|Ah#107|Ai#108|Aj#109|Ak#110");
@@ -156,7 +156,7 @@ void vec_sort_tests(tinfo* tinfo) {
     vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 7);
-    for (SSIZE_T i = 0; i < 5; ++i)
+    for (cx_size i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
     vec_insert(&v1, 0, tag_alloc("Zz#999", 999));
     vec_insert(&v1, 2, tag_alloc("Ww#888", 888));
@@ -167,7 +167,7 @@ void vec_sort_tests(tinfo* tinfo) {
         tinfo, &v1,
         "Zz#999|Aa#100|Ww#888|Ab#101|Ae#005|Ac#102|Aa#001|Ad#103|Ae#104");
 
-    SSIZE_T index;
+    cx_size index;
     Tag tag = {"", 0};
 
     tag.name = "Ae#005";
@@ -182,8 +182,16 @@ void vec_sort_tests(tinfo* tinfo) {
     index = vec_find(&v1, &tag);
     vec_check_found(tinfo, index, 8);
 
+    tag.name = "Ae#104";
+    index = vec_find_last(&v1, &tag);
+    vec_check_found(tinfo, index, 8);
+
     tag.name = "Xy#000";
     index = vec_find(&v1, &tag);
+    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+
+    tag.name = "Xy#000";
+    index = vec_find_last(&v1, &tag);
     vec_check_found(tinfo, index, VEC_NOT_FOUND);
 
     vec_sort(&v1);
@@ -249,8 +257,8 @@ void vec_sort_tests(tinfo* tinfo) {
 
 void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
     char buf[1000];
-    SSIZE_T n = 0; // clang-format warnings are wrong
-    for (SSIZE_T i = 0; i < vec_size(v); ++i) {
+    cx_size n = 0; // clang-format warnings are wrong
+    for (cx_size i = 0; i < vec_size(v); ++i) {
         const Tag* tag = vec_get(v, i);
         n += sprintf(&buf[n], "%s|", tag->name);
     }
@@ -258,8 +266,8 @@ void vec_match(tinfo* tinfo, const vec* v, const char* expected) {
     check_str_eq(tinfo, &buf[0], expected);
 }
 
-void vec_check_size_cap(tinfo* tinfo, const vec* v, SSIZE_T size,
-                        SSIZE_T capacity) {
+void vec_check_size_cap(tinfo* tinfo, const vec* v, cx_size size,
+                        cx_size capacity) {
     tinfo->total++;
     if (vec_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_size() expected %d, got %d\n",

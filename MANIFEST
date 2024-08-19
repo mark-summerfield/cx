@@ -1,7 +1,6 @@
 # TODO
 #
 # vec*:
-#   - ptrdiff_t vec*find_last(vec* v, void* what) 
 #   - const void** vec*values(const vec* v) // for fast iteration
 #
 # rbt types
