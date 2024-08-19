@@ -6,7 +6,7 @@
 #include <stddef.h>
 
 #define VEC_INITIAL_CAP 32
-#define VEC_NOT_FOUND ((cx_size)-1)
+#define VEC_NOT_FOUND ((int)-1)
 
 // index must be a variable or literal, not an expression!
 #define assert_valid_index(v, index) \

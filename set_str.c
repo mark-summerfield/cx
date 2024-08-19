@@ -212,7 +212,6 @@ inline const char* set_str_tostring(const set_str* t) {
     return set_str_tostring_range(t, 0, t->_size - 1);
 }
 
-const char* set_str_tostring_range(const set_str* t, cx_size begin,
-                                   cx_size end) {
+const char* set_str_tostring_range(const set_str* t, int begin, int end) {
     return NULL; // TODO
 }

@@ -5,4 +5,4 @@
 #include "cx_util_test.h"
 #include "vec_common.h"
 
-void vec_check_found(tinfo* tinfo, const cx_size i1, const cx_size i2);
+void vec_check_found(tinfo* tinfo, const int i1, const int i2);
