@@ -15,16 +15,16 @@ typedef struct {
 } set_str;
 
 typedef struct set_str_node {
-    char* value;
     set_str_node* _left;
     set_str_node* _right;
+    char* value;
     bool _red;
 } set_str_node;
 
 typedef struct {
-    char* value;
     cx_size i;
     cx_size size;
+    char* value;
 } set_str_visit_data;
 
 // Allocates a new empty set_str of owned char* values.
@@ -72,10 +72,6 @@ bool set_str_equal(const set_str* t1, const set_str* t2);
 // TODO add char*context or int i to apply function?
 void set_str_visit_all(const set_str* t,
                        void (*visit)(const set_str_visit_data*));
-
-// TODO uncomment or remove
-// Provides read-only access to the root if visit() isn't sufficient.
-// const char** set_str_borrow_root(const set_str* t);
 
 // Returns a new set_str that contains the values which are in t1 that are
 // not in t2.
