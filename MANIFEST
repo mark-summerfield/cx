@@ -1,7 +1,7 @@
 # TODO
 #
-# test set_int_remove()
-# implement check_equal_ints(tinfo*,SetInt*,int*) to avoid vec & tostring
+# TODO implement check_equal_ints(tinfo*,SetInt*,int*) to avoid vec & tostring
+# TODO test set_int_remove()
 #
 # rbt types
 #   see ~/app/golib/zOld/rbset/rbset.go
