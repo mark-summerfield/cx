@@ -77,9 +77,6 @@ SetInt set_int_union(const SetInt* set1, const SetInt* set2);
 // Adds every value from set2 to set1 (with no duplicates).
 void set_int_unite(SetInt* set1, const SetInt* set2);
 
-// Returns root for efficient iteration.
-const SetIntNode* set_int_get_root(SetInt* set);
-
 // Returns an VecInt which the caller owns and that has a copy of all the
 // set's values in order.
 // See the source of this function and its helper to see how to iterate a
