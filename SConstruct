@@ -14,7 +14,7 @@ FILES = Glob('*test.c') + [
     'vec_int.c',
     'vec_str.c',
     ]
-app = env.Program('cx_test', FILES)
+app = env.Program('cx_test', FILES, LIBS=['m'])
 
 Default(app)
 appname = str(app[0])

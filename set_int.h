@@ -27,12 +27,12 @@ typedef struct SetIntNode {
 // value, and destroy to free a value.
 SetInt set_int_alloc();
 
-// Calls destroy on all the SetInt's values.
-void set_int_clear(SetInt* set);
-
 // Destroys the SetInt freeing its memory and also freeing every value. The
 // SetInt is not usable after this.
-inline void set_int_free(SetInt* set) { set_int_clear(set); }
+void set_int_free(SetInt* set);
+
+// Calls destroy on all the SetInt's values.
+void set_int_clear(SetInt* set);
 
 // Returns true if the SetInt is empty.
 #define set_int_isempty(set) ((set)->_size == 0)
@@ -85,6 +85,9 @@ const SetIntNode* set_int_get_root(SetInt* set);
 // See the source of this function and its helper to see how to iterate a
 // set.
 VecInt set_int_to_vec(const SetInt* set);
+
+// Used for tests to verify balance.
+int set_int_max_depth(const SetInt* set);
 
 // TODO set_int_isdisjoint
 // TODO set_int_issubsetof

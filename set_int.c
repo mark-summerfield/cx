@@ -13,6 +13,7 @@ static SetIntNode* rotate_left(SetIntNode* node);
 static SetIntNode* rotate_right(SetIntNode* node);
 static void to_vec(SetIntNode* node, VecInt* vec);
 static void delete_node_and_children(SetIntNode* node);
+static int max_depth(SetIntNode* node);
 
 SetInt set_int_alloc() {
     return (SetInt){
@@ -20,6 +21,8 @@ SetInt set_int_alloc() {
         ._root = NULL,
     };
 }
+
+inline void set_int_free(SetInt* set) { set_int_clear(set); }
 
 void set_int_clear(SetInt* set) {
     assert_notnull(set);
@@ -38,7 +41,6 @@ static void delete_node_and_children(SetIntNode* node) {
 
 bool set_int_add(SetInt* set, int value) {
     assert_notnull(set);
-    assert_notnull(value);
     bool added = false;
     set->_root = add(set->_root, value, &added);
     set->_root->_red = false;
@@ -129,7 +131,16 @@ bool set_int_equal(const SetInt* set1, const SetInt* set2) {
 }
 
 bool set_int_contains(SetInt* set, int value) {
-    // TODO use iteration
+    bool found = false;
+    SetIntNode* node = set->_root;
+    while (node) {
+        if (value < node->value)
+            node = node->left;
+        else if (node->value < value)
+            node = node->right;
+        else
+            return true;
+    }
     return false;
 }
 
@@ -174,4 +185,16 @@ static void to_vec(SetIntNode* node, VecInt* vec) {
         vec_int_push(vec, node->value);
         to_vec(node->right, vec);
     }
+}
+
+inline int set_int_max_depth(const SetInt* set) {
+    return max_depth(set->_root);
+}
+
+static int max_depth(SetIntNode* node) {
+    if (!node)
+        return 0;
+    int left = max_depth(node->left);
+    int right = max_depth(node->right);
+    return (left > right) ? (left + 1) : (right + 1);
 }

@@ -2,6 +2,7 @@ rm -f core
 clc -L rb
 FILES=( 
     set_int.c
+    set_int_test.c
     cx_test.c
     cx_util_test.c
     sx.c

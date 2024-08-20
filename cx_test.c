@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "cx_util_test.h"
+#include "set_int_test.h"
 #include "sx_test.h"
 #include "va_test.h"
 #include "vec_int_test.h"
@@ -22,6 +23,8 @@ int main() {
     vec_str_tests(&tinfo);
     tinfo.tag = "vec_tests";
     vec_tests(&tinfo);
+    tinfo.tag = "set_int_tests";
+    set_int_tests(&tinfo);
     printf("%s %d/%d\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL",
            tinfo.ok, tinfo.total);
 }
