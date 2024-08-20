@@ -131,7 +131,6 @@ bool set_int_equal(const SetInt* set1, const SetInt* set2) {
 }
 
 bool set_int_contains(SetInt* set, int value) {
-    bool found = false;
     SetIntNode* node = set->_root;
     while (node) {
         if (value < node->value)
