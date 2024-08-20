@@ -4,16 +4,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-static SetIntNode* add(SetIntNode* node, int value, bool* added);
+static SetIntNode* node_add(SetIntNode* node, int value, bool* added);
 static SetIntNode* node_alloc(int value);
-static bool is_red(SetIntNode* node);
-static void color_flip(SetIntNode* node);
-static SetIntNode* add_rotation(SetIntNode* node);
-static SetIntNode* rotate_left(SetIntNode* node);
-static SetIntNode* rotate_right(SetIntNode* node);
+static bool node_is_red(SetIntNode* node);
+static void node_color_flip(SetIntNode* node);
+static SetIntNode* node_add_rotation(SetIntNode* node);
+static SetIntNode* node_rotate_left(SetIntNode* node);
+static SetIntNode* node_rotate_right(SetIntNode* node);
 static void to_vec(SetIntNode* node, VecInt* vec);
-static void delete_node_and_children(SetIntNode* node);
-static int max_depth(SetIntNode* node);
+static void node_remove_with_children(SetIntNode* node);
+static SetIntNode* node_remove(SetIntNode* node, int value, bool* deleted);
+static SetIntNode* node_move_red_left(SetIntNode* node);
+static SetIntNode* node_move_red_right(SetIntNode* node);
+static SetIntNode* node_remove_right(SetIntNode* node, int value,
+                                     bool* deleted);
+static SetIntNode* node_fixup(SetIntNode* node);
+static SetIntNode* node_first(SetIntNode* node);
+static SetIntNode* node_remove_minimum(SetIntNode* node);
+static int node_max_depth(SetIntNode* node);
 
 SetInt set_int_alloc() {
     return (SetInt){
@@ -26,15 +34,15 @@ inline void set_int_free(SetInt* set) { set_int_clear(set); }
 
 void set_int_clear(SetInt* set) {
     assert_notnull(set);
-    delete_node_and_children(set->_root);
+    node_remove_with_children(set->_root);
     set->_root = NULL;
     set->_size = 0;
 }
 
-static void delete_node_and_children(SetIntNode* node) {
+static void node_remove_with_children(SetIntNode* node) {
     if (node) {
-        delete_node_and_children(node->left);
-        delete_node_and_children(node->right);
+        node_remove_with_children(node->left);
+        node_remove_with_children(node->right);
         free(node);
     }
 }
@@ -42,30 +50,32 @@ static void delete_node_and_children(SetIntNode* node) {
 bool set_int_add(SetInt* set, int value) {
     assert_notnull(set);
     bool added = false;
-    set->_root = add(set->_root, value, &added);
+    set->_root = node_add(set->_root, value, &added);
     set->_root->_red = false;
     if (added)
         set->_size++;
     return added;
 }
 
-static SetIntNode* add(SetIntNode* node, int value, bool* added) {
+static SetIntNode* node_add(SetIntNode* node, int value, bool* added) {
     if (!node) { // If value was in the tree it would go here
         *added = true;
         return node_alloc(value);
     }
-    if (is_red(node->left) && is_red(node->right))
-        color_flip(node);
+    if (node_is_red(node->left) && node_is_red(node->right))
+        node_color_flip(node);
     if (value < node->value)
-        node->left = add(node->left, value, added);
+        node->left = node_add(node->left, value, added);
     else if (value > node->value)
-        node->right = add(node->right, value, added);
-    return add_rotation(node);
+        node->right = node_add(node->right, value, added);
+    return node_add_rotation(node);
 }
 
-static bool is_red(SetIntNode* node) { return node != NULL && node->_red; }
+static bool node_is_red(SetIntNode* node) {
+    return node != NULL && node->_red;
+}
 
-static void color_flip(SetIntNode* node) {
+static void node_color_flip(SetIntNode* node) {
     node->_red = !node->_red;
     if (node->left)
         node->left->_red = !node->left->_red;
@@ -73,15 +83,15 @@ static void color_flip(SetIntNode* node) {
         node->right->_red = !node->right->_red;
 }
 
-static SetIntNode* add_rotation(SetIntNode* node) {
-    if (is_red(node->right) && !is_red(node->left))
-        node = rotate_left(node);
-    if (is_red(node->left) && is_red(node->left->left))
-        node = rotate_right(node);
+static SetIntNode* node_add_rotation(SetIntNode* node) {
+    if (node_is_red(node->right) && !node_is_red(node->left))
+        node = node_rotate_left(node);
+    if (node_is_red(node->left) && node_is_red(node->left->left))
+        node = node_rotate_right(node);
     return node;
 }
 
-static SetIntNode* rotate_left(SetIntNode* node) {
+static SetIntNode* node_rotate_left(SetIntNode* node) {
     SetIntNode* x = node->right;
     node->right = x->left;
     x->left = node;
@@ -90,7 +100,7 @@ static SetIntNode* rotate_left(SetIntNode* node) {
     return x;
 }
 
-static SetIntNode* rotate_right(SetIntNode* node) {
+static SetIntNode* node_rotate_right(SetIntNode* node) {
     SetIntNode* x = node->left;
     node->left = x->right;
     x->right = node;
@@ -110,8 +120,96 @@ static SetIntNode* node_alloc(int value) {
 
 bool set_int_remove(SetInt* set, int value) {
     assert_notnull(set);
-    // TODO
-    return false;
+    bool deleted = false;
+    if (set->_root) {
+        set->_root = node_remove(set->_root, value, &deleted);
+        if (set->_root)
+            set->_root->_red = false;
+    }
+    if (deleted)
+        set->_size--;
+    return deleted;
+}
+
+static SetIntNode* node_remove(SetIntNode* node, int value, bool* deleted) {
+    if (value < node->value) {
+        if (node->left) {
+            if (!node_is_red(node->left) && !node_is_red(node->left->left))
+                node = node_move_red_left(node);
+            node->left = node_remove(node->left, value, deleted);
+        }
+    } else {
+        if (node_is_red(node->left))
+            node = node_rotate_right(node);
+        if (value == node->value && !node->right) {
+            free(node);
+            *deleted = true;
+            return NULL;
+        }
+        if (node->right)
+            node = node_remove_right(node, value, deleted);
+    }
+    return node_fixup(node);
+}
+
+static SetIntNode* node_move_red_left(SetIntNode* node) {
+    node_color_flip(node);
+    if (node->right && node_is_red(node->right->left)) {
+        node->right = node_rotate_right(node->right);
+        node = node_rotate_left(node);
+        node_color_flip(node);
+    }
+    return node;
+}
+
+static SetIntNode* node_move_red_right(SetIntNode* node) {
+    node_color_flip(node);
+    if (node->left && node_is_red(node->left->left)) {
+        node = node_rotate_right(node);
+        node_color_flip(node);
+    }
+    return node;
+}
+
+static SetIntNode* node_remove_right(SetIntNode* node, int value,
+                                     bool* deleted) {
+    if (!node_is_red(node->right) && !node_is_red(node->right->left))
+        node = node_move_red_right(node);
+    if (value == node->value) {
+        SetIntNode* first = node_first(node->right);
+        node->value = first->value;
+        node->right = node_remove_minimum(node->right);
+        *deleted = true;
+    } else
+        node->right = node_remove(node->right, value, deleted);
+    return node;
+}
+
+static SetIntNode* node_fixup(SetIntNode* node) {
+    if (node_is_red(node->right))
+        node = node_rotate_left(node);
+    if (node_is_red(node->left) && node_is_red(node->left->left))
+        node = node_rotate_right(node);
+    if (node_is_red(node->left) && node_is_red(node->right))
+        node_color_flip(node);
+    return node;
+}
+
+static SetIntNode* node_first(SetIntNode* node) {
+    while (node->left)
+        node = node->left;
+    return node;
+}
+
+static SetIntNode* node_remove_minimum(SetIntNode* node) {
+    if (!node->left) {
+        free(node);
+        return NULL;
+    }
+    if (!node_is_red(node->left) && !node_is_red(node->left->left))
+        node = node_move_red_left(node);
+    node->left = node_remove_minimum(node->left);
+    return node_fixup(node);
 }
 
 SetInt set_int_copy(const SetInt* set) {
@@ -187,13 +285,13 @@ static void to_vec(SetIntNode* node, VecInt* vec) {
 }
 
 inline int set_int_max_depth(const SetInt* set) {
-    return max_depth(set->_root);
+    return node_max_depth(set->_root);
 }
 
-static int max_depth(SetIntNode* node) {
+static int node_max_depth(SetIntNode* node) {
     if (!node)
         return 0;
-    int left = max_depth(node->left);
-    int right = max_depth(node->right);
+    int left = node_max_depth(node->left);
+    int right = node_max_depth(node->right);
     return (left > right) ? (left + 1) : (right + 1);
 }
