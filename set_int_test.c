@@ -52,7 +52,21 @@ static void test_remove(tinfo* tinfo) {
         if (set_int_add(&set, rand() % SIZE))
             size++;
     }
-    const int to_remove[] = {SIZE + 1, SIZE + 121, SIZE + 1038};
+    int x = 0;
+    for (int i = size / 3; i < size; ++i)
+        if (!set_int_contains(&set, i)) {
+            x = i;
+            break;
+        }
+    int y = 0;
+    for (int i = size / 5; i < size; ++i)
+        if (!set_int_contains(&set, i)) {
+            y = i;
+            break;
+        }
+    // 3 bigger, 2 smaller, 2 in the middle
+    const int to_remove[] = {SIZE + 1, SIZE + 121, SIZE + 1038, -91, -1,
+                             x,        y};
     const int to_remove_size = (sizeof(to_remove) / sizeof(int));
     for (int i = 0; i < to_remove_size; ++i)
         set_int_add(&set, to_remove[i]);
