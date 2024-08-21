@@ -188,7 +188,7 @@ int vec_int_search(const VecInt* vec, int i) {
     return VEC_NOT_FOUND;
 }
 
-char* vec_int_tostring(const VecInt* vec) {
+char* vec_int_to_str(const VecInt* vec) {
     assert_notnull(vec);
     const int BUF_SIZE = 128;
     const int VEC_SIZE = vec_int_size(vec);

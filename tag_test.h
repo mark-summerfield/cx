@@ -75,7 +75,7 @@ void* tag_copy(const void* old) {
 }
 
 // caller owns
-char* tag_tostring(Tag* tag) {
+char* tag_to_str(Tag* tag) {
     assert_notnull(tag);
     char buf[_TAG_BUF_SZ];
     int n = sprintf(&buf[0], "\"%s\"#%ld", tag->name, tag->id);

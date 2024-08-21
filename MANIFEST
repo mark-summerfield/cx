@@ -39,7 +39,7 @@ cx_test.c
 cx_util_test.h
 cx_util_test.c
 set_int_test.h
-set_int_test.c # TODO #ifdef REPORT_DEPTH void print_set()
+set_int_test.c
 vec_common_test.h
 vec_common_test.c
 vec_int_test.h

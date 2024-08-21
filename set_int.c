@@ -22,6 +22,8 @@ static SetIntNode* node_fixup(SetIntNode* node);
 static SetIntNode* node_first(SetIntNode* node);
 static SetIntNode* node_remove_minimum(SetIntNode* node);
 SetIntNode* node_copy(const SetIntNode* node);
+static void difference(SetInt* set, const SetIntNode* node,
+                       const SetInt* set2);
 static int node_max_depth(SetIntNode* node);
 
 SetInt set_int_alloc() {
@@ -241,6 +243,7 @@ bool set_int_equal(const SetInt* set1, const SetInt* set2) {
 }
 
 bool set_int_contains(const SetInt* set, int value) {
+    assert_notnull(set);
     SetIntNode* node = set->_root;
     while (node) {
         if (value < node->value)
@@ -254,21 +257,21 @@ bool set_int_contains(const SetInt* set, int value) {
 }
 
 SetInt set_int_difference(const SetInt* set1, const SetInt* set2) {
+    assert_notnull(set1);
+    assert_notnull(set2);
     SetInt set = set_int_alloc();
-    SetIntNode* stack[set1->_size + set2->_size];
-    int top = -1;
-    SetIntNode* node = set1->_root;
-    while (node || top > -1) {
-        while (node) {
-            stack[++top] = node;
-            node = node->left;
-        }
-        node = stack[top--];
-        if (!set_int_contains(set2, node->value))
-            set_int_add(&set, node->value);
-        node = node->right;
-    }
+    difference(&set, set1->_root, set2);
     return set;
+}
+
+static void difference(SetInt* set, const SetIntNode* node,
+                       const SetInt* set2) {
+    if (node) {
+        if (!set_int_contains(set2, node->value))
+            set_int_add(set, node->value);
+        difference(set, node->left, set2);
+        difference(set, node->right, set2);
+    }
 }
 
 SetInt set_int_symmetric_difference(const SetInt* set1,
@@ -306,6 +309,13 @@ static void to_vec(SetIntNode* node, VecInt* vec) {
         vec_int_push(vec, node->value);
         to_vec(node->right, vec);
     }
+}
+
+char* set_int_to_str(const SetInt* set) {
+    VecInt vec = set_int_to_vec(set);
+    char* s = vec_int_to_str(&vec);
+    vec_int_free(&vec);
+    return s;
 }
 
 inline int set_int_max_depth(const SetInt* set) {

@@ -105,7 +105,7 @@ int vec_int_search(const VecInt* vec, int i);
 
 // Returns a string of space-separated int values.
 // The returned char* value is now owned by the caller.
-char* vec_int_tostring(const VecInt* vec);
+char* vec_int_to_str(const VecInt* vec);
 
 // To iterate:
 //      for (int i = 0; i < vec_int_size(vec); ++i)

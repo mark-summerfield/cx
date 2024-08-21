@@ -19,6 +19,7 @@ static void check_all(tinfo* tinfo, const SetInt* set, int size);
 static void check_order(tinfo* tinfo, const SetInt* set);
 static void check_equal_ints(tinfo* tinfo, const SetInt* set,
                              const int* ints, int size);
+static void print_set(const SetInt* set);
 
 void set_int_tests(tinfo* tinfo) {
     tinfo->tag = "test_simple";
@@ -61,6 +62,7 @@ static void test_difference(tinfo* tinfo) {
                      (int[]){
                          2,
                          4,
+                         6,
                          8,
                          10,
                          12,
@@ -325,4 +327,10 @@ static void check_equal_ints(tinfo* tinfo, const SetInt* set,
         tinfo->ok++;
     else
         fprintf(stderr, "FAIL: %s check_equal_ints\n", tinfo->tag);
+}
+
+static void print_set(const SetInt* set) {
+    char* s = set_int_to_str(set);
+    printf("{%s}\n", s);
+    free(s);
 }

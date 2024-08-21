@@ -213,7 +213,7 @@ void vec_int_merge_tests(tinfo* tinfo) {
 }
 
 void vec_int_match(tinfo* tinfo, VecInt* v, char* expected) {
-    char* out = vec_int_tostring(v);
+    char* out = vec_int_to_str(v);
     check_str_eq(tinfo, out, expected);
     free(out);
 }
