@@ -73,13 +73,13 @@ static void test_remove(tinfo* tinfo) {
     size += to_remove_size;
     for (int i = 0; i < SIZE / 10; ++i) {
         bool skip = false;
-        const int x = rand();
+        const int z = rand();
         for (int j = 0; j < to_remove_size; ++j)
-            if (x == to_remove[j]) {
+            if (z == to_remove[j]) {
                 skip = true;
                 break;
             }
-        if (!skip && set_int_remove(&set, x))
+        if (!skip && set_int_remove(&set, z))
             size--;
     }
     for (int i = 0; i < to_remove_size; ++i) {
