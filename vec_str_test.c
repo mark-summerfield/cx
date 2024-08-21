@@ -53,6 +53,17 @@ void vec_str_tests(tinfo* tinfo) {
         "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa";
     vec_str_match(tinfo, &v2, V2);
 
+    tinfo->total++;
+    char* e = "OneZuluVictorRomeoSierraWhiskeyX-rayTwoIndiaPapa";
+    char* s = vec_str_join(&v2, NULL);
+    if (strcmp(s, e))
+        fprintf(stderr,
+                "FAIL: %s vec_str_join() expected\n\"%s\", got\n\"%s\"\n",
+                tinfo->tag, e, s);
+    else
+        tinfo->ok++;
+    free(s);
+
     for (int i = WORD_COUNT - 1; i > 9; --i) {
         char* s = vec_str_pop(&v1);
         check_str_eq(tinfo, s, WORDS[i]);
