@@ -9,6 +9,7 @@
 
 //#define REPORT_DEPTH
 
+static void test_copy(tinfo* tinfo);
 static void test_remove(tinfo* tinfo);
 static void test_bigs(tinfo* tinfo);
 static void test_simple(tinfo* tinfo);
@@ -27,6 +28,37 @@ void set_int_tests(tinfo* tinfo) {
     test_contains(tinfo);
     tinfo->tag = "test_remove";
     test_remove(tinfo);
+    tinfo->tag = "test_copy";
+    test_copy(tinfo);
+}
+
+static void test_copy(tinfo* tinfo) {
+    SetInt set = set_int_alloc();
+    check_all(tinfo, &set, 0);
+#ifdef REPORT_DEPTH
+    const int SIZE = 1000;
+#else
+    const int SIZE = 51;
+#endif
+    int size = 0;
+    for (int i = 0; i < SIZE - 11; ++i) {
+        if (set_int_add(&set, rand() % SIZE))
+            size++;
+    }
+    check_all(tinfo, &set, size);
+    tinfo->total++;
+    if (!set_int_equal(&set, &set))
+        fprintf(stderr, "FAIL: %s set not equal to itself!\n", tinfo->tag);
+    else
+        tinfo->ok++;
+    SetInt dup = set_int_copy(&set);
+    tinfo->total++;
+    if (!set_int_equal(&set, &dup)) {
+        fprintf(stderr, "FAIL: %s set not equal to dup\n", tinfo->tag);
+    } else
+        tinfo->ok++;
+    set_int_free(&dup);
+    set_int_free(&set);
 }
 
 static void test_simple(tinfo* tinfo) {

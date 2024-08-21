@@ -52,7 +52,7 @@ bool set_int_remove(SetInt* set, int value);
 // Returns true if value is in the SetInt.
 bool set_int_contains(const SetInt* set, int value);
 
-// Returns a deep copy of the SetInt.
+// Returns a deep copy of the SetInt which the caller now owns.
 SetInt set_int_copy(const SetInt* set);
 
 // Returns true if the two SetInt's have the same values.

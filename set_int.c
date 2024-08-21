@@ -21,12 +21,13 @@ static SetIntNode* node_remove_right(SetIntNode* node, int value,
 static SetIntNode* node_fixup(SetIntNode* node);
 static SetIntNode* node_first(SetIntNode* node);
 static SetIntNode* node_remove_minimum(SetIntNode* node);
+SetIntNode* node_copy(const SetIntNode* node);
 static int node_max_depth(SetIntNode* node);
 
 SetInt set_int_alloc() {
     return (SetInt){
-        ._size = 0,
         ._root = NULL,
+        ._size = 0,
     };
 }
 
@@ -214,9 +215,16 @@ static SetIntNode* node_remove_minimum(SetIntNode* node) {
 
 SetInt set_int_copy(const SetInt* set) {
     assert_notnull(set);
-    SetInt out = set_int_alloc();
-    // TODO
-    return out;
+    return (SetInt){._root = node_copy(set->_root), ._size = set->_size};
+}
+
+SetIntNode* node_copy(const SetIntNode* node) {
+    if (!node)
+        return NULL;
+    SetIntNode* dup = node_alloc(node->value);
+    dup->left = node_copy(node->left);
+    dup->right = node_copy(node->right);
+    return dup;
 }
 
 bool set_int_equal(const SetInt* set1, const SetInt* set2) {
@@ -224,8 +232,12 @@ bool set_int_equal(const SetInt* set1, const SetInt* set2) {
     assert_notnull(set2);
     if (set1->_size != set2->_size)
         return false;
-    // TODO
-    return true;
+    VecInt vec1 = set_int_to_vec(set1);
+    VecInt vec2 = set_int_to_vec(set2);
+    bool equal = vec_int_equal(&vec1, &vec2);
+    vec_int_free(&vec2);
+    vec_int_free(&vec1);
+    return equal;
 }
 
 bool set_int_contains(const SetInt* set, int value) {
