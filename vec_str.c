@@ -228,7 +228,7 @@ char* vec_str_join(const VecStr* vec, const char* sep) {
         sizes[i] = size;
         total_size += size;
     }
-    total_size += (VEC_SIZE * SEP_SIZE) + 1; // +1 for 0-terminator
+    total_size += ((VEC_SIZE - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
     char* s = malloc(total_size);
     assert_alloc(s);
     char* p = s;

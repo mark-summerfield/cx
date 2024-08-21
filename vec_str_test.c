@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+void check_join(tinfo* tinfo, const VecStr* vec, const char* sep,
+                const char* expected);
 void vec_str_check_size_cap(tinfo* tinfo, const VecStr* v, int size,
                             int cap);
 void vec_str_match(tinfo* tinfo, const VecStr* v, const char* expected);
@@ -52,18 +54,9 @@ void vec_str_tests(tinfo* tinfo) {
     const char* V2 =
         "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa";
     vec_str_match(tinfo, &v2, V2);
-
-    tinfo->total++;
-    char* e = "OneZuluVictorRomeoSierraWhiskeyX-rayTwoIndiaPapa";
-    char* s = vec_str_join(&v2, NULL);
-    if (strcmp(s, e))
-        fprintf(stderr,
-                "FAIL: %s vec_str_join() expected\n\"%s\", got\n\"%s\"\n",
-                tinfo->tag, e, s);
-    else
-        tinfo->ok++;
-    free(s);
-
+    check_join(tinfo, &v2, "|", V2);
+    check_join(tinfo, &v2, NULL,
+               "OneZuluVictorRomeoSierraWhiskeyX-rayTwoIndiaPapa");
     for (int i = WORD_COUNT - 1; i > 9; --i) {
         char* s = vec_str_pop(&v1);
         check_str_eq(tinfo, s, WORDS[i]);
@@ -183,11 +176,23 @@ void vec_str_tests(tinfo* tinfo) {
 void vec_str_merge_tests(tinfo* tinfo) {
     VecStr v1 = vec_str_alloc_cap(7);
     vec_str_check_size_cap(tinfo, &v1, 0, 7);
+    check_join(tinfo, &v1, ":", "");
+    check_join(tinfo, &v1, NULL, "");
     vec_str_push(&v1, strdup("one"));
+    check_join(tinfo, &v1, ":", "one");
+    check_join(tinfo, &v1, NULL, "one");
     vec_str_push(&v1, strdup("two"));
+    check_join(tinfo, &v1, ":", "one:two");
+    check_join(tinfo, &v1, NULL, "onetwo");
     vec_str_push(&v1, strdup("three"));
+    check_join(tinfo, &v1, ":", "one:two:three");
+    check_join(tinfo, &v1, NULL, "onetwothree");
     vec_str_push(&v1, strdup("four"));
+    check_join(tinfo, &v1, ":", "one:two:three:four");
+    check_join(tinfo, &v1, NULL, "onetwothreefour");
     vec_str_push(&v1, strdup("five"));
+    check_join(tinfo, &v1, ":", "one:two:three:four:five");
+    check_join(tinfo, &v1, NULL, "onetwothreefourfive");
     vec_str_check_size_cap(tinfo, &v1, 5, 7);
     vec_str_match(tinfo, &v1, "one|two|three|four|five");
 
@@ -328,4 +333,17 @@ void vec_str_same(tinfo* tinfo, const VecStr* v1, const VecStr* v2) {
                 tinfo->tag);
     } else
         tinfo->ok++;
+}
+
+void check_join(tinfo* tinfo, const VecStr* vec, const char* sep,
+                const char* expected) {
+    tinfo->total++;
+    char* actual = vec_str_join(vec, sep);
+    if (strcmp(actual, expected))
+        fprintf(stderr,
+                "FAIL: %s vec_str_join() expected\n\"%s\", got\n\"%s\"\n",
+                tinfo->tag, expected, actual);
+    else
+        tinfo->ok++;
+    free(actual);
 }
