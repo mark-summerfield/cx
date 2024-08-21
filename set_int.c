@@ -255,7 +255,19 @@ bool set_int_contains(const SetInt* set, int value) {
 
 SetInt set_int_difference(const SetInt* set1, const SetInt* set2) {
     SetInt set = set_int_alloc();
-    // TODO
+    SetIntNode* stack[set1->_size + set2->_size];
+    int top = -1;
+    SetIntNode* node = set1->_root;
+    while (node || top > -1) {
+        while (node) {
+            stack[++top] = node;
+            node = node->left;
+        }
+        node = stack[top--];
+        if (!set_int_contains(set2, node->value))
+            set_int_add(&set, node->value);
+        node = node->right;
+    }
     return set;
 }
 

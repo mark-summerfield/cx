@@ -1,7 +1,6 @@
 # TODO
 #
 # rbt types
-#   see ~/app/golib/zOld/rbset/rbset.go
 #   see ~/app/golib/set/set.go
 #   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
 #   - SetInt (much easier to test than SetStr)
@@ -31,11 +30,6 @@ vec_str.c
 vec_int.h
 vec_int.c
 
-set_str.h.idea
-set_str.c.idea
-rbt.h.idea
-rbt.c.idea
-
 sx.h
 sx.c
 
@@ -45,7 +39,7 @@ cx_test.c
 cx_util_test.h
 cx_util_test.c
 set_int_test.h
-set_int_test.c
+set_int_test.c # TODO #ifdef REPORT_DEPTH void print_set()
 vec_common_test.h
 vec_common_test.c
 vec_int_test.h

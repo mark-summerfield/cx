@@ -9,6 +9,7 @@
 
 //#define REPORT_DEPTH
 
+static void test_difference(tinfo* tinfo);
 static void test_copy(tinfo* tinfo);
 static void test_remove(tinfo* tinfo);
 static void test_bigs(tinfo* tinfo);
@@ -30,6 +31,45 @@ void set_int_tests(tinfo* tinfo) {
     test_remove(tinfo);
     tinfo->tag = "test_copy";
     test_copy(tinfo);
+    tinfo->tag = "test_difference";
+    test_difference(tinfo);
+}
+
+static void test_difference(tinfo* tinfo) {
+    SetInt set1 = set_int_alloc();
+    SetInt set2 = set_int_alloc();
+    const int SIZE = 17;
+    for (int i = 0; i < SIZE; ++i) {
+        set_int_add(&set1, i);
+        set_int_add(&set2, i);
+    }
+    check_equal_ints(
+        tinfo, &set1,
+        (int[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+        17);
+    tinfo->total++;
+    if (!set_int_equal(&set1, &set2)) {
+        fprintf(stderr, "FAIL: %s set1 != set2\n", tinfo->tag);
+    } else
+        tinfo->ok++;
+    for (int i = 2; i < SIZE - 3; i += 2)
+        set_int_remove(&set2, i);
+    check_equal_ints(tinfo, &set2,
+                     (int[]){0, 1, 3, 5, 7, 9, 11, 13, 14, 15, 16}, 11);
+    SetInt set3 = set_int_difference(&set1, &set2);
+    check_equal_ints(tinfo, &set3,
+                     (int[]){
+                         2,
+                         4,
+                         8,
+                         10,
+                         12,
+                     },
+                     6);
+    // TODO
+    set_int_free(&set3);
+    set_int_free(&set2);
+    set_int_free(&set1);
 }
 
 static void test_copy(tinfo* tinfo) {
