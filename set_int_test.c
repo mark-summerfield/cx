@@ -9,32 +9,80 @@
 
 //#define REPORT_DEPTH
 
-void test_bigs(tinfo* tinfo);
-void test_simple(tinfo* tinfo);
-void test_contains(tinfo* tinfo);
-void check_all(tinfo* tinfo, const SetInt* set, int size);
-void check_values(tinfo* tinfo, const SetInt* set, const char* expected);
-void check_order(tinfo* tinfo, const SetInt* set);
+static void test_remove(tinfo* tinfo);
+static void test_bigs(tinfo* tinfo);
+static void test_simple(tinfo* tinfo);
+static void test_contains(tinfo* tinfo);
+static void check_all(tinfo* tinfo, const SetInt* set, int size);
+static void check_order(tinfo* tinfo, const SetInt* set);
+static void check_equal_ints(tinfo* tinfo, const SetInt* set,
+                             const int* ints, int size);
 
 void set_int_tests(tinfo* tinfo) {
+    tinfo->tag = "test_simple";
     test_simple(tinfo);
+    tinfo->tag = "test_bigs";
     test_bigs(tinfo);
+    tinfo->tag = "test_contains";
     test_contains(tinfo);
+    tinfo->tag = "test_remove";
+    test_remove(tinfo);
 }
 
-void test_simple(tinfo* tinfo) {
+static void test_simple(tinfo* tinfo) {
     SetInt set = set_int_alloc();
     check_all(tinfo, &set, 0);
     for (int i = 30; i > 0; --i)
         set_int_add(&set, i);
     check_all(tinfo, &set, 30);
-    check_values(tinfo, &set,
-                 "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 "
-                 "23 24 25 26 27 28 29 30");
+    check_equal_ints(tinfo, &set,
+                     (int[]){1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
+                             11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                             21, 22, 23, 24, 25, 26, 27, 28, 29, 30},
+                     30);
     set_int_free(&set);
 }
 
-void test_bigs(tinfo* tinfo) {
+static void test_remove(tinfo* tinfo) {
+    SetInt set = set_int_alloc();
+    check_all(tinfo, &set, 0);
+    const int SIZE = 160000;
+    int size = 0;
+    for (int i = 0; i < SIZE; ++i) {
+        if (set_int_add(&set, rand() % SIZE))
+            size++;
+    }
+    const int to_remove[] = {SIZE + 1, SIZE + 121, SIZE + 1038};
+    const int to_remove_size = (sizeof(to_remove) / sizeof(int));
+    for (int i = 0; i < to_remove_size; ++i)
+        set_int_add(&set, to_remove[i]);
+    size += to_remove_size;
+    for (int i = 0; i < SIZE / 10; ++i) {
+        bool skip = false;
+        const int x = rand();
+        for (int j = 0; j < to_remove_size; ++j)
+            if (x == to_remove[j]) {
+                skip = true;
+                break;
+            }
+        if (!skip && set_int_remove(&set, x))
+            size--;
+    }
+    for (int i = 0; i < to_remove_size; ++i) {
+        tinfo->total++;
+        if (!set_int_remove(&set, to_remove[i]))
+            fprintf(stderr, "FAIL: %s failed to remove %d\n", tinfo->tag,
+                    to_remove[i]);
+        else {
+            size--;
+            tinfo->ok++;
+        }
+    }
+    check_all(tinfo, &set, size);
+    set_int_free(&set);
+}
+
+static void test_bigs(tinfo* tinfo) {
 #ifdef REPORT_DEPTH
     const int SIZE = 6;
 #else
@@ -69,7 +117,7 @@ void test_bigs(tinfo* tinfo) {
     set_int_free(&set);
 }
 
-void check_all(tinfo* tinfo, const SetInt* set, int size) {
+static void check_all(tinfo* tinfo, const SetInt* set, int size) {
     tinfo->total++;
     if (set_int_size(set) != size) {
         fprintf(stderr, "FAIL: %s set_int_size() expected %d, got %d\n",
@@ -77,6 +125,10 @@ void check_all(tinfo* tinfo, const SetInt* set, int size) {
     } else
         tinfo->ok++;
 
+#ifdef REPORT_DEPTH
+    const char* tick = "\u2714";
+#endif
+    const char* cross = "\u2717";
     if (size) {
         tinfo->total++;
         int exp_rbtree_depth = (int)round(2 * log2f(size + 1));
@@ -84,20 +136,21 @@ void check_all(tinfo* tinfo, const SetInt* set, int size) {
         if (depth > exp_rbtree_depth)
             fprintf(stderr,
                     "FAIL: %s SetInt unexpectedly deep: size=%8d depth=%3d "
-                    "exp_rbtree_depth=%3d\n",
-                    tinfo->tag, size, depth, exp_rbtree_depth);
+                    "2×lg(n)=%3d %s\n",
+                    tinfo->tag, size, depth, exp_rbtree_depth, cross);
         else
             tinfo->ok++;
         if (size < 1000001)
             check_order(tinfo, set);
 #ifdef REPORT_DEPTH
-        printf("size=%8d depth=%3d exp_rbtree_depth=%3d\n", size, depth,
-               exp_rbtree_depth);
+        printf("%-20s size=%8d depth=%3d 2×lg(n)=%3d %s\n", tinfo->tag,
+               size, depth, exp_rbtree_depth,
+               (depth < exp_rbtree_depth) ? tick : cross);
 #endif
     }
 }
 
-void test_contains(tinfo* tinfo) {
+static void test_contains(tinfo* tinfo) {
     SetInt set = set_int_alloc();
     check_all(tinfo, &set, 0);
     int size = 0;
@@ -147,26 +200,37 @@ void test_contains(tinfo* tinfo) {
     set_int_free(&set);
 }
 
-void check_values(tinfo* tinfo, const SetInt* set, const char* expected) {
-    VecInt vec = set_int_to_vec(set);
-    char* s = vec_int_tostring(&vec);
-    tinfo->total++;
-    if (strcmp(s, expected)) {
-        fprintf(stderr,
-                "FAIL: %s set_int_add() expected\n\t[%s], got\n\t[%s]\n",
-                tinfo->tag, expected, s);
-    } else
-        tinfo->ok++;
-    free(s);
-    vec_int_free(&vec);
-}
-
-void check_order(tinfo* tinfo, const SetInt* set) {
+static void check_order(tinfo* tinfo, const SetInt* set) {
     tinfo->total++;
     bool ok = true;
     VecInt vec = set_int_to_vec(set);
-    for (int i = 1; i < vec_int_size(&vec); ++i) {
+    for (int i = 1; i < vec_int_size(&vec); ++i)
         if (vec_int_get(&vec, i - 1) > vec_int_get(&vec, i)) {
+            ok = false;
+            break;
+        }
+    if (ok)
+        tinfo->ok++;
+    else
+        fprintf(stderr, "FAIL: %s check_order\n", tinfo->tag);
+    vec_int_free(&vec);
+}
+
+static void check_equal_ints(tinfo* tinfo, const SetInt* set,
+                             const int* ints, int size) {
+    tinfo->total++;
+    const int SIZE = set_int_size(set);
+    if (SIZE != size)
+        fprintf(stderr,
+                "FAIL: %s check_equal_ints set size %d expected %d\n",
+                tinfo->tag, SIZE, size);
+    else
+        tinfo->ok++;
+    tinfo->total++;
+    bool ok = true;
+    for (int i = 0; i < SIZE; ++i) {
+        int x = ints[i];
+        if (!set_int_contains(set, x)) {
             ok = false;
             break;
         }
@@ -174,6 +238,5 @@ void check_order(tinfo* tinfo, const SetInt* set) {
     if (ok)
         tinfo->ok++;
     else
-        fprintf(stderr, "FAIL: %s check_order\n", tinfo->tag);
-    vec_int_free(&vec);
+        fprintf(stderr, "FAIL: %s check_equal_ints\n", tinfo->tag);
 }

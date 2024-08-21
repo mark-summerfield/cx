@@ -50,7 +50,7 @@ bool set_int_add(SetInt* set, int value);
 bool set_int_remove(SetInt* set, int value);
 
 // Returns true if value is in the SetInt.
-bool set_int_contains(SetInt* set, int value);
+bool set_int_contains(const SetInt* set, int value);
 
 // Returns a deep copy of the SetInt.
 SetInt set_int_copy(const SetInt* set);
