@@ -4,29 +4,29 @@
 #include <stdlib.h>
 #include <string.h>
 
+static void add_to_difference(SetInt* set, const SetIntNode* node,
+                              const SetInt* set2);
+static void push_to_vec(const SetIntNode* node, VecInt* vec);
 static SetIntNode* node_add(SetIntNode* node, int value, bool* added);
 static SetIntNode* node_alloc(int value);
-static bool node_is_red(SetIntNode* node);
+static bool node_is_red(const SetIntNode* node);
 static void node_color_flip(SetIntNode* node);
 static SetIntNode* node_add_rotation(SetIntNode* node);
 static SetIntNode* node_rotate_left(SetIntNode* node);
 static SetIntNode* node_rotate_right(SetIntNode* node);
-static void to_vec(SetIntNode* node, VecInt* vec);
-static void node_remove_with_children(SetIntNode* node);
+static void node_remove_all(SetIntNode* node);
 static SetIntNode* node_remove(SetIntNode* node, int value, bool* deleted);
 static SetIntNode* node_move_red_left(SetIntNode* node);
 static SetIntNode* node_move_red_right(SetIntNode* node);
 static SetIntNode* node_remove_right(SetIntNode* node, int value,
                                      bool* deleted);
 static SetIntNode* node_fixup(SetIntNode* node);
-static SetIntNode* node_first(SetIntNode* node);
+static const SetIntNode* node_first(const SetIntNode* node);
 static SetIntNode* node_remove_minimum(SetIntNode* node);
 SetIntNode* node_copy(const SetIntNode* node);
-static void difference(SetInt* set, const SetIntNode* node,
-                       const SetInt* set2);
-static int node_max_depth(SetIntNode* node);
+static int node_max_depth(const SetIntNode* node);
 
-SetInt set_int_alloc() {
+inline SetInt set_int_alloc() {
     return (SetInt){
         ._root = NULL,
         ._size = 0,
@@ -37,17 +37,26 @@ inline void set_int_free(SetInt* set) { set_int_clear(set); }
 
 void set_int_clear(SetInt* set) {
     assert_notnull(set);
-    node_remove_with_children(set->_root);
+    node_remove_all(set->_root);
     set->_root = NULL;
     set->_size = 0;
 }
 
-static void node_remove_with_children(SetIntNode* node) {
+static void node_remove_all(SetIntNode* node) {
     if (node) {
-        node_remove_with_children(node->left);
-        node_remove_with_children(node->right);
+        node_remove_all(node->left);
+        node_remove_all(node->right);
         free(node);
     }
+}
+
+static SetIntNode* node_alloc(int value) {
+    SetIntNode* node = malloc(sizeof(SetIntNode));
+    assert_alloc(node);
+    node->left = node->right = NULL;
+    node->value = value;
+    node->_red = true;
+    return node;
 }
 
 bool set_int_add(SetInt* set, int value) {
@@ -74,7 +83,7 @@ static SetIntNode* node_add(SetIntNode* node, int value, bool* added) {
     return node_add_rotation(node);
 }
 
-static bool node_is_red(SetIntNode* node) {
+static inline bool node_is_red(const SetIntNode* node) {
     return node != NULL && node->_red;
 }
 
@@ -110,15 +119,6 @@ static SetIntNode* node_rotate_right(SetIntNode* node) {
     x->_red = node->_red;
     node->_red = true;
     return x;
-}
-
-static SetIntNode* node_alloc(int value) {
-    SetIntNode* node = malloc(sizeof(SetIntNode));
-    assert_alloc(node);
-    node->left = node->right = NULL;
-    node->value = value;
-    node->_red = true;
-    return node;
 }
 
 bool set_int_remove(SetInt* set, int value) {
@@ -179,7 +179,7 @@ static SetIntNode* node_remove_right(SetIntNode* node, int value,
     if (!node_is_red(node->right) && !node_is_red(node->right->left))
         node = node_move_red_right(node);
     if (value == node->value) {
-        SetIntNode* first = node_first(node->right);
+        const SetIntNode* first = node_first(node->right);
         node->value = first->value;
         node->right = node_remove_minimum(node->right);
         *deleted = true;
@@ -198,7 +198,7 @@ static SetIntNode* node_fixup(SetIntNode* node) {
     return node;
 }
 
-static SetIntNode* node_first(SetIntNode* node) {
+static const SetIntNode* node_first(const SetIntNode* node) {
     while (node->left)
         node = node->left;
     return node;
@@ -215,7 +215,7 @@ static SetIntNode* node_remove_minimum(SetIntNode* node) {
     return node_fixup(node);
 }
 
-SetInt set_int_copy(const SetInt* set) {
+inline SetInt set_int_copy(const SetInt* set) {
     assert_notnull(set);
     return (SetInt){._root = node_copy(set->_root), ._size = set->_size};
 }
@@ -223,10 +223,10 @@ SetInt set_int_copy(const SetInt* set) {
 SetIntNode* node_copy(const SetIntNode* node) {
     if (!node)
         return NULL;
-    SetIntNode* dup = node_alloc(node->value);
-    dup->left = node_copy(node->left);
-    dup->right = node_copy(node->right);
-    return dup;
+    SetIntNode* copy = node_alloc(node->value);
+    copy->left = node_copy(node->left);
+    copy->right = node_copy(node->right);
+    return copy;
 }
 
 bool set_int_equal(const SetInt* set1, const SetInt* set2) {
@@ -260,17 +260,17 @@ SetInt set_int_difference(const SetInt* set1, const SetInt* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
     SetInt set = set_int_alloc();
-    difference(&set, set1->_root, set2);
+    add_to_difference(&set, set1->_root, set2);
     return set;
 }
 
-static void difference(SetInt* set, const SetIntNode* node,
-                       const SetInt* set2) {
+static void add_to_difference(SetInt* set, const SetIntNode* node,
+                              const SetInt* set2) {
     if (node) {
         if (!set_int_contains(set2, node->value))
             set_int_add(set, node->value);
-        difference(set, node->left, set2);
-        difference(set, node->right, set2);
+        add_to_difference(set, node->left, set2);
+        add_to_difference(set, node->right, set2);
     }
 }
 
@@ -299,15 +299,15 @@ void set_int_unite(SetInt* set1, const SetInt* set2) {
 
 VecInt set_int_to_vec(const SetInt* set) {
     VecInt vec = vec_int_alloc_cap(set->_size);
-    to_vec(set->_root, &vec);
+    push_to_vec(set->_root, &vec);
     return vec;
 }
 
-static void to_vec(SetIntNode* node, VecInt* vec) {
+static void push_to_vec(const SetIntNode* node, VecInt* vec) {
     if (node) {
-        to_vec(node->left, vec);
+        push_to_vec(node->left, vec);
         vec_int_push(vec, node->value);
-        to_vec(node->right, vec);
+        push_to_vec(node->right, vec);
     }
 }
 
@@ -322,7 +322,7 @@ inline int set_int_max_depth(const SetInt* set) {
     return node_max_depth(set->_root);
 }
 
-static int node_max_depth(SetIntNode* node) {
+static int node_max_depth(const SetIntNode* node) {
     if (!node)
         return 0;
     int left = node_max_depth(node->left);

@@ -83,8 +83,7 @@ void set_int_unite(SetInt* set1, const SetInt* set2);
 // set.
 VecInt set_int_to_vec(const SetInt* set);
 
-// Returns the set as a string of space-separated ints; the caller owns the
-// string.
+// Returns the set as a caller-owned string of space-separated ints.
 char* set_int_to_str(const SetInt* set);
 
 // Used for tests to verify balance.
