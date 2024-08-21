@@ -219,26 +219,25 @@ VecStr vec_str_alloc_split(const char* s, const char* sep) {
 
 char* vec_str_join(const VecStr* vec, const char* sep) {
     assert_notnull(vec);
-    const int VEC_SIZE = vec_str_size(vec);
+    const int VEC_SIZE = vec->_size;
     const int SEP_SIZE = sep ? strlen(sep) : 0;
     int total_size = 0;
     int sizes[VEC_SIZE];
     for (int i = 0; i < VEC_SIZE; ++i) {
-        int size = strlen(vec_str_get(vec, i));
+        int size = strlen(vec->_values[i]);
         sizes[i] = size;
-        total_size += size + SEP_SIZE;
+        total_size += size;
     }
-    total_size -= SEP_SIZE; // don't want one at the end
-    total_size++;           // allow for \0
+    total_size += (VEC_SIZE * SEP_SIZE);
     char* s = malloc(total_size);
     assert_alloc(s);
     char* p = s;
     for (int i = 0; i < VEC_SIZE; ++i) {
         int size = sizes[i];
-        strncpy(p, strndup(vec_str_get(vec, i), size), size);
+        strncpy(p, vec->_values[i], size);
         p += size;
-        if (sep && (i + 1 < VEC_SIZE)) { // avoid adding one at the end
-            strncpy(p, strndup(sep, SEP_SIZE), SEP_SIZE);
+        if (sep && (i + 1 < VEC_SIZE)) { // avoid adding sep at the end
+            strncpy(p, sep, SEP_SIZE);
             p += SEP_SIZE;
         }
     }

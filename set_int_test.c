@@ -9,8 +9,6 @@
 
 //#define REPORT_DEPTH
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-
 void test_bigs(tinfo* tinfo);
 void test_simple(tinfo* tinfo);
 void test_contains(tinfo* tinfo);
@@ -59,9 +57,6 @@ void test_bigs(tinfo* tinfo) {
         check_all(tinfo, &set, size);
     }
     for (int i = 0; i < SIZE; ++i) {
-        if (sizes[i] > 10000) {
-            break;
-        }
         set_int_clear(&set);
         check_all(tinfo, &set, 0);
         int size = 0;
@@ -84,23 +79,20 @@ void check_all(tinfo* tinfo, const SetInt* set, int size) {
 
     if (size) {
         tinfo->total++;
-        int exp_bintree_depth = (int)round(sqrt(size));
         int exp_rbtree_depth = (int)round(2 * log2f(size + 1));
         int depth = set_int_max_depth(set);
         if (depth > exp_rbtree_depth)
             fprintf(stderr,
                     "FAIL: %s SetInt unexpectedly deep: size=%8d depth=%3d "
-                    "exp_rbtree_depth=%3d exp_bintree_depth=%5d\n",
-                    tinfo->tag, size, depth, exp_rbtree_depth,
-                    exp_bintree_depth);
+                    "exp_rbtree_depth=%3d\n",
+                    tinfo->tag, size, depth, exp_rbtree_depth);
         else
             tinfo->ok++;
         if (size < 1000001)
             check_order(tinfo, set);
 #ifdef REPORT_DEPTH
-        printf("size=%8d depth=%3d exp_rbtree_depth=%3d "
-               "exp_bintree_depth=%5d\n",
-               size, depth, exp_rbtree_depth, exp_bintree_depth);
+        printf("size=%8d depth=%3d exp_rbtree_depth=%3d\n", size, depth,
+               exp_rbtree_depth);
 #endif
     }
 }

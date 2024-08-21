@@ -8,10 +8,13 @@
 #include "vec_str_test.h"
 #include "vec_test.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 void va_tests(tinfo*);
 
 int main() {
+    srand((unsigned)time(NULL));
     tinfo tinfo = {"", 0, 0};
     tinfo.tag = "va_tests";
     va_tests(&tinfo);
