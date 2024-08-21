@@ -220,6 +220,8 @@ VecStr vec_str_alloc_split(const char* s, const char* sep) {
 char* vec_str_join(const VecStr* vec, const char* sep) {
     assert_notnull(vec);
     const int VEC_SIZE = vec->_size;
+    if (!VEC_SIZE)
+        return NULL; // empty
     const int SEP_SIZE = sep ? strlen(sep) : 0;
     int total_size = 0;
     int sizes[VEC_SIZE];

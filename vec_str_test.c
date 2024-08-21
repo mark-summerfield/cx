@@ -176,8 +176,8 @@ void vec_str_tests(tinfo* tinfo) {
 void vec_str_merge_tests(tinfo* tinfo) {
     VecStr v1 = vec_str_alloc_cap(7);
     vec_str_check_size_cap(tinfo, &v1, 0, 7);
-    check_join(tinfo, &v1, ":", "");
-    check_join(tinfo, &v1, NULL, "");
+    check_join(tinfo, &v1, ":", NULL);
+    check_join(tinfo, &v1, NULL, NULL);
     vec_str_push(&v1, strdup("one"));
     check_join(tinfo, &v1, ":", "one");
     check_join(tinfo, &v1, NULL, "one");
@@ -339,7 +339,9 @@ void check_join(tinfo* tinfo, const VecStr* vec, const char* sep,
                 const char* expected) {
     tinfo->total++;
     char* actual = vec_str_join(vec, sep);
-    if (strcmp(actual, expected))
+    if (!vec_str_size(vec) && !actual)
+        tinfo->ok++;
+    else if (strcmp(actual, expected))
         fprintf(stderr,
                 "FAIL: %s vec_str_join() expected\n\"%s\", got\n\"%s\"\n",
                 tinfo->tag, expected, actual);
