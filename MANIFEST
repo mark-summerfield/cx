@@ -5,21 +5,18 @@
 #
 # Only do these as needed:
 #   - SetStr/SetInt complete; see ~/app/golib/set/set.go
-#   - Hsh  with void* items - as with rbt but based on hash table?
-#   - Que  (based on vec)?
-#   - Lst  (doubly-linked list)?
-#   - Deq  (based on list)?
-#   - Str  (based on vec)?
-#   - MapStrStr (rbt; see set_str)?
-#   - MapStrAny (rbt; see set_str)?
-#   - MapIntAny (rbt; see set_str)?
-#   - VecSlice a slice of a Vec that does not own its void* values
-#   - VecStrSlice a slice of a VecStr that does not own its char* values
-#   etc.
+#   - Hsh  with void* items - as with rbt but based on hash table
+#   - Que  (based on vec)
+#   - Lst  (doubly-linked list)
+#   - Deq  (based on list)
+#   - Str  (based on vec)
+#   - MapStrStr (rbt; see set_str)
+#   - MapStrAny (rbt; see set_str)
+#   - MapIntAny (rbt; see set_str)
 
 cx.h
 set_str.h
-set_str.c # TODO use unowned VecStrView where poss.
+set_str.c
 set_int.h
 set_int.c
 vec_common.h
@@ -27,7 +24,6 @@ vec.h
 vec.c
 vec_str.h
 vec_str.c
-# TODO vec_str_view
 vec_int.h
 vec_int.c
 
@@ -47,7 +43,6 @@ vec_common_test.h
 vec_common_test.c
 vec_int_test.h
 vec_int_test.c
-# TODO vec_str_view tests
 vec_str_test.h
 vec_str_test.c
 tag_test.h
