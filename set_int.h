@@ -23,8 +23,6 @@ typedef struct SetIntNode {
 } SetIntNode;
 
 // Allocates a new empty SetInt of owned int values.
-// Caller must supply functions: cmp to compare values, cpy to copy a
-// value, and destroy to free a value.
 SetInt set_int_alloc();
 
 // Destroys the SetInt freeing its memory and also freeing every value. The
@@ -42,10 +40,9 @@ void set_int_clear(SetInt* set);
 
 // Adds the value in order. If the value was already present, does nothing
 // and returns false; otherwise inserts the new value and returns true.
-// SetInt takes ownership of the new value (set.g., use strdup()).
 bool set_int_add(SetInt* set, int value);
 
-// Removes and frees the given value and returns true; or does nothing
+// Removes the given value and returns true; or does nothing
 // (if the value isn'set in the SetInt) and returns false.
 bool set_int_remove(SetInt* set, int value);
 

@@ -5,6 +5,7 @@
 #   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
 #   - SetInt (much easier to test than SetStr)
 #   - SetStr (this and vector are all that's needed for wordladder)
+#   - VecStrView an unowned VecStr (then use in SetStr)
 #
 # Only do these as needed:
 #   - Hsh  with void* items - as with rbt but based on hash table?
@@ -15,11 +16,13 @@
 #   - MapStrStr (rbt; see set_str)?
 #   - MapStrAny (rbt; see set_str)?
 #   - MapIntAny (rbt; see set_str)?
-#   - VecView a slice of a Vec that does not own its void* values
-#   - VecStrView a slice of a VecStr that does not own its char* values
+#   - VecSlice a slice of a Vec that does not own its void* values
+#   - VecStrSlice a slice of a VecStr that does not own its char* values
 #   etc.
 
 cx.h
+set_str.h
+set_str.c # TODO use unowned VecStrView where poss.
 set_int.h
 set_int.c
 vec_common.h
@@ -27,6 +30,7 @@ vec.h
 vec.c
 vec_str.h
 vec_str.c
+# TODO vec_str_view
 vec_int.h
 vec_int.c
 
@@ -38,12 +42,14 @@ vaargs.h
 cx_test.c
 cx_util_test.h
 cx_util_test.c
+# TODO set_str tests
 set_int_test.h
 set_int_test.c
 vec_common_test.h
 vec_common_test.c
 vec_int_test.h
 vec_int_test.c
+# TODO vec_str_view tests
 vec_str_test.h
 vec_str_test.c
 tag_test.h
