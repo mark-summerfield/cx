@@ -9,7 +9,7 @@
 static void vec_int_grow(VecInt* vec);
 
 VecInt vec_int_alloc_cap(int cap) {
-    cap = cap ? cap : 32;
+    cap = cap > 0 ? cap : VEC_INITIAL_CAP;
     int* values = malloc(cap * sizeof(int));
     assert_alloc(values);
     return (VecInt){._size = 0, ._cap = cap, ._values = values};

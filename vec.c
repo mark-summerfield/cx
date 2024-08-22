@@ -10,6 +10,7 @@ Vec vec_alloc_(VecAllocArgs args) {
     assert(args.cmp && "must provide a cmp function");
     assert(args.cpy && "must provide a cpy function");
     assert(args.destroy && "must provide a destroy function");
+    args.cap = args.cap > 0 ? args.cap : VEC_INITIAL_CAP;
     void** values = malloc(args.cap * sizeof(void*));
     assert_alloc(values);
     return (Vec){._size = 0,

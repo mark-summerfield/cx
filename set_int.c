@@ -6,7 +6,8 @@
 
 static void add_to_difference(SetInt* set, const SetIntNode* node,
                               const SetInt* set2);
-static void push_to_vec(const SetIntNode* node, VecInt* vec);
+static void add_to_union(SetInt* set, const SetIntNode* node);
+static void push_to_vec(VecInt* vec, const SetIntNode* node);
 static SetIntNode* node_add(SetIntNode* node, int value, bool* added);
 static SetIntNode* node_alloc(int value);
 static bool node_is_red(const SetIntNode* node);
@@ -278,7 +279,22 @@ SetInt set_int_intersection(const SetInt* set1, const SetInt* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
     SetInt set = set_int_alloc();
-    // TODO
+    VecInt vec1 = set_int_to_vec(set1);
+    VecInt vec2 = set_int_to_vec(set2);
+    int i = 0;
+    int j = 0;
+    while (i < vec1._size && j < vec2._size) {
+        int v1 = vec1._values[i];
+        int v2 = vec2._values[j];
+        if (v1 == v2) {
+            set_int_add(&set, v1);
+            i++;
+            j++;
+        } else if (v1 < v2)
+            i++;
+        else
+            j++;
+    }
     return set;
 }
 
@@ -298,31 +314,28 @@ SetInt set_int_union(const SetInt* set1, const SetInt* set2) {
 void set_int_unite(SetInt* set1, const SetInt* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
-    // TODO
+    add_to_union(set1, set2->_root);
 }
 
-/*
-SetInt set_int_symmetric_difference(const SetInt* set1,
-                                    const SetInt* set2) {
-    assert_notnull(set1);
-    assert_notnull(set2);
-    SetInt set = set_int_alloc();
-    // TODO
-    return set;
+static void add_to_union(SetInt* set, const SetIntNode* node) {
+    if (node) {
+        set_int_add(set, node->value);
+        add_to_union(set, node->left);
+        add_to_union(set, node->right);
+    }
 }
-*/
 
 VecInt set_int_to_vec(const SetInt* set) {
     VecInt vec = vec_int_alloc_cap(set->_size);
-    push_to_vec(set->_root, &vec);
+    push_to_vec(&vec, set->_root);
     return vec;
 }
 
-static void push_to_vec(const SetIntNode* node, VecInt* vec) {
+static void push_to_vec(VecInt* vec, const SetIntNode* node) {
     if (node) {
-        push_to_vec(node->left, vec);
+        push_to_vec(vec, node->left);
         vec_int_push(vec, node->value);
-        push_to_vec(node->right, vec);
+        push_to_vec(vec, node->right);
     }
 }
 

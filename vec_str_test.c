@@ -208,7 +208,7 @@ void vec_str_merge_tests(tinfo* tinfo) {
     vec_str_check_size_cap(tinfo, &v1, 11, 11);
     vec_str_check_size_cap(tinfo, &v2, 0, 0);
 
-    // v2 already freed
+    // v2 already freed by merge
     vec_str_free(&v1);
 }
 

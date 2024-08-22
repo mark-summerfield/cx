@@ -146,7 +146,7 @@ void vec_merge_tests(tinfo* tinfo) {
     vec_check_size_cap(tinfo, &v1, 11, 11);
     vec_check_size_cap(tinfo, &v2, 0, 0);
 
-    // v2 already freed
+    // v2 already freed by merge
     vec_free(&v1);
 }
 
@@ -157,10 +157,10 @@ void vec_sort_tests(tinfo* tinfo) {
     vec_check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
-    vec_insert(&v1, 0, tag_alloc("Zz#999", 999));
-    vec_insert(&v1, 2, tag_alloc("Ww#888", 888));
-    vec_insert(&v1, 4, tag_alloc("Ae#005", 5));
-    vec_insert(&v1, 6, tag_alloc("Aa#001", 1));
+    vec_insert(&v1, 0, tag_alloc(strdup("Zz#999"), 999));
+    vec_insert(&v1, 2, tag_alloc(strdup("Ww#888"), 888));
+    vec_insert(&v1, 4, tag_alloc(strdup("Ae#005"), 5));
+    vec_insert(&v1, 6, tag_alloc(strdup("Aa#001"), 1));
     vec_check_size_cap(tinfo, &v1, 9, 14);
     vec_match(
         tinfo, &v1,
@@ -234,19 +234,19 @@ void vec_sort_tests(tinfo* tinfo) {
     vec_match(
         tinfo, &v1,
         "Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#888|Zz#999");
-    vec_add(&v1, tag_alloc("Aa#000", 0));
+    vec_add(&v1, tag_alloc(strdup("Aa#000"), 0));
     vec_match(tinfo, &v1,
               "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
               "888|Zz#999");
-    vec_add(&v1, tag_alloc("zz#999", 0));
+    vec_add(&v1, tag_alloc(strdup("zz#999"), 0));
     vec_match(tinfo, &v1,
               "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
               "888|Zz#999|zz#999");
-    vec_add(&v1, tag_alloc("Af#200", 0));
+    vec_add(&v1, tag_alloc(strdup("Af#200"), 0));
     vec_match(tinfo, &v1,
               "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
               "Af#200|Ww#888|Zz#999|zz#999");
-    vec_add(&v1, tag_alloc("Af#200", 0));
+    vec_add(&v1, tag_alloc(strdup("Af#200"), 0));
     vec_match(tinfo, &v1,
               "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
               "Af#200|Af#200|Ww#888|Zz#999|zz#999");

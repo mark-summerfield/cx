@@ -9,6 +9,8 @@
 
 //#define REPORT_DEPTH
 
+static void test_union(tinfo* tinfo);
+static void test_intersection(tinfo* tinfo);
 static void test_difference(tinfo* tinfo);
 static void test_copy(tinfo* tinfo);
 static void test_remove(tinfo* tinfo);
@@ -19,7 +21,7 @@ static void check_all(tinfo* tinfo, const SetInt* set, int size);
 static void check_order(tinfo* tinfo, const SetInt* set);
 static void check_equal_ints(tinfo* tinfo, const SetInt* set,
                              const int* ints, int size);
-static void print_set(const SetInt* set);
+static void print_set(const SetInt* set, const char* name);
 
 void set_int_tests(tinfo* tinfo) {
     tinfo->tag = "test_simple";
@@ -34,6 +36,80 @@ void set_int_tests(tinfo* tinfo) {
     test_copy(tinfo);
     tinfo->tag = "test_difference";
     test_difference(tinfo);
+    tinfo->tag = "test_intersection";
+    test_intersection(tinfo);
+    tinfo->tag = "test_union";
+    test_union(tinfo);
+}
+
+static void test_union(tinfo* tinfo) {
+    SetInt set1 = set_int_alloc();
+    SetInt set2 = set_int_alloc();
+    for (int i = 11; i < 23; ++i) {
+        if (i % 2)
+            set_int_add(&set1, i);
+        else
+            set_int_add(&set2, i);
+    }
+    set_int_add(&set1, 14);
+    set_int_add(&set1, 22);
+    check_equal_ints(tinfo, &set1, (int[]){11, 13, 14, 15, 17, 19, 21, 22},
+                     8);
+    check_equal_ints(tinfo, &set2, (int[]){12, 14, 16, 18, 20, 22}, 6);
+    SetInt set3 = set_int_union(&set1, &set2);
+    check_equal_ints(
+        tinfo, &set3,
+        (int[]){11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22}, 12);
+    set_int_unite(&set1, &set2);
+    check_equal_ints(
+        tinfo, &set1,
+        (int[]){11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22}, 12);
+    tinfo->total++;
+    if (!set_int_equal(&set1, &set3)) {
+        fprintf(stderr, "FAIL: %s set1 != set3\n", tinfo->tag);
+    } else
+        tinfo->ok++;
+    set_int_clear(&set2);
+    set2 = set_int_union(&set1, &set2);
+    tinfo->total++;
+    if (!set_int_equal(&set1, &set2)) {
+        fprintf(stderr, "FAIL: %s set1 != set2\n", tinfo->tag);
+    } else
+        tinfo->ok++;
+    set_int_free(&set3);
+    set_int_free(&set2);
+    set_int_free(&set1);
+}
+
+static void test_intersection(tinfo* tinfo) {
+    SetInt set1 = set_int_alloc();
+    SetInt set2 = set_int_alloc();
+    for (int i = 11; i < 23; ++i) {
+        if (i % 2)
+            set_int_add(&set1, i);
+        else
+            set_int_add(&set2, i);
+    }
+    check_equal_ints(tinfo, &set1, (int[]){11, 13, 15, 17, 19, 21}, 6);
+    check_equal_ints(tinfo, &set2, (int[]){12, 14, 16, 18, 20, 22}, 6);
+    SetInt set3 = set_int_intersection(&set1, &set2);
+    tinfo->total++;
+    if (!set_int_isempty(&set3)) {
+        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
+                tinfo->tag);
+    } else
+        tinfo->ok++;
+    for (int i = 12; i < 20; ++i)
+        set_int_add(&set2, i);
+    check_equal_ints(tinfo, &set2,
+                     (int[]){12, 13, 14, 15, 16, 17, 18, 19, 20, 22}, 10);
+    set_int_add(&set1, 14);
+    set_int_clear(&set3);
+    set3 = set_int_intersection(&set1, &set2);
+    check_equal_ints(tinfo, &set3, (int[]){13, 14, 15, 17, 19}, 5);
+    set_int_free(&set3);
+    set_int_free(&set2);
+    set_int_free(&set1);
 }
 
 static void test_difference(tinfo* tinfo) {
@@ -68,13 +144,13 @@ static void test_difference(tinfo* tinfo) {
                          12,
                      },
                      6);
-    set_int_clear(&set3);
     set_int_clear(&set2);
     set_int_clear(&set1);
     for (int i = 0; i < 10; ++i) {
         set_int_add(&set1, i);
         set_int_add(&set2, i);
     }
+    set_int_clear(&set3);
     set3 = set_int_difference(&set1, &set2);
     tinfo->total++;
     if (!set_int_isempty(&set3)) {
@@ -85,6 +161,7 @@ static void test_difference(tinfo* tinfo) {
     set_int_clear(&set3);
     set_int_add(&set2, 10);
     set_int_add(&set2, 11);
+    set_int_clear(&set3);
     set3 = set_int_difference(&set1, &set2);
     tinfo->total++;
     if (!set_int_isempty(&set3)) {
@@ -92,6 +169,7 @@ static void test_difference(tinfo* tinfo) {
                 tinfo->tag);
     } else
         tinfo->ok++;
+    set_int_clear(&set3);
     set3 = set_int_difference(&set2, &set1);
     check_equal_ints(tinfo, &set3, (int[]){10, 11}, 2);
     set_int_free(&set3);
@@ -354,8 +432,8 @@ static void check_equal_ints(tinfo* tinfo, const SetInt* set,
         fprintf(stderr, "FAIL: %s check_equal_ints\n", tinfo->tag);
 }
 
-static void print_set(const SetInt* set) {
+static void print_set(const SetInt* set, const char* name) {
     char* s = set_int_to_str(set);
-    printf("{%s}\n", s);
+    printf("%s{%s}\n", name ? name : "", s);
     free(s);
 }

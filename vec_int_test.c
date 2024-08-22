@@ -208,7 +208,7 @@ void vec_int_merge_tests(tinfo* tinfo) {
     vec_int_match(tinfo, &v1, "1 2 3 4 5 6 7 8 9 10 11");
     vec_int_check_size_cap(tinfo, &v1, 11, 11);
     vec_int_check_size_cap(tinfo, &v2, 0, 0);
-    // v2 already freed
+    // v2 already freed by merge
     vec_int_free(&v1);
 }
 

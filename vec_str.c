@@ -8,6 +8,7 @@
 static void vec_str_grow(VecStr* vec);
 
 VecStr vec_str_alloc_cap(int cap) {
+    cap = cap > 0 ? cap : VEC_INITIAL_CAP;
     char** values = malloc(cap * sizeof(char*));
     assert_alloc(values);
     return (VecStr){._size = 0, ._cap = cap, ._values = values};

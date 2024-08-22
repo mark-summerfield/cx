@@ -15,9 +15,9 @@ typedef struct {
 #define _TAG_BUF_SZ 20
 
 // caller owns
-Tag* tag_alloc(const char* name, long id) {
+Tag* tag_alloc(char* name, long id) {
     Tag* tag = malloc(sizeof(Tag));
-    tag->name = strdup(name);
+    tag->name = name;
     tag->id = id;
     return tag;
 }
