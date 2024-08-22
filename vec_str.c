@@ -55,10 +55,6 @@ void vec_str_set(VecStr* vec, int index, char* value) {
 void vec_str_insert(VecStr* vec, int index, char* value) {
     assert_notnull(vec);
     assert_notnull(value);
-    if (index == vec->_size) { // add at the end
-        vec_str_push(vec, value);
-        return;
-    }
     assert_valid_index(vec, index);
     if (vec->_size == vec->_cap)
         vec_str_grow(vec);

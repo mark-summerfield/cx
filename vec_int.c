@@ -45,10 +45,6 @@ void vec_int_set(VecInt* vec, int index, int value) {
 
 void vec_int_insert(VecInt* vec, int index, int value) {
     assert_notnull(vec);
-    if (index == vec->_size) { // add at the end
-        vec_int_push(vec, value);
-        return;
-    }
     assert_valid_index(vec, index);
     if (vec->_size == vec->_cap)
         vec_int_grow(vec);
