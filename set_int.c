@@ -24,7 +24,7 @@ static SetIntNode* node_remove_right(SetIntNode* node, int value,
 static SetIntNode* node_fixup(SetIntNode* node);
 static const SetIntNode* node_first(const SetIntNode* node);
 static SetIntNode* node_remove_minimum(SetIntNode* node);
-SetIntNode* node_copy(const SetIntNode* node);
+static SetIntNode* node_copy(const SetIntNode* node);
 static int node_max_depth(const SetIntNode* node);
 
 inline SetInt set_int_alloc() {
@@ -221,7 +221,7 @@ inline SetInt set_int_copy(const SetInt* set) {
     return (SetInt){._root = node_copy(set->_root), ._size = set->_size};
 }
 
-SetIntNode* node_copy(const SetIntNode* node) {
+static SetIntNode* node_copy(const SetIntNode* node) {
     if (!node)
         return NULL;
     SetIntNode* copy = node_alloc(node->value);

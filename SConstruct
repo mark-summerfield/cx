@@ -8,7 +8,7 @@ else:
 
 FILES = Glob('*test.c') + [
     'set_int.c',
-    #'set_str.c',
+    'set_str.c',
     'sx.c',
     'vec.c',
     'vec_int.c',

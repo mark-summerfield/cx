@@ -1,9 +1,10 @@
 # TODO
 #
+# TODO ############### valgrind Invalid Free
+#
 # rbt types
 #   see ~/app/golib/set/set.go
 #   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
-#   - SetInt (much easier to test than SetStr)
 #   - SetStr (this and vector are all that's needed for wordladder)
 #   - VecStrView an unowned VecStr (then use in SetStr)
 #
@@ -42,7 +43,8 @@ vaargs.h
 cx_test.c
 cx_util_test.h
 cx_util_test.c
-# TODO set_str tests
+set_str_test.h
+set_str_test.c # TODO set_str tests
 set_int_test.h
 set_int_test.c
 vec_common_test.h

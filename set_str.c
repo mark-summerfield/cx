@@ -16,16 +16,16 @@ static SetStrNode* node_add_rotation(SetStrNode* node);
 static SetStrNode* node_rotate_left(SetStrNode* node);
 static SetStrNode* node_rotate_right(SetStrNode* node);
 static void node_remove_all(SetStrNode* node);
-static SetStrNode* node_remove(SetStrNode* node, char* value,
+static SetStrNode* node_remove(SetStrNode* node, const char* value,
                                bool* deleted);
 static SetStrNode* node_move_red_left(SetStrNode* node);
 static SetStrNode* node_move_red_right(SetStrNode* node);
-static SetStrNode* node_remove_right(SetStrNode* node, char* value,
+static SetStrNode* node_remove_right(SetStrNode* node, const char* value,
                                      bool* deleted);
 static SetStrNode* node_fixup(SetStrNode* node);
 static const SetStrNode* node_first(const SetStrNode* node);
 static SetStrNode* node_remove_minimum(SetStrNode* node);
-SetStrNode* node_copy(const SetStrNode* node);
+static SetStrNode* node_copy(const SetStrNode* node);
 static int node_max_depth(const SetStrNode* node);
 static void node_free(SetStrNode* node);
 
@@ -50,15 +50,17 @@ static void node_remove_all(SetStrNode* node) {
         node_remove_all(node->left);
         node_remove_all(node->right);
         node_free(node);
+        free(node);
     }
 }
 
-static void node_free(SetStrNode* node) {
+static inline void node_free(SetStrNode* node) {
+    assert_notnull(node);
     free(node->value);
-    node->value = NULL;
 }
 
 static SetStrNode* node_alloc(char* value) {
+    assert_notnull(value);
     SetStrNode* node = malloc(sizeof(SetStrNode));
     assert_alloc(node);
     node->left = node->right = NULL;
@@ -157,6 +159,7 @@ static SetStrNode* node_remove(SetStrNode* node, const char* value,
             node = node_rotate_right(node);
         if (cmp == 0 && !node->right) {
             node_free(node);
+            free(node);
             *deleted = true;
             return NULL;
         }
@@ -191,6 +194,7 @@ static SetStrNode* node_remove_right(SetStrNode* node, const char* value,
         node = node_move_red_right(node);
     if (strcmp(value, node->value) == 0) {
         const SetStrNode* first = node_first(node->right);
+        free(node->value);
         node->value = first->value;
         node->right = node_remove_minimum(node->right);
         *deleted = true;
@@ -218,6 +222,7 @@ static const SetStrNode* node_first(const SetStrNode* node) {
 static SetStrNode* node_remove_minimum(SetStrNode* node) {
     if (!node->left) {
         node_free(node);
+        free(node);
         return NULL;
     }
     if (!node_is_red(node->left) && !node_is_red(node->left->left))
@@ -231,7 +236,7 @@ inline SetStr set_str_copy(const SetStr* set) {
     return (SetStr){._root = node_copy(set->_root), ._size = set->_size};
 }
 
-SetStrNode* node_copy(const SetStrNode* node) {
+static SetStrNode* node_copy(const SetStrNode* node) {
     if (!node)
         return NULL;
     SetStrNode* copy = node_alloc(strdup(node->value));
@@ -296,13 +301,14 @@ SetStr set_str_intersection(const SetStr* set1, const SetStr* set2) {
     int i = 0;
     int j = 0;
     while (i < vec1._size && j < vec2._size) {
-        int v1 = vec1._values[i];
-        int v2 = vec2._values[j];
-        if (v1 == v2) {
-            set_str_add(&set, v1);
+        const char* v1 = vec1._values[i];
+        const char* v2 = vec2._values[j];
+        int cmp = strcmp(v1, v2);
+        if (cmp == 0) {
+            set_str_add(&set, strdup(v1));
             i++;
             j++;
-        } else if (v1 < v2)
+        } else if (cmp < 0)
             i++;
         else
             j++;
@@ -331,13 +337,14 @@ void set_str_unite(SetStr* set1, const SetStr* set2) {
 
 static void add_to_union(SetStr* set, const SetStrNode* node) {
     if (node) {
-        set_str_add(set, node->value);
+        set_str_add(set, strdup(node->value));
         add_to_union(set, node->left);
         add_to_union(set, node->right);
     }
 }
 
 VecStr set_str_to_vec(const SetStr* set) {
+    assert_notnull(set);
     VecStr vec = vec_str_alloc_cap(set->_size);
     push_to_vec(&vec, set->_root);
     return vec;
@@ -352,6 +359,7 @@ static void push_to_vec(VecStr* vec, const SetStrNode* node) {
 }
 
 char* set_str_join(const SetStr* set, const char* sep) {
+    assert_notnull(set);
     // TODO use a VecStrView since this deep copy is needlessly expensive
     VecStr vec = set_str_to_vec(set);
     char* s = vec_str_join(&vec, sep);
