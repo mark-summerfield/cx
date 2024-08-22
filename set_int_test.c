@@ -68,7 +68,32 @@ static void test_difference(tinfo* tinfo) {
                          12,
                      },
                      6);
-    // TODO
+    set_int_clear(&set3);
+    set_int_clear(&set2);
+    set_int_clear(&set1);
+    for (int i = 0; i < 10; ++i) {
+        set_int_add(&set1, i);
+        set_int_add(&set2, i);
+    }
+    set3 = set_int_difference(&set1, &set2);
+    tinfo->total++;
+    if (!set_int_isempty(&set3)) {
+        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
+                tinfo->tag);
+    } else
+        tinfo->ok++;
+    set_int_clear(&set3);
+    set_int_add(&set2, 10);
+    set_int_add(&set2, 11);
+    set3 = set_int_difference(&set1, &set2);
+    tinfo->total++;
+    if (!set_int_isempty(&set3)) {
+        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
+                tinfo->tag);
+    } else
+        tinfo->ok++;
+    set3 = set_int_difference(&set2, &set1);
+    check_equal_ints(tinfo, &set3, (int[]){10, 11}, 2);
     set_int_free(&set3);
     set_int_free(&set2);
     set_int_free(&set1);

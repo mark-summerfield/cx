@@ -274,28 +274,43 @@ static void add_to_difference(SetInt* set, const SetIntNode* node,
     }
 }
 
-SetInt set_int_symmetric_difference(const SetInt* set1,
-                                    const SetInt* set2) {
-    SetInt set = set_int_alloc();
-    // TODO
-    return set;
-}
-
 SetInt set_int_intersection(const SetInt* set1, const SetInt* set2) {
+    assert_notnull(set1);
+    assert_notnull(set2);
     SetInt set = set_int_alloc();
     // TODO
     return set;
 }
 
 SetInt set_int_union(const SetInt* set1, const SetInt* set2) {
-    SetInt set = set_int_alloc();
-    // TODO
+    assert_notnull(set1);
+    assert_notnull(set2);
+    if (set1->_size < set2->_size) {
+        const SetInt* set = set1;
+        set2 = set1;
+        set1 = set;
+    }
+    SetInt set = set_int_copy(set1);
+    set_int_unite(&set, set2);
     return set;
 }
 
 void set_int_unite(SetInt* set1, const SetInt* set2) {
+    assert_notnull(set1);
+    assert_notnull(set2);
     // TODO
 }
+
+/*
+SetInt set_int_symmetric_difference(const SetInt* set1,
+                                    const SetInt* set2) {
+    assert_notnull(set1);
+    assert_notnull(set2);
+    SetInt set = set_int_alloc();
+    // TODO
+    return set;
+}
+*/
 
 VecInt set_int_to_vec(const SetInt* set) {
     VecInt vec = vec_int_alloc_cap(set->_size);

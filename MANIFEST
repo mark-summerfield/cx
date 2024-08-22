@@ -6,9 +6,7 @@
 #   - SetInt (much easier to test than SetStr)
 #   - SetStr (this and vector are all that's needed for wordladder)
 #
-# Only do this as needed:
-#   - VecRef a Vec that does not own its void* values
-#   - VecStrRef a VecStr that does not own its char* values
+# Only do these as needed:
 #   - Hsh  with void* items - as with rbt but based on hash table?
 #   - Que  (based on vec)?
 #   - Lst  (doubly-linked list)?
@@ -17,6 +15,8 @@
 #   - MapStrStr (rbt; see set_str)?
 #   - MapStrAny (rbt; see set_str)?
 #   - MapIntAny (rbt; see set_str)?
+#   - VecView a slice of a Vec that does not own its void* values
+#   - VecStrView a slice of a VecStr that does not own its char* values
 #   etc.
 
 cx.h

@@ -62,10 +62,6 @@ bool set_int_equal(const SetInt* set1, const SetInt* set2);
 // not in set2.
 SetInt set_int_difference(const SetInt* set1, const SetInt* set2);
 
-// Returns a new SetInt that contains the values which are in set1 or in
-// set2—but not in both.
-SetInt set_int_symmetric_difference(const SetInt* set1, const SetInt* set2);
-
 // Returns a new SetInt that contains the values that set1 and set2 have in
 // common.
 SetInt set_int_intersection(const SetInt* set1, const SetInt* set2);
@@ -89,6 +85,11 @@ char* set_int_to_str(const SetInt* set);
 // Used for tests to verify balance.
 int set_int_max_depth(const SetInt* set);
 
+/* TODO
+// Returns a new SetInt that contains the values which are in set1 or in
+// set2—but not in both.
+SetInt set_int_symmetric_difference(const SetInt* set1, const SetInt* set2);
+*/
 // TODO set_int_isdisjoint
 // TODO set_int_issubsetof
 // TODO set_int_issupersetof
