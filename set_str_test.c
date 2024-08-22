@@ -83,7 +83,7 @@ static void test_copy(tinfo* tinfo) {
         fprintf(stderr, "FAIL: %s set not equal to itself!\n", tinfo->tag);
     else
         tinfo->ok++;
-    SetStr dup = set_str_copy(&set);
+    SetStr dup = set_str_copy(&set, false);
     tinfo->total++;
     if (!set_str_equal(&set, &dup)) {
         fprintf(stderr, "FAIL: %s set not equal to dup\n", tinfo->tag);
@@ -98,7 +98,7 @@ static void test_union(tinfo* tinfo) {
     SetStr set2 = prep_set1(tinfo);
     set_str_add(&set1, "ten");
     set_str_add(&set1, "eleven");
-    SetStr set3 = set_str_union(&set1, &set2);
+    SetStr set3 = set_str_union(&set1, &set2, false);
     check_set_strs(
         tinfo, &set3,
         "eight|eleven|five|four|nine|one|seven|six|ten|three|two");
@@ -107,7 +107,7 @@ static void test_union(tinfo* tinfo) {
         tinfo, &set1,
         "eight|eleven|five|four|nine|one|seven|six|ten|three|two");
     set_str_clear(&set3);
-    set3 = set_str_union(&set1, &set2);
+    set3 = set_str_union(&set1, &set2, false);
     tinfo->total++;
     if (!set_str_equal(&set1, &set3)) {
         fprintf(stderr, "FAIL: %s set1 != set3\n", tinfo->tag);
@@ -120,8 +120,8 @@ static void test_union(tinfo* tinfo) {
 
 /*
 static void test_intersection(tinfo* tinfo) {
-    SetStr set1 = set_str_alloc();
-    SetStr set2 = set_str_alloc();
+    SetStr set1 = set_str_alloc(true);
+    SetStr set2 = set_str_alloc(true);
     for (int i = 11; i < 23; ++i) {
         if (i % 2)
             set_str_add(&set1, i);
@@ -151,8 +151,8 @@ static void test_intersection(tinfo* tinfo) {
 }
 
 static void test_difference(tinfo* tinfo) {
-    SetStr set1 = set_str_alloc();
-    SetStr set2 = set_str_alloc();
+    SetStr set1 = set_str_alloc(true);
+    SetStr set2 = set_str_alloc(true);
     const int SIZE = 17;
     for (int i = 0; i < SIZE; ++i) {
         set_str_add(&set1, i);
@@ -297,7 +297,7 @@ static void check_bool(tinfo* tinfo, bool actual, bool expected) {
 }
 
 static SetStr prep_set(tinfo* tinfo) {
-    SetStr set = set_str_alloc();
+    SetStr set = set_str_alloc(true);
     check_all(tinfo, &set, 0);
     char* a[] = {"one", "two", "three", "four",  "five",
                  "six", "two", "one",   "seven", "eight"};
@@ -309,7 +309,7 @@ static SetStr prep_set(tinfo* tinfo) {
 }
 
 static SetStr prep_set1(tinfo* tinfo) {
-    SetStr set = set_str_alloc();
+    SetStr set = set_str_alloc(true);
     check_all(tinfo, &set, 0);
     char* a[] = {"one", "three", "five", "nine", "one", "seven"};
     int a_sz = sizeof(a) / sizeof(char*);

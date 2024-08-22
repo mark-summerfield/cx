@@ -1,6 +1,6 @@
 # TODO fix set_str_union crash
 #
-#   - SetStr
+#   - SetStr - do unowned variant
 #   - wordladder to try VecStr & SetStr in action
 #
 # Only do these as needed:

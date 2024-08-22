@@ -7,12 +7,12 @@
 
 static void vec_str_grow(VecStr* vec);
 
-VecStr vec_str_alloc_custom(int cap, bool owned) {
+VecStr vec_str_alloc_custom(int cap, bool owns) {
     cap = cap > 0 ? cap : VEC_INITIAL_CAP;
     char** values = malloc(cap * sizeof(char*));
     assert_alloc(values);
     return (VecStr){
-        ._size = 0, ._cap = cap, ._owned = owned, ._values = values};
+        ._size = 0, ._cap = cap, ._owns = owns, ._values = values};
 }
 
 void vec_str_free(VecStr* vec) {
@@ -25,7 +25,7 @@ void vec_str_free(VecStr* vec) {
 
 void vec_str_clear(VecStr* vec) {
     assert_notnull(vec);
-    if (vec->_owned)
+    if (vec->_owns)
         for (int i = 0; i < vec->_size; ++i)
             free(vec->_values[i]);
     vec->_size = 0;
@@ -47,7 +47,7 @@ void vec_str_set(VecStr* vec, int index, char* value) {
     assert_notnull(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
-    if (vec->_owned)
+    if (vec->_owns)
         free(vec->_values[index]);
     vec->_values[index] = value;
 }
@@ -100,7 +100,7 @@ char* vec_str_replace(VecStr* vec, int index, char* value) {
 inline void vec_str_remove(VecStr* vec, int index) {
     assert_notnull(vec);
     char* old = vec_str_take(vec, index);
-    if (vec->_owned)
+    if (vec->_owns)
         free(old);
 }
 
@@ -132,10 +132,10 @@ void vec_str_push(VecStr* vec, char* value) {
 VecStr vec_str_copy(const VecStr* vec) {
     assert_notnull(vec);
     VecStr out = vec_str_alloc_custom(
-        vec->_size ? vec->_size : VEC_INITIAL_CAP, vec->_owned);
+        vec->_size ? vec->_size : VEC_INITIAL_CAP, vec->_owns);
     for (int i = 0; i < vec->_size; ++i) {
         char* value = vec->_values[i];
-        if (vec->_owned)
+        if (vec->_owns)
             value = strdup(value);
         vec_str_push(&out, value);
     }

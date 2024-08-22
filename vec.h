@@ -4,7 +4,7 @@
 #include "cx.h"
 #include "vec_common.h"
 
-// A vector of owned void* values.
+// A vector of owns or unowned void* values.
 // All data members are private; all accesses via functions.
 //
 // To see an example of how to use store an arbitrary struct type in a
@@ -26,21 +26,27 @@ typedef struct {
     void (*destroy)(void* values);
 } VecAllocArgs;
 
-// Allocates a new Vec of owned void* with default capacity of
+// Allocates a new Vec of owns or unowned void* with default capacity of
 // VEC_INITIAL_CAP.
 // Set the initial capacity with .cap.
-// Caller must supply functions: cmp to compare values (for find, sort,
-// and search), cpy to copy a value, and destroy to free a value.
-#define vec_alloc(...) \
-    vec_alloc_((VecAllocArgs){.cap = VEC_INITIAL_CAP, __VA_ARGS__})
+// Caller must supply cmp to compare values (for find, sort, and search),
+// and if owns, cpy to copy a value, and destroy to free a value.
+#define vec_alloc(...)                                \
+    vec_alloc_((VecAllocArgs){.cap = VEC_INITIAL_CAP, \
+                              .cpy = NULL,            \
+                              .destroy = NULL,        \
+                              __VA_ARGS__})
 Vec vec_alloc_(VecAllocArgs args);
 
-// Destroys the Vec freeing its memory and also freeing every value. The Vec
-// is not usable after this.
+// Destroys the Vec freeing its memory and if owns, also freeing every
+// value. The Vec is not usable after this.
 void vec_free(Vec* vec);
 
-// Calls destroy on all the Vec's values.
+// Calls destroy on all the Vec's values if owns.
 void vec_clear(Vec* vec);
+
+// Returns true if the Vec is owns.
+#define vec_owns(vec) ((vec)->_destroy != NULL)
 
 // Returns true if the Vec is empty.
 #define vec_isempty(vec) ((vec)->_size == 0)
@@ -52,51 +58,55 @@ void vec_clear(Vec* vec);
 #define vec_cap(vec) ((vec)->_cap)
 
 // Returns the Vec's value at position index.
-// Vec retains ownership, so do not delete the value.
-const void* vec_get(const Vec* vec, int index);
+// If owned, Vec retains ownership, so do not delete the value.
+void* vec_get(const Vec* vec, int index);
 
 // Returns the Vec's value at its last valid index.
-// Vec retains ownership, so do not delete the value.
-const void* vec_get_last(const Vec* vec);
+// If owned, Vec retains ownership, so do not delete the value.
+void* vec_get_last(const Vec* vec);
 
 // Sets the Vec's value at position index to the given value.
-// Vec takes ownership of the new value (e.g., if char* then use strdup())
-// and frees the old value.
+// If owns, Vec takes ownership of the new value (e.g., if char* then use
+// strdup()) and frees the old value.
 void vec_set(Vec* vec, int index, void* value);
 
 // Inserts the value at position index and moves succeeding values up
 // (right), increasing the Vec's size (and cap if necessary): O(n).
 // Use add to insert into a sorted Vec.
-// Vec takes ownership of the new value (e.g., if char* then use strdup()).
+// If owns, Vec takes ownership of the new value (e.g., if char* then use
+// strdup()).
 void vec_insert(Vec* vec, int index, void* value);
 
 // Adds the value in order (in a sorted Vec) and moves succeeding values up
 // (right), increasing the Vec's size (and cap if necessary): O(n).
-// Vec takes ownership of the new value (e.g., if char* then use strdup()).
+// If owns, Vec takes ownership of the new value (e.g., if char* then use
+// strdup()).
 void vec_add(Vec* vec, void* value);
 
 // Sets the Vec's value at position index to the given value and returns
 // the old value from that position.
-// Vec takes ownership of the new value (e.g., if char* then use strdup()).
-// The returned value is now owned by the caller.
+// If owns, Vec takes ownership of the new value (e.g., if char* then use
+// strdup()). The returned value is now owns by the caller if it was owned
+// by Vec.
 void* vec_replace(Vec* vec, int index, void* value);
 
-// Removes and frees the value at the given index and closes up the gap:
-// O(n).
+// Removes and, if owns, frees the value at the given index and closes up
+// the gap: O(n).
 void vec_remove(Vec* vec, int index);
 
 // Returns and removes the value at the given index and closes up the
 // gap.
-// The returned value is now owned by the caller: O(n).
+// If Vec is owns, the returned value is now owns by the caller: O(n).
 void* vec_take(Vec* vec, int index);
 
 // Removes and returns the last value. Only use if vec.isempty() is false.
-// The returned value is now owned by the caller: O(1).
+// The returned value is now owned by the caller, if Vec is owns: O(1).
 void* vec_pop(Vec* vec);
 
 // Pushes a new value onto the end of the Vec, increasing the Vec's size
 // (and cap if necessary): O(1).
-// Vec takes ownership of the value (e.g., if char* then use strdup()).
+// If owns, Vec takes ownership of the value (e.g., if char* then use
+// strdup()).
 void vec_push(Vec* vec, void* value);
 
 // Returns a deep copy of the Vec including cmp, cpy, and destroy.

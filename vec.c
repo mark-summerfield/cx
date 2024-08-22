@@ -8,8 +8,8 @@ static void vec_grow(Vec* vec);
 // This *is* used, via a macro in vec.h; clang-format gets confused.
 Vec vec_alloc_(VecAllocArgs args) {
     assert(args.cmp && "must provide a cmp function");
-    assert(args.cpy && "must provide a cpy function");
-    assert(args.destroy && "must provide a destroy function");
+    assert(((args.cpy && args.destroy) || (!args.cpy && !args.destroy)) &&
+           "must provide both cpy and destroy (owns) or neither");
     args.cap = args.cap > 0 ? args.cap : VEC_INITIAL_CAP;
     void** values = malloc(args.cap * sizeof(void*));
     assert_alloc(values);
@@ -31,18 +31,19 @@ void vec_free(Vec* vec) {
 
 void vec_clear(Vec* vec) {
     assert_notnull(vec);
-    for (int i = 0; i < vec->_size; ++i)
-        vec->_destroy(vec->_values[i]);
+    if (vec->_destroy)
+        for (int i = 0; i < vec->_size; ++i)
+            vec->_destroy(vec->_values[i]);
     vec->_size = 0;
 }
 
-const void* vec_get(const Vec* vec, int index) {
+void* vec_get(const Vec* vec, int index) {
     assert_notnull(vec);
     assert_valid_index(vec, index);
     return vec->_values[index];
 }
 
-inline const void* vec_get_last(const Vec* vec) {
+inline void* vec_get_last(const Vec* vec) {
     assert_notnull(vec);
     assert_nonempty(vec);
     return vec->_values[vec->_size - 1];
@@ -52,7 +53,8 @@ void vec_set(Vec* vec, int index, void* value) {
     assert_notnull(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
-    vec->_destroy(vec->_values[index]);
+    if (vec->_destroy)
+        vec->_destroy(vec->_values[index]);
     vec->_values[index] = value;
 }
 
@@ -103,7 +105,9 @@ void* vec_replace(Vec* vec, int index, void* value) {
 
 inline void vec_remove(Vec* vec, int index) {
     assert_notnull(vec);
-    vec->_destroy(vec_take(vec, index)); // vec_take checks index
+    void* value = vec_take(vec, index); // vec_take checks index
+    if (vec->_destroy)
+        vec->_destroy(value);
 }
 
 void* vec_take(Vec* vec, int index) {
@@ -139,8 +143,12 @@ Vec vec_copy(const Vec* vec) {
                         .cmp = vec->_cmp, .cpy = vec->_cpy,
                         .destroy = vec->_destroy);
 #pragma GCC diagnostic pop
-    for (int i = 0; i < vec->_size; ++i)
-        vec_push(&out, vec->_cpy(vec->_values[i]));
+    for (int i = 0; i < vec->_size; ++i) {
+        void* value = vec->_values[i];
+        if (vec->_cpy)
+            value = vec->_cpy(value);
+        vec_push(&out, value);
+    }
     return out;
 }
 
