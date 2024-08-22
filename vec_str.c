@@ -7,11 +7,12 @@
 
 static void vec_str_grow(VecStr* vec);
 
-VecStr vec_str_alloc_cap(int cap) {
+VecStr vec_str_alloc_custom(int cap, bool owned) {
     cap = cap > 0 ? cap : VEC_INITIAL_CAP;
     char** values = malloc(cap * sizeof(char*));
     assert_alloc(values);
-    return (VecStr){._size = 0, ._cap = cap, ._values = values};
+    return (VecStr){
+        ._size = 0, ._cap = cap, ._owned = owned, ._values = values};
 }
 
 void vec_str_free(VecStr* vec) {
@@ -24,18 +25,19 @@ void vec_str_free(VecStr* vec) {
 
 void vec_str_clear(VecStr* vec) {
     assert_notnull(vec);
-    for (int i = 0; i < vec->_size; ++i)
-        free(vec->_values[i]);
+    if (vec->_owned)
+        for (int i = 0; i < vec->_size; ++i)
+            free(vec->_values[i]);
     vec->_size = 0;
 }
 
-const char* vec_str_get(const VecStr* vec, int index) {
+char* vec_str_get(const VecStr* vec, int index) {
     assert_notnull(vec);
     assert_valid_index(vec, index);
     return vec->_values[index];
 }
 
-inline const char* vec_str_get_last(const VecStr* vec) {
+inline char* vec_str_get_last(const VecStr* vec) {
     assert_notnull(vec);
     assert_nonempty(vec);
     return vec->_values[vec->_size - 1];
@@ -45,7 +47,8 @@ void vec_str_set(VecStr* vec, int index, char* value) {
     assert_notnull(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
-    free(vec->_values[index]);
+    if (vec->_owned)
+        free(vec->_values[index]);
     vec->_values[index] = value;
 }
 
@@ -96,7 +99,9 @@ char* vec_str_replace(VecStr* vec, int index, char* value) {
 
 inline void vec_str_remove(VecStr* vec, int index) {
     assert_notnull(vec);
-    free(vec_str_take(vec, index));
+    char* old = vec_str_take(vec, index);
+    if (vec->_owned)
+        free(old);
 }
 
 char* vec_str_take(VecStr* vec, int index) {
@@ -126,10 +131,14 @@ void vec_str_push(VecStr* vec, char* value) {
 
 VecStr vec_str_copy(const VecStr* vec) {
     assert_notnull(vec);
-    VecStr out =
-        vec_str_alloc_cap(vec->_size ? vec->_size : VEC_INITIAL_CAP);
-    for (int i = 0; i < vec->_size; ++i)
-        vec_str_push(&out, strdup(vec->_values[i]));
+    VecStr out = vec_str_alloc_custom(
+        vec->_size ? vec->_size : VEC_INITIAL_CAP, vec->_owned);
+    for (int i = 0; i < vec->_size; ++i) {
+        char* value = vec->_values[i];
+        if (vec->_owned)
+            value = strdup(value);
+        vec_str_push(&out, value);
+    }
     return out;
 }
 

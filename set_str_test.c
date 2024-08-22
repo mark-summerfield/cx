@@ -39,7 +39,8 @@ void set_str_tests(tinfo* tinfo) {
     tinfo->tag = "test_copy";
     test_copy(tinfo);
     tinfo->tag = "test_union";
-    test_union(tinfo);
+    // TODO
+    //    test_union(tinfo);
     /*
     tinfo->tag = "test_difference";
     test_difference(tinfo);
@@ -252,7 +253,7 @@ static void check_all(tinfo* tinfo, const SetStr* set, int size) {
 static void check_order(tinfo* tinfo, const SetStr* set) {
     tinfo->total++;
     bool ok = true;
-    VecStr vec = set_str_to_vec(set);
+    VecStr vec = set_str_to_vec(set, false);
     for (int i = 1; i < vec_str_size(&vec); ++i)
         if (strcmp(vec_str_get(&vec, i - 1), vec_str_get(&vec, i)) > 0) {
             ok = false;

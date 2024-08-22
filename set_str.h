@@ -71,11 +71,11 @@ SetStr set_str_union(const SetStr* set1, const SetStr* set2);
 // Adds every value from set2 to set1 (with no duplicates).
 void set_str_unite(SetStr* set1, const SetStr* set2);
 
-// Returns an VecStr which the caller owns and that has a deep copy of
-// all the set's values in order.
+// Returns an owning or unowning VecStr which the caller owns with all
+// the set's values in order.
 // See the source of this function and its helper to see how to iterate a
 // set.
-VecStr set_str_to_vec(const SetStr* set);
+VecStr set_str_to_vec(const SetStr* set, bool owned);
 
 // Returns the set as a caller-owned string of sep-separated strings.
 char* set_str_join(const SetStr* set, const char* sep);

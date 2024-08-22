@@ -174,7 +174,7 @@ void vec_str_tests(tinfo* tinfo) {
 }
 
 void vec_str_merge_tests(tinfo* tinfo) {
-    VecStr v1 = vec_str_alloc_cap(7);
+    VecStr v1 = vec_str_alloc_custom(7, true);
     vec_str_check_size_cap(tinfo, &v1, 0, 7);
     check_join(tinfo, &v1, ":", NULL);
     check_join(tinfo, &v1, NULL, NULL);

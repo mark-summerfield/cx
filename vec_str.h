@@ -4,31 +4,36 @@
 #include "cx.h"
 #include "vec_common.h"
 
-// A vector of owned char* values.
+// A vector of owned or unowned char* values.
 // All data members are private; all accesses via functions.
 typedef struct {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
     char** _values;
+    bool _owned;
 } VecStr;
 
 // Allocates a new VecStr of owned char* with default capacity of
 // VEC_INITIAL_CAP.
-// Set the initial capacity with cap.
-VecStr vec_str_alloc_cap(int cap);
+#define vec_str_alloc() vec_str_alloc_custom(VEC_INITIAL_CAP, true)
 
-#define vec_str_alloc() vec_str_alloc_cap(VEC_INITIAL_CAP)
+// Allocates a new VecStr of char* (owned if owned, otherwise unowned)
+// with the specified capacity.
+VecStr vec_str_alloc_custom(int cap, bool owned);
 
 // Allocates a new vec of owned char*'s by splitting s on sep; neither
 // may be NULL.
 VecStr vec_str_alloc_split(const char* s, const char* sep);
 
-// Destroys the VecStr freeing its memory and also freeing every value. The
-// VecStr is not usable after this.
+// Destroys the VecStr freeing its memory and if owning, freeing every
+// value. The VecStr is not usable after this.
 void vec_str_free(VecStr* vec);
 
-// Calls free on all the VecStr's values.
+// Calls free on all the VecStr's values if owning.
 void vec_str_clear(VecStr* vec);
+
+// Returns true if the VecStr owns its strings.
+#define vec_str_owned(vec) ((vec)->_owned)
 
 // Returns true if the VecStr is empty.
 #define vec_str_isempty(vec) ((vec)->_size == 0)
@@ -40,53 +45,55 @@ void vec_str_clear(VecStr* vec);
 #define vec_str_cap(vec) ((vec)->_cap)
 
 // Returns the VecStr's value at position index.
-// VecStr retains ownership, so do not delete the value.
-const char* vec_str_get(const VecStr* vec, int index);
+// VecStr retains ownership (if owning), so do not delete the value.
+char* vec_str_get(const VecStr* vec, int index);
 
 // Returns the VecStr's value at its last valid index.
-// VecStr retains ownership, so do not delete the value.
-const char* vec_str_get_last(const VecStr* vec);
+// VecStr retains ownership (if owning), so do not delete the value.
+char* vec_str_get_last(const VecStr* vec);
 
 // Sets the VecStr's value at position index to the given value.
-// VecStr takes ownership of the new value (e.g., if char* then use
-// strdup()) and frees the old value.
+// If owning, VecStr takes ownership of the new value (e.g., if char*
+// then use strdup()) and frees the old value.
 void vec_str_set(VecStr* vec, int index, char* value);
 
 // Inserts the value at position index and moves succeeding values up
 // (right), increasing the VecStr's size (and cap if necessary): O(n).
-// VecStr takes ownership of the new value (e.g., use strdup()).
+// If owning, VecStr takes ownership of the new value (e.g., use strdup()).
 void vec_str_insert(VecStr* vec, int index, char* value);
 
 // Adds the value in order (in a sorted vec) and moves succeeding values up
 // (right), increasing the vec's size (and cap if necessary): O(n).
-// vec takes ownership of the new value (e.g., use strdup()).
+// If owning, vec takes ownership of the new value (e.g., use strdup()).
 void vec_str_add(VecStr* vec, char* value);
 
 // Sets the VecStr's value at position index to the given value and returns
 // the old value from that position.
-// VecStr takes ownership of the new value (e.g., if char* then use
-// strdup()). The returned value is now owned by the caller.
+// If owning, VecStr takes ownership of the new value (e.g., if char*
+// then use strdup()). The returned value is now owned by the caller (if
+// it was owned by the VecStr).
 char* vec_str_replace(VecStr* vec, int index, char* value);
 
-// Removes and frees the value at the given index and closes up the gap:
-// O(n).
+// Removes (and frees if owned) the value at the given index and closes
+// up the gap: O(n).
 void vec_str_remove(VecStr* vec, int index);
 
 // Returns and removes the value at the given index and closes up the
 // gap: O(n).
-// The returned value is now owned by the caller.
+// The returned value is now owned by the caller if it was owned by VecStr.
 char* vec_str_take(VecStr* vec, int index);
 
 // Removes and returns the last value. Only use if vec.isempty() is false.
-// The returned value is now owned by the caller: O(1).
+// The returned value is now owned by the caller if it was owned by
+// VecStr: O(1).
 char* vec_str_pop(VecStr* vec);
 
 // Pushes a new value onto the end of the VecStr, increasing the VecStr's
-// size (and cap if necessary): O(1). VecStr takes ownership of the value
-// (e.g., if char* then use strdup()).
+// size (and cap if necessary): O(1). If owning, VecStr takes ownership
+// of the value (e.g., if char* then use strdup()).
 void vec_str_push(VecStr* vec, char* value);
 
-// Returns a deep copy of the VecStr.
+// Returns a copy of the VecStr (a deep copy if owned).
 VecStr vec_str_copy(const VecStr* vec);
 
 // Moves all vec2's values to the end of vec1's values, after which vec2 is

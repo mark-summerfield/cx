@@ -250,9 +250,8 @@ bool set_str_equal(const SetStr* set1, const SetStr* set2) {
     assert_notnull(set2);
     if (set1->_size != set2->_size)
         return false;
-    // TODO use VecStrViews since these deep copies are needlessly expensive
-    VecStr vec1 = set_str_to_vec(set1);
-    VecStr vec2 = set_str_to_vec(set2);
+    VecStr vec1 = set_str_to_vec(set1, false);
+    VecStr vec2 = set_str_to_vec(set2, false);
     bool equal = vec_str_equal(&vec1, &vec2);
     vec_str_free(&vec2);
     vec_str_free(&vec1);
@@ -296,8 +295,8 @@ SetStr set_str_intersection(const SetStr* set1, const SetStr* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
     SetStr set = set_str_alloc();
-    VecStr vec1 = set_str_to_vec(set1);
-    VecStr vec2 = set_str_to_vec(set2);
+    VecStr vec1 = set_str_to_vec(set1, false);
+    VecStr vec2 = set_str_to_vec(set2, false);
     int i = 0;
     int j = 0;
     while (i < vec1._size && j < vec2._size) {
@@ -343,9 +342,9 @@ static void add_to_union(SetStr* set, const SetStrNode* node) {
     }
 }
 
-VecStr set_str_to_vec(const SetStr* set) {
+VecStr set_str_to_vec(const SetStr* set, bool owned) {
     assert_notnull(set);
-    VecStr vec = vec_str_alloc_cap(set->_size);
+    VecStr vec = vec_str_alloc_custom(set->_size, owned);
     push_to_vec(&vec, set->_root);
     return vec;
 }
@@ -360,8 +359,7 @@ static void push_to_vec(VecStr* vec, const SetStrNode* node) {
 
 char* set_str_join(const SetStr* set, const char* sep) {
     assert_notnull(set);
-    // TODO use a VecStrView since this deep copy is needlessly expensive
-    VecStr vec = set_str_to_vec(set);
+    VecStr vec = set_str_to_vec(set, false);
     char* s = vec_str_join(&vec, sep);
     vec_str_free(&vec);
     return s;
