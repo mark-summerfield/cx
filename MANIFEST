@@ -1,14 +1,10 @@
-# TODO
+# TODO fix set_str_union crash
 #
-# TODO ############### valgrind Invalid Free
-#
-# rbt types
-#   see ~/app/golib/set/set.go
-#   see ~/app/golib/rbtree/rbtree.go (now with // free(root) marked)
-#   - SetStr (this and vector are all that's needed for wordladder)
-#   - VecStrView an unowned VecStr (then use in SetStr)
+#   - SetStr
+#   - wordladder to try VecStr & SetStr in action
 #
 # Only do these as needed:
+#   - SetStr/SetInt complete; see ~/app/golib/set/set.go
 #   - Hsh  with void* items - as with rbt but based on hash table?
 #   - Que  (based on vec)?
 #   - Lst  (doubly-linked list)?

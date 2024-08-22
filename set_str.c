@@ -352,7 +352,10 @@ VecStr set_str_to_vec(const SetStr* set, bool owned) {
 static void push_to_vec(VecStr* vec, const SetStrNode* node) {
     if (node) {
         push_to_vec(vec, node->left);
-        vec_str_push(vec, strdup(node->value));
+        char* value = node->value;
+        if (vec_str_owned(vec))
+            value = strdup(value);
+        vec_str_push(vec, value);
         push_to_vec(vec, node->right);
     }
 }
