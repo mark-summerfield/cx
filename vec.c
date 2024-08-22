@@ -135,19 +135,17 @@ void vec_push(Vec* vec, void* value) {
     vec->_values[vec->_size++] = value;
 }
 
-Vec vec_copy(const Vec* vec) {
+Vec vec_copy(const Vec* vec, bool owns) {
     assert_notnull(vec);
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
     Vec out = vec_alloc(.cap = vec->_size ? vec->_size : VEC_INITIAL_CAP,
-                        .cmp = vec->_cmp, .cpy = vec->_cpy,
-                        .destroy = vec->_destroy);
+                        .cmp = vec->_cmp, .cpy = owns ? vec->_cpy : NULL,
+                        .destroy = owns ? vec->_destroy : NULL);
 #pragma GCC diagnostic pop
     for (int i = 0; i < vec->_size; ++i) {
-        void* value = vec->_values[i];
-        if (vec->_cpy)
-            value = vec->_cpy(value);
-        vec_push(&out, value);
+        vec_push(&out, owns && vec->_cpy ? vec->_cpy(vec->_values[i])
+                                         : vec->_values[i]);
     }
     return out;
 }

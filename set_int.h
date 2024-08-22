@@ -8,7 +8,7 @@
 
 typedef struct SetIntNode SetIntNode;
 
-// A red-black tree of owns int values.
+// A red-black tree of int values.
 // All data members are private; all accesses via functions.
 typedef struct {
     SetIntNode* _root;
@@ -22,7 +22,7 @@ typedef struct SetIntNode {
     bool _red;
 } SetIntNode;
 
-// Allocates a new empty SetInt of owns int values.
+// Allocates a new empty SetInt of int values.
 SetInt set_int_alloc();
 
 // Destroys the SetInt freeing its memory and also freeing every value. The
@@ -49,7 +49,7 @@ bool set_int_remove(SetInt* set, int value);
 // Returns true if value is in the SetInt.
 bool set_int_contains(const SetInt* set, int value);
 
-// Returns a deep copy of the SetInt which the caller now owns.
+// Returns a copy of the SetInt which the caller now owns.
 SetInt set_int_copy(const SetInt* set);
 
 // Returns true if the two SetInt's have the same values.
@@ -70,13 +70,13 @@ SetInt set_int_union(const SetInt* set1, const SetInt* set2);
 // Adds every value from set2 to set1 (with no duplicates).
 void set_int_unite(SetInt* set1, const SetInt* set2);
 
-// Returns an VecInt which the caller owns and that has a copy of all the
+// Returns a VecInt which the caller owns and that has a copy of all the
 // set's values in order.
 // See the source of this function and its helper to see how to iterate a
 // set.
 VecInt set_int_to_vec(const SetInt* set);
 
-// Returns the set as a caller-owns string of space-separated ints.
+// Returns the set as a caller-owned string of space-separated ints.
 char* set_int_to_str(const SetInt* set);
 
 // Used for tests to verify balance.

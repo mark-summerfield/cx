@@ -29,7 +29,7 @@ void vec_tests(tinfo* tinfo) {
                        .destroy = tag_free);
     vec_check_size_cap(tinfo, &v1, 0, 5);
 
-    Vec v2 = vec_copy(&v1);
+    Vec v2 = vec_copy(&v1, true);
     vec_check_size_cap(tinfo, &v1, 0, 5);
 
     for (int i = 0; i < 7; ++i)
@@ -38,7 +38,7 @@ void vec_tests(tinfo* tinfo) {
     vec_match(tinfo, &v1,
               "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     vec_free(&v2);
-    v2 = vec_copy(&v1);
+    v2 = vec_copy(&v1, true);
     vec_check_size_cap(tinfo, &v2, 7, 7);
     vec_match(tinfo, &v2,
               "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
