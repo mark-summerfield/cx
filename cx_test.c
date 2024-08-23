@@ -14,9 +14,9 @@
 
 void va_tests(tinfo*);
 
-int main() {
+int main(int argc, char** argv) {
     srand((unsigned)time(NULL));
-    tinfo tinfo = {"", 0, 0};
+    tinfo tinfo = {"", 0, 0, argc > 1};
     tinfo.tag = "va_tests";
     va_tests(&tinfo);
     tinfo.tag = "sx_tests";
@@ -36,6 +36,8 @@ int main() {
 }
 
 void va_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     tinfo->total++;
     int i = va_test(5);
     if (i != 8) {

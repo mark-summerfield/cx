@@ -32,29 +32,35 @@ static void test_difference(tinfo* tinfo);
 */
 
 void set_str_tests(tinfo* tinfo) {
-    tinfo->tag = "test_simple";
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    tinfo->tag = "set_str test_simple";
     test_simple(tinfo);
-    tinfo->tag = "test_contains";
+    tinfo->tag = "set_str test_contains";
     test_contains(tinfo);
-    tinfo->tag = "test_remove";
+    tinfo->tag = "set_str test_remove";
     test_remove(tinfo);
-    tinfo->tag = "test_copy";
+    tinfo->tag = "set_str test_copy";
     test_copy(tinfo);
-    // tinfo->tag = "test_difference";
-    // test_difference(tinfo);
-    // tinfo->tag = "test_intersection";
-    // test_intersection(tinfo);
-    tinfo->tag = "test_union";
+    tinfo->tag = "set_str test_union";
     test_union(tinfo);
+    // tinfo->tag = "set_str test_difference";
+    // test_difference(tinfo);
+    // tinfo->tag = "set_str test_intersection";
+    // test_intersection(tinfo);
 }
 
 static void test_simple(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetStr set = prep_set(tinfo);
     check_set_strs(tinfo, &set, "eight|five|four|one|seven|six|three|two");
     set_str_free(&set);
 }
 
 static void test_contains(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetStr set = prep_set(tinfo);
     check_bool(tinfo, set_str_contains(&set, "one"), true);
     check_bool(tinfo, set_str_contains(&set, "eight"), true);
@@ -65,6 +71,8 @@ static void test_contains(tinfo* tinfo) {
 }
 
 static void test_remove(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetStr set = prep_set(tinfo);
     check_bool(tinfo, set_str_remove(&set, "one"), true);
     check_bool(tinfo, set_str_remove(&set, "eight"), true);
@@ -76,6 +84,8 @@ static void test_remove(tinfo* tinfo) {
 }
 
 static void test_copy(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetStr set = prep_set(tinfo);
     tinfo->total++;
     if (!set_str_equal(&set, &set))
@@ -93,6 +103,8 @@ static void test_copy(tinfo* tinfo) {
 }
 
 static void test_union(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetStr set1 = prep_set(tinfo);
     SetStr set2 = prep_set1(tinfo);
     set_str_add(&set1, strdup("ten"));
@@ -114,13 +126,13 @@ static void test_union(tinfo* tinfo) {
         tinfo->ok++;
     set_str_free(&set3);
     set_str_free(&set2);
-    puts("A");
     set_str_free(&set1);
-    puts("B");
 }
 
 /*
 static void test_intersection(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetStr set1 = set_str_alloc(OWNS);
     SetStr set2 = set_str_alloc(OWNS);
     for (int i = 11; i < 23; ++i) {
@@ -154,6 +166,8 @@ static void test_intersection(tinfo* tinfo) {
 
 /*
 static void test_difference(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetStr set1 = set_str_alloc(OWNS);
     SetStr set2 = set_str_alloc(OWNS);
     const int SIZE = 17;

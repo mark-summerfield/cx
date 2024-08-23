@@ -26,7 +26,6 @@ static const SetStrNode* node_first(const SetStrNode* node);
 static SetStrNode* node_remove_minimum(SetStrNode* node, bool owns);
 static SetStrNode* node_copy(const SetStrNode* node, bool owns);
 static int node_max_depth(const SetStrNode* node);
-static void node_free(SetStrNode* node);
 
 inline SetStr set_str_alloc(bool owns) {
     return (SetStr){._root = NULL, ._size = 0, ._owns = owns};
@@ -46,14 +45,9 @@ static void node_remove_all(SetStrNode* node, bool owns) {
         node_remove_all(node->left, owns);
         node_remove_all(node->right, owns);
         if (owns)
-            node_free(node);
+            free(node->value);
         free(node);
     }
-}
-
-static inline void node_free(SetStrNode* node) {
-    assert_notnull(node);
-    free(node->value);
 }
 
 static SetStrNode* node_alloc(char* value) {
@@ -156,7 +150,7 @@ static SetStrNode* node_remove(SetStrNode* node, const char* value,
             node = node_rotate_right(node);
         if (cmp == 0 && !node->right) {
             if (owns)
-                node_free(node);
+                free(node->value);
             free(node);
             *deleted = true;
             return NULL;
@@ -193,7 +187,7 @@ static SetStrNode* node_remove_right(SetStrNode* node, const char* value,
     if (strcmp(value, node->value) == 0) {
         const SetStrNode* first = node_first(node->right);
         if (owns)
-            node_free(node);
+            free(node->value);
         node->value = first->value;
         node->right = node_remove_minimum(node->right, owns);
         *deleted = true;
@@ -221,7 +215,7 @@ static const SetStrNode* node_first(const SetStrNode* node) {
 static SetStrNode* node_remove_minimum(SetStrNode* node, bool owns) {
     if (!node->left) {
         if (owns)
-            node_free(node);
+            free(node->value);
         free(node);
         return NULL;
     }
@@ -330,8 +324,10 @@ void set_str_unite(SetStr* set1, const SetStr* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
     VecStr vec = set_str_to_vec(set2, BORROWS);
-    for (int i = 0; i < vec_str_size(&vec); ++i)
-        set_str_add(set1, vec_str_get(&vec, i));
+    for (int i = 0; i < vec_str_size(&vec); ++i) {
+        char* value = vec_str_get(&vec, i);
+        set_str_add(set1, set1->_owns ? strdup(value) : value);
+    }
     vec_str_free(&vec);
 }
 

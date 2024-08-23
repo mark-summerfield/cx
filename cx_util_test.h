@@ -7,6 +7,7 @@ typedef struct {
     char* tag;
     int total;
     int ok;
+    bool verbose;
 } tinfo;
 
 void check_str_eq(tinfo* tinfo, const char* s, const char* t);

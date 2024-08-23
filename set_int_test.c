@@ -24,25 +24,29 @@ static void check_equal_ints(tinfo* tinfo, const SetInt* set,
 static void print_set(const SetInt* set, const char* name);
 
 void set_int_tests(tinfo* tinfo) {
-    tinfo->tag = "test_simple";
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    tinfo->tag = "set_int test_simple";
     test_simple(tinfo);
-    tinfo->tag = "test_bigs";
+    tinfo->tag = "set_int test_bigs";
     test_bigs(tinfo);
-    tinfo->tag = "test_contains";
+    tinfo->tag = "set_int test_contains";
     test_contains(tinfo);
-    tinfo->tag = "test_remove";
+    tinfo->tag = "set_int test_remove";
     test_remove(tinfo);
-    tinfo->tag = "test_copy";
+    tinfo->tag = "set_int test_copy";
     test_copy(tinfo);
-    tinfo->tag = "test_difference";
-    test_difference(tinfo);
-    tinfo->tag = "test_intersection";
-    test_intersection(tinfo);
-    tinfo->tag = "test_union";
+    tinfo->tag = "set_int test_union";
     test_union(tinfo);
+    tinfo->tag = "set_int test_difference";
+    test_difference(tinfo);
+    tinfo->tag = "set_int test_intersection";
+    test_intersection(tinfo);
 }
 
 static void test_union(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetInt set1 = set_int_alloc();
     SetInt set2 = set_int_alloc();
     for (int i = 11; i < 23; ++i) {
@@ -82,6 +86,8 @@ static void test_union(tinfo* tinfo) {
 }
 
 static void test_intersection(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetInt set1 = set_int_alloc();
     SetInt set2 = set_int_alloc();
     for (int i = 11; i < 23; ++i) {
@@ -113,6 +119,8 @@ static void test_intersection(tinfo* tinfo) {
 }
 
 static void test_difference(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetInt set1 = set_int_alloc();
     SetInt set2 = set_int_alloc();
     const int SIZE = 17;
@@ -178,6 +186,8 @@ static void test_difference(tinfo* tinfo) {
 }
 
 static void test_copy(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetInt set = set_int_alloc();
     check_all(tinfo, &set, 0);
 #ifdef REPORT_DEPTH
@@ -207,6 +217,8 @@ static void test_copy(tinfo* tinfo) {
 }
 
 static void test_simple(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetInt set = set_int_alloc();
     check_all(tinfo, &set, 0);
     for (int i = 30; i > 0; --i)
@@ -221,6 +233,8 @@ static void test_simple(tinfo* tinfo) {
 }
 
 static void test_remove(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetInt set = set_int_alloc();
     check_all(tinfo, &set, 0);
     const int SIZE = 160000;
@@ -274,6 +288,8 @@ static void test_remove(tinfo* tinfo) {
 }
 
 static void test_bigs(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
 #ifdef REPORT_DEPTH
     const int SIZE = 6;
 #else
@@ -342,6 +358,8 @@ static void check_all(tinfo* tinfo, const SetInt* set, int size) {
 }
 
 static void test_contains(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     SetInt set = set_int_alloc();
     check_all(tinfo, &set, 0);
     int size = 0;

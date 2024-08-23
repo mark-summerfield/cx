@@ -19,9 +19,14 @@ static void merge_tests(tinfo*);
 static void sort_tests(tinfo*);
 
 void vec_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     merge_tests(tinfo);
     sort_tests(tinfo);
 
+    tinfo->tag = "vec_tests continued";
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     tag_make(true);
     Vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
@@ -119,6 +124,8 @@ void vec_tests(tinfo* tinfo) {
 }
 
 static void merge_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     tag_make(true);
     Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
@@ -148,6 +155,8 @@ static void merge_tests(tinfo* tinfo) {
 }
 
 static void sort_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     tag_make(true);
     Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);

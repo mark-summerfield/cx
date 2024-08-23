@@ -26,9 +26,14 @@ const char* WORDS[] = {
     "Ten",  "Zero"};
 
 void vec_str_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     merge_tests(tinfo);
     sort_tests(tinfo);
 
+    tinfo->tag = "vec_str_tests continued";
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     VecStr v1 = vec_str_alloc(); // default of 32
     check_size_cap(tinfo, &v1, 0, 32);
 
@@ -172,6 +177,8 @@ void vec_str_tests(tinfo* tinfo) {
 }
 
 static void merge_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     VecStr v1 = vec_str_alloc_custom(7, OWNS);
     check_size_cap(tinfo, &v1, 0, 7);
     check_join(tinfo, &v1, ":", NULL);
@@ -210,6 +217,8 @@ static void merge_tests(tinfo* tinfo) {
 }
 
 static void sort_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     VecStr v1 = vec_str_alloc_split(
         "Zulu|Victor|Hairy|Sierra|gamma|X-ray|Two|India|Papa", "|");
     match(tinfo, &v1,

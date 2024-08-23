@@ -12,6 +12,8 @@ static void equal(tinfo* tinfo, VecInt* v1, VecInt* v2);
 static void merge_tests(tinfo* tinfo);
 
 void vec_int_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     merge_tests(tinfo);
 
     VecInt v1 = vec_int_alloc(); // default of 32
@@ -182,6 +184,8 @@ void vec_int_tests(tinfo* tinfo) {
 }
 
 static void merge_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
     VecInt v1 = vec_int_alloc_cap(7);
     check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 1; i < 6; ++i)
