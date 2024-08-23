@@ -20,12 +20,10 @@ static void test_union(tinfo* tinfo);
 static void check_all(tinfo* tinfo, const SetStr* set, int size);
 static void check_order(tinfo* tinfo, const SetStr* set);
 static void check_set_strs(tinfo* tinfo, const SetStr* set, const char* s);
-static void check_equal_str(tinfo* tinfo, const char* s, const char* t);
-static void check_bool(tinfo* tinfo, bool actual, bool expected);
 static void test_copy(tinfo* tinfo);
 static SetStr prep_set(tinfo* tinfo);
 static SetStr prep_set1(tinfo* tinfo);
-static void print_set(const SetStr* set, const char* name);
+// static void print_set(const SetStr* set, const char* name);
 
 void set_str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -58,11 +56,11 @@ static void test_contains(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     SetStr set = prep_set(tinfo);
-    check_bool(tinfo, set_str_contains(&set, "one"), true);
-    check_bool(tinfo, set_str_contains(&set, "eight"), true);
-    check_bool(tinfo, set_str_contains(&set, "two"), true);
-    check_bool(tinfo, set_str_contains(&set, "FOUR"), false);
-    check_bool(tinfo, set_str_contains(&set, ""), false);
+    check_bool_eq(tinfo, set_str_contains(&set, "one"), true);
+    check_bool_eq(tinfo, set_str_contains(&set, "eight"), true);
+    check_bool_eq(tinfo, set_str_contains(&set, "two"), true);
+    check_bool_eq(tinfo, set_str_contains(&set, "FOUR"), false);
+    check_bool_eq(tinfo, set_str_contains(&set, ""), false);
     set_str_free(&set);
 }
 
@@ -70,11 +68,11 @@ static void test_remove(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     SetStr set = prep_set(tinfo);
-    check_bool(tinfo, set_str_remove(&set, "one"), true);
-    check_bool(tinfo, set_str_remove(&set, "eight"), true);
-    check_bool(tinfo, set_str_remove(&set, "two"), true);
-    check_bool(tinfo, set_str_remove(&set, "FOUR"), false);
-    check_bool(tinfo, set_str_remove(&set, ""), false);
+    check_bool_eq(tinfo, set_str_remove(&set, "one"), true);
+    check_bool_eq(tinfo, set_str_remove(&set, "eight"), true);
+    check_bool_eq(tinfo, set_str_remove(&set, "two"), true);
+    check_bool_eq(tinfo, set_str_remove(&set, "FOUR"), false);
+    check_bool_eq(tinfo, set_str_remove(&set, ""), false);
     check_set_strs(tinfo, &set, "five|four|seven|six|three");
     set_str_free(&set);
 }
@@ -138,7 +136,7 @@ static void test_difference(tinfo* tinfo) {
     SetStr set3 = set_str_difference(&set1, &set2, BORROWS);
     check_set_strs(tinfo, &set3, "eight|eleven|four|six|ten|two");
     SetStr set4 = set_str_difference(&set3, &set3, BORROWS);
-    check_bool(tinfo, set_str_isempty(&set4), true);
+    check_bool_eq(tinfo, set_str_isempty(&set4), true);
     set_str_clear(&set3);
     set3 = set_str_difference(&set2, &set1, BORROWS);
     check_set_strs(tinfo, &set3, "nine");
@@ -162,12 +160,12 @@ static void test_intersection(tinfo* tinfo) {
     set_str_clear(&set4);
     set_str_clear(&set3);
     set3 = set_str_intersection(&set1, &set4, BORROWS);
-    check_bool(tinfo, set_str_isempty(&set3), true);
+    check_bool_eq(tinfo, set_str_isempty(&set3), true);
     set_str_add(&set4, "ABC");
     set_str_add(&set4, "XY");
     set_str_clear(&set3);
     set3 = set_str_intersection(&set1, &set4, BORROWS);
-    check_bool(tinfo, set_str_isempty(&set3), true);
+    check_bool_eq(tinfo, set_str_isempty(&set3), true);
     set_str_free(&set4);
     set_str_free(&set3);
     set_str_free(&set2);
@@ -234,25 +232,6 @@ static void check_set_strs(tinfo* tinfo, const SetStr* set, const char* s) {
         tinfo->ok++;
 }
 
-static void check_equal_str(tinfo* tinfo, const char* s, const char* t) {
-    tinfo->total++;
-    if (strcmp(s, t) != 0)
-        fprintf(stderr,
-                "FAIL: %s check_equal_str got\n\"%s\", expected\n\"%s\"\n",
-                tinfo->tag, s, t);
-    else
-        tinfo->ok++;
-}
-
-static void check_bool(tinfo* tinfo, bool actual, bool expected) {
-    tinfo->total++;
-    if (actual != expected)
-        fprintf(stderr, "FAIL: %s check_bool got %s, expected %s\n",
-                tinfo->tag, bool_to_str(actual), bool_to_str(expected));
-    else
-        tinfo->ok++;
-}
-
 static SetStr prep_set(tinfo* tinfo) {
     SetStr set = set_str_alloc(OWNS);
     check_all(tinfo, &set, 0);
@@ -276,8 +255,10 @@ static SetStr prep_set1(tinfo* tinfo) {
     return set;
 }
 
+/*
 static void print_set(const SetStr* set, const char* name) {
     char* s = set_str_join(set, "|");
     printf("%s{%s}\n", name ? name : "", s);
     free(s);
 }
+*/

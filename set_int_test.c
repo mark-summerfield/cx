@@ -21,7 +21,7 @@ static void check_all(tinfo* tinfo, const SetInt* set, int size);
 static void check_order(tinfo* tinfo, const SetInt* set);
 static void check_equal_ints(tinfo* tinfo, const SetInt* set,
                              const int* ints, int size);
-static void print_set(const SetInt* set, const char* name);
+// static void print_set(const SetInt* set, const char* name);
 
 void set_int_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -229,6 +229,11 @@ static void test_simple(tinfo* tinfo) {
                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                              21, 22, 23, 24, 25, 26, 27, 28, 29, 30},
                      30);
+    char* s = set_int_to_str(&set);
+    check_str_eq(tinfo, s,
+                 "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 "
+                 "19 20 21 22 23 24 25 26 27 28 29 30");
+    free(s);
     set_int_free(&set);
 }
 
@@ -450,8 +455,10 @@ static void check_equal_ints(tinfo* tinfo, const SetInt* set,
         fprintf(stderr, "FAIL: %s check_equal_ints\n", tinfo->tag);
 }
 
+/*
 static void print_set(const SetInt* set, const char* name) {
     char* s = set_int_to_str(set);
     printf("%s{%s}\n", name ? name : "", s);
     free(s);
 }
+*/
