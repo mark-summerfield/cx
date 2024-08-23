@@ -14,8 +14,8 @@
 static void test_simple(tinfo* tinfo);
 static void test_contains(tinfo* tinfo);
 static void test_remove(tinfo* tinfo);
-// static void test_difference(tinfo* tinfo);
-// static void test_intersection(tinfo* tinfo);
+static void test_difference(tinfo* tinfo);
+static void test_intersection(tinfo* tinfo);
 static void test_union(tinfo* tinfo);
 static void check_all(tinfo* tinfo, const SetStr* set, int size);
 static void check_order(tinfo* tinfo, const SetStr* set);
@@ -26,10 +26,6 @@ static void test_copy(tinfo* tinfo);
 static SetStr prep_set(tinfo* tinfo);
 static SetStr prep_set1(tinfo* tinfo);
 static void print_set(const SetStr* set, const char* name);
-/*
-static void test_intersection(tinfo* tinfo);
-static void test_difference(tinfo* tinfo);
-*/
 
 void set_str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -44,10 +40,10 @@ void set_str_tests(tinfo* tinfo) {
     test_copy(tinfo);
     tinfo->tag = "set_str test_union";
     test_union(tinfo);
-    // tinfo->tag = "set_str test_difference";
-    // test_difference(tinfo);
-    // tinfo->tag = "set_str test_intersection";
-    // test_intersection(tinfo);
+    tinfo->tag = "set_str test_difference";
+    test_difference(tinfo);
+    tinfo->tag = "set_str test_intersection";
+    test_intersection(tinfo);
 }
 
 static void test_simple(tinfo* tinfo) {
@@ -129,109 +125,54 @@ static void test_union(tinfo* tinfo) {
     set_str_free(&set1);
 }
 
-/*
-static void test_intersection(tinfo* tinfo) {
-    if (tinfo->verbose)
-        puts(tinfo->tag);
-    SetStr set1 = set_str_alloc(OWNS);
-    SetStr set2 = set_str_alloc(OWNS);
-    for (int i = 11; i < 23; ++i) {
-        if (i % 2)
-            set_str_add(&set1, i);
-        else
-            set_str_add(&set2, i);
-    }
-    check_equal_str(tinfo, &set1, (int[]){11, 13, 15, 17, 19, 21}, 6);
-    check_equal_str(tinfo, &set2, (int[]){12, 14, 16, 18, 20, 22}, 6);
-    SetStr set3 = set_str_intersection(&set1, &set2);
-    tinfo->total++;
-    if (!set_str_isempty(&set3)) {
-        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
-                tinfo->tag);
-    } else
-        tinfo->ok++;
-    for (int i = 12; i < 20; ++i)
-        set_str_add(&set2, i);
-    check_equal_str(tinfo, &set2,
-                    (int[]){12, 13, 14, 15, 16, 17, 18, 19, 20, 22}, 10);
-    set_str_add(&set1, 14);
-    set_str_clear(&set3);
-    set3 = set_str_intersection(&set1, &set2);
-    check_equal_str(tinfo, &set3, (int[]){13, 14, 15, 17, 19}, 5);
-    set_str_free(&set3);
-    set_str_free(&set2);
-    set_str_free(&set1);
-}
-*/
-
-/*
 static void test_difference(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    SetStr set1 = set_str_alloc(OWNS);
-    SetStr set2 = set_str_alloc(OWNS);
-    const int SIZE = 17;
-    for (int i = 0; i < SIZE; ++i) {
-        set_str_add(&set1, i);
-        set_str_add(&set2, i);
-    }
-    check_equal_str(
-        tinfo, &set1,
-        (int[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
-        17);
-    tinfo->total++;
-    if (!set_str_equal(&set1, &set2)) {
-        fprintf(stderr, "FAIL: %s set1 != set2\n", tinfo->tag);
-    } else
-        tinfo->ok++;
-    for (int i = 2; i < SIZE - 3; i += 2)
-        set_str_remove(&set2, i);
-    check_equal_str(tinfo, &set2,
-                    (int[]){0, 1, 3, 5, 7, 9, 11, 13, 14, 15, 16}, 11);
-    SetStr set3 = set_str_difference(&set1, &set2);
-    check_equal_str(tinfo, &set3,
-                    (int[]){
-                        2,
-                        4,
-                        6,
-                        8,
-                        10,
-                        12,
-                    },
-                    6);
-    set_str_clear(&set2);
-    set_str_clear(&set1);
-    for (int i = 0; i < 10; ++i) {
-        set_str_add(&set1, i);
-        set_str_add(&set2, i);
-    }
+    SetStr set1 = prep_set(tinfo);
+    SetStr set2 = prep_set1(tinfo);
+    set_str_add(&set1, strdup("ten"));
+    set_str_add(&set1, strdup("eleven"));
+    check_set_strs(tinfo, &set1,
+                   "eight|eleven|five|four|one|seven|six|ten|three|two");
+    check_set_strs(tinfo, &set2, "five|nine|one|seven|three");
+    SetStr set3 = set_str_difference(&set1, &set2, BORROWS);
+    check_set_strs(tinfo, &set3, "eight|eleven|four|six|ten|two");
+    SetStr set4 = set_str_difference(&set3, &set3, BORROWS);
+    check_bool(tinfo, set_str_isempty(&set4), true);
     set_str_clear(&set3);
-    set3 = set_str_difference(&set1, &set2);
-    tinfo->total++;
-    if (!set_str_isempty(&set3)) {
-        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
-                tinfo->tag);
-    } else
-        tinfo->ok++;
-    set_str_clear(&set3);
-    set_str_add(&set2, 10);
-    set_str_add(&set2, 11);
-    set_str_clear(&set3);
-    set3 = set_str_difference(&set1, &set2);
-    tinfo->total++;
-    if (!set_str_isempty(&set3)) {
-        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
-                tinfo->tag);
-    } else
-        tinfo->ok++;
-    set_str_clear(&set3);
-    set3 = set_str_difference(&set2, &set1);
-    check_equal_str(tinfo, &set3, (int[]){10, 11}, 2);
+    set3 = set_str_difference(&set2, &set1, BORROWS);
+    check_set_strs(tinfo, &set3, "nine");
+    set_str_free(&set4);
     set_str_free(&set3);
     set_str_free(&set2);
     set_str_free(&set1);
 }
-*/
+
+static void test_intersection(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    SetStr set1 = prep_set(tinfo);
+    SetStr set2 = prep_set1(tinfo);
+    check_set_strs(tinfo, &set1, "eight|five|four|one|seven|six|three|two");
+    check_set_strs(tinfo, &set2, "five|nine|one|seven|three");
+    SetStr set3 = set_str_intersection(&set1, &set2, BORROWS);
+    check_set_strs(tinfo, &set3, "five|one|seven|three");
+    SetStr set4 = set_str_intersection(&set3, &set3, BORROWS);
+    check_set_strs(tinfo, &set4, "five|one|seven|three");
+    set_str_clear(&set4);
+    set_str_clear(&set3);
+    set3 = set_str_intersection(&set1, &set4, BORROWS);
+    check_bool(tinfo, set_str_isempty(&set3), true);
+    set_str_add(&set4, "ABC");
+    set_str_add(&set4, "XY");
+    set_str_clear(&set3);
+    set3 = set_str_intersection(&set1, &set4, BORROWS);
+    check_bool(tinfo, set_str_isempty(&set3), true);
+    set_str_free(&set4);
+    set_str_free(&set3);
+    set_str_free(&set2);
+    set_str_free(&set1);
+}
 
 static void check_all(tinfo* tinfo, const SetStr* set, int size) {
     tinfo->total++;

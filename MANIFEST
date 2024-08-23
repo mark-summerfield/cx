@@ -1,6 +1,5 @@
 # TODO
 #
-#   - SetStr
 #   - full code review
 #   - wordladder to try VecStr & SetStr in action
 #
@@ -37,7 +36,7 @@ cx_test.c
 cx_util_test.h
 cx_util_test.c
 set_str_test.h
-set_str_test.c # TODO set_str tests
+set_str_test.c
 set_int_test.h
 set_int_test.c
 vec_common_test.h

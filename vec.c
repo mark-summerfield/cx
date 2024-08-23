@@ -140,8 +140,8 @@ Vec vec_copy(const Vec* vec, bool owns) {
                         .destroy = owns ? vec->_destroy : NULL);
 #pragma GCC diagnostic pop
     for (int i = 0; i < vec->_size; ++i) {
-        vec_push(&out, owns && vec->_cpy ? vec->_cpy(vec->_values[i])
-                                         : vec->_values[i]);
+        void* value = vec->_values[i];
+        vec_push(&out, owns && vec->_cpy ? vec->_cpy(value) : value);
     }
     return out;
 }

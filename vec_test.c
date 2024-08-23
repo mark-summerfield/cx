@@ -14,7 +14,7 @@
 
 static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap);
 static void match(tinfo* tinfo, const Vec* v, const char* expected);
-static void same(tinfo* tinfo, const Vec* v1, const Vec* v2);
+static void same(tinfo* tinfo, const Vec* v1, const Vec* v2, bool exact);
 static void merge_tests(tinfo*);
 static void sort_tests(tinfo*);
 
@@ -32,7 +32,7 @@ void vec_tests(tinfo* tinfo) {
                        .destroy = tag_free);
     check_size_cap(tinfo, &v1, 0, 5);
 
-    Vec v2 = vec_copy(&v1, true);
+    Vec v2 = vec_copy(&v1, OWNS);
     check_size_cap(tinfo, &v1, 0, 5);
 
     for (int i = 0; i < 7; ++i)
@@ -40,10 +40,10 @@ void vec_tests(tinfo* tinfo) {
     check_size_cap(tinfo, &v1, 7, 10);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     vec_free(&v2);
-    v2 = vec_copy(&v1, OWNS); // TODO does not work for BORROWS
+    v2 = vec_copy(&v1, vec_owns(&v2));
     check_size_cap(tinfo, &v2, 7, 7);
     match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
-    same(tinfo, &v1, &v2);
+    same(tinfo, &v1, &v2, true);
     check_bool_eq(tinfo, vec_equal(&v1, &v2), true);
 
     Tag* t1 = vec_pop(&v1);
@@ -294,11 +294,18 @@ static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
         tinfo->ok++;
 }
 
-static void same(tinfo* tinfo, const Vec* v1, const Vec* v2) {
+static void same(tinfo* tinfo, const Vec* v1, const Vec* v2, bool exact) {
     tinfo->total++;
     if (!vec_equal(v1, v2)) {
         fprintf(stderr, "FAIL: %s vec_equal() expected true != false\n",
                 tinfo->tag);
+    } else
+        tinfo->ok++;
+    tinfo->total++;
+    bool sm = vec_same(v1, v2);
+    if (sm != exact) {
+        fprintf(stderr, "FAIL: %s vec_same() expected %s != %s\n",
+                tinfo->tag, bool_to_str(exact), bool_to_str(sm));
     } else
         tinfo->ok++;
 }
