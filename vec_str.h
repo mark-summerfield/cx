@@ -59,6 +59,7 @@ void vec_str_set(VecStr* vec, int index, char* value);
 
 // Inserts the value at position index and moves succeeding values up
 // (right), increasing the VecStr's size (and cap if necessary): O(n).
+// Use vec_str_add() to insert into a sorted VecStr.
 // If owns, VecStr takes ownership of the new value (e.g., use strdup()).
 void vec_str_insert(VecStr* vec, int index, char* value);
 
@@ -89,8 +90,9 @@ char* vec_str_take(VecStr* vec, int index);
 char* vec_str_pop(VecStr* vec);
 
 // Pushes a new value onto the end of the VecStr, increasing the VecStr's
-// size (and cap if necessary): O(1). If owns, VecStr takes ownership
-// of the value (e.g., if char* then use strdup()).
+// size (and cap if necessary): O(1). Use vec_str_add() to insert into a
+// sorted VecStr. If owns, VecStr takes ownership of the value (e.g., if
+// char* then use strdup()).
 void vec_str_push(VecStr* vec, char* value);
 
 // Returns a copy of the VecStr (a deep copy if owns).

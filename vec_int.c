@@ -132,10 +132,7 @@ void vec_int_merge(VecInt* vec1, VecInt* vec2) {
     }
     for (int i = 0; i < vec2->_size; ++i)
         vec1->_values[vec1->_size++] = vec2->_values[i]; // push
-    free(vec2->_values);
-    vec2->_values = NULL;
-    vec2->_cap = 0;
-    vec2->_size = 0;
+    vec_int_free(vec2);
 }
 
 bool vec_int_equal(const VecInt* vec1, const VecInt* vec2) {

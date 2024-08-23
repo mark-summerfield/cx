@@ -322,18 +322,19 @@ SetStr set_str_union(const SetStr* set1, const SetStr* set2, bool owns) {
     return set;
 }
 
-// We only add if not already present.
-// The alternative is that if we attempt to add and get false (already
-// present) we must then free(value) if owns.
 void set_str_unite(SetStr* set1, const SetStr* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
     VecStr vec = set_str_to_vec(set2, BORROWS);
-    for (int i = 0; i < vec_str_size(&vec); ++i) {
-        char* value = vec_str_get(&vec, i);
-        if (!set_str_contains(set1, value))
-            set_str_add(set1, set1->_owns ? strdup(value) : value);
-    }
+    if (set1->_owns) // only add new values to avoid freeing dups
+        for (int i = 0; i < vec_str_size(&vec); ++i) {
+            char* value = vec_str_get(&vec, i);
+            if (!set_str_contains(set1, value))
+                set_str_add(set1, strdup(value));
+        }
+    else // no problem to add (or not if dup) borrowed pointer
+        for (int i = 0; i < vec_str_size(&vec); ++i)
+            set_str_add(set1, vec_str_get(&vec, i));
     vec_str_free(&vec);
 }
 

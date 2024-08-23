@@ -1,7 +1,5 @@
 # TODO
 #
-#   - full code review
-#   - check *every* strdup in *.c (excl. tests)
 #   - wordladder to try VecStr & SetStr in action
 #
 # Only do these as needed:
