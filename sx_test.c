@@ -4,12 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-void sx_test_uppercase_alloc(tinfo*);
-void sx_test_uppercase_ip(tinfo*);
-void sx_test_lowercase_alloc(tinfo*);
-void sx_test_lowercase_ip(tinfo*);
-void sx_test_begins_ends(tinfo*);
-void sx_test_comparisons(tinfo*);
+static void sx_test_uppercase_alloc(tinfo*);
+static void sx_test_uppercase_ip(tinfo*);
+static void sx_test_lowercase_alloc(tinfo*);
+static void sx_test_lowercase_ip(tinfo*);
+static void sx_test_begins_ends(tinfo*);
+static void sx_test_comparisons(tinfo*);
 
 void sx_tests(tinfo* tinfo) {
     sx_test_uppercase_alloc(tinfo);
@@ -20,7 +20,7 @@ void sx_tests(tinfo* tinfo) {
     sx_test_comparisons(tinfo);
 }
 
-void sx_test_uppercase_alloc(tinfo* tinfo) {
+static void sx_test_uppercase_alloc(tinfo* tinfo) {
     const char* original = "this is a test";
     const char* expected = "THIS IS A TEST";
     char* actual = sx_uppercase_alloc(original);
@@ -28,14 +28,14 @@ void sx_test_uppercase_alloc(tinfo* tinfo) {
     free(actual);
 }
 
-void sx_test_uppercase_ip(tinfo* tinfo) {
+static void sx_test_uppercase_ip(tinfo* tinfo) {
     char original[] = "this is a test";
     const char* expected = "THIS IS A TEST";
     sx_uppercase_ip(original);
     check_str_eq(tinfo, expected, original);
 }
 
-void sx_test_lowercase_alloc(tinfo* tinfo) {
+static void sx_test_lowercase_alloc(tinfo* tinfo) {
     const char* original = "THIS IS A TEST";
     const char* expected = "this is a test";
     char* actual = sx_lowercase_alloc(original);
@@ -43,14 +43,14 @@ void sx_test_lowercase_alloc(tinfo* tinfo) {
     free(actual);
 }
 
-void sx_test_lowercase_ip(tinfo* tinfo) {
+static void sx_test_lowercase_ip(tinfo* tinfo) {
     char original[] = "THIS IS A TEST";
     const char* expected = "this is a test";
     sx_lowercase_ip(original);
     check_str_eq(tinfo, expected, original);
 }
 
-void sx_test_begins_ends(tinfo* tinfo) {
+static void sx_test_begins_ends(tinfo* tinfo) {
     tinfo->total++;
     if (!sx_begins("alpha", "alp")) {
         fprintf(stderr, "FAIL: %s !sx_begins(\"alpha\", \"alp\"\n",
@@ -108,7 +108,7 @@ void sx_test_begins_ends(tinfo* tinfo) {
         tinfo->ok++;
 }
 
-void sx_test_comparisons(tinfo* tinfo) {
+static void sx_test_comparisons(tinfo* tinfo) {
     tinfo->total++;
     if (!sx_eq("bravo", "bravo")) {
         fprintf(stderr, "FAIL: %s !sx_eq(\"bravo\", \"bravo\"\n",
