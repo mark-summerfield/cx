@@ -20,14 +20,14 @@ bool sx_ends(const char* s, const char* suffix) {
     size_t size = strlen(s);
     if (size < strlen(suffix))
         return false;
-    return sx_eq(s + size - strlen(suffix), suffix);
+    return strcmp(s + size - strlen(suffix), suffix) == 0;
 }
 
 bool sx_ends_fold(const char* s, const char* suffix) {
     size_t size = strlen(s);
     if (size < strlen(suffix))
         return false;
-    return sx_eq_fold(s + size - strlen(suffix), suffix);
+    return strcasecmp(s + size - strlen(suffix), suffix) == 0;
 }
 
 void sx_uppercase_ip(char* s) {

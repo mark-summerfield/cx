@@ -4,36 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-// Returns true if char* s's text == char* t's text
-#define sx_eq(s, t) (strcmp((s), (t)) == 0)
-
-// Returns true if char* s's text == char* t's text, regardless of case
-#define sx_eq_fold(s, t) (strcasecmp((s), (t)) == 0)
-
-// Returns true if char* s's text < char* t's text
-#define sx_lt(s, t) (strcmp((s), (t)) < 0)
-
-// Returns true if char* s's text < char* t's text, regardless of case
-#define sx_lt_fold(s, t) (strcasecmp((s), (t)) < 0)
-
-// Returns true if char* s's text <= char* t's text
-#define sx_le(s, t) (strcmp((s), (t)) <= 0)
-
-// Returns true if char* s's text <= char* t's text, regardless of case
-#define sx_le_fold(s, t) (strcasecmp((s), (t)) <= 0)
-
-// Returns true if char* s's text > char* t's text
-#define sx_gt(s, t) (strcmp((s), (t)) > 0)
-
-// Returns true if char* s's text > char* t's text, regardless of case
-#define sx_gt_fold(s, t) (strcasecmp((s), (t)) > 0)
-
-// Returns true if char* s's text >= char* t's text
-#define sx_ge(s, t) (strcmp((s), (t)) >= 0)
-
-// Returns true if char* s's text >= char* t's text, regardless of case
-#define sx_ge_fold(s, t) (strcasecmp((s), (t)) >= 0)
-
 // Returns true if char* s begins with char* prefix
 #define sx_begins(s, prefix) (strncmp((s), (prefix), strlen(prefix)) == 0)
 

@@ -14,7 +14,10 @@
 
 void va_tests(tinfo*);
 
+#define UNUSED(x) (void)(x)
+
 int main(int argc, char** argv) {
+    UNUSED(argv);
     srand((unsigned)time(NULL));
     tinfo tinfo = {"", 0, 0, argc > 1};
     tinfo.tag = "va_tests";
