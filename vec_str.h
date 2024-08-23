@@ -4,7 +4,7 @@
 #include "cx.h"
 #include "vec_common.h"
 
-// A vector of owns or unowned char* values.
+// A vector of owned or borrowed char* values.
 // All data members are private; all accesses via functions.
 typedef struct {
     int _size; // This is "end", i.e., one past the last value
@@ -13,11 +13,11 @@ typedef struct {
     bool _owns;
 } VecStr;
 
-// Allocates a new VecStr of owns char* with default capacity of
+// Allocates a new VecStr of owned char* with default capacity of
 // VEC_INITIAL_CAP.
-#define vec_str_alloc() vec_str_alloc_custom(VEC_INITIAL_CAP, true)
+#define vec_str_alloc() vec_str_alloc_custom(VEC_INITIAL_CAP, OWNS)
 
-// Allocates a new VecStr of char* (owns if owns, otherwise unowned)
+// Allocates a new VecStr of char* (owns if owns, otherwise borrowed)
 // with the specified capacity.
 VecStr vec_str_alloc_custom(int cap, bool owns);
 

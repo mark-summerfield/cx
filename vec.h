@@ -4,7 +4,7 @@
 #include "cx.h"
 #include "vec_common.h"
 
-// A vector of owned or unowned void* values.
+// A vector of owned or borrowed void* values.
 // All data members are private; all accesses via functions.
 //
 // To see an example of how to use store an arbitrary struct type in a
@@ -26,7 +26,7 @@ typedef struct {
     void (*destroy)(void* values);
 } VecAllocArgs;
 
-// Allocates a new Vec of owned or unowned void* with default capacity of
+// Allocates a new Vec of owned or borrowed void* with default capacity of
 // VEC_INITIAL_CAP.
 // Set the initial capacity with .cap.
 // Caller must supply cmp to compare values (for find, sort, and search),

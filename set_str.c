@@ -6,7 +6,6 @@
 
 static void add_to_difference(SetStr* set, const SetStrNode* node,
                               const SetStr* set2);
-static void add_to_union(SetStr* set, const SetStrNode* node, bool owns);
 static void push_to_vec(VecStr* vec, const SetStrNode* node);
 static SetStrNode* node_add(SetStrNode* node, char* value, bool* added);
 static SetStrNode* node_alloc(char* value);
@@ -252,8 +251,8 @@ bool set_str_equal(const SetStr* set1, const SetStr* set2) {
     assert_notnull(set2);
     if (set1->_size != set2->_size)
         return false;
-    VecStr vec1 = set_str_to_vec(set1, false);
-    VecStr vec2 = set_str_to_vec(set2, false);
+    VecStr vec1 = set_str_to_vec(set1, BORROWS);
+    VecStr vec2 = set_str_to_vec(set2, BORROWS);
     bool equal = vec_str_equal(&vec1, &vec2);
     vec_str_free(&vec2);
     vec_str_free(&vec1);
@@ -299,8 +298,8 @@ SetStr set_str_intersection(const SetStr* set1, const SetStr* set2,
     assert_notnull(set1);
     assert_notnull(set2);
     SetStr set = set_str_alloc(owns);
-    VecStr vec1 = set_str_to_vec(set1, false);
-    VecStr vec2 = set_str_to_vec(set2, false);
+    VecStr vec1 = set_str_to_vec(set1, BORROWS);
+    VecStr vec2 = set_str_to_vec(set2, BORROWS);
     int i = 0;
     int j = 0;
     while (i < vec1._size && j < vec2._size) {
@@ -322,11 +321,6 @@ SetStr set_str_intersection(const SetStr* set1, const SetStr* set2,
 SetStr set_str_union(const SetStr* set1, const SetStr* set2, bool owns) {
     assert_notnull(set1);
     assert_notnull(set2);
-    if (set1->_size < set2->_size) {
-        const SetStr* set = set1;
-        set2 = set1;
-        set1 = set;
-    }
     SetStr set = set_str_copy(set1, owns);
     set_str_unite(&set, set2);
     return set;
@@ -335,15 +329,10 @@ SetStr set_str_union(const SetStr* set1, const SetStr* set2, bool owns) {
 void set_str_unite(SetStr* set1, const SetStr* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
-    add_to_union(set1, set2->_root, set1->_owns);
-}
-
-static void add_to_union(SetStr* set, const SetStrNode* node, bool owns) {
-    if (node) {
-        set_str_add(set, owns ? strdup(node->value) : node->value);
-        add_to_union(set, node->left, owns);
-        add_to_union(set, node->right, owns);
-    }
+    VecStr vec = set_str_to_vec(set2, BORROWS);
+    for (int i = 0; i < vec_str_size(&vec); ++i)
+        set_str_add(set1, vec_str_get(&vec, i));
+    vec_str_free(&vec);
 }
 
 VecStr set_str_to_vec(const SetStr* set, bool owns) {
@@ -364,7 +353,7 @@ static void push_to_vec(VecStr* vec, const SetStrNode* node) {
 
 char* set_str_join(const SetStr* set, const char* sep) {
     assert_notnull(set);
-    VecStr vec = set_str_to_vec(set, false);
+    VecStr vec = set_str_to_vec(set, BORROWS);
     char* s = vec_str_join(&vec, sep);
     vec_str_free(&vec);
     return s;

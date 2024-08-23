@@ -160,6 +160,8 @@ void vec_str_merge(VecStr* vec1, VecStr* vec2) {
 bool vec_str_equal(const VecStr* vec1, const VecStr* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
+    if (vec1->_size != vec2->_size)
+        return false;
     for (int i = 0; i < vec1->_size; ++i)
         if (strcmp(vec1->_values[i], vec2->_values[i]))
             return false;

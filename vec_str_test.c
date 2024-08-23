@@ -172,7 +172,7 @@ void vec_str_tests(tinfo* tinfo) {
 }
 
 static void merge_tests(tinfo* tinfo) {
-    VecStr v1 = vec_str_alloc_custom(7, true);
+    VecStr v1 = vec_str_alloc_custom(7, OWNS);
     check_size_cap(tinfo, &v1, 0, 7);
     check_join(tinfo, &v1, ":", NULL);
     check_join(tinfo, &v1, NULL, NULL);
@@ -297,7 +297,7 @@ static void check_size_cap(tinfo* tinfo, const VecStr* v, int size,
                            int cap) {
     tinfo->total++;
     if (vec_str_size(v) != size) {
-        fprintf(stderr, "FAIL: %s vec_str_size() expected %d, got %d\n",
+        fprintf(stderr, "FAIL: %s vec_str_size() expected %d != %d\n",
                 tinfo->tag, size, vec_str_size(v));
     } else
         tinfo->ok++;
@@ -305,7 +305,7 @@ static void check_size_cap(tinfo* tinfo, const VecStr* v, int size,
     tinfo->total++;
     if (vec_str_isempty(v) != (size == 0)) {
         fprintf(stderr,
-                "FAIL: %s vec_stry_isempty() expected %s, got %s size=%d\n",
+                "FAIL: %s vec_stry_isempty() expected %s != %s size=%d\n",
                 tinfo->tag, bool_to_str(size == 0),
                 bool_to_str(vec_str_isempty(v)), size);
     } else
@@ -313,7 +313,7 @@ static void check_size_cap(tinfo* tinfo, const VecStr* v, int size,
 
     tinfo->total++;
     if (vec_str_cap(v) != cap) {
-        fprintf(stderr, "FAIL: %s vec_str_cap() expected %d, got %d\n",
+        fprintf(stderr, "FAIL: %s vec_str_cap() expected %d != %d\n",
                 tinfo->tag, cap, vec_str_cap(v));
     } else
         tinfo->ok++;
@@ -322,8 +322,7 @@ static void check_size_cap(tinfo* tinfo, const VecStr* v, int size,
 static void equal(tinfo* tinfo, const VecStr* v1, const VecStr* v2) {
     tinfo->total++;
     if (!vec_str_equal(v1, v2)) {
-        fprintf(stderr,
-                "FAIL: %s vec_str_equal() expected true, got false\n",
+        fprintf(stderr, "FAIL: %s vec_str_equal() expected true != false\n",
                 tinfo->tag);
     } else
         tinfo->ok++;
@@ -337,7 +336,7 @@ static void check_join(tinfo* tinfo, const VecStr* vec, const char* sep,
         tinfo->ok++;
     else if (strcmp(actual, expected))
         fprintf(stderr,
-                "FAIL: %s vec_str_join() expected\n\"%s\", got\n\"%s\"\n",
+                "FAIL: %s vec_str_join() expected\n\"%s\" !=\n\"%s\"\n",
                 tinfo->tag, expected, actual);
     else
         tinfo->ok++;

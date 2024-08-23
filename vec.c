@@ -135,8 +135,8 @@ Vec vec_copy(const Vec* vec, bool owns) {
     assert_notnull(vec);
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
-    Vec out = vec_alloc(.cap = vec->_size ? vec->_size : VEC_INITIAL_CAP,
-                        .cmp = vec->_cmp, .cpy = owns ? vec->_cpy : NULL,
+    Vec out = vec_alloc(.cap = vec->_size, .cmp = vec->_cmp,
+                        .cpy = owns ? vec->_cpy : NULL,
                         .destroy = owns ? vec->_destroy : NULL);
 #pragma GCC diagnostic pop
     for (int i = 0; i < vec->_size; ++i) {

@@ -9,7 +9,7 @@
 void check_str_eq(tinfo* tinfo, const char* s, const char* t) {
     tinfo->total++;
     if (strcmp((s), (t)) != 0) {
-        fprintf(stderr, "FAIL: %s expected\n\t\"%s\", got\n\t\"%s\"\n",
+        fprintf(stderr, "FAIL: %s expected\n\t\"%s\" !=\n\t\"%s\"\n",
                 tinfo->tag, s, t);
     } else
         tinfo->ok++;
@@ -18,7 +18,7 @@ void check_str_eq(tinfo* tinfo, const char* s, const char* t) {
 void check_int_eq(tinfo* tinfo, int a, int b) {
     tinfo->total++;
     if (a != b) {
-        fprintf(stderr, "FAIL: %s expected %d, got %d\n", tinfo->tag, a, b);
+        fprintf(stderr, "FAIL: %s expected %d != %d\n", tinfo->tag, a, b);
     } else
         tinfo->ok++;
 }
@@ -26,7 +26,7 @@ void check_int_eq(tinfo* tinfo, int a, int b) {
 void check_bool_eq(tinfo* tinfo, bool actual, bool expected) {
     tinfo->total++;
     if (actual != expected)
-        fprintf(stderr, "FAIL: %s expected %s, got %s\n", tinfo->tag,
+        fprintf(stderr, "FAIL: %s expected %s != %s\n", tinfo->tag,
                 bool_to_str(expected), bool_to_str(actual));
     else
         tinfo->ok++;

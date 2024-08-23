@@ -311,7 +311,7 @@ static void test_bigs(tinfo* tinfo) {
 static void check_all(tinfo* tinfo, const SetInt* set, int size) {
     tinfo->total++;
     if (set_int_size(set) != size) {
-        fprintf(stderr, "FAIL: %s set_int_size() expected %d, got %d\n",
+        fprintf(stderr, "FAIL: %s set_int_size() expected %d != %d\n",
                 tinfo->tag, size, set_int_size(set));
     } else
         tinfo->ok++;

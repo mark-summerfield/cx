@@ -8,7 +8,7 @@
 
 typedef struct SetStrNode SetStrNode;
 
-// A red-black tree of owned or unowned char* values.
+// A red-black tree of owned or borrowed char* values.
 // All data members are private; all accesses via functions.
 typedef struct {
     SetStrNode* _root;
@@ -23,7 +23,7 @@ typedef struct SetStrNode {
     bool _red;
 } SetStrNode;
 
-// Allocates a new empty SetStr of owned or unowned char* values.
+// Allocates a new empty SetStr of owned or borrowed char* values.
 SetStr set_str_alloc(bool owns);
 
 // Destroys the SetStr freeing its memory, and if owning, also freeing every
@@ -79,7 +79,7 @@ SetStr set_str_union(const SetStr* set1, const SetStr* set2, bool owns);
 // If set1 owns, set2's values are deep copied.
 void set_str_unite(SetStr* set1, const SetStr* set2);
 
-// Returns an owned or unowned VecStr which the caller owns with all
+// Returns an owned or borrowed VecStr which the caller owns with all
 // the set's values in order.
 // See the source of this function and its helper to see how to iterate a
 // set.

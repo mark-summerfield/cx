@@ -6,7 +6,6 @@
 
 static void add_to_difference(SetInt* set, const SetIntNode* node,
                               const SetInt* set2);
-static void add_to_union(SetInt* set, const SetIntNode* node);
 static void push_to_vec(VecInt* vec, const SetIntNode* node);
 static SetIntNode* node_add(SetIntNode* node, int value, bool* added);
 static SetIntNode* node_alloc(int value);
@@ -301,11 +300,6 @@ SetInt set_int_intersection(const SetInt* set1, const SetInt* set2) {
 SetInt set_int_union(const SetInt* set1, const SetInt* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
-    if (set1->_size < set2->_size) {
-        const SetInt* set = set1;
-        set2 = set1;
-        set1 = set;
-    }
     SetInt set = set_int_copy(set1);
     set_int_unite(&set, set2);
     return set;
@@ -314,15 +308,10 @@ SetInt set_int_union(const SetInt* set1, const SetInt* set2) {
 void set_int_unite(SetInt* set1, const SetInt* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
-    add_to_union(set1, set2->_root);
-}
-
-static void add_to_union(SetInt* set, const SetIntNode* node) {
-    if (node) {
-        set_int_add(set, node->value);
-        add_to_union(set, node->left);
-        add_to_union(set, node->right);
-    }
+    VecInt vec = set_int_to_vec(set2);
+    for (int i = 0; i < vec_int_size(&vec); ++i)
+        set_int_add(set1, vec_int_get(&vec, i));
+    vec_int_free(&vec);
 }
 
 VecInt set_int_to_vec(const SetInt* set) {
