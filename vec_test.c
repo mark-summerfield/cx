@@ -12,37 +12,33 @@
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
 
-void vec_check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap);
-void vec_match(tinfo* tinfo, const Vec* v, const char* expected);
-void vec_same(tinfo* tinfo, const Vec* v1, const Vec* v2);
-void vec_print(const Vec* v);
-void vec_tests(tinfo*);
-void vec_merge_tests(tinfo*);
-void vec_sort_tests(tinfo*);
+static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap);
+static void match(tinfo* tinfo, const Vec* v, const char* expected);
+static void same(tinfo* tinfo, const Vec* v1, const Vec* v2);
+static void merge_tests(tinfo*);
+static void sort_tests(tinfo*);
 
 void vec_tests(tinfo* tinfo) {
-    vec_merge_tests(tinfo);
-    vec_sort_tests(tinfo);
+    merge_tests(tinfo);
+    sort_tests(tinfo);
 
     tag_make(true);
     Vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
-    vec_check_size_cap(tinfo, &v1, 0, 5);
+    check_size_cap(tinfo, &v1, 0, 5);
 
     Vec v2 = vec_copy(&v1, true);
-    vec_check_size_cap(tinfo, &v1, 0, 5);
+    check_size_cap(tinfo, &v1, 0, 5);
 
     for (int i = 0; i < 7; ++i)
         vec_push(&v1, tag_make(false));
-    vec_check_size_cap(tinfo, &v1, 7, 10);
-    vec_match(tinfo, &v1,
-              "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
+    check_size_cap(tinfo, &v1, 7, 10);
+    match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     vec_free(&v2);
     v2 = vec_copy(&v1, true);
-    vec_check_size_cap(tinfo, &v2, 7, 7);
-    vec_match(tinfo, &v2,
-              "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
-    vec_same(tinfo, &v1, &v2);
+    check_size_cap(tinfo, &v2, 7, 7);
+    match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
+    same(tinfo, &v1, &v2);
     check_bool_eq(tinfo, vec_equal(&v1, &v2), true);
 
     Tag* t1 = vec_pop(&v1);
@@ -56,8 +52,9 @@ void vec_tests(tinfo* tinfo) {
     tag_free(t1);
     t1 = NULL;
 
-    vec_check_size_cap(tinfo, &v1, 5, 10);
-    vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
+    check_size_cap(tinfo, &v1, 5, 10);
+    match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
+    match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     check_bool_eq(tinfo, vec_equal(&v1, &v2), false);
 
     const Tag* t2 = vec_get(&v1, 0);
@@ -76,8 +73,8 @@ void vec_tests(tinfo* tinfo) {
     vec_set(&v1, vec_size(&v1) - 1, tag_make(false));
     vec_set(&v1, 3, tag_make(false));
     vec_push(&v1, tag_make(false));
-    vec_check_size_cap(tinfo, &v1, 6, 10);
-    vec_match(tinfo, &v1, "Ah#107|Ab#101|Ac#102|Aj#109|Ai#108|Ak#110");
+    check_size_cap(tinfo, &v1, 6, 10);
+    match(tinfo, &v1, "Ah#107|Ab#101|Ac#102|Aj#109|Ai#108|Ak#110");
 
     t1 = vec_replace(&v1, 0, tag_make(false));
     tag_free(t1);
@@ -85,176 +82,173 @@ void vec_tests(tinfo* tinfo) {
     tag_free(t1);
     t1 = vec_replace(&v1, vec_size(&v1) - 1, tag_make(false));
     tag_free(t1);
-    vec_check_size_cap(tinfo, &v1, 6, 10);
-    vec_match(tinfo, &v1, "Al#111|Ab#101|Ac#102|Aj#109|Am#112|An#113");
+    check_size_cap(tinfo, &v1, 6, 10);
+    match(tinfo, &v1, "Al#111|Ab#101|Ac#102|Aj#109|Am#112|An#113");
 
     vec_remove(&v1, 0);
-    vec_check_size_cap(tinfo, &v1, 5, 10);
-    vec_match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112|An#113");
+    check_size_cap(tinfo, &v1, 5, 10);
+    match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112|An#113");
 
     vec_remove(&v1, vec_size(&v1) - 1);
-    vec_check_size_cap(tinfo, &v1, 4, 10);
-    vec_match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112");
+    check_size_cap(tinfo, &v1, 4, 10);
+    match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112");
 
     vec_remove(&v1, 1);
-    vec_check_size_cap(tinfo, &v1, 3, 10);
-    vec_match(tinfo, &v1, "Ab#101|Aj#109|Am#112");
+    check_size_cap(tinfo, &v1, 3, 10);
+    match(tinfo, &v1, "Ab#101|Aj#109|Am#112");
 
     vec_remove(&v1, 0);
-    vec_check_size_cap(tinfo, &v1, 2, 10);
-    vec_match(tinfo, &v1, "Aj#109|Am#112");
+    check_size_cap(tinfo, &v1, 2, 10);
+    match(tinfo, &v1, "Aj#109|Am#112");
 
     vec_remove(&v1, 0);
-    vec_check_size_cap(tinfo, &v1, 1, 10);
-    vec_match(tinfo, &v1, "Am#112");
+    check_size_cap(tinfo, &v1, 1, 10);
+    match(tinfo, &v1, "Am#112");
 
     vec_remove(&v1, 0);
-    vec_check_size_cap(tinfo, &v1, 0, 10);
+    check_size_cap(tinfo, &v1, 0, 10);
 
     vec_clear(&v1);
-    vec_check_size_cap(tinfo, &v1, 0, 10);
+    check_size_cap(tinfo, &v1, 0, 10);
     vec_free(&v1);
-    vec_check_size_cap(tinfo, &v1, 0, 0);
+    check_size_cap(tinfo, &v1, 0, 0);
     vec_clear(&v2);
-    vec_check_size_cap(tinfo, &v2, 0, 7);
+    check_size_cap(tinfo, &v2, 0, 7);
     vec_free(&v2);
-    vec_check_size_cap(tinfo, &v2, 0, 0);
+    check_size_cap(tinfo, &v2, 0, 0);
 }
 
-void vec_merge_tests(tinfo* tinfo) {
+static void merge_tests(tinfo* tinfo) {
     tag_make(true);
     Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
-    vec_check_size_cap(tinfo, &v1, 0, 7);
+    check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
-    vec_check_size_cap(tinfo, &v1, 5, 7);
-    vec_match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
+    check_size_cap(tinfo, &v1, 5, 7);
+    match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
 
     Vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
-    vec_check_size_cap(tinfo, &v2, 0, 11);
+    check_size_cap(tinfo, &v2, 0, 11);
     for (int i = 0; i < 6; ++i)
         vec_push(&v2, tag_make(false));
-    vec_check_size_cap(tinfo, &v2, 6, 11);
-    vec_match(tinfo, &v2, "Af#105|Ag#106|Ah#107|Ai#108|Aj#109|Ak#110");
+    check_size_cap(tinfo, &v2, 6, 11);
+    match(tinfo, &v2, "Af#105|Ag#106|Ah#107|Ai#108|Aj#109|Ak#110");
 
     vec_merge(&v1, &v2);
-    vec_match(tinfo, &v1,
-              "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106|Ah#107|Ai#"
-              "108|Aj#109|Ak#110");
-    vec_check_size_cap(tinfo, &v1, 11, 11);
-    vec_check_size_cap(tinfo, &v2, 0, 0);
+    match(tinfo, &v1,
+          "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106|Ah#107|Ai#"
+          "108|Aj#109|Ak#110");
+    check_size_cap(tinfo, &v1, 11, 11);
+    check_size_cap(tinfo, &v2, 0, 0);
 
-    // v2 already freed by merge
+    // v2 already freed by vec_merge
     vec_free(&v1);
 }
 
-void vec_sort_tests(tinfo* tinfo) {
+static void sort_tests(tinfo* tinfo) {
     tag_make(true);
     Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
-    vec_check_size_cap(tinfo, &v1, 0, 7);
+    check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
     vec_insert(&v1, 0, tag_alloc(strdup("Zz#999"), 999));
     vec_insert(&v1, 2, tag_alloc(strdup("Ww#888"), 888));
     vec_insert(&v1, 4, tag_alloc(strdup("Ae#005"), 5));
     vec_insert(&v1, 6, tag_alloc(strdup("Aa#001"), 1));
-    vec_check_size_cap(tinfo, &v1, 9, 14);
-    vec_match(
-        tinfo, &v1,
-        "Zz#999|Aa#100|Ww#888|Ab#101|Ae#005|Ac#102|Aa#001|Ad#103|Ae#104");
+    check_size_cap(tinfo, &v1, 9, 14);
+    match(tinfo, &v1,
+          "Zz#999|Aa#100|Ww#888|Ab#101|Ae#005|Ac#102|Aa#001|Ad#103|Ae#104");
 
     int index;
     Tag tag = {"", 0};
 
     tag.name = "Ae#005";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, 4);
+    check_found(tinfo, index, 4);
 
     tag.name = "Zz#999";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, 0);
+    check_found(tinfo, index, 0);
 
     tag.name = "Ae#104";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, 8);
+    check_found(tinfo, index, 8);
 
     tag.name = "Ae#104";
     index = vec_find_last(&v1, &tag);
-    vec_check_found(tinfo, index, 8);
+    check_found(tinfo, index, 8);
 
     tag.name = "Xy#000";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    check_found(tinfo, index, VEC_NOT_FOUND);
 
     tag.name = "Xy#000";
     index = vec_find_last(&v1, &tag);
-    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    check_found(tinfo, index, VEC_NOT_FOUND);
 
     vec_sort(&v1);
-    vec_check_size_cap(tinfo, &v1, 9, 14);
-    vec_match(
-        tinfo, &v1,
-        "Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#888|Zz#999");
+    check_size_cap(tinfo, &v1, 9, 14);
+    match(tinfo, &v1,
+          "Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#888|Zz#999");
 
     tag.name = "Ae#005";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, 5);
+    check_found(tinfo, index, 5);
 
     tag.name = "Zz#999";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, 8);
+    check_found(tinfo, index, 8);
 
     tag.name = "Ae#104";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, 6);
+    check_found(tinfo, index, 6);
 
     tag.name = "Xy#000";
     index = vec_find(&v1, &tag);
-    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    check_found(tinfo, index, VEC_NOT_FOUND);
 
     tag.name = "Ae#005";
     index = vec_search(&v1, &tag);
-    vec_check_found(tinfo, index, 5);
+    check_found(tinfo, index, 5);
 
     tag.name = "Zz#999";
     index = vec_search(&v1, &tag);
-    vec_check_found(tinfo, index, 8);
+    check_found(tinfo, index, 8);
 
     tag.name = "Ae#104";
     index = vec_search(&v1, &tag);
-    vec_check_found(tinfo, index, 6);
+    check_found(tinfo, index, 6);
 
     tag.name = "Xy#000";
     index = vec_search(&v1, &tag);
-    vec_check_found(tinfo, index, VEC_NOT_FOUND);
+    check_found(tinfo, index, VEC_NOT_FOUND);
 
-    vec_match(
-        tinfo, &v1,
-        "Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#888|Zz#999");
+    match(tinfo, &v1,
+          "Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#888|Zz#999");
     vec_add(&v1, tag_alloc(strdup("Aa#000"), 0));
-    vec_match(tinfo, &v1,
-              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
-              "888|Zz#999");
+    match(tinfo, &v1,
+          "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
+          "888|Zz#999");
     vec_add(&v1, tag_alloc(strdup("zz#999"), 0));
-    vec_match(tinfo, &v1,
-              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
-              "888|Zz#999|zz#999");
+    match(tinfo, &v1,
+          "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|Ww#"
+          "888|Zz#999|zz#999");
     vec_add(&v1, tag_alloc(strdup("Af#200"), 0));
-    vec_match(tinfo, &v1,
-              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
-              "Af#200|Ww#888|Zz#999|zz#999");
+    match(tinfo, &v1,
+          "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
+          "Af#200|Ww#888|Zz#999|zz#999");
     vec_add(&v1, tag_alloc(strdup("Af#200"), 0));
-    vec_match(tinfo, &v1,
-              "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
-              "Af#200|Af#200|Ww#888|Zz#999|zz#999");
+    match(tinfo, &v1,
+          "Aa#000|Aa#001|Aa#100|Ab#101|Ac#102|Ad#103|Ae#005|Ae#104|"
+          "Af#200|Af#200|Ww#888|Zz#999|zz#999");
 
     vec_free(&v1);
 }
 
-void vec_match(tinfo* tinfo, const Vec* v, const char* expected) {
+static void match(tinfo* tinfo, const Vec* v, const char* expected) {
     char buf[1000] = {0}; // guarantee start with NUL if Vec is empty
     int n = 0;
     for (int i = 0; i < vec_size(v); ++i) {
@@ -266,7 +260,7 @@ void vec_match(tinfo* tinfo, const Vec* v, const char* expected) {
     check_str_eq(tinfo, &buf[0], expected);
 }
 
-void vec_check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
+static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
     tinfo->total++;
     if (vec_size(v) != size) {
         fprintf(stderr, "FAIL: %s vec_size() expected %d, got %d\n",
@@ -277,7 +271,7 @@ void vec_check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
     tinfo->total++;
     if (vec_isempty(v) != (size == 0)) {
         fprintf(stderr,
-                "FAIL: %s vecy_isempty() expected %s, got %s size=%d\n",
+                "FAIL: %s vec_isempty() expected %s, got %s size=%d\n",
                 tinfo->tag, bool_to_str(size == 0),
                 bool_to_str(vec_isempty(v)), size);
     } else
@@ -291,7 +285,7 @@ void vec_check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
         tinfo->ok++;
 }
 
-void vec_same(tinfo* tinfo, const Vec* v1, const Vec* v2) {
+static void same(tinfo* tinfo, const Vec* v1, const Vec* v2) {
     tinfo->total++;
     if (!vec_equal(v1, v2)) {
         fprintf(stderr, "FAIL: %s vec_equal() expected true, got false\n",

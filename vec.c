@@ -170,13 +170,21 @@ void vec_merge(Vec* vec1, Vec* vec2) {
 bool vec_equal(const Vec* vec1, const Vec* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
-    if (vec1->_size != vec2->_size || vec1->_cmp != vec2->_cmp ||
-        vec1->_cpy != vec2->_cpy || vec1->_destroy != vec2->_destroy)
+    if (vec1->_size != vec2->_size)
         return false;
     for (int i = 0; i < vec1->_size; ++i)
         if (vec1->_cmp(&vec1->_values[i], &vec2->_values[i]))
             return false;
     return true;
+}
+
+bool vec_same(const Vec* vec1, const Vec* vec2) {
+    assert_notnull(vec1);
+    assert_notnull(vec2);
+    if (vec1->_cmp != vec2->_cmp || vec1->_cpy != vec2->_cpy ||
+        vec1->_destroy != vec2->_destroy)
+        return false;
+    return vec_equal(vec1, vec2);
 }
 
 int vec_find(const Vec* vec, const void* value) {

@@ -119,9 +119,12 @@ Vec vec_copy(const Vec* vec, bool owns);
 // thread and at the end we want to merge all the Vec's into one.
 void vec_merge(Vec* vec1, Vec* vec2);
 
+// Returns true if the two Vec's have the same values.
+bool vec_equal(const Vec* vec1, const Vec* vec2);
+
 // Returns true if the two Vec's have the same values and the same cmp,
 // cpy, and destroy.
-bool vec_equal(const Vec* vec1, const Vec* vec2);
+bool vec_same(const Vec* vec1, const Vec* vec2);
 
 // Returns the index where the value was found in the Vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
