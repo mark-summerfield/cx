@@ -294,6 +294,8 @@ SetInt set_int_intersection(const SetInt* set1, const SetInt* set2) {
         else
             j++;
     }
+    vec_int_free(&vec2);
+    vec_int_free(&vec1);
     return set;
 }
 

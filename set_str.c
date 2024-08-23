@@ -309,6 +309,8 @@ SetStr set_str_intersection(const SetStr* set1, const SetStr* set2,
         else
             j++;
     }
+    vec_str_free(&vec2);
+    vec_str_free(&vec1);
     return set;
 }
 
@@ -320,13 +322,17 @@ SetStr set_str_union(const SetStr* set1, const SetStr* set2, bool owns) {
     return set;
 }
 
+// We only add if not already present.
+// The alternative is that if we attempt to add and get false (already
+// present) we must then free(value) if owns.
 void set_str_unite(SetStr* set1, const SetStr* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
     VecStr vec = set_str_to_vec(set2, BORROWS);
     for (int i = 0; i < vec_str_size(&vec); ++i) {
         char* value = vec_str_get(&vec, i);
-        set_str_add(set1, set1->_owns ? strdup(value) : value);
+        if (!set_str_contains(set1, value))
+            set_str_add(set1, set1->_owns ? strdup(value) : value);
     }
     vec_str_free(&vec);
 }

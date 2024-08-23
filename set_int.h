@@ -81,8 +81,3 @@ char* set_int_to_str(const SetInt* set);
 
 // Used for tests to verify balance.
 int set_int_max_depth(const SetInt* set);
-
-// TODO set_int_symmetric_difference
-// TODO set_int_isdisjoint
-// TODO set_int_issubsetof
-// TODO set_int_issupersetof

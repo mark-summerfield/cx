@@ -72,7 +72,8 @@ void vec_set(Vec* vec, int index, void* value);
 
 // Inserts the value at position index and moves succeeding values up
 // (right), increasing the Vec's size (and cap if necessary): O(n).
-// Use add to insert into a sorted Vec.
+// Use add to insert into a sorted Vec, or push to insert at the end of
+// an unsorted Vec.
 // If owning, Vec takes ownership of the new value (e.g., if char* then use
 // strdup()).
 void vec_insert(Vec* vec, int index, void* value);
@@ -104,7 +105,8 @@ void* vec_take(Vec* vec, int index);
 void* vec_pop(Vec* vec);
 
 // Pushes a new value onto the end of the Vec, increasing the Vec's size
-// (and cap if necessary): O(1).
+// (and cap if necessary): O(1). Use vec_add() to insert into a sorted
+// Vec.
 // If owning, Vec takes ownership of the value (e.g., if char* then use
 // strdup()).
 void vec_push(Vec* vec, void* value);

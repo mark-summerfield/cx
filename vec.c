@@ -150,7 +150,7 @@ void vec_merge(Vec* vec1, Vec* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
     assert(vec1->_cmp == vec2->_cmp && vec1->_cpy == vec2->_cpy &&
-           vec1->_destroy == vec2->_destroy && "non-matching vecs");
+           vec1->_destroy == vec2->_destroy && "incompatible vecs");
     if ((vec1->_cap - vec1->_size) <
         vec2->_size) { // vec1 doesn't have enough cap
         int cap = vec1->_size + vec2->_size;

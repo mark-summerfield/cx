@@ -90,8 +90,3 @@ char* set_str_join(const SetStr* set, const char* sep);
 
 // Used for tests to verify balance.
 int set_str_max_depth(const SetStr* set);
-
-// TODO set_str_symmetric_difference
-// TODO set_str_isdisjoint
-// TODO set_str_issubsetof
-// TODO set_str_issupersetof
