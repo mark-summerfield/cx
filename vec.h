@@ -46,7 +46,7 @@ void vec_free(Vec* vec);
 void vec_clear(Vec* vec);
 
 // Returns true if the Vec is owning.
-#define vec_owns(vec) ((vec)->_destroy != NULL)
+#define vec_owns(vec) ((vec)->_destroy && (vec)->_cpy)
 
 // Returns true if the Vec is empty.
 #define vec_isempty(vec) ((vec)->_size == 0)

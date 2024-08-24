@@ -1,16 +1,16 @@
 # Do these as needed:
-#   - set_str_symmetric_difference set_str_isdisjoint set_str_issubset
-#     set_str_issuperset
 #   - set_int_symmetric_difference set_int_isdisjoint set_int_issubset
 #     set_int_issuperset
+#   - set_str_symmetric_difference set_str_isdisjoint set_str_issubset
+#     set_str_issuperset
+#   - MapStrStr (rbt; see set_str)
+#   - MapIntAny (rbt; see set_str)
+#   - MapStrAny (rbt; see set_str)
 #   - Hsh  with void* items - as with rbt but based on hash table
 #   - Que  (based on vec)
 #   - Lst  (doubly-linked list)
 #   - Deq  (based on list)
 #   - Str  (based on vec)
-#   - MapStrStr (rbt; see set_str)
-#   - MapStrAny (rbt; see set_str)
-#   - MapIntAny (rbt; see set_str)
 
 cx.h
 set_str.h

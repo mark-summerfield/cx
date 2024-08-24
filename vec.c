@@ -27,6 +27,8 @@ void vec_free(Vec* vec) {
     free(vec->_values);
     vec->_values = NULL;
     vec->_cap = 0;
+    vec->_cpy = NULL;
+    vec->_destroy = NULL;
 }
 
 void vec_clear(Vec* vec) {
@@ -133,6 +135,8 @@ void vec_push(Vec* vec, void* value) {
 
 Vec vec_copy(const Vec* vec, bool owns) {
     assert_notnull(vec);
+    assert((!owns || (owns && vec->_destroy && vec->_cpy)) &&
+           "can't copy borrowed to owned");
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
     Vec out = vec_alloc(.cap = vec->_size, .cmp = vec->_cmp,
@@ -141,7 +145,7 @@ Vec vec_copy(const Vec* vec, bool owns) {
 #pragma GCC diagnostic pop
     for (int i = 0; i < vec->_size; ++i) {
         void* value = vec->_values[i];
-        vec_push(&out, owns && vec->_cpy ? vec->_cpy(value) : value);
+        vec_push(&out, owns ? vec->_cpy(value) : value);
     }
     return out;
 }

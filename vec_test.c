@@ -32,34 +32,48 @@ void vec_tests(tinfo* tinfo) {
                        .destroy = tag_free);
     check_size_cap(tinfo, &v1, 0, 5);
 
-    Vec v2 = vec_copy(&v1, OWNS);
+    Vec v2 = vec_copy(&v1, BORROWS); // copying empty so OWNS|BORROWS ok
     check_size_cap(tinfo, &v1, 0, 5);
 
     for (int i = 0; i < 7; ++i)
         vec_push(&v1, tag_make(false));
     check_size_cap(tinfo, &v1, 7, 10);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
+
+    match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     vec_free(&v2);
-    v2 = vec_copy(&v1, vec_owns(&v2));
+    v2 = vec_copy(&v1, BORROWS);
     check_size_cap(tinfo, &v2, 7, 7);
     match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
-    same(tinfo, &v1, &v2, true);
+    same(tinfo, &v1, &v2, false);
     check_bool_eq(tinfo, vec_equal(&v1, &v2), true);
+
+    Vec v3 = vec_copy(&v1, BORROWS);
+    check_size_cap(tinfo, &v3, 7, 7);
+    match(tinfo, &v3, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
+    same(tinfo, &v1, &v3, false);
+    check_bool_eq(tinfo, vec_equal(&v1, &v3), true);
+    vec_free(&v3);
+
+    check_size_cap(tinfo, &v1, 7, 10);
+    match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
+    match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
 
     Tag* t1 = vec_pop(&v1);
     check_str_eq(tinfo, t1->name, "Ag#106");
     check_int_eq(tinfo, t1->id, 106);
     tag_free(t1);
+    check_size_cap(tinfo, &v1, 6, 10);
+    match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105");
+    check_bool_eq(tinfo, vec_equal(&v1, &v2), false);
 
     t1 = vec_pop(&v1);
     check_str_eq(tinfo, t1->name, "Af#105");
     check_int_eq(tinfo, t1->id, 105);
     tag_free(t1);
     t1 = NULL;
-
     check_size_cap(tinfo, &v1, 5, 10);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
-    match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     check_bool_eq(tinfo, vec_equal(&v1, &v2), false);
 
     const Tag* t2 = vec_get(&v1, 0);
