@@ -341,9 +341,9 @@ static void check_join(tinfo* tinfo, const VecStr* vec, const char* sep,
                        const char* expected) {
     tinfo->total++;
     char* actual = vec_str_join(vec, sep);
-    if (!vec_str_size(vec) && !actual)
+    if (!vec_str_size(vec) && !actual && !expected)
         tinfo->ok++;
-    else if (strcmp(actual, expected))
+    else if (actual && expected && strcmp(actual, expected))
         fprintf(stderr,
                 "FAIL: %s vec_str_join() expected\n\"%s\" !=\n\"%s\"\n",
                 tinfo->tag, expected, actual);
