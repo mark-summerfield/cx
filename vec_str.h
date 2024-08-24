@@ -95,8 +95,8 @@ char* vec_str_pop(VecStr* vec);
 // char* then use strdup()).
 void vec_str_push(VecStr* vec, char* value);
 
-// Returns a copy of the VecStr (a deep copy if owns).
-VecStr vec_str_copy(const VecStr* vec);
+// Returns a copy of the VecStr (a deep copy if owns is true).
+VecStr vec_str_copy(const VecStr* vec, bool owns);
 
 // Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.

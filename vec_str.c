@@ -125,13 +125,13 @@ void vec_str_push(VecStr* vec, char* value) {
     vec->_values[vec->_size++] = value;
 }
 
-VecStr vec_str_copy(const VecStr* vec) {
+VecStr vec_str_copy(const VecStr* vec, bool owns) {
     assert_notnull(vec);
     VecStr out = vec_str_alloc_custom(
-        vec->_size ? vec->_size : VEC_INITIAL_CAP, vec->_owns);
+        vec->_size ? vec->_size : VEC_INITIAL_CAP, owns);
     for (int i = 0; i < vec->_size; ++i) {
         char* value = vec->_values[i];
-        if (vec->_owns)
+        if (owns)
             value = strdup(value);
         vec_str_push(&out, value);
     }

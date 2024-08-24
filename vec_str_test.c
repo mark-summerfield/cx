@@ -37,7 +37,7 @@ void vec_str_tests(tinfo* tinfo) {
     VecStr v1 = vec_str_alloc(); // default of 32
     check_size_cap(tinfo, &v1, 0, 32);
 
-    VecStr v2 = vec_str_copy(&v1);
+    VecStr v2 = vec_str_copy(&v1, BORROWS);
     check_size_cap(tinfo, &v1, 0, 32);
 
     tinfo->total++;
