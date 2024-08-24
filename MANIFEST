@@ -3,6 +3,7 @@
 #     set_int_issuperset
 #   - set_str_symmetric_difference set_str_isdisjoint set_str_issubset
 #     set_str_issuperset
+#   - vec_copy_to_owned(vec, cpy, destroy) // copy borrowed to owned
 #   - MapStrStr (rbt; see set_str)
 #   - MapIntAny (rbt; see set_str)
 #   - MapStrAny (rbt; see set_str)
