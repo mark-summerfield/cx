@@ -93,8 +93,6 @@ int vec_int_find(const VecInt* vec, int value);
 // VEC_NOT_FOUND (-1). Uses a linear search.
 int vec_int_find_last(const VecInt* vec, int value);
 
-int intcmp(const void* a, const void* b);
-
 // Sorts the VecInt in-place in ascending order.
 void vec_int_sort(VecInt* vec);
 

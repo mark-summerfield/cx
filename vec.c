@@ -169,6 +169,8 @@ void vec_merge(Vec* vec1, Vec* vec2) {
     vec2->_values = NULL;
     vec2->_cap = 0;
     vec2->_size = 0;
+    vec2->_cpy = NULL;
+    vec2->_destroy = NULL;
 }
 
 bool vec_equal(const Vec* vec1, const Vec* vec2) {

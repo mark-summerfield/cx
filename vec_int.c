@@ -7,6 +7,7 @@
 #include <string.h>
 
 static void vec_int_grow(VecInt* vec);
+static int intcmp(const void* a, const void* b);
 
 VecInt vec_int_alloc_cap(int cap) {
     cap = cap > 0 ? cap : VEC_INITIAL_CAP;
@@ -162,7 +163,9 @@ int vec_int_find_last(const VecInt* vec, int value) {
     return VEC_NOT_FOUND;
 }
 
-int intcmp(const void* a, const void* b) { return (*(int*)a - *(int*)b); }
+static int intcmp(const void* a, const void* b) {
+    return (*(int*)a - *(int*)b);
+}
 
 void vec_int_sort(VecInt* vec) {
     assert_notnull(vec);
