@@ -230,6 +230,7 @@ static void check_set_strs(tinfo* tinfo, const SetStr* set, const char* s) {
                 tinfo->tag, a, s);
     else
         tinfo->ok++;
+    free(a);
 }
 
 static SetStr prep_set(tinfo* tinfo) {

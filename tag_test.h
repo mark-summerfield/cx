@@ -35,9 +35,7 @@ Tag* tag_make(bool reset) {
     }
     char buf[_TAG_BUF_SZ];
     int n = sprintf(&buf[0], "%c%c#%ld", N1, N2, ID);
-    Tag* tag = malloc(sizeof(Tag));
-    tag->name = strndup(&buf[0], n);
-    tag->id = ID++;
+    Tag* tag = tag_alloc(strndup(&buf[0], n), ID++);
     N2++;
     if (N2 > 'z') {
         N2 = 'a';
