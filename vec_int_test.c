@@ -62,6 +62,8 @@ void vec_int_tests(tinfo* tinfo) {
 
     int x = vec_int_get(&v1, 0);
     check_int_eq(tinfo, x, 17);
+    x = vec_int_get_first(&v1);
+    check_int_eq(tinfo, x, 17);
     x = vec_int_get(&v1, 4);
     check_int_eq(tinfo, x, 3);
     x = vec_int_get_last(&v1);

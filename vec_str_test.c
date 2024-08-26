@@ -86,6 +86,8 @@ void vec_str_tests(tinfo* tinfo) {
 
     const char* s0 = vec_str_get(&v1, 0);
     check_str_eq(tinfo, s0, "One");
+    s0 = vec_str_get_first(&v1);
+    check_str_eq(tinfo, s0, "One");
     const char* s5 = vec_str_get(&v1, 5);
     check_str_eq(tinfo, s5, "Sierra");
     const char* s6 = vec_str_get(&v1, 6);

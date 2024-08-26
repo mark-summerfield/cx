@@ -67,6 +67,10 @@ void vec_tests(tinfo* tinfo) {
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105");
     check_bool_eq(tinfo, vec_equal(&v1, &v2), false);
 
+    t1 = vec_get_first(&v1);
+    check_str_eq(tinfo, t1->name, "Aa#100");
+    check_int_eq(tinfo, t1->id, 100);
+
     t1 = vec_pop(&v1);
     check_str_eq(tinfo, t1->name, "Af#105");
     check_int_eq(tinfo, t1->id, 105);
