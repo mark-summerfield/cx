@@ -45,6 +45,12 @@ void* vec_get(const Vec* vec, int index) {
     return vec->_values[index];
 }
 
+inline void* vec_get_first(const Vec* vec) {
+    assert_notnull(vec);
+    assert_nonempty(vec);
+    return vec->_values[0];
+}
+
 inline void* vec_get_last(const Vec* vec) {
     assert_notnull(vec);
     assert_nonempty(vec);

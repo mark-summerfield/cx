@@ -39,6 +39,9 @@ void vec_int_clear(VecInt* vec);
 // Returns the VecInt's int value at position index.
 int vec_int_get(const VecInt* vec, int index);
 
+// Returns the VecInt's int value at its first valid index.
+int vec_int_get_first(const VecInt* vec);
+
 // Returns the VecInt's int value at its last valid index.
 int vec_int_get_last(const VecInt* vec);
 

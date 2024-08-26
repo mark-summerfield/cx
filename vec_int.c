@@ -32,6 +32,12 @@ int vec_int_get(const VecInt* vec, int index) {
     return vec->_values[index];
 }
 
+inline int vec_int_get_first(const VecInt* vec) {
+    assert_notnull(vec);
+    assert_nonempty(vec);
+    return vec->_values[0];
+}
+
 inline int vec_int_get_last(const VecInt* vec) {
     assert_notnull(vec);
     assert_nonempty(vec);

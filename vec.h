@@ -61,6 +61,10 @@ void vec_clear(Vec* vec);
 // If owning, Vec retains ownership, so do not delete the value.
 void* vec_get(const Vec* vec, int index);
 
+// Returns the Vec's value at its first valid index.
+// If owning, Vec retains ownership, so do not delete the value.
+void* vec_get_first(const Vec* vec);
+
 // Returns the Vec's value at its last valid index.
 // If owning, Vec retains ownership, so do not delete the value.
 void* vec_get_last(const Vec* vec);

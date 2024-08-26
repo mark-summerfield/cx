@@ -37,6 +37,12 @@ char* vec_str_get(const VecStr* vec, int index) {
     return vec->_values[index];
 }
 
+inline char* vec_str_get_first(const VecStr* vec) {
+    assert_notnull(vec);
+    assert_nonempty(vec);
+    return vec->_values[0];
+}
+
 inline char* vec_str_get_last(const VecStr* vec) {
     assert_notnull(vec);
     assert_nonempty(vec);

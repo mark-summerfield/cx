@@ -48,6 +48,10 @@ void vec_str_clear(VecStr* vec);
 // VecStr retains ownership (if owns), so do not delete the value.
 char* vec_str_get(const VecStr* vec, int index);
 
+// Returns the VecStr's value at its first valid index.
+// VecStr retains ownership (if owns), so do not delete the value.
+char* vec_str_get_first(const VecStr* vec);
+
 // Returns the VecStr's value at its last valid index.
 // VecStr retains ownership (if owns), so do not delete the value.
 char* vec_str_get_last(const VecStr* vec);
