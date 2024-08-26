@@ -228,7 +228,8 @@ static SetStrNode* node_remove_minimum(SetStrNode* node, bool owns) {
 SetStr set_str_copy(const SetStr* set, bool owns) {
     assert_notnull(set);
     return (SetStr){._root = node_copy(set->_root, owns),
-                    ._size = set->_size};
+                    ._size = set->_size,
+                    ._owns = owns};
 }
 
 static SetStrNode* node_copy(const SetStrNode* node, bool owns) {
