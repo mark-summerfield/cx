@@ -51,6 +51,19 @@ char* sx_uppercase_alloc(const char* s) {
     return u;
 }
 
+char* sx_uppercase_allocn(const char* s, int n) {
+    assert(s && "can't uppercase NULL");
+    char* u = malloc(n);
+    assert_alloc(u);
+    int i = 0;
+    while (*s && i < n) {
+        u[i++] = toupper(*s);
+        s++;
+    }
+    u[i] = 0;
+    return u;
+}
+
 void sx_lowercase_ip(char* s) {
     assert(s && "can't lowercase NULL");
     while (*s) {

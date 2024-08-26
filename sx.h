@@ -25,6 +25,10 @@ void sx_uppercase_ip(char*);
 // Returns new char* of given char*'s ASCII chars uppercased
 char* sx_uppercase_alloc(const char*);
 
+// Returns new char* of up to n chars from the given char*'s ASCII chars
+// uppercased
+char* sx_uppercase_allocn(const char*, int n);
+
 // Modifies char*'s text in-place converting ASCII lowercase to lowercase
 void sx_lowercase_ip(char*);
 

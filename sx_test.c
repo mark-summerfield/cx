@@ -5,6 +5,7 @@
 #include <string.h>
 
 static void sx_test_uppercase_alloc(tinfo*);
+static void sx_test_uppercase_allocn(tinfo*);
 static void sx_test_uppercase_ip(tinfo*);
 static void sx_test_lowercase_alloc(tinfo*);
 static void sx_test_lowercase_ip(tinfo*);
@@ -15,6 +16,8 @@ void sx_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     tinfo->tag = "sx_test_uppercase_alloc";
     sx_test_uppercase_alloc(tinfo);
+    tinfo->tag = "sx_test_uppercase_allocn";
+    sx_test_uppercase_allocn(tinfo);
     tinfo->tag = "sx_test_uppercase_ip";
     sx_test_uppercase_ip(tinfo);
     tinfo->tag = "sx_test_lowercase_alloc";
@@ -31,6 +34,16 @@ static void sx_test_uppercase_alloc(tinfo* tinfo) {
     const char* original = "this is a test";
     const char* expected = "THIS IS A TEST";
     char* actual = sx_uppercase_alloc(original);
+    check_str_eq(tinfo, expected, actual);
+    free(actual);
+}
+
+static void sx_test_uppercase_allocn(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    const char* original = "this is a test of allocn";
+    const char* expected = "THIS IS A TEST";
+    char* actual = sx_uppercase_allocn(original, 14);
     check_str_eq(tinfo, expected, actual);
     free(actual);
 }
