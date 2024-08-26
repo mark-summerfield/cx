@@ -53,7 +53,7 @@ char* sx_uppercase_alloc(const char* s) {
 
 char* sx_uppercase_allocn(const char* s, int n) {
     assert(s && "can't uppercase NULL");
-    char* u = malloc(n);
+    char* u = malloc(n + 1); // +1 for terminating 0
     assert_alloc(u);
     int i = 0;
     while (*s && i < n) {
