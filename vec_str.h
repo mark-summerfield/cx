@@ -13,9 +13,8 @@ typedef struct {
     bool _owns;
 } VecStr;
 
-// Allocates a new VecStr of owned char* with default capacity of
-// VEC_INITIAL_CAP.
-#define vec_str_alloc() vec_str_alloc_custom(VEC_INITIAL_CAP, OWNS)
+// Allocates a new VecStr of owned char* with default capacity of 0.
+#define vec_str_alloc() vec_str_alloc_custom(0, OWNS)
 
 // Allocates a new VecStr of char* (owns if owns, otherwise borrowed)
 // with the specified capacity.

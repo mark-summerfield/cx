@@ -10,9 +10,12 @@ Vec vec_alloc_(VecAllocArgs args) {
     assert(args.cmp && "must provide a cmp function");
     assert(((args.cpy && args.destroy) || (!args.cpy && !args.destroy)) &&
            "must provide both cpy and destroy (owns) or neither");
-    args.cap = args.cap > 0 ? args.cap : VEC_INITIAL_CAP;
-    void** values = malloc(args.cap * sizeof(void*));
-    assert_alloc(values);
+    args.cap = args.cap > 0 ? args.cap : 0;
+    void** values = NULL;
+    if (args.cap) {
+        values = malloc(args.cap * sizeof(void*));
+        assert_alloc(values);
+    }
     return (Vec){._size = 0,
                  ._cap = args.cap,
                  ._values = values,
@@ -41,6 +44,7 @@ void vec_clear(Vec* vec) {
 
 void* vec_get(const Vec* vec, int index) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     return vec->_values[index];
 }
@@ -59,6 +63,7 @@ inline void* vec_get_last(const Vec* vec) {
 
 void vec_set(Vec* vec, int index, void* value) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
     if (vec->_destroy)
@@ -100,6 +105,7 @@ void vec_add(Vec* vec, void* value) {
 
 void* vec_replace(Vec* vec, int index, void* value) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
     void* old = vec->_values[index];
@@ -108,14 +114,14 @@ void* vec_replace(Vec* vec, int index, void* value) {
 }
 
 inline void vec_remove(Vec* vec, int index) {
-    assert_notnull(vec);
-    void* value = vec_take(vec, index); // vec_take checks index
+    void* value = vec_take(vec, index); // vec_take does asserts
     if (vec->_destroy)
         vec->_destroy(value);
 }
 
 void* vec_take(Vec* vec, int index) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     void* old = vec->_values[index];
     for (int i = index; i < vec->_size; ++i)
@@ -236,9 +242,7 @@ int vec_search(const Vec* vec, const void* value) {
 }
 
 static void vec_grow(Vec* vec) {
-    const int BLOCK_SIZE = 1024 * 1024;
-    int cap =
-        (vec->_cap < BLOCK_SIZE) ? vec->_cap * 2 : vec->_cap + BLOCK_SIZE;
+    int cap = GROW_CAP(vec->_cap);
     void** p = realloc(vec->_values, cap * sizeof(void*));
     assert_alloc(p);
     vec->_values = p;

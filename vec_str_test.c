@@ -34,19 +34,19 @@ void vec_str_tests(tinfo* tinfo) {
     tinfo->tag = "vec_str_tests continued";
     if (tinfo->verbose)
         puts(tinfo->tag);
-    VecStr v1 = vec_str_alloc(); // default of 32
-    check_size_cap(tinfo, &v1, 0, 32);
+    VecStr v1 = vec_str_alloc(); // default of 0
+    check_size_cap(tinfo, &v1, 0, 0);
 
     VecStr v2 = vec_str_copy(&v1, BORROWS);
-    check_size_cap(tinfo, &v1, 0, 32);
+    check_size_cap(tinfo, &v1, 0, 0);
 
     tinfo->total++;
     int WORD_COUNT = sizeof(WORDS) / sizeof(char*);
     for (int i = 0; i < WORD_COUNT; ++i) {
-        check_size_cap(tinfo, &v1, i, i <= 32 ? 32 : 64);
+        check_size_cap(tinfo, &v1, i, i == 0 ? 0 : i <= 32 ? 32 : 64);
         vec_str_push(&v1, strdup(WORDS[i]));
         if (i < 10) {
-            check_size_cap(tinfo, &v2, i, 32);
+            check_size_cap(tinfo, &v2, i, i == 0 ? 0 : 32);
             vec_str_push(&v2, strdup(WORDS[i]));
         }
     }

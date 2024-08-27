@@ -101,8 +101,8 @@ static void test_union(tinfo* tinfo) {
         puts(tinfo->tag);
     SetStr set1 = prep_set(tinfo);
     SetStr set2 = prep_set1(tinfo);
-    set_str_add(&set1, strdup("ten"));
-    set_str_add(&set1, strdup("eleven"));
+    set_str_add(&set1, "ten");
+    set_str_add(&set1, "eleven");
     SetStr set3 = set_str_union(&set1, &set2, BORROWS);
     check_set_strs(
         tinfo, &set3,
@@ -128,8 +128,8 @@ static void test_difference(tinfo* tinfo) {
         puts(tinfo->tag);
     SetStr set1 = prep_set(tinfo);
     SetStr set2 = prep_set1(tinfo);
-    set_str_add(&set1, strdup("ten"));
-    set_str_add(&set1, strdup("eleven"));
+    set_str_add(&set1, "ten");
+    set_str_add(&set1, "eleven");
     check_set_strs(tinfo, &set1,
                    "eight|eleven|five|four|one|seven|six|ten|three|two");
     check_set_strs(tinfo, &set2, "five|nine|one|seven|three");
@@ -234,24 +234,24 @@ static void check_set_strs(tinfo* tinfo, const SetStr* set, const char* s) {
 }
 
 static SetStr prep_set(tinfo* tinfo) {
-    SetStr set = set_str_alloc(OWNS);
+    SetStr set = set_str_alloc(BORROWS);
     check_all(tinfo, &set, 0);
     char* a[] = {"one", "two", "three", "four",  "five",
                  "six", "two", "one",   "seven", "eight"};
     int a_sz = sizeof(a) / sizeof(char*);
     for (int i = 0; i < a_sz; i++)
-        set_str_add(&set, strdup(a[i]));
+        set_str_add(&set, a[i]);
     check_all(tinfo, &set, a_sz - 2); // -2 due to dropped duplicates
     return set;
 }
 
 static SetStr prep_set1(tinfo* tinfo) {
-    SetStr set = set_str_alloc(OWNS);
+    SetStr set = set_str_alloc(BORROWS);
     check_all(tinfo, &set, 0);
     char* a[] = {"one", "three", "five", "nine", "one", "seven"};
     int a_sz = sizeof(a) / sizeof(char*);
     for (int i = 0; i < a_sz; i++)
-        set_str_add(&set, strdup(a[i]));
+        set_str_add(&set, a[i]);
     check_all(tinfo, &set, a_sz - 1); // -1 due to dropped duplicates
     return set;
 }

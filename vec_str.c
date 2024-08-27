@@ -8,9 +8,12 @@
 static void vec_str_grow(VecStr* vec);
 
 VecStr vec_str_alloc_custom(int cap, bool owns) {
-    cap = cap > 0 ? cap : VEC_INITIAL_CAP;
-    char** values = malloc(cap * sizeof(char*));
-    assert_alloc(values);
+    cap = cap > 0 ? cap : 0;
+    char** values = NULL;
+    if (cap) {
+        values = malloc(cap * sizeof(char*));
+        assert_alloc(values);
+    }
     return (VecStr){
         ._size = 0, ._cap = cap, ._owns = owns, ._values = values};
 }
@@ -33,6 +36,7 @@ void vec_str_clear(VecStr* vec) {
 
 char* vec_str_get(const VecStr* vec, int index) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     return vec->_values[index];
 }
@@ -51,6 +55,7 @@ inline char* vec_str_get_last(const VecStr* vec) {
 
 void vec_str_set(VecStr* vec, int index, char* value) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
     if (vec->_owns)
@@ -92,6 +97,7 @@ void vec_str_add(VecStr* vec, char* value) {
 
 char* vec_str_replace(VecStr* vec, int index, char* value) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
     char* old = vec->_values[index];
@@ -100,14 +106,14 @@ char* vec_str_replace(VecStr* vec, int index, char* value) {
 }
 
 inline void vec_str_remove(VecStr* vec, int index) {
-    assert_notnull(vec);
-    char* old = vec_str_take(vec, index);
+    char* old = vec_str_take(vec, index); // vec_str_take does asserts
     if (vec->_owns)
         free(old);
 }
 
 char* vec_str_take(VecStr* vec, int index) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     char* old = vec->_values[index];
     for (int i = index; i < vec->_size; ++i)
@@ -133,8 +139,7 @@ void vec_str_push(VecStr* vec, char* value) {
 
 VecStr vec_str_copy(const VecStr* vec, bool owns) {
     assert_notnull(vec);
-    VecStr out = vec_str_alloc_custom(
-        vec->_size ? vec->_size : VEC_INITIAL_CAP, owns);
+    VecStr out = vec_str_alloc_custom(vec->_size ? vec->_size : 0, owns);
     for (int i = 0; i < vec->_size; ++i) {
         char* value = vec->_values[i];
         if (owns)
@@ -262,9 +267,7 @@ char* vec_str_join(const VecStr* vec, const char* sep) {
 }
 
 static void vec_str_grow(VecStr* vec) {
-    const int BLOCK_SIZE = 1024 * 1024;
-    int cap =
-        (vec->_cap < BLOCK_SIZE) ? vec->_cap * 2 : vec->_cap + BLOCK_SIZE;
+    int cap = GROW_CAP(vec->_cap);
     char** p = realloc(vec->_values, cap * sizeof(char*));
     assert_alloc(p);
     vec->_values = p;

@@ -27,15 +27,13 @@ typedef struct {
 } VecAllocArgs;
 
 // Allocates a new Vec of owned or borrowed void* with default capacity of
-// VEC_INITIAL_CAP.
+// 0.
 // Set the initial capacity with .cap.
 // Caller must supply cmp to compare values (for find, sort, and search),
 // and if owning, cpy to copy a value, and destroy to free a value.
-#define vec_alloc(...)                                \
-    vec_alloc_((VecAllocArgs){.cap = VEC_INITIAL_CAP, \
-                              .cpy = NULL,            \
-                              .destroy = NULL,        \
-                              __VA_ARGS__})
+#define vec_alloc(...)         \
+    vec_alloc_((VecAllocArgs){ \
+        .cap = 0, .cpy = NULL, .destroy = NULL, __VA_ARGS__})
 Vec vec_alloc_(VecAllocArgs args);
 
 // Destroys the Vec freeing its memory and if owning, also freeing every

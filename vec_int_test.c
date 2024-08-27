@@ -16,11 +16,11 @@ void vec_int_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     merge_tests(tinfo);
 
-    VecInt v1 = vec_int_alloc(); // default of 32
-    check_size_cap(tinfo, &v1, 0, 32);
+    VecInt v1 = vec_int_alloc(); // default of 0
+    check_size_cap(tinfo, &v1, 0, 0);
 
     VecInt v2 = vec_int_copy(&v1);
-    check_size_cap(tinfo, &v1, 0, 32);
+    check_size_cap(tinfo, &v1, 0, 0);
 
     tinfo->total++;
     for (int i = 1; i <= 35; ++i) {
@@ -196,7 +196,7 @@ static void merge_tests(tinfo* tinfo) {
     match(tinfo, &v1, "1 2 3 4 5");
 
     VecInt v2 = vec_int_alloc();
-    check_size_cap(tinfo, &v2, 0, 32);
+    check_size_cap(tinfo, &v2, 0, 0);
     for (int i = 6; i < 12; ++i)
         vec_int_push(&v2, i);
     check_size_cap(tinfo, &v2, 6, 32);

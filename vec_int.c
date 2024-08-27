@@ -10,9 +10,12 @@ static void vec_int_grow(VecInt* vec);
 static int intcmp(const void* a, const void* b);
 
 VecInt vec_int_alloc_cap(int cap) {
-    cap = cap > 0 ? cap : VEC_INITIAL_CAP;
-    int* values = malloc(cap * sizeof(int));
-    assert_alloc(values);
+    cap = cap > 0 ? cap : 0;
+    int* values = NULL;
+    if (cap) {
+        values = malloc(cap * sizeof(int));
+        assert_alloc(values);
+    }
     return (VecInt){._size = 0, ._cap = cap, ._values = values};
 }
 
@@ -28,6 +31,7 @@ inline void vec_int_clear(VecInt* vec) { vec->_size = 0; }
 
 int vec_int_get(const VecInt* vec, int index) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     return vec->_values[index];
 }
@@ -46,6 +50,7 @@ inline int vec_int_get_last(const VecInt* vec) {
 
 void vec_int_set(VecInt* vec, int index, int value) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     vec->_values[index] = value;
 }
@@ -83,6 +88,7 @@ void vec_int_add(VecInt* vec, int value) {
 
 int vec_int_replace(VecInt* vec, int index, int value) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     int old = vec->_values[index];
     vec->_values[index] = value;
@@ -91,6 +97,7 @@ int vec_int_replace(VecInt* vec, int index, int value) {
 
 void vec_int_remove(VecInt* vec, int index) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     for (int i = index; i < vec->_size; ++i)
         vec->_values[i] = vec->_values[i + 1];
@@ -99,6 +106,7 @@ void vec_int_remove(VecInt* vec, int index) {
 
 int vec_int_take(VecInt* vec, int index) {
     assert_notnull(vec);
+    assert_nonempty(vec);
     assert_valid_index(vec, index);
     int old = vec->_values[index];
     vec_int_remove(vec, index);
@@ -215,9 +223,7 @@ char* vec_int_to_str(const VecInt* vec) {
 }
 
 static void vec_int_grow(VecInt* vec) {
-    const int BLOCK_SIZE = 1024 * 1024;
-    int cap =
-        (vec->_cap < BLOCK_SIZE) ? vec->_cap * 2 : vec->_cap + BLOCK_SIZE;
+    int cap = GROW_CAP(vec->_cap);
     int* p = realloc(vec->_values, cap * sizeof(int));
     assert_alloc(p);
     vec->_values = p;
