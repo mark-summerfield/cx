@@ -8,5 +8,5 @@
 
 #define assert_notnull(p) assert((p) && "unexpected NULL pointer")
 
-#define OWNS 1
+#define OWNS true
 #define BORROWS (!OWNS)
