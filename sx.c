@@ -84,3 +84,5 @@ char* sx_lowercase_alloc(const char* s) {
     u[i] = 0;
     return u;
 }
+
+inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }

@@ -37,7 +37,7 @@ char* sx_lowercase_alloc(const char*);
 
 int sx_strcmp(const void* s, const void* t);
 
-#define bool_to_str(b) ((b) ? "true" : "false")
+const char* bool_to_str(bool b);
 
 #define typename(x) \
     _Generic((x), \
