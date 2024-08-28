@@ -37,6 +37,8 @@ char* sx_lowercase_alloc(const char*);
 
 int sx_strcmp(const void* s, const void* t);
 
+const char* sx_filename_ext(const char* filename);
+
 const char* bool_to_str(bool b);
 
 #define typename(x) \

@@ -14,6 +14,7 @@
 #   - Lst  (doubly-linked list)
 #   - Deq  (based on list)
 #   - Str  (based on vec)
+# Add? #define ARRAYSIZE(a) (&(a)[1] - (a))
 
 cx.h
 set_str.h

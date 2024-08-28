@@ -85,4 +85,9 @@ char* sx_lowercase_alloc(const char* s) {
     return u;
 }
 
+inline const char* sx_filename_ext(const char* filename) {
+    const char* dot = strrchr(filename, '.');
+    return (!dot || dot == filename) ? "" : dot + 1;
+}
+
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }

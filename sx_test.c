@@ -10,6 +10,7 @@ static void sx_test_uppercase_ip(tinfo*);
 static void sx_test_lowercase_alloc(tinfo*);
 static void sx_test_lowercase_ip(tinfo*);
 static void sx_test_begins_ends(tinfo*);
+static void sx_test_filename_ext(tinfo*);
 
 void sx_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -26,6 +27,8 @@ void sx_tests(tinfo* tinfo) {
     sx_test_lowercase_ip(tinfo);
     tinfo->tag = "sx_test_begins_ends";
     sx_test_begins_ends(tinfo);
+    tinfo->tag = "sx_test_filename_ext";
+    sx_test_filename_ext(tinfo);
 }
 
 static void sx_test_uppercase_alloc(tinfo* tinfo) {
@@ -134,4 +137,36 @@ static void sx_test_begins_ends(tinfo* tinfo) {
                 tinfo->tag);
     } else
         tinfo->ok++;
+}
+
+static void sx_test_filename_ext(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    {
+        const char* filename = "file.zip";
+        const char* exp = "zip";
+        const char* ext = sx_filename_ext(filename);
+        check_str_eq(tinfo, exp, ext);
+    }
+    {
+        const char* filename = "file.tar.gz";
+        const char* exp = "gz";
+        const char* ext = sx_filename_ext(filename);
+        check_str_eq(tinfo, exp, ext);
+    }
+    {
+        const char* filename = "file.";
+        const char* ext = sx_filename_ext(filename);
+        check_str_eq(tinfo, "", ext);
+    }
+    {
+        const char* filename = "file";
+        const char* ext = sx_filename_ext(filename);
+        check_str_eq(tinfo, "", ext);
+    }
+    {
+        const char* filename = "...";
+        const char* ext = sx_filename_ext(filename);
+        check_str_eq(tinfo, "", ext);
+    }
 }

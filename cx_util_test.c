@@ -8,7 +8,7 @@
 
 void check_str_eq(tinfo* tinfo, const char* s, const char* t) {
     tinfo->total++;
-    if (strcmp((s), (t)) != 0) {
+    if (strcmp(s, t) != 0) {
         fprintf(stderr, "FAIL: %s expected\n\t\"%s\" !=\n\t\"%s\"\n",
                 tinfo->tag, s, t);
     } else
