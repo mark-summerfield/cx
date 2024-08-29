@@ -10,9 +10,6 @@
 // Returns true if char* s case-folded equals char* t
 #define sx_eq_fold(s, t) (!strcasecmp((s), (t)))
 
-// Returns true if char* s contains char* t
-#define sx_in(s, t) (strstr((s), (t)))
-
 // Returns true if char* s begins with char* prefix
 #define sx_begins(s, prefix) (strncmp((s), (prefix), strlen(prefix)) == 0)
 
