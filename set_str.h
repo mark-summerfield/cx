@@ -7,6 +7,7 @@
 #include <stddef.h>
 
 typedef struct SetStrNode SetStrNode;
+typedef void (*visitor_fn)(const char* value, void* state);
 
 // A red-black tree of owned or borrowed char* values.
 // All data members are private; all accesses via functions.
@@ -87,6 +88,10 @@ VecStr set_str_to_vec(const SetStr* set, bool owns);
 
 // Returns the set as a caller-owned string of sep-separated strings.
 char* set_str_join(const SetStr* set, const char* sep);
+
+// Calls visitor(value, state) on every element of the set.
+// See the tests for an example of use.
+void set_str_visit(const SetStr* set, void* state, visitor_fn);
 
 // Used for tests to verify balance.
 int set_str_max_depth(const SetStr* set);

@@ -17,6 +17,7 @@ static void test_remove(tinfo* tinfo);
 static void test_difference(tinfo* tinfo);
 static void test_intersection(tinfo* tinfo);
 static void test_union(tinfo* tinfo);
+static void test_visit(tinfo* tinfo);
 static void check_all(tinfo* tinfo, const SetStr* set, int size);
 static void check_order(tinfo* tinfo, const SetStr* set);
 static void check_set_strs(tinfo* tinfo, const SetStr* set, const char* s);
@@ -42,6 +43,8 @@ void set_str_tests(tinfo* tinfo) {
     test_difference(tinfo);
     tinfo->tag = "set_str test_intersection";
     test_intersection(tinfo);
+    tinfo->tag = "set_str test_visit";
+    test_visit(tinfo);
 }
 
 static void test_simple(tinfo* tinfo) {
@@ -170,6 +173,69 @@ static void test_intersection(tinfo* tinfo) {
     set_str_free(&set3);
     set_str_free(&set2);
     set_str_free(&set1);
+}
+
+#define NUM_LETTERS 26
+
+typedef struct {
+    int start_letter[NUM_LETTERS];
+} StartLetters;
+
+static void start_letters(const char* value, void* state_) {
+    StartLetters* state = state_;
+    state->start_letter[value[0] - 'a']++;
+}
+
+static void test_visit(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    StartLetters state = {0};
+    for (int i = 0; i < NUM_LETTERS; i++)
+        check_int_eq(tinfo, state.start_letter[i], 0);
+    SetStr set = prep_set(tinfo);
+    check_set_strs(tinfo, &set, "eight|five|four|one|seven|six|three|two");
+    set_str_visit(&set, &state, start_letters);
+    for (int i = 0; i < NUM_LETTERS; i++) {
+        char letter = 'a' + i;
+        switch (letter) {
+        case 'e':
+        case 'o':
+            check_int_eq(tinfo, state.start_letter[i], 1);
+            break;
+        case 'f':
+        case 's':
+        case 't':
+            check_int_eq(tinfo, state.start_letter[i], 2);
+            break;
+        default:
+            check_int_eq(tinfo, state.start_letter[i], 0);
+        }
+    }
+    for (int i = 0; i < NUM_LETTERS; i++)
+        state.start_letter[i] = 0;
+    set_str_add(&set, "nine");
+    set_str_add(&set, "ten");
+    set_str_visit(&set, &state, start_letters);
+    for (int i = 0; i < NUM_LETTERS; i++) {
+        char letter = 'a' + i;
+        switch (letter) {
+        case 'e':
+        case 'o':
+        case 'n':
+            check_int_eq(tinfo, state.start_letter[i], 1);
+            break;
+        case 'f':
+        case 's':
+            check_int_eq(tinfo, state.start_letter[i], 2);
+            break;
+        case 't':
+            check_int_eq(tinfo, state.start_letter[i], 3);
+            break;
+        default:
+            check_int_eq(tinfo, state.start_letter[i], 0);
+        }
+    }
+    set_str_free(&set);
 }
 
 static void check_all(tinfo* tinfo, const SetStr* set, int size) {

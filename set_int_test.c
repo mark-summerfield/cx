@@ -9,6 +9,7 @@
 
 //#define REPORT_DEPTH
 
+static void test_visit(tinfo* tinfo);
 static void test_union(tinfo* tinfo);
 static void test_intersection(tinfo* tinfo);
 static void test_difference(tinfo* tinfo);
@@ -42,6 +43,37 @@ void set_int_tests(tinfo* tinfo) {
     test_difference(tinfo);
     tinfo->tag = "set_int test_intersection";
     test_intersection(tinfo);
+    tinfo->tag = "set_int test_visit";
+    test_visit(tinfo);
+}
+
+typedef struct {
+    int sum;
+} SumState;
+
+static void summer(int value, void* state_) {
+    SumState* state = state_;
+    state->sum += value;
+}
+
+static void test_visit(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    SumState state = {0};
+    SetInt set1 = set_int_alloc();
+    for (int i = 1; i < 9; ++i)
+        set_int_add(&set1, i);
+    check_equal_ints(tinfo, &set1, (int[]){1, 2, 3, 4, 5, 6, 7, 8}, 8);
+    set_int_visit(&set1, &state, summer);
+    check_int_eq(tinfo, set_int_size(&set1), 8);
+    check_int_eq(tinfo, state.sum, 36);
+    for (int i = 1; i < 111; ++i)
+        set_int_add(&set1, i);
+    state.sum = 0;
+    set_int_visit(&set1, &state, summer);
+    check_int_eq(tinfo, set_int_size(&set1), 110);
+    check_int_eq(tinfo, state.sum, 6105);
+    set_int_free(&set1);
 }
 
 static void test_union(tinfo* tinfo) {

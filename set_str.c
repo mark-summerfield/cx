@@ -7,6 +7,7 @@
 static void add_to_difference(SetStr* set, const SetStrNode* node,
                               const SetStr* set2);
 static void push_to_vec(VecStr* vec, const SetStrNode* node);
+static void visit(SetStrNode* node, void* state, visitor_fn visitor);
 static SetStrNode* node_add(SetStrNode* node, char* value, bool* added);
 static SetStrNode* node_alloc(char* value);
 static bool node_is_red(const SetStrNode* node);
@@ -361,6 +362,19 @@ char* set_str_join(const SetStr* set, const char* sep) {
     char* s = vec_str_join(&vec, sep);
     vec_str_free(&vec);
     return s;
+}
+
+void set_str_visit(const SetStr* set, void* state, visitor_fn visitor) {
+    assert_notnull(set);
+    visit(set->_root, state, visitor);
+}
+
+static void visit(SetStrNode* node, void* state, visitor_fn visitor) {
+    if (node) {
+        visit(node->left, state, visitor);
+        visitor(node->value, state);
+        visit(node->right, state, visitor);
+    }
 }
 
 inline int set_str_max_depth(const SetStr* set) {

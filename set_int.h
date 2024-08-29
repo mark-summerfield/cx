@@ -7,6 +7,7 @@
 #include <stddef.h>
 
 typedef struct SetIntNode SetIntNode;
+typedef void (*visitor_fn)(int value, void* state);
 
 // A red-black tree of int values.
 // All data members are private; all accesses via functions.
@@ -78,6 +79,10 @@ VecInt set_int_to_vec(const SetInt* set);
 
 // Returns the set as a caller-owned string of space-separated ints.
 char* set_int_to_str(const SetInt* set);
+
+// Calls visitor(value, state) on every element of the set.
+// See the tests for an example of use.
+void set_int_visit(const SetInt* set, void* state, visitor_fn);
 
 // Used for tests to verify balance.
 int set_int_max_depth(const SetInt* set);
