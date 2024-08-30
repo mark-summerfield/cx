@@ -295,6 +295,34 @@ static void sort_tests(tinfo* tinfo) {
     match(tinfo, &v1,
           "Aardvark|Alpha|Hairy|India|Oscar|Oscar|Papa|Sierra|Two|"
           "Victor|X-ray|Zulu|gamma|kilo|limbo");
+
+    VecStr v2 =
+        vec_str_alloc_split("Delta|bravo|Charlie|Bravo|delta|Alpha", "|");
+    match(tinfo, &v2, "Delta|bravo|Charlie|Bravo|delta|Alpha");
+    vec_str_casesort(&v2);
+    match(tinfo, &v2, "Alpha|bravo|Bravo|Charlie|Delta|delta");
+
+    index = vec_str_find(&v2, "Sierrb");
+    check_found(tinfo, index, VEC_NOT_FOUND);
+    index = vec_str_search(&v2, "Sierrb");
+    check_found(tinfo, index, VEC_NOT_FOUND);
+
+    index = vec_str_find(&v2, "Alpha");
+    check_found(tinfo, index, 0);
+    index = vec_str_search(&v2, "Alpha");
+    check_found(tinfo, index, 0);
+
+    index = vec_str_find(&v2, "Bravo");
+    check_found(tinfo, index, 2);
+    index = vec_str_casesearch(&v2, "Bravo");
+    check_found(tinfo, index, 1);
+
+    index = vec_str_find(&v2, "delta");
+    check_found(tinfo, index, 5);
+    index = vec_str_casesearch(&v2, "delta");
+    check_found(tinfo, index, 5);
+
+    vec_str_free(&v2);
     vec_str_free(&v1);
 }
 
