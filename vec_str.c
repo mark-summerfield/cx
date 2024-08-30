@@ -197,6 +197,24 @@ int vec_str_find_last(const VecStr* vec, const char* value) {
     return VEC_NOT_FOUND;
 }
 
+void vec_str_casesort(VecStr* vec) {
+    assert_notnull(vec);
+    if (vec->_size)
+        qsort(vec->_values, vec->_size, sizeof(char*), sx_strcasecmp);
+}
+
+int vec_str_casesearch(const VecStr* vec, const char* s) {
+    assert_notnull(vec);
+    assert_notnull(s);
+    if (vec->_size) {
+        char** p = bsearch(&s, vec->_values, vec->_size, sizeof(char*),
+                           sx_strcasecmp);
+        if (p)
+            return p - vec->_values;
+    }
+    return VEC_NOT_FOUND;
+}
+
 void vec_str_sort(VecStr* vec) {
     assert_notnull(vec);
     if (vec->_size)

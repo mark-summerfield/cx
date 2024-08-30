@@ -71,6 +71,12 @@ void vec_str_insert(VecStr* vec, int index, char* value);
 // If owns, vec takes ownership of the new value (e.g., use strdup()).
 void vec_str_add(VecStr* vec, char* value);
 
+// Adds the value in order (in a case sorted vec) and moves succeeding
+// values up (right), increasing the vec's size (and cap if necessary):
+// O(n).
+// If owns, vec takes ownership of the new value (e.g., use strdup()).
+void vec_str_caseadd(VecStr* vec, char* value);
+
 // Sets the VecStr's value at position index to the given value and returns
 // the old value from that position.
 // If owns, VecStr takes ownership of the new value (e.g., if char*
@@ -122,6 +128,14 @@ int vec_str_find(const VecStr* vec, const char* value);
 // Returns the last index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
 int vec_str_find_last(const VecStr* vec, const char* value);
+
+// Sorts the VecStr in-place with case-folding.
+void vec_str_casesort(VecStr* vec);
+
+// Returns the index where the value was found in the vec or
+// VEC_NOT_FOUND (-1). Uses a binary search that assumes vec_str_sort() has
+// been used.
+int vec_str_casesearch(const VecStr* vec, const char* s);
 
 // Sorts the VecStr in-place.
 void vec_str_sort(VecStr* vec);

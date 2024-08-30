@@ -16,6 +16,10 @@ int sx_strcmp(const void* s, const void* t) {
     return strcmp(*(const char**)s, *(const char**)t);
 }
 
+int sx_strcasecmp(const void* s, const void* t) {
+    return strcasecmp(*(const char**)s, *(const char**)t);
+}
+
 bool sx_ends(const char* s, const char* suffix) {
     size_t size = strlen(s);
     if (size < strlen(suffix))
