@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 // Each void* argument is actually a pointer to a pointer, so first we
 // must cast to pointer to pointer to the actual type, then we must
