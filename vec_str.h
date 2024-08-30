@@ -109,6 +109,8 @@ VecStr vec_str_copy(const VecStr* vec, bool owns);
 
 // Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.
+// Only callable if both vecs are compatible, i.e., both are owners or both
+// are borrowers.
 // Use case: an array of VecStr's each one of which is populated in its own
 // thread and at the end we want to merge all the VecStr's into one.
 void vec_str_merge(VecStr* vec1, VecStr* vec2);

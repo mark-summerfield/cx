@@ -118,7 +118,9 @@ Vec vec_copy(const Vec* vec, bool owns);
 
 // Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.
-// The two Vec's must have the same cmp, cpy, and destroy methods.
+// Only callable if both vecs are compatible, i.e., they have matching
+// _cpy(), _destroy(), and _cmp(), functions (so both are owners or both
+// are borrowers of the same kind of objects).
 // Use case: an array of Vec's each one of which is populated in its own
 // thread and at the end we want to merge all the Vec's into one.
 void vec_merge(Vec* vec1, Vec* vec2);

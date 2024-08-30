@@ -152,6 +152,8 @@ VecStr vec_str_copy(const VecStr* vec, bool owns) {
 void vec_str_merge(VecStr* vec1, VecStr* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
+    assert(vec1->_owns == vec2->_owns &&
+           "both vec_str's must be owners or both must be borrowers");
     if ((vec1->_cap - vec1->_size) <
         vec2->_size) { // vec1 doesn't have enough cap
         int cap = vec1->_size + vec2->_size;
@@ -162,6 +164,8 @@ void vec_str_merge(VecStr* vec1, VecStr* vec2) {
     }
     for (int i = 0; i < vec2->_size; ++i)
         vec1->_values[vec1->_size++] = vec2->_values[i]; // push
+    // we do *not* free vec2's individual values even if vec2 owns since
+    // their pointers are now owned by vec1
     free(vec2->_values);
     vec2->_values = NULL;
     vec2->_cap = 0;
