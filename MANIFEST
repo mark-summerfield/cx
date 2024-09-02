@@ -31,6 +31,9 @@ vec_int.c
 sx.h
 sx.c
 
+fx.h
+fx.c
+
 tx.h
 
 vaargs.h
