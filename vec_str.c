@@ -288,6 +288,50 @@ char* vec_str_join(const VecStr* vec, const char* sep) {
     return s;
 }
 
+char* vec_str_longest_common_prefix(const VecStr* vec) {
+    if (!vec->_size)
+        return NULL;
+    if (vec->_size == 1)
+        return strdup(vec->_values[0]);
+    const char* first = vec->_values[0];
+    int size = strlen(first);
+    char prefix[size];
+    int i = 0;
+    for (; i < size; ++i) {
+        char c = first[i];
+        for (int j = 1; j < vec->_size; ++j) {
+            char* s = vec->_values[j];
+            if (((int)strlen(s)) - 1 < i || s[i] != c)
+                goto end;
+        }
+        prefix[i] = c;
+    }
+end:
+    if (!i)
+        return NULL;
+    prefix[i] = 0;
+    return strdup(prefix);
+}
+
+char* vec_str_longest_common_path(const VecStr* vec) {
+    if (!vec->_size)
+        return NULL;
+    if (vec->_size == 1)
+        return strdup(vec->_values[0]);
+    char *prefix = vec_str_longest_common_prefix(vec);
+    if (prefix) {
+        char *p = strrchr(prefix, '/');
+        if (!p) { // no path separator to slice to
+            free(prefix);
+            return NULL;
+        }
+        if (p == prefix) // preserve root of /
+            p++;
+        *p = 0; // slice to separator
+    }
+    return prefix;
+}
+
 static void vec_str_grow(VecStr* vec) {
     int cap = GROW_CAP(vec->_cap);
     char** p = realloc(vec->_values, cap * sizeof(char*));

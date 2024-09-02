@@ -16,6 +16,7 @@ static void match(tinfo* tinfo, const VecStr* v, const char* expected);
 static void equal(tinfo* tinfo, const VecStr* v1, const VecStr* v2);
 static void merge_tests(tinfo*);
 static void sort_tests(tinfo*);
+static void prefix_tests(tinfo*);
 
 const char* WORDS[] = {
     "One",  "Zulu",    "Victor", "Romeo",  "Sierra",   "Whiskey", "X-ray",
@@ -28,8 +29,12 @@ const char* WORDS[] = {
 void vec_str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
+    tinfo->tag = "merge_tests";
     merge_tests(tinfo);
+    tinfo->tag = "sort_tests";
     sort_tests(tinfo);
+    tinfo->tag = "prefix_tests";
+    prefix_tests(tinfo);
 
     tinfo->tag = "vec_str_tests continued";
     if (tinfo->verbose)
@@ -323,6 +328,126 @@ static void sort_tests(tinfo* tinfo) {
     check_found(tinfo, index, 5);
 
     vec_str_free(&v2);
+    vec_str_free(&v1);
+}
+
+static void prefix_tests(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    VecStr v1 = vec_str_alloc_custom(3, BORROWS);
+    vec_str_push(&v1, "fan");
+    vec_str_push(&v1, "fate");
+    vec_str_push(&v1, "fame");
+    char* prefix = vec_str_longest_common_prefix(&v1);
+    check_str_eq(tinfo, prefix, "fa");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "elefan");
+    vec_str_push(&v1, "elefate");
+    vec_str_push(&v1, "elefame");
+    vec_str_push(&v1, "elefa");
+    prefix = vec_str_longest_common_prefix(&v1);
+    check_str_eq(tinfo, prefix, "elefa");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "bat");
+    vec_str_push(&v1, "vat");
+    vec_str_push(&v1, "cat");
+    prefix = vec_str_longest_common_prefix(&v1);
+    check_bool_eq(tinfo, false, prefix); // i.e., prefix == NULL
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "/home/mark/app/go/gong");
+    vec_str_push(&v1, "/home/mark/app/py/accelhints");
+    vec_str_push(&v1, "/home/mark/app/rs");
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "/home/mark/app");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "/users/mark/app/go/gong");
+    vec_str_push(&v1, "/Users/mark/app/py/accelhints");
+    vec_str_push(&v1, "/home/mark/app/rs");
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "/");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "mark/app/go/gong");
+    vec_str_push(&v1, "mark/app/py/accelhints");
+    vec_str_push(&v1, "mark/app/rs");
+    vec_str_push(&v1, "mark/app/rsc");
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "mark/app");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "mark/app/go/gong");
+    vec_str_push(&v1, "andrea/app/py/accelhints");
+    prefix = vec_str_longest_common_path(&v1);
+    check_bool_eq(tinfo, false, prefix); // i.e., prefix == NULL
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "/home/mark/app/go/gong");
+    vec_str_push(&v1, "/home/mark/apps/bin");
+    vec_str_push(&v1, "/home/mark/apps/py/accelhints");
+    vec_str_push(&v1, "/home/mark/app/rs");
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "/home/mark");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "/home/mark/bin/checksum");
+    vec_str_push(&v1, "/home/mark/bin/checkkey");
+    prefix = vec_str_longest_common_prefix(&v1);
+    check_str_eq(tinfo, prefix, "/home/mark/bin/check");
+    free(prefix);
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "/home/mark/bin");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "/home/marm/bin/checksum");
+    vec_str_push(&v1, "/home/mark/bin/checkkey");
+    prefix = vec_str_longest_common_prefix(&v1);
+    check_str_eq(tinfo, prefix, "/home/mar");
+    free(prefix);
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "/home");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "/home/marm/bin/checksum");
+    vec_str_push(&v1, "/homer/mark/bin/checkkey");
+    prefix = vec_str_longest_common_prefix(&v1);
+    check_str_eq(tinfo, prefix, "/home");
+    free(prefix);
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "/");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "/home/page");
+    vec_str_push(&v1, "/homeric/poem");
+    prefix = vec_str_longest_common_path(&v1);
+    check_str_eq(tinfo, prefix, "/");
+    free(prefix);
+    vec_str_clear(&v1);
+
+    vec_str_push(&v1, "home");
+    vec_str_push(&v1, "homeric");
+    prefix = vec_str_longest_common_prefix(&v1);
+    check_str_eq(tinfo, prefix, "home");
+    free(prefix);
+    prefix = vec_str_longest_common_path(&v1);
+    check_bool_eq(tinfo, false, prefix); // i.e., prefix == NULL
+    free(prefix);
+    vec_str_clear(&v1);
+
     vec_str_free(&v1);
 }
 

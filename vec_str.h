@@ -147,6 +147,15 @@ void vec_str_sort(VecStr* vec);
 // been used.
 int vec_str_search(const VecStr* vec, const char* s);
 
+// Returns the longest common prefix of all the strings in vec; or NULL
+// if there is no common prefix. The caller owns the returned string.
+char* vec_str_longest_common_prefix(const VecStr* vec);
+
+// Returns the longest common path of all the strings in vec; or NULL
+// if there is no common path. This is Unix-specific. The caller owns
+// the returned string.
+char* vec_str_longest_common_path(const VecStr* vec);
+
 // To iterate:
 //      for (int i = 0; i < vec_str_size(vec); ++i)
 //          const char* value = vec_str_get(vec, i);
