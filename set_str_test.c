@@ -2,7 +2,7 @@
 
 #include "set_str_test.h"
 #include "set_str.h"
-#include "sx.h"
+#include "str.h"
 #include "vec_str.h"
 #include <math.h>
 #include <stdio.h>

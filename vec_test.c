@@ -1,7 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_test.h"
-#include "sx.h"
+#include "str.h"
 #include "tag_test.h"
 #include "vec.h"
 #include "vec_common_test.h"

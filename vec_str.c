@@ -1,7 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_str.h"
-#include "sx.h"
+#include "str.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -204,7 +204,7 @@ int vec_str_find_last(const VecStr* vec, const char* value) {
 void vec_str_casesort(VecStr* vec) {
     assert_notnull(vec);
     if (vec->_size)
-        qsort(vec->_values, vec->_size, sizeof(char*), sx_strcasecmp);
+        qsort(vec->_values, vec->_size, sizeof(char*), str_strcasecmp);
 }
 
 int vec_str_casesearch(const VecStr* vec, const char* s) {
@@ -212,7 +212,7 @@ int vec_str_casesearch(const VecStr* vec, const char* s) {
     assert_notnull(s);
     if (vec->_size) {
         char** p = bsearch(&s, vec->_values, vec->_size, sizeof(char*),
-                           sx_strcasecmp);
+                           str_strcasecmp);
         if (p)
             return p - vec->_values;
     }
@@ -222,7 +222,7 @@ int vec_str_casesearch(const VecStr* vec, const char* s) {
 void vec_str_sort(VecStr* vec) {
     assert_notnull(vec);
     if (vec->_size)
-        qsort(vec->_values, vec->_size, sizeof(char*), sx_strcmp);
+        qsort(vec->_values, vec->_size, sizeof(char*), str_strcmp);
 }
 
 int vec_str_search(const VecStr* vec, const char* s) {
@@ -230,7 +230,7 @@ int vec_str_search(const VecStr* vec, const char* s) {
     assert_notnull(s);
     if (vec->_size) {
         char** p =
-            bsearch(&s, vec->_values, vec->_size, sizeof(char*), sx_strcmp);
+            bsearch(&s, vec->_values, vec->_size, sizeof(char*), str_strcmp);
         if (p)
             return p - vec->_values;
     }

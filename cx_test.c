@@ -3,7 +3,7 @@
 #include "cx_util_test.h"
 #include "set_int_test.h"
 #include "set_str_test.h"
-#include "sx_test.h"
+#include "str_test.h"
 #include "va_test.h"
 #include "vec_int_test.h"
 #include "vec_str_test.h"
@@ -22,8 +22,8 @@ int main(int argc, char** argv) {
     tinfo tinfo = {"", 0, 0, argc > 1};
     tinfo.tag = "va_tests";
     va_tests(&tinfo);
-    tinfo.tag = "sx_tests";
-    sx_tests(&tinfo);
+    tinfo.tag = "str_tests";
+    str_tests(&tinfo);
     tinfo.tag = "vec_int_tests";
     vec_int_tests(&tinfo);
     tinfo.tag = "vec_str_tests";

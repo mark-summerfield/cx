@@ -28,8 +28,8 @@ vec_str.c
 vec_int.h
 vec_int.c
 
-sx.h
-sx.c
+str.h
+str.c
 
 fx.h
 fx.c
@@ -54,8 +54,8 @@ vec_str_test.c
 tag_test.h
 vec_test.h
 vec_test.c
-sx_test.h
-sx_test.c
+str_test.h
+str_test.c
 va_test.h
 va_test.c
 

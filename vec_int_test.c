@@ -1,7 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_int_test.h"
-#include "sx.h"
+#include "str.h"
 #include "vec_common_test.h"
 #include "vec_int.h"
 #include <stdlib.h>

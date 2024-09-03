@@ -5,47 +5,45 @@
 #include <string.h>
 
 // Returns true if char* s equals char* t
-#define sx_eq(s, t) (!strcmp((s), (t)))
+#define str_eq(s, t) (!strcmp((s), (t)))
 
 // Returns true if char* s case-folded equals char* t
-#define sx_eq_fold(s, t) (!strcasecmp((s), (t)))
+#define str_eq_fold(s, t) (!strcasecmp((s), (t)))
 
 // Returns true if char* s begins with char* prefix
-#define sx_begins(s, prefix) (strncmp((s), (prefix), strlen(prefix)) == 0)
+#define str_begins(s, prefix) (strncmp((s), (prefix), strlen(prefix)) == 0)
 
 // Returns true if char* s begins with char* prefix, regardless of case
-#define sx_begins_fold(s, prefix) \
+#define str_begins_fold(s, prefix) \
     (strncasecmp((s), (prefix), strlen(prefix)) == 0)
 
 // Returns true if char* s ends with char* suffix
-bool sx_ends(const char*, const char*);
+bool str_ends(const char*, const char*);
 
 // Returns true if char* s ends with char* suffix, regardless of case
-bool sx_ends_fold(const char*, const char*);
+bool str_ends_fold(const char*, const char*);
 
 // new means returned pointer must be free'd; _ip means changes in-place
 
 // Modifies char*'s text in-place converting ASCII lowercase to uppercase
-void sx_uppercase_ip(char*);
+void str_uppercase_ip(char*);
 
 // Returns new char* of given char*'s ASCII chars uppercased
-char* sx_uppercase_alloc(const char*);
+char* str_uppercase_alloc(const char*);
 
 // Returns new char* of up to n chars from the given char*'s ASCII chars
 // uppercased
-char* sx_uppercase_allocn(const char*, int n);
+char* str_uppercase_allocn(const char*, int n);
 
 // Modifies char*'s text in-place converting ASCII lowercase to lowercase
-void sx_lowercase_ip(char*);
+void str_lowercase_ip(char*);
 
 // Returns new char* of given char*'s ASCII chars lowercased
-char* sx_lowercase_alloc(const char*);
+char* str_lowercase_alloc(const char*);
 
-int sx_strcmp(const void* s, const void* t);
+int str_strcmp(const void* s, const void* t);
 
-int sx_strcasecmp(const void* s, const void* t);
-
-const char* sx_filename_ext(const char* filename);
+int str_strcasecmp(const void* s, const void* t);
 
 const char* bool_to_str(bool b);
 

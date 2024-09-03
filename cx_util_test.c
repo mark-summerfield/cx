@@ -2,7 +2,7 @@
 
 #include "cx_util_test.h"
 #include "cx.h"
-#include "sx.h"
+#include "str.h"
 #include <stdio.h>
 #include <string.h>
 

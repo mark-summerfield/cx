@@ -3,4 +3,4 @@
 
 #include "cx_util_test.h"
 
-void sx_tests(tinfo* tinfo);
+void str_tests(tinfo* tinfo);

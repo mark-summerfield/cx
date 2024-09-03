@@ -141,7 +141,7 @@ int vec_find(const Vec* vec, const void* value);
 int vec_find_last(const Vec* vec, const void* value);
 
 // Sorts the Vec in-place using the cmp function.
-// See tag_test.h's tag_cmp and sx.c's sx_strcmp functions for examples
+// See tag_test.h's tag_cmp and sx.c's str_strcmp functions for examples
 // of how to create a cmp function.
 void vec_sort(Vec* vec);
 

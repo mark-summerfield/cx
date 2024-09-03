@@ -7,9 +7,10 @@ else:
     env.Append(CCFLAGS='-Wall -O3 -DNDEBUG')
 
 FILES = Glob('*test.c') + [
+    'fx.c',
     'set_int.c',
     'set_str.c',
-    'sx.c',
+    'str.c',
     'vec.c',
     'vec_int.c',
     'vec_str.c',
