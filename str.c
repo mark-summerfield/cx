@@ -4,7 +4,9 @@
 #include "cx.h"
 #include <assert.h>
 #include <ctype.h>
+#include <stdarg.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -91,3 +93,12 @@ char* str_lowercase_alloc(const char* s) {
 }
 
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }
+
+/*[[noreturn]]*/ void expire(const char* fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+    fputc('\n', stderr);
+    exit(EXIT_FAILURE);
+}
