@@ -1,10 +1,10 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 #pragma once
 
-#define RESET "\x1B[0m"
-#define BOLD "\x1B[1m"
-#define ITALIC "\x1B[3m"
-#define UNDERLINE "\x1B[4m"
+#define TX_RESET "\x1B[0m"
+#define TX_BOLD "\x1B[1m"
+#define TX_ITALIC "\x1B[3m"
+#define TX_UNDERLINE "\x1B[4m"
 #define FG_BLACK "\x1B[30m"
 #define FG_DARK_RED "\x1B[31m"
 #define FG_DARK_GREEN "\x1B[32m"
