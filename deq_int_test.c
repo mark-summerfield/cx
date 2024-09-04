@@ -35,6 +35,8 @@ static void check_size_and_contents(tinfo* tinfo, DeqInt* deq, int size,
     if (size) {
         int i = 0;
         for (DeqIntNode* node = deq->head; node; node = node->next) {
+            printf("check_size_and_contents i=%d %d %p\n", i, node->value,
+                   node);
             tinfo->total++;
             if (i == size) {
                 fprintf(
