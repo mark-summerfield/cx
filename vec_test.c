@@ -190,9 +190,8 @@ static void sort_tests(tinfo* tinfo) {
           "Zz#999|Aa#100|Ww#888|Ab#101|Ae#005|Ac#102|Aa#001|Ad#103|Ae#104");
 
     int index;
-    Tag tag = {"", 0};
+    Tag tag = tag_make_key("Ae#005");
 
-    tag.name = "Ae#005";
     index = vec_find(&v1, &tag);
     check_found(tinfo, index, 4);
 

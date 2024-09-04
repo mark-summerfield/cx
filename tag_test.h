@@ -14,6 +14,11 @@ typedef struct {
 
 #define _TAG_BUF_SZ 20
 
+Tag tag_make_key(char* name) {
+    Tag tag = {name, 0};
+    return tag;
+}
+
 // caller owns
 Tag* tag_alloc(char* name, long id) {
     Tag* tag = malloc(sizeof(Tag));
