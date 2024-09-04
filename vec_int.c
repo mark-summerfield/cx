@@ -1,7 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_int.h"
-#include "cx.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

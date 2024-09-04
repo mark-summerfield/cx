@@ -3,19 +3,22 @@
 #     set_int_issuperset
 #   - set_str_symmetric_difference set_str_isdisjoint set_str_issubset
 #     set_str_issuperset
-#   - vec_copy_to_owned(vec, cpy, destroy) // copy borrowed to owned
 #   - Map (based on SetStr; owned char* keys; void* values owned iff
 #	   _cpy && _destroy)
 # Long shots:
 #   - MapStrStr (rbt; see set_str)
 #   - MapIntAny (rbt; see set_str)
 #   - Hsh  with void* items - as with rbt but based on hash table
-#   - Que  (based on vec)
-#   - Lst  (doubly-linked list)
 #   - Deq  (based on list)
 #   - Str  (based on vec)
 
 cx.h
+# lst.h # TODO (3) OWNS|BORROWS
+# lst.c
+# lst_str.h # TODO (2) OWNS|BORROWS
+# lst_str.c
+lst_int.h # TODO (1)
+lst_int.c
 set_str.h
 set_str.c
 set_int.h
