@@ -8,17 +8,17 @@
 # Long shots:
 #   - MapStrStr (rbt; see set_str)
 #   - MapIntAny (rbt; see set_str)
-#   - Hsh  with void* items - as with rbt but based on hash table
+#   - Lst
 #   - Deq  (based on list)
 #   - Str  (based on vec)
 
 cx.h
-# lst.h # TODO (3) OWNS|BORROWS
-# lst.c
-# lst_str.h # TODO (2) OWNS|BORROWS
-# lst_str.c
-lst_int.h # TODO (1)
-lst_int.c
+# deq.h # TODO (3) OWNS|BORROWS
+# deq.c
+# deq_str.h # TODO (2) OWNS|BORROWS
+# deq_str.c
+deq_int.h # TODO (1)
+deq_int.c # TODO bug in clear() - or am i failing to build the deq correctly?
 set_str.h
 set_str.c
 set_int.h
@@ -44,6 +44,8 @@ vaargs.h
 cx_test.c
 cx_util_test.h
 cx_util_test.c
+deq_int_test.h
+deq_int_test.c
 set_str_test.h
 set_str_test.c
 set_int_test.h

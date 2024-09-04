@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "cx_util_test.h"
+#include "deq_int_test.h"
 #include "set_int_test.h"
 #include "set_str_test.h"
 #include "str_test.h"
@@ -34,6 +35,8 @@ int main(int argc, char** argv) {
     set_int_tests(&tinfo);
     tinfo.tag = "set_str_tests";
     set_str_tests(&tinfo);
+    tinfo.tag = "deq_int_tests";
+    deq_int_tests(&tinfo);
     printf("%s %d/%d\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL",
            tinfo.ok, tinfo.total);
 }
