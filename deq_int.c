@@ -29,6 +29,7 @@ void deq_int_push(DeqInt* deq, int value) {
     else {
         assert(!deq->tail->next && "tail must not have a next");
         node->prev = deq->tail;
+        deq->tail->next = node;
         deq->tail = node;
     }
     deq->_size++;
@@ -41,6 +42,7 @@ void deq_int_push_first(DeqInt* deq, int value) {
     else {
         assert(!deq->head->prev && "head must not have a prev");
         node->next = deq->head;
+        deq->head->prev = node;
         deq->head = node;
     }
     deq->_size++;
@@ -77,11 +79,7 @@ static DeqIntNode* node_alloc(int value) {
     DeqIntNode* node = malloc(sizeof(DeqIntNode));
     node->prev = node->next = NULL;
     node->value = value;
-    printf("alloc %d %p\n", node->value, node);
     return node;
 }
 
-static inline void node_free(DeqIntNode* node) {
-    printf("free  %d %p\n", node->value, node);
-    free(node);
-}
+static inline void node_free(DeqIntNode* node) { free(node); }

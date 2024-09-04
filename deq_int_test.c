@@ -19,6 +19,7 @@ void deq_int_tests(tinfo* tinfo) {
         deq_int_push(&deq, i);
         check_size_and_contents(tinfo, &deq, i, a);
     }
+
     // TODO deq_int_push_first
     // TODO deq_int_pop
     // TODO deq_int_pop_first
@@ -35,8 +36,6 @@ static void check_size_and_contents(tinfo* tinfo, DeqInt* deq, int size,
     if (size) {
         int i = 0;
         for (DeqIntNode* node = deq->head; node; node = node->next) {
-            printf("check_size_and_contents i=%d %d %p\n", i, node->value,
-                   node);
             tinfo->total++;
             if (i == size) {
                 fprintf(

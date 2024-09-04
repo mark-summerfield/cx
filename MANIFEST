@@ -17,8 +17,8 @@ cx.h
 # deq.c
 # deq_str.h # TODO (2) OWNS|BORROWS
 # deq_str.c
-deq_int.h # TODO (1)
-deq_int.c # TODO bug in clear() - or am i failing to build the deq correctly?
+deq_int.h
+deq_int.c # TODO (1)
 set_str.h
 set_str.c
 set_int.h
