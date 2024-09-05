@@ -1,5 +1,5 @@
 rm -f core
-clc -L rb
+clc -sL rb
 FILES=( 
     set_str.c
     set_str_test.c
