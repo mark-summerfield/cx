@@ -64,6 +64,11 @@ char* deq_str_pop(DeqStr* deq);
 // The DeqStr must not be empty.
 char* deq_str_pop_first(DeqStr* deq);
 
+// Returns a char* of all the deq's strings joined together with sep, or
+// NULL if deq is empty. If sep is NULL they are joined with no separator.
+// The returned char* value is now owned by the caller.
+char* deq_str_join(DeqStr* deq, const char* sep);
+
 // To iterate:
 //  for (DeqStrNode* node = deq->head; node; node = node->next)
 //      char* value = p->value;

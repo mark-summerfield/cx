@@ -120,7 +120,7 @@ bool vec_str_equal(const VecStr* vec1, const VecStr* vec2);
 
 // Returns a char* of all the vec's strings joined together with sep, or
 // NULL if vec is empty. If sep is NULL they are joined with no separator.
-// The returned char* value is now owns by the caller.
+// The returned char* value is now owned by the caller.
 char* vec_str_join(const VecStr* vec, const char* sep);
 
 // Returns the index where the value was found in the vec or

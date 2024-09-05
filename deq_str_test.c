@@ -90,14 +90,9 @@ static void check_size_and_contents(tinfo* tinfo, DeqStr* deq,
     if (!deq_str_isempty(deq)) {
         check_str_eq(tinfo, first, deq_str_first(deq));
         check_str_eq(tinfo, last, deq_str_last(deq));
-        char actual[100] = "";
-        char* p = actual;
-        for (DeqStrNode* node = deq->head; node; node = node->next) {
-            p = stpcpy(p, node->value);
-            p = stpcpy(p, "|");
-        }
-        *(p - 1) = 0; // remove final |
+        char* actual = deq_str_join(deq, "|");
         check_str_eq(tinfo, actual, expected);
+        free(actual);
     } else
         check_str_eq(tinfo, "", expected);
 }

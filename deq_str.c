@@ -3,6 +3,7 @@
 #include "deq_str.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define assert_nonempty(d) assert((d->_size) && "unexpectedly empty queue")
 
@@ -96,6 +97,26 @@ char* deq_str_pop_first(DeqStr* deq) {
     node_free(node, false); // if DeqStr owned, caller now owns
     deq->_size--;
     return value;
+}
+
+char* deq_str_join(DeqStr* deq, const char* sep) {
+    if (!deq->_size)
+        return NULL;
+    const int SEP_SIZE = sep ? strlen(sep) : 0;
+    int size = 0;
+    for (DeqStrNode* node = deq->head; node; node = node->next)
+        size += strlen(node->value);
+    size += ((deq->_size - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
+    char* s = malloc(size);
+    assert_alloc(s);
+    char* p = s;
+    for (DeqStrNode* node = deq->head; node; node = node->next) {
+        p = stpcpy(p, node->value);
+        if (node != deq->tail)
+            p = stpcpy(p, sep);
+    }
+    *p = 0;
+    return s;
 }
 
 static DeqStrNode* node_alloc(char* value) {
