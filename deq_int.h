@@ -33,6 +33,12 @@ void deq_int_clear(DeqInt* deq);
 // Returns the DeqInt's size.
 #define deq_int_size(deq) ((deq)->_size)
 
+// Returns the DeqInt's first value. The DeqInt must not be empty.
+int deq_int_first(DeqInt*deq);
+
+// Returns the DeqInt's last value. The DeqInt must not be empty.
+int deq_int_last(DeqInt*deq);
+
 // Adds a new node with the given value at the end of the DeqInt.
 void deq_int_push(DeqInt* deq, int value);
 
@@ -40,9 +46,11 @@ void deq_int_push(DeqInt* deq, int value);
 void deq_int_push_first(DeqInt* deq, int value);
 
 // Removes and frees the DeqInt's last node, returning its value.
+// The DeqInt must not be empty.
 int deq_int_pop(DeqInt* deq);
 
 // Removes and frees the DeqInt's first node, returning its value.
+// The DeqInt must not be empty.
 int deq_int_pop_first(DeqInt* deq);
 
 // To iterate:

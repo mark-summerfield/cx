@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#define assert_nonempty(d) assert((d->_size) && "unexpectedly empty queue")
+
 static void push_head(DeqInt* deq, DeqIntNode* node);
 static DeqIntNode* node_alloc(int value);
 static void node_free(DeqIntNode* node);
@@ -22,9 +24,19 @@ void deq_int_clear(DeqInt* deq) {
     deq->_size = 0;
 }
 
+int deq_int_first(DeqInt* deq) {
+    assert_nonempty(deq);
+    return deq->head->value;
+}
+
+int deq_int_last(DeqInt* deq) {
+    assert_nonempty(deq);
+    return deq->tail->value;
+}
+
 void deq_int_push(DeqInt* deq, int value) {
     DeqIntNode* node = node_alloc(value);
-    if (!deq->head) // empty list
+    if (!deq->head) // empty deque
         push_head(deq, node);
     else {
         assert(!deq->tail->next && "tail must not have a next");
@@ -37,7 +49,7 @@ void deq_int_push(DeqInt* deq, int value) {
 
 void deq_int_push_first(DeqInt* deq, int value) {
     DeqIntNode* node = node_alloc(value);
-    if (!deq->head) // empty list
+    if (!deq->head) // empty deque
         push_head(deq, node);
     else {
         assert(!deq->head->prev && "head must not have a prev");
@@ -49,27 +61,37 @@ void deq_int_push_first(DeqInt* deq, int value) {
 }
 
 static void push_head(DeqInt* deq, DeqIntNode* node) {
-    assert(deq->_size == 0 && "headless list must be empty");
-    assert(!deq->tail && "headless list must not have a tail");
+    assert(deq->_size == 0 && "headless deque must be empty");
+    assert(!deq->tail && "headless deque must not have a tail");
     deq->head = node;
     deq->tail = node;
 }
 
 int deq_int_pop(DeqInt* deq) {
-    assert(deq->_size && "can't pop empty list");
+    assert_nonempty(deq);
     DeqIntNode* node = deq->tail;
-    deq->tail = deq->tail->prev;
     int value = node->value;
+    if (deq->_size == 1)
+        deq->head = deq->tail = NULL;
+    else {
+        node->prev->next = NULL;
+        deq->tail = node->prev;
+    }
     node_free(node);
     deq->_size--;
     return value;
 }
 
 int deq_int_pop_first(DeqInt* deq) {
-    assert(deq->_size && "can't pop empty list");
+    assert_nonempty(deq);
     DeqIntNode* node = deq->head;
-    deq->head = deq->head->next;
     int value = node->value;
+    if (deq->_size == 1)
+        deq->head = deq->tail = NULL;
+    else {
+        node->next->prev = NULL;
+        deq->head = node->next;
+    }
     node_free(node);
     deq->_size--;
     return value;

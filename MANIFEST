@@ -13,12 +13,12 @@
 #   - Str  (based on vec)
 
 cx.h
-# deq.h # TODO (3) OWNS|BORROWS
+# deq.h # TODO (2) OWNS|BORROWS
 # deq.c
-# deq_str.h # TODO (2) OWNS|BORROWS
+# deq_str.h # TODO (1) OWNS|BORROWS
 # deq_str.c
 deq_int.h
-deq_int.c # TODO (1)
+deq_int.c
 set_str.h
 set_str.c
 set_int.h

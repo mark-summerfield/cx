@@ -13,16 +13,34 @@ void deq_int_tests(tinfo* tinfo) {
     DeqInt deq = deq_int_alloc();
     check_size_and_contents(tinfo, &deq, 0, NULL);
 
-    int a[100] = {0};
-    for (int i = 1; i < 6; ++i) {
+    int a[20] = {0};
+    for (int i = 1; i < 11; ++i) {
         a[i - 1] = i;
         deq_int_push(&deq, i);
         check_size_and_contents(tinfo, &deq, i, a);
     }
+    check_size_and_contents(tinfo, &deq, 10, a);
 
-    // TODO deq_int_push_first
-    // TODO deq_int_pop
-    // TODO deq_int_pop_first
+    int x = deq_int_pop(&deq);
+    check_int_eq(tinfo, x, 10);
+    x = deq_int_pop(&deq);
+    check_int_eq(tinfo, x, 9);
+    x = deq_int_pop_first(&deq);
+    check_int_eq(tinfo, x, 1);
+    x = deq_int_pop_first(&deq);
+    check_int_eq(tinfo, x, 2);
+    check_size_and_contents(tinfo, &deq, 6, &a[2]);
+
+    deq_int_push_first(&deq, 10);
+    deq_int_push_first(&deq, 20);
+    a[0] = 20;
+    a[1] = 10;
+    check_size_and_contents(tinfo, &deq, 8, a);
+    deq_int_push(&deq, 90);
+    deq_int_push(&deq, 100);
+    a[8] = 90;
+    a[9] = 100;
+    check_size_and_contents(tinfo, &deq, 10, a);
 
     deq_int_clear(&deq);
     check_size_and_contents(tinfo, &deq, 0, NULL);
@@ -34,6 +52,20 @@ static void check_size_and_contents(tinfo* tinfo, DeqInt* deq, int size,
     check_bool_eq(tinfo, size == 0, deq_int_isempty(deq));
     check_int_eq(tinfo, size, deq_int_size(deq));
     if (size) {
+        tinfo->total++;
+        if (ints[0] != deq_int_first(deq))
+            fprintf(stderr,
+                    "FAIL: %s check_size_and_contents: wrong first\n",
+                    tinfo->tag);
+        else
+            tinfo->ok++;
+        tinfo->total++;
+        if (ints[size - 1] != deq_int_last(deq))
+            fprintf(stderr,
+                    "FAIL: %s check_size_and_contents: wrong last\n",
+                    tinfo->tag);
+        else
+            tinfo->ok++;
         int i = 0;
         for (DeqIntNode* node = deq->head; node; node = node->next) {
             tinfo->total++;
