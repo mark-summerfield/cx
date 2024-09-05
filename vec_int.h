@@ -7,7 +7,7 @@
 
 // A vector of int values.
 // All data members are private; all accesses via functions.
-typedef struct {
+typedef struct VecInt {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
     int* _values;

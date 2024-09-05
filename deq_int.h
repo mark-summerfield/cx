@@ -6,7 +6,7 @@
 typedef struct DeqIntNode DeqIntNode;
 
 // A doubly linked list of int values.
-typedef struct {
+typedef struct DeqInt {
     DeqIntNode* head;
     DeqIntNode* tail;
     int _size;
@@ -34,10 +34,10 @@ void deq_int_clear(DeqInt* deq);
 #define deq_int_size(deq) ((deq)->_size)
 
 // Returns the DeqInt's first value. The DeqInt must not be empty.
-int deq_int_first(DeqInt*deq);
+int deq_int_first(DeqInt* deq);
 
 // Returns the DeqInt's last value. The DeqInt must not be empty.
-int deq_int_last(DeqInt*deq);
+int deq_int_last(DeqInt* deq);
 
 // Adds a new node with the given value at the end of the DeqInt.
 void deq_int_push(DeqInt* deq, int value);

@@ -10,7 +10,7 @@
 // To see an example of how to use store an arbitrary struct type in a
 // Vec see tag_test.h for the Tag struct and vec_test.[hc] for usage
 // examples.
-typedef struct {
+typedef struct Vec {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
     void** _values;

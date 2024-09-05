@@ -15,8 +15,8 @@
 cx.h
 # deq.h # TODO (2) OWNS|BORROWS
 # deq.c
-# deq_str.h # TODO (1) OWNS|BORROWS
-# deq_str.c
+deq_str.h # TODO (1) OWNS|BORROWS
+deq_str.c
 deq_int.h
 deq_int.c
 set_str.h
@@ -44,6 +44,8 @@ vaargs.h
 cx_test.c
 cx_util_test.h
 cx_util_test.c
+deq_str_test.h
+deq_str_test.c
 deq_int_test.h
 deq_int_test.c
 set_str_test.h

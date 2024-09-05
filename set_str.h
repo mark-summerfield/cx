@@ -11,7 +11,7 @@ typedef void (*visitor_fn)(const char* value, void* state);
 
 // A red-black tree of owned or borrowed char* values.
 // All data members are private; all accesses via functions.
-typedef struct {
+typedef struct SetStr {
     SetStrNode* _root;
     int _size;
     bool _owns;

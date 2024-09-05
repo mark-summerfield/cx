@@ -11,7 +11,7 @@ typedef void (*visitor_fn)(int value, void* state);
 
 // A red-black tree of int values.
 // All data members are private; all accesses via functions.
-typedef struct {
+typedef struct SetInt {
     SetIntNode* _root;
     int _size;
 } SetInt;

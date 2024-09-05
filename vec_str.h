@@ -6,7 +6,7 @@
 
 // A vector of owned or borrowed char* values.
 // All data members are private; all accesses via functions.
-typedef struct {
+typedef struct VecStr {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
     char** _values;

@@ -1,41 +1,43 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
-#include "deq_int.h"
+#include "deq_str.h"
 #include <assert.h>
 #include <stdlib.h>
 
 #define assert_nonempty(d) assert((d->_size) && "unexpectedly empty queue")
 
-static void push_head(DeqInt* deq, DeqIntNode* node);
-static DeqIntNode* node_alloc(int value);
-static void node_free(DeqIntNode* node);
+static void push_head(DeqStr* deq, DeqStrNode* node);
+static DeqStrNode* node_alloc(char* value);
+static void node_free(DeqStrNode* node, bool owns);
 
-inline DeqInt deq_int_alloc() { return (DeqInt){NULL, NULL, 0}; }
+inline DeqStr deq_str_alloc(bool owns) {
+    return (DeqStr){NULL, NULL, 0, owns};
+}
 
-void deq_int_free(DeqInt* deq) { deq_int_clear(deq); }
+void deq_str_free(DeqStr* deq) { deq_str_clear(deq); }
 
-void deq_int_clear(DeqInt* deq) {
-    DeqIntNode* next = NULL;
-    for (DeqIntNode* node = deq->head; node; node = next) {
+void deq_str_clear(DeqStr* deq) {
+    DeqStrNode* next = NULL;
+    for (DeqStrNode* node = deq->head; node; node = next) {
         next = node->next;
-        node_free(node);
+        node_free(node, deq->_owns);
     }
     deq->head = deq->tail = NULL;
     deq->_size = 0;
 }
 
-int deq_int_first(DeqInt* deq) {
+const char* deq_str_first(DeqStr* deq) {
     assert_nonempty(deq);
     return deq->head->value;
 }
 
-int deq_int_last(DeqInt* deq) {
+const char* deq_str_last(DeqStr* deq) {
     assert_nonempty(deq);
     return deq->tail->value;
 }
 
-void deq_int_push(DeqInt* deq, int value) {
-    DeqIntNode* node = node_alloc(value);
+void deq_str_push(DeqStr* deq, char* value) {
+    DeqStrNode* node = node_alloc(value);
     if (!deq->head) // empty deque
         push_head(deq, node);
     else {
@@ -47,8 +49,8 @@ void deq_int_push(DeqInt* deq, int value) {
     deq->_size++;
 }
 
-void deq_int_push_first(DeqInt* deq, int value) {
-    DeqIntNode* node = node_alloc(value);
+void deq_str_push_first(DeqStr* deq, char* value) {
+    DeqStrNode* node = node_alloc(value);
     if (!deq->head) // empty deque
         push_head(deq, node);
     else {
@@ -60,47 +62,51 @@ void deq_int_push_first(DeqInt* deq, int value) {
     deq->_size++;
 }
 
-static void push_head(DeqInt* deq, DeqIntNode* node) {
+static void push_head(DeqStr* deq, DeqStrNode* node) {
     assert(deq->_size == 0 && "headless deque must be empty");
     assert(!deq->tail && "headless deque must not have a tail");
     deq->head = deq->tail = node;
 }
 
-int deq_int_pop(DeqInt* deq) {
+char* deq_str_pop(DeqStr* deq) {
     assert_nonempty(deq);
-    DeqIntNode* node = deq->tail;
-    int value = node->value;
+    DeqStrNode* node = deq->tail;
+    char* value = node->value;
     if (deq->_size == 1)
         deq->head = deq->tail = NULL;
     else {
         node->prev->next = NULL;
         deq->tail = node->prev;
     }
-    node_free(node);
+    node_free(node, false); // if DeqStr owned, caller now owns
     deq->_size--;
     return value;
 }
 
-int deq_int_pop_first(DeqInt* deq) {
+char* deq_str_pop_first(DeqStr* deq) {
     assert_nonempty(deq);
-    DeqIntNode* node = deq->head;
-    int value = node->value;
+    DeqStrNode* node = deq->head;
+    char* value = node->value;
     if (deq->_size == 1)
         deq->head = deq->tail = NULL;
     else {
         node->next->prev = NULL;
         deq->head = node->next;
     }
-    node_free(node);
+    node_free(node, false); // if DeqStr owned, caller now owns
     deq->_size--;
     return value;
 }
 
-static DeqIntNode* node_alloc(int value) {
-    DeqIntNode* node = malloc(sizeof(DeqIntNode));
+static DeqStrNode* node_alloc(char* value) {
+    DeqStrNode* node = malloc(sizeof(DeqStrNode));
     node->prev = node->next = NULL;
     node->value = value;
     return node;
 }
 
-static inline void node_free(DeqIntNode* node) { free(node); }
+static inline void node_free(DeqStrNode* node, bool owns) {
+    if (owns)
+        free(node->value);
+    free(node);
+}
