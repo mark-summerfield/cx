@@ -72,4 +72,4 @@ char* deq_str_join(DeqStr* deq, const char* sep);
 
 // To iterate:
 //  for (DeqStrNode* node = deq->head; node; node = node->next)
-//      char* value = p->value;
+//      const char* value = p->value;

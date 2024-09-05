@@ -13,7 +13,7 @@ inline DeqStr deq_str_alloc(bool owns) {
     return (DeqStr){NULL, NULL, 0, owns};
 }
 
-void deq_str_free(DeqStr* deq) { deq_str_clear(deq); }
+inline void deq_str_free(DeqStr* deq) { deq_str_clear(deq); }
 
 void deq_str_clear(DeqStr* deq) {
     DeqStrNode* next = NULL;
@@ -25,16 +25,12 @@ void deq_str_clear(DeqStr* deq) {
     deq->_size = 0;
 }
 
-const char* deq_str_first(DeqStr* deq) {
-    if (!deq->_size)
-        return NULL;
-    return deq->head->value;
+inline const char* deq_str_first(DeqStr* deq) {
+    return deq->_size ? deq->head->value : NULL;
 }
 
-const char* deq_str_last(DeqStr* deq) {
-    if (!deq->_size)
-        return NULL;
-    return deq->tail->value;
+inline const char* deq_str_last(DeqStr* deq) {
+    return deq->_size ? deq->tail->value : NULL;
 }
 
 void deq_str_push(DeqStr* deq, char* value) {
@@ -63,7 +59,7 @@ void deq_str_push_first(DeqStr* deq, char* value) {
     deq->_size++;
 }
 
-static void push_head(DeqStr* deq, DeqStrNode* node) {
+static inline void push_head(DeqStr* deq, DeqStrNode* node) {
     assert(deq->_size == 0 && "headless deque must be empty");
     assert(!deq->tail && "headless deque must not have a tail");
     deq->head = deq->tail = node;
@@ -117,7 +113,6 @@ char* deq_str_join(DeqStr* deq, const char* sep) {
         if (node != deq->tail)
             p = stpcpy(p, sep);
     }
-    *p = 0;
     return s;
 }
 

@@ -229,8 +229,8 @@ int vec_str_search(const VecStr* vec, const char* s) {
     assert_notnull(vec);
     assert_notnull(s);
     if (vec->_size) {
-        char** p =
-            bsearch(&s, vec->_values, vec->_size, sizeof(char*), str_strcmp);
+        char** p = bsearch(&s, vec->_values, vec->_size, sizeof(char*),
+                           str_strcmp);
         if (p)
             return p - vec->_values;
     }
@@ -264,27 +264,18 @@ char* vec_str_join(const VecStr* vec, const char* sep) {
     if (!VEC_SIZE)
         return NULL; // empty
     const int SEP_SIZE = sep ? strlen(sep) : 0;
-    int total_size = 0;
-    int sizes[VEC_SIZE];
-    for (int i = 0; i < VEC_SIZE; ++i) {
-        int size = strlen(vec->_values[i]);
-        sizes[i] = size;
-        total_size += size;
-    }
-    total_size += ((VEC_SIZE - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
-    char* s = malloc(total_size);
+    int size = 0;
+    for (int i = 0; i < VEC_SIZE; ++i)
+        size += strlen(vec->_values[i]);
+    size += ((VEC_SIZE - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
+    char* s = malloc(size);
     assert_alloc(s);
     char* p = s;
     for (int i = 0; i < VEC_SIZE; ++i) {
-        int size = sizes[i];
-        strncpy(p, vec->_values[i], size);
-        p += size;
-        if (sep && (i + 1 < VEC_SIZE)) { // avoid adding sep at the end
-            strncpy(p, sep, SEP_SIZE);
-            p += SEP_SIZE;
-        }
+        p = stpcpy(p, vec->_values[i]);
+        if (sep && (i + 1 < VEC_SIZE)) // avoid adding sep at the end
+            p = stpncpy(p, sep, SEP_SIZE);
     }
-    *p = 0;
     return s;
 }
 
@@ -318,9 +309,9 @@ char* vec_str_longest_common_path(const VecStr* vec) {
         return NULL;
     if (vec->_size == 1)
         return strdup(vec->_values[0]);
-    char *prefix = vec_str_longest_common_prefix(vec);
+    char* prefix = vec_str_longest_common_prefix(vec);
     if (prefix) {
-        char *p = strrchr(prefix, '/');
+        char* p = strrchr(prefix, '/');
         if (!p) { // no path separator to slice to
             free(prefix);
             return NULL;

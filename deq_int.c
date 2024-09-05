@@ -12,7 +12,7 @@ static void node_free(DeqIntNode* node);
 
 inline DeqInt deq_int_alloc() { return (DeqInt){NULL, NULL, 0}; }
 
-void deq_int_free(DeqInt* deq) { deq_int_clear(deq); }
+inline void deq_int_free(DeqInt* deq) { deq_int_clear(deq); }
 
 void deq_int_clear(DeqInt* deq) {
     DeqIntNode* next = NULL;
@@ -24,12 +24,12 @@ void deq_int_clear(DeqInt* deq) {
     deq->_size = 0;
 }
 
-int deq_int_first(DeqInt* deq) {
+inline int deq_int_first(DeqInt* deq) {
     assert_nonempty(deq);
     return deq->head->value;
 }
 
-int deq_int_last(DeqInt* deq) {
+inline int deq_int_last(DeqInt* deq) {
     assert_nonempty(deq);
     return deq->tail->value;
 }
@@ -60,7 +60,7 @@ void deq_int_push_first(DeqInt* deq, int value) {
     deq->_size++;
 }
 
-static void push_head(DeqInt* deq, DeqIntNode* node) {
+static inline void push_head(DeqInt* deq, DeqIntNode* node) {
     assert(deq->_size == 0 && "headless deque must be empty");
     assert(!deq->tail && "headless deque must not have a tail");
     deq->head = deq->tail = node;

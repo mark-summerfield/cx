@@ -1,9 +1,9 @@
 #pragma once
 
 /* // 1+ args example (cannot be used for 0|1 i.e., optional arg)
-    #define mefunc(...) CONC(mefunc, NARGS(__VA_ARGS__))(__VA_ARGS__)
-    int mefunc1(int a) { return mefunc2(3, a); }
-    int mefunc2(int a, int b) { return a + b; }
+    #define afunc(...) CONC(afunc, NARGS(__VA_ARGS__))(__VA_ARGS__)
+    int afunc1(int a) { return afunc2(3, a); }
+    int afunc2(int a, int b) { return a + b; }
 */
 
 #define NARGS(...) NARGS_(__VA_ARGS__, 5, 4, 3, 2, 1, 0)
