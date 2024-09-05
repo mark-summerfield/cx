@@ -31,3 +31,11 @@ void check_bool_eq(tinfo* tinfo, bool actual, bool expected) {
     else
         tinfo->ok++;
 }
+
+void check_isnull(tinfo* tinfo, const void* p) {
+    tinfo->total++;
+    if (p)
+        fprintf(stderr, "FAIL: %s expected NULL != %p\n", tinfo->tag, p);
+    else
+        tinfo->ok++;
+}

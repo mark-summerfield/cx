@@ -15,6 +15,8 @@ void deq_str_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     DeqStr deq1 = deq_str_alloc(OWNS);
     check_size_and_contents(tinfo, &deq1, "", "", "");
+    check_isnull(tinfo, deq_str_first(&deq1));
+    check_isnull(tinfo, deq_str_last(&deq1));
 
     deq_str_push(&deq1, strdup("a"));
     check_size_and_contents(tinfo, &deq1, "a", "a", "a");
@@ -46,10 +48,14 @@ void deq_str_tests(tinfo* tinfo) {
 
     deq_str_clear(&deq1);
     check_size_and_contents(tinfo, &deq1, "", "", "");
+    check_isnull(tinfo, deq_str_first(&deq1));
+    check_isnull(tinfo, deq_str_last(&deq1));
     deq_str_free(&deq1);
 
     DeqStr deq2 = deq_str_alloc(BORROWS);
     check_size_and_contents(tinfo, &deq2, "", "", "");
+    check_isnull(tinfo, deq_str_first(&deq2));
+    check_isnull(tinfo, deq_str_last(&deq2));
 
     deq_str_push(&deq2, "a");
     check_size_and_contents(tinfo, &deq2, "a", "a", "a");
@@ -79,6 +85,8 @@ void deq_str_tests(tinfo* tinfo) {
 
     deq_str_clear(&deq2);
     check_size_and_contents(tinfo, &deq2, "", "", "");
+    check_isnull(tinfo, deq_str_first(&deq2));
+    check_isnull(tinfo, deq_str_last(&deq2));
     deq_str_free(&deq2);
 }
 
