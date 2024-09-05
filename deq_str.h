@@ -23,10 +23,11 @@ typedef struct DeqStrNode {
 // Returns a new empty DeqStr.
 DeqStr deq_str_alloc(bool owns);
 
-// Frees a DeqStr and all its values. It can't be used after this.
+// Frees a DeqStr and frees all its values if owned. It can't be used
+// after this.
 void deq_str_free(DeqStr* deq);
 
-// Clears a DeqStr and all its values.
+// Clears a DeqStr and frees all its values if owned.
 void deq_str_clear(DeqStr* deq);
 
 // Returns true if the DeqStr is owning.
@@ -38,10 +39,10 @@ void deq_str_clear(DeqStr* deq);
 // Returns the DeqStr's size.
 #define deq_str_size(deq) ((deq)->_size)
 
-// Returns the DeqStr's first value. The DeqStr must not be empty.
+// Returns the DeqStr's first value or NULL if empty.
 const char* deq_str_first(DeqStr* deq);
 
-// Returns the DeqStr's last value. The DeqStr must not be empty.
+// Returns the DeqStr's last value or NULL if empty.
 const char* deq_str_last(DeqStr* deq);
 
 // Adds a new node with the given value at the end of the DeqStr.
@@ -54,14 +55,14 @@ void deq_str_push(DeqStr* deq, char* value);
 // strdup()).
 void deq_str_push_first(DeqStr* deq, char* value);
 
-// Removes and frees the DeqStr's last node, returning its value.
+// Removes and frees the DeqStr's last node, returning its value or NULL
+// if empty.
 // The caller owns the value if the DeqStr is owning.
-// The DeqStr must not be empty.
 char* deq_str_pop(DeqStr* deq);
 
-// Removes and frees the DeqStr's first node, returning its value.
+// Removes and frees the DeqStr's first node, returning its value or
+// NULL if empty.
 // The caller owns the value if the DeqStr is owning.
-// The DeqStr must not be empty.
 char* deq_str_pop_first(DeqStr* deq);
 
 // Returns a char* of all the deq's strings joined together with sep, or

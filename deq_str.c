@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define assert_nonempty(d) assert((d->_size) && "unexpectedly empty queue")
-
 static void push_head(DeqStr* deq, DeqStrNode* node);
 static DeqStrNode* node_alloc(char* value);
 static void node_free(DeqStrNode* node, bool owns);
@@ -28,12 +26,14 @@ void deq_str_clear(DeqStr* deq) {
 }
 
 const char* deq_str_first(DeqStr* deq) {
-    assert_nonempty(deq);
+    if (!deq->_size)
+        return NULL;
     return deq->head->value;
 }
 
 const char* deq_str_last(DeqStr* deq) {
-    assert_nonempty(deq);
+    if (!deq->_size)
+        return NULL;
     return deq->tail->value;
 }
 
@@ -70,7 +70,8 @@ static void push_head(DeqStr* deq, DeqStrNode* node) {
 }
 
 char* deq_str_pop(DeqStr* deq) {
-    assert_nonempty(deq);
+    if (!deq->_size)
+        return NULL;
     DeqStrNode* node = deq->tail;
     char* value = node->value;
     if (deq->_size == 1)
@@ -85,7 +86,8 @@ char* deq_str_pop(DeqStr* deq) {
 }
 
 char* deq_str_pop_first(DeqStr* deq) {
-    assert_nonempty(deq);
+    if (!deq->_size)
+        return NULL;
     DeqStrNode* node = deq->head;
     char* value = node->value;
     if (deq->_size == 1)

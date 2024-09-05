@@ -1,14 +1,4 @@
-# Do these as needed:
-#   - set_int_symmetric_difference set_int_isdisjoint set_int_issubset
-#     set_int_issuperset
-#   - set_str_symmetric_difference set_str_isdisjoint set_str_issubset
-#     set_str_issuperset
-#   - Deq (void* values, owned iff _destroy)
-#   - Map (based on SetStr; owned char* keys; void* values, owned iff
-#	   _cpy && _destroy)
-#   - MapStrStr (rbt; see set_str)
-#   - MapIntAny (rbt; see set_str)
-#   - Lst
+# Notes at the end
 
 cx.h
 vec_common.h
@@ -69,5 +59,17 @@ doc.adoc
 doc.rb
 doc.css
 doc.sh
+
+# Do these as needed:
+#   - set_int_symmetric_difference set_int_isdisjoint set_int_issubset
+#     set_int_issuperset
+#   - set_str_symmetric_difference set_str_isdisjoint set_str_issubset
+#     set_str_issuperset
+#   - Deq (void* values, owned iff _destroy)
+#   - Map (based on SetStr; owned char* keys; void* values, owned iff
+#	   _cpy && _destroy)
+#   - MapStrStr (rbt; see set_str)
+#   - MapIntAny (rbt; see set_str)
+#   - Lst
 
 # vim: syn=yaml
