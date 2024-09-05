@@ -1,6 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
-#include "vec_common_test.h"
+#include "vecs_test.h"
 #include <stdio.h>
 
 void check_found(tinfo* tinfo, const int i1, const int i2) {

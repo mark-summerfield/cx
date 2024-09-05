@@ -2,8 +2,8 @@
 
 #include "vec_str_test.h"
 #include "str.h"
-#include "vec_common_test.h"
 #include "vec_str.h"
+#include "vecs_test.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

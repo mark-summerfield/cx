@@ -2,7 +2,7 @@
 #pragma once
 
 #include "cx.h"
-#include "vec_common.h"
+#include "vecs.h"
 
 // A vector of owned or borrowed void* values.
 // All data members are private; all accesses via functions.

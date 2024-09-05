@@ -2,8 +2,8 @@
 
 #include "vec_int_test.h"
 #include "str.h"
-#include "vec_common_test.h"
 #include "vec_int.h"
+#include "vecs_test.h"
 #include <stdlib.h>
 
 static void check_size_cap(tinfo* tinfo, VecInt* v, int size, int cap);

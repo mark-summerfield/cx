@@ -1,7 +1,7 @@
 # Notes at the end
 
 cx.h
-vec_common.h
+vecs.h
 vec.h
 vec.c
 vec_str.h

@@ -3,6 +3,6 @@
 
 #include "cx.h"
 #include "cx_util_test.h"
-#include "vec_common.h"
+#include "vecs.h"
 
 void check_found(tinfo* tinfo, const int i1, const int i2);

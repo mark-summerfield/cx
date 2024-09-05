@@ -2,7 +2,7 @@
 #pragma once
 
 #include "cx.h"
-#include "vec_common.h"
+#include "vecs.h"
 #include <stdio.h>
 
 // A vector of int values.

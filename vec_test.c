@@ -4,7 +4,7 @@
 #include "str.h"
 #include "tag_test.h"
 #include "vec.h"
-#include "vec_common_test.h"
+#include "vecs_test.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
