@@ -25,7 +25,6 @@ static SetStrNode* node_remove_right(SetStrNode* node, const char* value,
 static SetStrNode* node_fixup(SetStrNode* node);
 static const SetStrNode* node_first(const SetStrNode* node);
 static SetStrNode* node_remove_minimum(SetStrNode* node, bool owns);
-static SetStrNode* node_copy(const SetStrNode* node, bool owns);
 static int node_max_depth(const SetStrNode* node);
 
 inline SetStr set_str_alloc(bool owns) {
@@ -228,18 +227,14 @@ static SetStrNode* node_remove_minimum(SetStrNode* node, bool owns) {
 
 SetStr set_str_copy(const SetStr* set, bool owns) {
     assert_notnull(set);
-    return (SetStr){._root = node_copy(set->_root, owns),
-                    ._size = set->_size,
-                    ._owns = owns};
-}
-
-static SetStrNode* node_copy(const SetStrNode* node, bool owns) {
-    if (!node)
-        return NULL;
-    SetStrNode* copy = node_alloc(owns ? strdup(node->value) : node->value);
-    copy->left = node_copy(node->left, owns);
-    copy->right = node_copy(node->right, owns);
-    return copy;
+    SetStr set2 = set_str_alloc(owns);
+    VecStr vec = set_str_to_vec(set, BORROWS);
+    for (int i = 0; i < vec_str_size(&vec); i++) {
+        char* value = vec_str_get(&vec, i);
+        set_str_add(&set2, owns ? strdup(value) : value);
+    }
+    vec_str_free(&vec);
+    return set2;
 }
 
 bool set_str_equal(const SetStr* set1, const SetStr* set2) {

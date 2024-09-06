@@ -142,9 +142,7 @@ VecStr vec_str_copy(const VecStr* vec, bool owns) {
     VecStr out = vec_str_alloc_custom(vec->_size ? vec->_size : 0, owns);
     for (int i = 0; i < vec->_size; ++i) {
         char* value = vec->_values[i];
-        if (owns)
-            value = strdup(value);
-        vec_str_push(&out, value);
+        vec_str_push(&out, owns ? strdup(value) : value);
     }
     return out;
 }
