@@ -15,14 +15,12 @@ typedef struct Vec {
     int _cap;  // The size of the allocated array
     void** _values;
     int (*_cmp)(const void*, const void*);
-    void* (*_cpy)(const void*);
     void (*_destroy)(void* value);
 } Vec;
 
 typedef struct {
     int cap;
     int (*cmp)(const void*, const void*);
-    void* (*cpy)(const void*);
     void (*destroy)(void* values);
 } VecAllocArgs;
 
@@ -30,10 +28,9 @@ typedef struct {
 // 0.
 // Set the initial capacity with .cap.
 // Caller must supply cmp to compare values (for find, sort, and search),
-// and if owning, cpy to copy a value, and destroy to free a value.
-#define vec_alloc(...)         \
-    vec_alloc_((VecAllocArgs){ \
-        .cap = 0, .cpy = NULL, .destroy = NULL, __VA_ARGS__})
+// and if owning, destroy to free a value.
+#define vec_alloc(...) \
+    vec_alloc_((VecAllocArgs){.cap = 0, .destroy = NULL, __VA_ARGS__})
 Vec vec_alloc_(VecAllocArgs args);
 
 // Destroys the Vec freeing its memory and if owning, also freeing every
@@ -44,7 +41,7 @@ void vec_free(Vec* vec);
 void vec_clear(Vec* vec);
 
 // Returns true if the Vec is owning.
-#define vec_owns(vec) ((vec)->_destroy && (vec)->_cpy)
+#define vec_owns(vec) ((vec)->_destroy != NULL)
 
 // Returns true if the Vec is empty.
 #define vec_isempty(vec) ((vec)->_size == 0)
@@ -113,14 +110,11 @@ void* vec_pop(Vec* vec);
 // strdup()).
 void vec_push(Vec* vec, void* value);
 
-// Returns a copy of the Vec including cmp, cpy, and destroy.
-Vec vec_copy(const Vec* vec, bool owns);
-
 // Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.
 // Only callable if both vecs are compatible, i.e., they have matching
-// _cpy(), _destroy(), and _cmp(), functions (so both are owners or both
-// are borrowers of the same kind of objects).
+// _cmp() and _destroy() functions (so both are owners or both are
+// borrowers of the same kind of objects).
 // Use case: an array of Vec's each one of which is populated in its own
 // thread and at the end we want to merge all the Vec's into one.
 void vec_merge(Vec* vec1, Vec* vec2);
@@ -128,8 +122,8 @@ void vec_merge(Vec* vec1, Vec* vec2);
 // Returns true if the two Vec's have the same values.
 bool vec_equal(const Vec* vec1, const Vec* vec2);
 
-// Returns true if the two Vec's have the same values and the same cmp,
-// cpy, and destroy.
+// Returns true if the two Vec's have the same values and the same cmp
+// and destroy.
 bool vec_same(const Vec* vec1, const Vec* vec2);
 
 // Returns the index where the value was found in the Vec or

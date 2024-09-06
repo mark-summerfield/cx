@@ -18,12 +18,15 @@ static void same(tinfo* tinfo, const Vec* v1, const Vec* v2, bool exact);
 static void merge_tests(tinfo*);
 static void sort_tests(tinfo*);
 static void misc_tests(tinfo* tinfo);
+static void misc_test2(tinfo* tinfo, const Vec* v1);
+static Vec copy_vec(tinfo* tinfo, const Vec* v1);
 
 void vec_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    // merge_tests(tinfo);
-    // sort_tests(tinfo);
+    // TODO reinstate
+    //merge_tests(tinfo);
+    //sort_tests(tinfo);
     misc_tests(tinfo);
 }
 
@@ -32,12 +35,15 @@ static void misc_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tag_make(true);
-    Vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .cpy = tag_copy,
-                       .destroy = tag_free);
+    Vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .destroy = tag_free);
     check_size_cap(tinfo, &v1, 0, 5);
+    check_bool_eq(tinfo, vec_owns(&v1), true);
 
-    Vec v2 = vec_copy(&v1, BORROWS); // copying empty so OWNS|BORROWS ok
+    Vec v2 = copy_vec(tinfo, &v1);
+    check_bool_eq(tinfo, vec_owns(&v2), true);
+
     check_size_cap(tinfo, &v1, 0, 5);
+    check_size_cap(tinfo, &v2, 0, 5);
 
     for (int i = 0; i < 7; ++i)
         vec_push(&v1, tag_make(false));
@@ -46,18 +52,14 @@ static void misc_tests(tinfo* tinfo) {
 
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     vec_free(&v2);
-    v2 = vec_copy(&v1, BORROWS);
+
+    v2 = copy_vec(tinfo, &v1);
     check_size_cap(tinfo, &v2, 7, 7);
     match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     same(tinfo, &v1, &v2, false);
     check_bool_eq(tinfo, vec_equal(&v1, &v2), true);
 
-    Vec v3 = vec_copy(&v1, BORROWS);
-    check_size_cap(tinfo, &v3, 7, 7);
-    match(tinfo, &v3, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
-    same(tinfo, &v1, &v3, false);
-    check_bool_eq(tinfo, vec_equal(&v1, &v3), true);
-    vec_free(&v3);
+    misc_test2(tinfo, &v1);
 
     check_size_cap(tinfo, &v1, 7, 10);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
@@ -145,12 +147,21 @@ static void misc_tests(tinfo* tinfo) {
     check_size_cap(tinfo, &v2, 0, 0);
 }
 
+static void misc_test2(tinfo* tinfo, const Vec* v1) {
+    Vec v3 = copy_vec(tinfo, v1);
+    check_bool_eq(tinfo, vec_owns(&v3), true);
+    check_size_cap(tinfo, &v3, 7, 7);
+    match(tinfo, &v3, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
+    same(tinfo, v1, &v3, false);
+    check_bool_eq(tinfo, vec_equal(v1, &v3), true);
+    vec_free(&v3);
+}
+
 static void merge_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tag_make(true);
-    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
-                       .destroy = tag_free);
+    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .destroy = tag_free);
     check_bool_eq(tinfo, vec_owns(&v1), true);
     check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
@@ -158,8 +169,7 @@ static void merge_tests(tinfo* tinfo) {
     check_size_cap(tinfo, &v1, 5, 7);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
 
-    Vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
-                       .destroy = tag_free);
+    Vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .destroy = tag_free);
     check_bool_eq(tinfo, vec_owns(&v2), true);
     check_size_cap(tinfo, &v2, 0, 11);
     for (int i = 0; i < 6; ++i)
@@ -184,8 +194,7 @@ static void sort_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tag_make(true);
-    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
-                       .destroy = tag_free);
+    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .destroy = tag_free);
     check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
@@ -333,6 +342,15 @@ static void same(tinfo* tinfo, const Vec* v1, const Vec* v2, bool exact) {
                 tinfo->tag, bool_to_str(exact), bool_to_str(sm));
     } else
         tinfo->ok++;
+}
+
+static Vec copy_vec(tinfo* tinfo, const Vec* v1) {
+    Vec v2 =
+        vec_alloc(.cap = vec_size(v1), .cmp = tag_cmp, .destroy = tag_free);
+    check_bool_eq(tinfo, vec_owns(&v2), true);
+    for (int i = 0; i < vec_size(v1); ++i)
+        vec_push(&v2, tag_copy(vec_get(v1, i)));
+    return v2;
 }
 
 #pragma GCC diagnostic pop

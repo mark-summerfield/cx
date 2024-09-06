@@ -8,8 +8,6 @@ static void vec_grow(Vec* vec);
 // This *is* used, via a macro in vec.h; clang-format gets confused.
 Vec vec_alloc_(VecAllocArgs args) {
     assert(args.cmp && "must provide a cmp function");
-    assert(((args.cpy && args.destroy) || (!args.cpy && !args.destroy)) &&
-           "must provide both cpy and destroy (owns) or neither");
     args.cap = args.cap > 0 ? args.cap : 0;
     void** values = NULL;
     if (args.cap) {
@@ -20,7 +18,6 @@ Vec vec_alloc_(VecAllocArgs args) {
                  ._cap = args.cap,
                  ._values = values,
                  ._cmp = args.cmp,
-                 ._cpy = args.cpy,
                  ._destroy = args.destroy};
 }
 
@@ -30,17 +27,16 @@ void vec_free(Vec* vec) {
     free(vec->_values);
     vec->_values = NULL;
     vec->_cap = 0;
-    vec->_cpy = NULL;
     vec->_destroy = NULL;
 }
 
 void vec_clear(Vec* vec) {
     assert_notnull(vec);
-    if (vec->_destroy)
-        for (int i = 0; i < vec->_size; ++i)
+    for (int i = 0; i < vec->_size; ++i) {
+        if (vec->_destroy)
             vec->_destroy(vec->_values[i]); // contents of contained object
-    for (int i = 0; i < vec->_size; ++i)
-        free(vec->_values[i]); // containing object
+        free(vec->_values[i]);              // containing object
+    }
     vec->_size = 0;
 }
 
@@ -69,7 +65,8 @@ void vec_set(Vec* vec, int index, void* value) {
     assert_notnull(value);
     assert_valid_index(vec, index);
     if (vec->_destroy)
-        vec->_destroy(vec->_values[index]);
+        vec->_destroy(vec->_values[index]); // contents of contained object
+    free(vec->_values[index]);              // containing object
     vec->_values[index] = value;
 }
 
@@ -118,7 +115,8 @@ void* vec_replace(Vec* vec, int index, void* value) {
 inline void vec_remove(Vec* vec, int index) {
     void* value = vec_take(vec, index); // vec_take does asserts
     if (vec->_destroy)
-        vec->_destroy(value);
+        vec->_destroy(value); // contents of contained object
+    free(value);              // containing object
 }
 
 void* vec_take(Vec* vec, int index) {
@@ -147,23 +145,6 @@ void vec_push(Vec* vec, void* value) {
     vec->_values[vec->_size++] = value;
 }
 
-Vec vec_copy(const Vec* vec, bool owns) {
-    assert_notnull(vec);
-    assert((!owns || (owns && vec->_destroy && vec->_cpy)) &&
-           "can't copy borrowed to owned");
-#pragma GCC diagnostic ignored "-Woverride-init"
-#pragma GCC diagnostic push
-    Vec out = vec_alloc(.cap = vec->_size, .cmp = vec->_cmp,
-                        .cpy = owns ? vec->_cpy : NULL,
-                        .destroy = owns ? vec->_destroy : NULL);
-#pragma GCC diagnostic pop
-    for (int i = 0; i < vec->_size; ++i) {
-        void* value = vec->_values[i];
-        vec_push(&out, owns ? vec->_cpy(value) : value);
-    }
-    return out;
-}
-
 void vec_merge(Vec* vec1, Vec* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
@@ -183,7 +164,6 @@ void vec_merge(Vec* vec1, Vec* vec2) {
     vec2->_values = NULL;
     vec2->_cap = 0;
     vec2->_size = 0;
-    vec2->_cpy = NULL;
     vec2->_destroy = NULL;
 }
 
@@ -201,8 +181,7 @@ bool vec_equal(const Vec* vec1, const Vec* vec2) {
 bool vec_same(const Vec* vec1, const Vec* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
-    if (vec1->_cmp != vec2->_cmp || vec1->_cpy != vec2->_cpy ||
-        vec1->_destroy != vec2->_destroy)
+    if (vec1->_cmp != vec2->_cmp || vec1->_destroy != vec2->_destroy)
         return false;
     return vec_equal(vec1, vec2);
 }
