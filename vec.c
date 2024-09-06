@@ -38,7 +38,9 @@ void vec_clear(Vec* vec) {
     assert_notnull(vec);
     if (vec->_destroy)
         for (int i = 0; i < vec->_size; ++i)
-            vec->_destroy(vec->_values[i]);
+            vec->_destroy(vec->_values[i]); // contents of contained object
+    for (int i = 0; i < vec->_size; ++i)
+        free(vec->_values[i]); // containing object
     vec->_size = 0;
 }
 

@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+//#define MEMCHECK
+
 typedef struct {
     char* name; // caller owns
     long id;
@@ -24,6 +26,10 @@ Tag* tag_alloc(char* name, long id) {
     Tag* tag = malloc(sizeof(Tag));
     tag->name = name;
     tag->id = id;
+#ifdef MEMCHECK
+    static int x = 0;
+    printf("tag_alloc %2d:\"%s\"#%ld\n", ++x, tag->name, tag->id);
+#endif
     return tag;
 }
 
@@ -39,8 +45,8 @@ Tag* tag_make(bool reset) {
         return NULL;
     }
     char buf[_TAG_BUF_SZ];
-    int n = sprintf(&buf[0], "%c%c#%ld", N1, N2, ID);
-    Tag* tag = tag_alloc(strndup(&buf[0], n), ID++);
+    int n = sprintf(buf, "%c%c#%ld", N1, N2, ID);
+    Tag* tag = tag_alloc(strndup(buf, n), ID++);
     N2++;
     if (N2 > 'z') {
         N2 = 'a';
@@ -55,6 +61,10 @@ Tag* tag_make(bool reset) {
 
 void tag_free(void* t) {
     Tag* tag = t;
+#ifdef MEMCHECK
+    static int x = 0;
+    printf("tag_free  %2d:\"%s\"#%ld\n", ++x, tag->name, tag->id);
+#endif
     free(tag->name);
     tag->name = NULL;
 }
@@ -81,6 +91,6 @@ void* tag_copy(const void* old) {
 char* tag_to_str(Tag* tag) {
     assert_notnull(tag);
     char buf[_TAG_BUF_SZ];
-    int n = sprintf(&buf[0], "\"%s\"#%ld", tag->name, tag->id);
-    return strndup(&buf[0], n);
+    int n = sprintf(buf, "\"%s\"#%ld", tag->name, tag->id);
+    return strndup(buf, n);
 }

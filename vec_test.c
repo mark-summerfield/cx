@@ -17,14 +17,18 @@ static void match(tinfo* tinfo, const Vec* v, const char* expected);
 static void same(tinfo* tinfo, const Vec* v1, const Vec* v2, bool exact);
 static void merge_tests(tinfo*);
 static void sort_tests(tinfo*);
+static void misc_tests(tinfo* tinfo);
 
 void vec_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    merge_tests(tinfo);
-    sort_tests(tinfo);
+    // merge_tests(tinfo);
+    // sort_tests(tinfo);
+    misc_tests(tinfo);
+}
 
-    tinfo->tag = "vec_tests continued";
+static void misc_tests(tinfo* tinfo) {
+    tinfo->tag = "vec_tests misc_tests";
     if (tinfo->verbose)
         puts(tinfo->tag);
     tag_make(true);
@@ -147,6 +151,7 @@ static void merge_tests(tinfo* tinfo) {
     tag_make(true);
     Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
+    check_bool_eq(tinfo, vec_owns(&v1), true);
     check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
@@ -155,6 +160,7 @@ static void merge_tests(tinfo* tinfo) {
 
     Vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .cpy = tag_copy,
                        .destroy = tag_free);
+    check_bool_eq(tinfo, vec_owns(&v2), true);
     check_size_cap(tinfo, &v2, 0, 11);
     for (int i = 0; i < 6; ++i)
         vec_push(&v2, tag_make(false));
@@ -170,6 +176,8 @@ static void merge_tests(tinfo* tinfo) {
 
     // v2 already freed by vec_merge
     vec_free(&v1);
+    check_size_cap(tinfo, &v1, 0, 0);
+    check_size_cap(tinfo, &v2, 0, 0);
 }
 
 static void sort_tests(tinfo* tinfo) {

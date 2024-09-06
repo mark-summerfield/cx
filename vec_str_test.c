@@ -39,7 +39,7 @@ void vec_str_tests(tinfo* tinfo) {
     tinfo->tag = "vec_str_tests continued";
     if (tinfo->verbose)
         puts(tinfo->tag);
-    VecStr v1 = vec_str_alloc(); // default of 0
+    VecStr v1 = vec_str_alloc(); // default of 0 size and OWNS
     check_size_cap(tinfo, &v1, 0, 0);
 
     VecStr v2 = vec_str_copy(&v1, BORROWS);
@@ -52,7 +52,7 @@ void vec_str_tests(tinfo* tinfo) {
         vec_str_push(&v1, strdup(WORDS[i]));
         if (i < 10) {
             check_size_cap(tinfo, &v2, i, i == 0 ? 0 : 32);
-            vec_str_push(&v2, strdup(WORDS[i]));
+            vec_str_push(&v2, (char*)WORDS[i]);
         }
     }
     tinfo->ok++;
@@ -82,8 +82,8 @@ void vec_str_tests(tinfo* tinfo) {
         tinfo, &v1,
         "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa|alpha");
 
-    vec_str_insert(&v1, 4, strdup("beta"));
-    const char* s2 = vec_str_get(&v1, 4);
+    vec_str_insert(&v1, 4, "beta"); // valgrind says strdup here would leak!
+    const char* s2 = vec_str_get(&v1, 4); // but see "B2" later
     check_str_eq(tinfo, s2, "beta");
     match(tinfo, &v1,
           "One|Zulu|Victor|Romeo|beta|Sierra|Whiskey|X-ray|Two|"
@@ -112,7 +112,7 @@ void vec_str_tests(tinfo* tinfo) {
           "A0|Zulu|Victor|Romeo|beta|Sierra|gamma|X-ray|Two|"
           "India|Papa|alpha");
 
-    vec_str_insert(&v1, 2, strdup("B2"));
+    vec_str_insert(&v1, 2, strdup("B2")); // this is fine (& expected)
     const char* s2a = vec_str_get(&v1, 2);
     check_str_eq(tinfo, s2a, "B2");
     match(tinfo, &v1,
