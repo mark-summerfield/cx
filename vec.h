@@ -110,6 +110,8 @@ void* vec_pop(Vec* vec);
 // strdup()).
 void vec_push(Vec* vec, void* value);
 
+// vec_copy(Vec*): see vec_test.c's copy_vec() function for an example.
+
 // Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.
 // Only callable if both vecs are compatible, i.e., they have matching
