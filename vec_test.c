@@ -14,7 +14,7 @@
 
 static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap);
 static void match(tinfo* tinfo, const Vec* v, const char* expected);
-static void same(tinfo* tinfo, const Vec* v1, const Vec* v2, bool exact);
+static void equal(tinfo* tinfo, const Vec* v1, const Vec* v2, bool same);
 static void merge_tests(tinfo*);
 static void sort_tests(tinfo*);
 static void misc_tests(tinfo* tinfo);
@@ -24,9 +24,8 @@ static Vec copy_vec(tinfo* tinfo, const Vec* v1);
 void vec_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    // TODO reinstate
-    //merge_tests(tinfo);
-    //sort_tests(tinfo);
+    merge_tests(tinfo);
+    sort_tests(tinfo);
     misc_tests(tinfo);
 }
 
@@ -43,7 +42,7 @@ static void misc_tests(tinfo* tinfo) {
     check_bool_eq(tinfo, vec_owns(&v2), true);
 
     check_size_cap(tinfo, &v1, 0, 5);
-    check_size_cap(tinfo, &v2, 0, 5);
+    check_size_cap(tinfo, &v2, 0, 0);
 
     for (int i = 0; i < 7; ++i)
         vec_push(&v1, tag_make(false));
@@ -56,7 +55,7 @@ static void misc_tests(tinfo* tinfo) {
     v2 = copy_vec(tinfo, &v1);
     check_size_cap(tinfo, &v2, 7, 7);
     match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
-    same(tinfo, &v1, &v2, false);
+    equal(tinfo, &v1, &v2, true);
     check_bool_eq(tinfo, vec_equal(&v1, &v2), true);
 
     misc_test2(tinfo, &v1);
@@ -69,6 +68,7 @@ static void misc_tests(tinfo* tinfo) {
     check_str_eq(tinfo, t1->name, "Ag#106");
     check_int_eq(tinfo, t1->id, 106);
     tag_free(t1);
+    free(t1);
     check_size_cap(tinfo, &v1, 6, 10);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105");
     check_bool_eq(tinfo, vec_equal(&v1, &v2), false);
@@ -81,6 +81,7 @@ static void misc_tests(tinfo* tinfo) {
     check_str_eq(tinfo, t1->name, "Af#105");
     check_int_eq(tinfo, t1->id, 105);
     tag_free(t1);
+    free(t1);
     t1 = NULL;
     check_size_cap(tinfo, &v1, 5, 10);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
@@ -107,10 +108,13 @@ static void misc_tests(tinfo* tinfo) {
 
     t1 = vec_replace(&v1, 0, tag_make(false));
     tag_free(t1);
+    free(t1);
     t1 = vec_replace(&v1, 4, tag_make(false));
     tag_free(t1);
+    free(t1);
     t1 = vec_replace(&v1, vec_size(&v1) - 1, tag_make(false));
     tag_free(t1);
+    free(t1);
     check_size_cap(tinfo, &v1, 6, 10);
     match(tinfo, &v1, "Al#111|Ab#101|Ac#102|Aj#109|Am#112|An#113");
 
@@ -152,7 +156,7 @@ static void misc_test2(tinfo* tinfo, const Vec* v1) {
     check_bool_eq(tinfo, vec_owns(&v3), true);
     check_size_cap(tinfo, &v3, 7, 7);
     match(tinfo, &v3, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
-    same(tinfo, v1, &v3, false);
+    equal(tinfo, v1, &v3, true);
     check_bool_eq(tinfo, vec_equal(v1, &v3), true);
     vec_free(&v3);
 }
@@ -328,18 +332,16 @@ static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
         tinfo->ok++;
 }
 
-static void same(tinfo* tinfo, const Vec* v1, const Vec* v2, bool exact) {
+static void equal(tinfo* tinfo, const Vec* v1, const Vec* v2, bool same) {
     tinfo->total++;
     if (!vec_equal(v1, v2)) {
-        fprintf(stderr, "FAIL: %s vec_equal() expected true != false\n",
-                tinfo->tag);
+        fprintf(stderr, "FAIL: %s vec_equal() true != false\n", tinfo->tag);
     } else
         tinfo->ok++;
     tinfo->total++;
-    bool sm = vec_same(v1, v2);
-    if (sm != exact) {
-        fprintf(stderr, "FAIL: %s vec_same() expected %s != %s\n",
-                tinfo->tag, bool_to_str(exact), bool_to_str(sm));
+    if (same != vec_same(v1, v2)) {
+        fprintf(stderr, "FAIL: %s vec_same() %s != %s\n", tinfo->tag,
+                bool_to_str(same), bool_to_str(!same));
     } else
         tinfo->ok++;
 }
