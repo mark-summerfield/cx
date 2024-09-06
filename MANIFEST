@@ -67,9 +67,9 @@ doc.sh
 #     set_str_issuperset
 #   - Deq (void* values, owned iff _destroy)
 #   - Map (based on SetStr; owned char* keys; void* values, owned iff
-#	   _cpy && _destroy)
+#	   _destroy != NULL)
 #   - MapStrStr (rbt; see set_str)
 #   - MapIntAny (rbt; see set_str)
-#   - Lst
+#   - mx.h (_Generic isclose(double|float|long double)
 
 # vim: syn=yaml
