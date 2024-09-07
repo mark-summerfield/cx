@@ -110,7 +110,9 @@ void* vec_pop(Vec* vec);
 // strdup()).
 void vec_push(Vec* vec, void* value);
 
-// vec_copy(Vec*): see vec_test.c's copy_vec() function for an example.
+// Returns an owning (or borrowing) copy of the given owning (or borrowing)
+// Vec using the given copy function.
+Vec vec_copy(const Vec* vec, void* (*cpy)(const void*));
 
 // Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.

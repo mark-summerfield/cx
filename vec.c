@@ -145,6 +145,17 @@ void vec_push(Vec* vec, void* value) {
     vec->_values[vec->_size++] = value;
 }
 
+Vec vec_copy(const Vec* vec, void* (*cpy)(const void*)) {
+#pragma GCC diagnostic ignored "-Woverride-init"
+#pragma GCC diagnostic push
+    Vec out = vec_alloc(.cap = vec->_size, .cmp = vec->_cmp,
+                        .destroy = vec->_destroy);
+#pragma GCC diagnostic pop
+    for (int i = 0; i < vec->_size; ++i)
+        vec_push(&out, cpy(vec->_values[i]));
+    return out;
+}
+
 void vec_merge(Vec* vec1, Vec* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);

@@ -78,9 +78,10 @@ int tag_cmp(const void* t1, const void* t2) {
 }
 
 // caller owns
-void* tag_copy(const Tag* tag) {
+void* tag_copy(const void* tag) {
     assert_notnull(tag);
-    return tag_alloc(strdup(tag->name), tag->id);
+    const Tag* t = tag;
+    return tag_alloc(strdup(t->name), t->id);
 }
 
 // caller owns
