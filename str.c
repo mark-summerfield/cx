@@ -45,7 +45,7 @@ void str_uppercase_ip(char* s) {
     }
 }
 
-char* str_uppercase_alloc(const char* s) {
+char* str_uppercase(const char* s) {
     assert(s && "can't uppercase NULL");
     char* u = malloc(strlen(s) + 1);
     assert_alloc(u);
@@ -58,7 +58,7 @@ char* str_uppercase_alloc(const char* s) {
     return u;
 }
 
-char* str_uppercase_allocn(const char* s, int n) {
+char* str_uppercasen(const char* s, int n) {
     assert(s && "can't uppercase NULL");
     char* u = malloc(n + 1); // +1 for terminating 0
     assert_alloc(u);
@@ -79,7 +79,7 @@ void str_lowercase_ip(char* s) {
     }
 }
 
-char* str_lowercase_alloc(const char* s) {
+char* str_lowercase(const char* s) {
     assert(s && "can't lowercase NULL");
     char* u = malloc(strlen(s) + 1);
     assert_alloc(u);

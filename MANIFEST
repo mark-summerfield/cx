@@ -1,5 +1,7 @@
 # Notes at the end
 
+# TODO ini.[hc] to read/write INI files
+
 cx.h
 vecs.h
 vec.h

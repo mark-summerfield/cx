@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void str_test_uppercase_alloc(tinfo*);
-static void str_test_uppercase_allocn(tinfo*);
+static void str_test_uppercase(tinfo*);
+static void str_test_uppercasen(tinfo*);
 static void str_test_uppercase_ip(tinfo*);
-static void str_test_lowercase_alloc(tinfo*);
+static void str_test_lowercase(tinfo*);
 static void str_test_lowercase_ip(tinfo*);
 static void str_test_begins_ends(tinfo*);
 static void str_test_filename_ext(tinfo*);
@@ -16,14 +16,14 @@ static void str_test_filename_ext(tinfo*);
 void str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    tinfo->tag = "str_test_uppercase_alloc";
-    str_test_uppercase_alloc(tinfo);
-    tinfo->tag = "str_test_uppercase_allocn";
-    str_test_uppercase_allocn(tinfo);
+    tinfo->tag = "str_test_uppercase";
+    str_test_uppercase(tinfo);
+    tinfo->tag = "str_test_uppercasen";
+    str_test_uppercasen(tinfo);
     tinfo->tag = "str_test_uppercase_ip";
     str_test_uppercase_ip(tinfo);
-    tinfo->tag = "str_test_lowercase_alloc";
-    str_test_lowercase_alloc(tinfo);
+    tinfo->tag = "str_test_lowercase";
+    str_test_lowercase(tinfo);
     tinfo->tag = "str_test_lowercase_ip";
     str_test_lowercase_ip(tinfo);
     tinfo->tag = "str_test_begins_ends";
@@ -32,22 +32,22 @@ void str_tests(tinfo* tinfo) {
     str_test_filename_ext(tinfo);
 }
 
-static void str_test_uppercase_alloc(tinfo* tinfo) {
+static void str_test_uppercase(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     const char* original = "this is a test";
     const char* expected = "THIS IS A TEST";
-    char* actual = str_uppercase_alloc(original);
+    char* actual = str_uppercase(original);
     check_str_eq(tinfo, expected, actual);
     free(actual);
 }
 
-static void str_test_uppercase_allocn(tinfo* tinfo) {
+static void str_test_uppercasen(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     const char* original = "this is a test of allocn";
     const char* expected = "THIS IS A TEST";
-    char* actual = str_uppercase_allocn(original, 14);
+    char* actual = str_uppercasen(original, 14);
     check_str_eq(tinfo, expected, actual);
     free(actual);
 }
@@ -61,12 +61,12 @@ static void str_test_uppercase_ip(tinfo* tinfo) {
     check_str_eq(tinfo, expected, original);
 }
 
-static void str_test_lowercase_alloc(tinfo* tinfo) {
+static void str_test_lowercase(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     const char* original = "THIS IS A TEST";
     const char* expected = "this is a test";
-    char* actual = str_lowercase_alloc(original);
+    char* actual = str_lowercase(original);
     check_str_eq(tinfo, expected, actual);
     free(actual);
 }

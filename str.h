@@ -29,17 +29,17 @@ bool str_ends_fold(const char*, const char*);
 void str_uppercase_ip(char*);
 
 // Returns new char* of given char*'s ASCII chars uppercased
-char* str_uppercase_alloc(const char*);
+char* str_uppercase(const char*);
 
 // Returns new char* of up to n chars from the given char*'s ASCII chars
 // uppercased
-char* str_uppercase_allocn(const char*, int n);
+char* str_uppercasen(const char*, int n);
 
 // Modifies char*'s text in-place converting ASCII lowercase to lowercase
 void str_lowercase_ip(char*);
 
 // Returns new char* of given char*'s ASCII chars lowercased
-char* str_lowercase_alloc(const char*);
+char* str_lowercase(const char*);
 
 int str_strcmp(const void* s, const void* t);
 
