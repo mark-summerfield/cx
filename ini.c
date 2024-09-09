@@ -109,9 +109,11 @@ static void save_file(Ini* ini, FILE* file) {
         const IniItem* item = vec_get(&ini->items, i);
         if (item->sectid != prev_sectid) { // new section
             prev_sectid = item->sectid;
-            const char* section = vec_str_get(&ini->sections, prev_sectid);
-            if (!str_eq(section, INI_NO_SECTION))
+            if (prev_sectid != INI_NO_SECTION) {
+                const char* section =
+                    vec_str_get(&ini->sections, prev_sectid);
                 fprintf(file, "[%s]\n", section);
+            }
         }
         if (item->comment)
             fprintf(file, "; %s\n", item->comment);
