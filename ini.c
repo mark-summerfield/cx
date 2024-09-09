@@ -14,7 +14,7 @@
 static bool load_file(Ini* ini);
 bool parse_text(Ini* ini, const char* text);
 static void save_file(Ini* ini, FILE* file);
-static IniItem* item_alloc(const char* key, const char* value, int sectid);
+static IniItem* item_alloc(char* key, char* value, int sectid);
 static void item_destroy(void* item_);
 static int item_cmp(const void* item1_, const void* item2_);
 static int find_sectid(const Ini* ini, const char* section);
@@ -303,10 +303,11 @@ static int item_cmp(const void* item1_, const void* item2_) {
     return strcasecmp(item1->key, item2->key);
 }
 
-static IniItem* item_alloc(const char* key, const char* value, int sectid) {
+// Takes ownership of key and value
+static IniItem* item_alloc(char* key, char* value, int sectid) {
     IniItem* item = malloc(sizeof(IniItem));
-    item->key = strdup(key);
-    item->value = strdup(value);
+    item->key = key;
+    item->value = value;
     item->comment = NULL;
     item->sectid = sectid;
     return item;

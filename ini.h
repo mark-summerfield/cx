@@ -9,13 +9,6 @@
 
 typedef struct Item Item;
 
-// One of these is returned by most ini_get functions.
-typedef enum IniReply {
-    IniItemNotFound,
-    IniInvalidValue,
-    IniItemFound
-} IniReply;
-
 // Ini represents a .ini file's sections, keys, values, and comments and
 // owns all the strings it holds.
 typedef struct Ini {
@@ -30,6 +23,13 @@ typedef struct IniItem {
     char* comment;
     int sectid;
 } IniItem;
+
+// One of these is returned by most ini_get functions.
+typedef enum IniReply {
+    IniItemNotFound,
+    IniInvalidValue,
+    IniItemFound
+} IniReply;
 
 // Creates an Ini with the given filename and if the file exists, loads it.
 Ini ini_alloc(const char* filename);
