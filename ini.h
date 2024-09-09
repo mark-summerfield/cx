@@ -5,7 +5,7 @@
 #include "vec_str.h"
 #include <stdbool.h>
 
-#define INI_UNNAMED_SECTION "!"
+#define INI_NO_SECTION -1
 
 typedef struct Item Item;
 
@@ -20,7 +20,7 @@ typedef enum IniReply {
 // owns all the strings it holds.
 typedef struct Ini {
     char* filename;
-    VecStr sections; // index is section ID
+    VecStr sections; // index is section ID; *never* sort
     Vec items;
 } Ini;
 
@@ -71,5 +71,6 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
                   double value);
 void ini_set_str(Ini* ini, const char* section, const char* key,
                  const char* value);
+
 bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment);

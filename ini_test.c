@@ -28,13 +28,12 @@ void test1(tinfo* tinfo) {
     Ini ini1 = ini_alloc("/tmp/test1.ini");
 
     bool value = true;
-    IniReply reply =
-        ini_get_bool(&ini1, INI_UNNAMED_SECTION, "cando", &value);
+    IniReply reply = ini_get_bool(&ini1, NULL, "cando", &value);
     check_reply(tinfo, reply, IniItemNotFound);
     check_bool_eq(tinfo, value, true);
 
-    ini_set_bool(&ini1, INI_UNNAMED_SECTION, "cando", value);
-    reply = ini_get_bool(&ini1, INI_UNNAMED_SECTION, "cando", &value);
+    ini_set_bool(&ini1, NULL, "cando", value);
+    reply = ini_get_bool(&ini1, NULL, "cando", &value);
     check_reply(tinfo, reply, IniItemFound);
     check_bool_eq(tinfo, value, true);
 

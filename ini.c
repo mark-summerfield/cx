@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NOT_FOUND -1
+#define NOT_FOUND -2
 
 static bool load_file(Ini* ini);
 bool parse_text(Ini* ini, const char* text);
@@ -103,14 +103,14 @@ end:
 }
 
 static void save_file(Ini* ini, FILE* file) {
-    int prev_sectid = NOT_FOUND;
+    int prev_sectid = INI_NO_SECTION;
     vec_sort(&ini->items); // sectid x key
     for (int i = 0; i < vec_size(&ini->items); ++i) {
         const IniItem* item = vec_get(&ini->items, i);
         if (item->sectid != prev_sectid) { // new section
             prev_sectid = item->sectid;
             const char* section = vec_str_get(&ini->sections, prev_sectid);
-            if (!str_eq(section, INI_UNNAMED_SECTION))
+            if (!str_eq(section, INI_NO_SECTION))
                 fprintf(file, "[%s]\n", section);
         }
         if (item->comment)
@@ -120,17 +120,8 @@ static void save_file(Ini* ini, FILE* file) {
 }
 
 bool ini_equal(Ini* ini1, Ini* ini2) {
-    if (vec_str_size(&ini1->sections) != vec_str_size(&ini2->sections))
-        return false;
     if (vec_str_size(&ini1->items) != vec_str_size(&ini2->items))
         return false;
-    vec_str_casesort(&ini1->sections);
-    vec_str_casesort(&ini2->sections);
-    for (int i = 0; i < vec_str_size(&ini1->sections); ++i) {
-        if (!str_eq_fold(vec_str_get(&ini1->sections, i),
-                         vec_str_get(&ini2->sections, i)))
-            return false;
-    }
     vec_sort(&ini1->items);
     vec_sort(&ini2->items);
     for (int i = 0; i < vec_size(&ini1->items); ++i) {
@@ -145,6 +136,8 @@ bool ini_equal(Ini* ini1, Ini* ini2) {
 }
 
 static int find_sectid(const Ini* ini, const char* section) {
+    if (!section)
+        return INI_NO_SECTION;
     for (int i = 0; i < vec_str_size(&ini->sections); i++)
         if (str_eq_fold(section, vec_str_get(&ini->sections, i)))
             return i;
