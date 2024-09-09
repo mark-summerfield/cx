@@ -1,7 +1,5 @@
 # Notes at the end
 
-# TODO cx_test [-v|--verbose] [testmatch]
-
 ini.h
 ini.c # TODO parse_text()
 
