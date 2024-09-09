@@ -3,7 +3,7 @@
 # TODO cx_test [-v|--verbose] [testmatch]
 
 ini.h
-ini.c # TODO parse_text()
+ini.c # TODO fix leak TODO parse_text()
 
 cx.h
 vecs.h
