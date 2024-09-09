@@ -5,13 +5,15 @@
 #include "ini.h"
 #include "fx.h"
 #include "str.h"
+#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define NOT_FOUND -2
 
-static bool load_file(Ini* ini);
+static Ini alloc(const char* filename);
+static void load_file(Ini* ini);
 bool parse_text(Ini* ini, const char* text);
 static void save_file(Ini* ini, FILE* file);
 static IniItem* item_alloc(char* key, char* value, int sectid);
@@ -22,54 +24,51 @@ static int maybe_add_section(Ini* ini, const char* section);
 static IniItem* find_item(Ini* ini, const char* section, const char* key);
 
 Ini ini_alloc(const char* filename) {
-    assert(filename && ".ini filename is required");
-    Ini ini = {strdup(filename), vec_str_alloc(),
-               vec_alloc(0, item_cmp, item_destroy)};
+    Ini ini = alloc(filename);
     if (is_file(filename))
         load_file(&ini);
     return ini;
 }
 
 Ini ini_alloc_from_str(const char* filename, const char* text) {
-    assert(filename && ".ini filename is required");
     assert(text && ".ini text is required");
-    Ini ini = {strdup(filename), vec_str_alloc(),
-               vec_alloc(0, item_cmp, item_destroy)};
+    Ini ini = alloc(filename);
     parse_text(&ini, text);
     return ini;
 }
 
-void ini_free(Ini* ini) {
-    free(ini->filename);
-    vec_str_free(&ini->sections);
-    vec_free(&ini->items);
+static Ini alloc(const char* filename) {
+    assert(filename && ".ini filename is required");
+    return (Ini){strdup(filename), vec_str_alloc(),
+                 vec_alloc(0, item_cmp, item_destroy)};
 }
 
-static bool load_file(Ini* ini) {
-    bool ok = true;
+void ini_free(Ini* ini) {
+    vec_free(&ini->items);
+    vec_str_free(&ini->sections);
+    free(ini->filename);
+}
+
+static void load_file(Ini* ini) {
     char* text = NULL;
     FILE* file = fopen(ini->filename, "rb");
     if (!file) {
-        ok = false;
-        goto end;
+        warn(NULL);
+        return;
     }
     fseek(file, 0, SEEK_END);
     long size = ftell(file);
     fseek(file, 0, SEEK_SET);
     text = malloc(size + 1);
     fread(text, size, 1, file);
+    if (fclose(file))
+        warn(NULL);
     parse_text(ini, text);
-    if (fclose(file)) {
-        ok = false;
-        goto end;
-    }
-end:
     free(text);
-    return ok;
 }
 
 bool parse_text(Ini* ini, const char* text) {
-    // Use INI_UNNAMED_SECTION when needed
+    // Use INI_NO_SECTION when needed
     return false; // TODO
 }
 
@@ -77,34 +76,33 @@ char* ini_save_to_str(Ini* ini) {
     char* p = NULL;
     size_t size;
     FILE* file = open_memstream(&p, &size);
-    if (!file)
-        goto end;
+    if (!file) {
+        warn(NULL);
+        return p;
+    }
     save_file(ini, file);
     if (fclose(file))
-        goto end;
-end:
+        warn(NULL);
     return p;
 }
 
 bool ini_save(Ini* ini) {
-    bool ok = true;
     FILE* file = fopen(ini->filename, "w");
     if (!file) {
-        ok = false;
-        goto end;
+        warn(NULL);
+        return false;
     }
     save_file(ini, file);
     if (fclose(file)) {
-        ok = false;
-        goto end;
+        warn(NULL);
+        return false;
     }
-end:
-    return ok;
+    return true;
 }
 
 static void save_file(Ini* ini, FILE* file) {
-    int prev_sectid = INI_NO_SECTION;
     vec_sort(&ini->items); // sectid x key
+    int prev_sectid = INI_NO_SECTION;
     for (int i = 0; i < vec_size(&ini->items); ++i) {
         const IniItem* item = vec_get(&ini->items, i);
         if (item->sectid != prev_sectid) { // new section
@@ -140,7 +138,7 @@ bool ini_equal(Ini* ini1, Ini* ini2) {
 static int find_sectid(const Ini* ini, const char* section) {
     if (!section)
         return INI_NO_SECTION;
-    for (int i = 0; i < vec_str_size(&ini->sections); i++)
+    for (int i = 0; i < vec_str_size(&ini->sections); ++i)
         if (str_eq_fold(section, vec_str_get(&ini->sections, i)))
             return i;
     return NOT_FOUND;
@@ -150,7 +148,7 @@ static IniItem* find_item(Ini* ini, const char* section, const char* key) {
     int sectid = find_sectid(ini, section);
     if (sectid == NOT_FOUND)
         return NULL;
-    for (int i = 0; i < vec_size(&ini->items); i++) {
+    for (int i = 0; i < vec_size(&ini->items); ++i) {
         IniItem* item = vec_get(&ini->items, i);
         if (item->sectid == sectid && str_eq_fold(item->key, key))
             return item;
@@ -225,8 +223,8 @@ void ini_set_bool(Ini* ini, const char* section, const char* key,
         }
     } else {
         int sectid = maybe_add_section(ini, section);
-        const char* s = bool_to_str(value);
-        item = item_alloc(strdup(key), strdup(s), sectid);
+        const char* v = bool_to_str(value);
+        item = item_alloc(strdup(key), strdup(v), sectid);
         vec_push(&ini->items, item);
     }
 }
@@ -243,9 +241,9 @@ void ini_set_int(Ini* ini, const char* section, const char* key,
         }
     } else {
         int sectid = maybe_add_section(ini, section);
-        char* s;
-        asprintf(&s, "%d", value);
-        item = item_alloc(strdup(key), s, sectid);
+        char* v;
+        asprintf(&v, "%d", value);
+        item = item_alloc(strdup(key), v, sectid);
         vec_push(&ini->items, item);
     }
 }
@@ -258,9 +256,9 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
         asprintf(&item->value, "%lg", value);
     } else {
         int sectid = maybe_add_section(ini, section);
-        char* s;
-        asprintf(&s, "%lg", value);
-        item = item_alloc(strdup(key), s, sectid);
+        char* v;
+        asprintf(&v, "%lg", value);
+        item = item_alloc(strdup(key), v, sectid);
         vec_push(&ini->items, item);
     }
 }
