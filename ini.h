@@ -5,11 +5,12 @@
 #include "vec_str.h"
 #include <stdbool.h>
 
+#define INI_UNNAMED_SECTION "!"
+
 typedef struct Item Item;
 
 // One of these is returned by most ini_get functions.
 typedef enum IniReply {
-    IniSectionNotFound,
     IniItemNotFound,
     IniInvalidValue,
     IniItemFound
@@ -30,18 +31,29 @@ typedef struct IniItem {
     int sectid;
 } IniItem;
 
-// Creates an Ini with the given filename.
-// If the file exists, loads it and sets state to IniLoaded; otherwises
-// sets state to IniNotLoaded.
+// Creates an Ini with the given filename and if the file exists, loads it.
 Ini ini_alloc(const char* filename);
+
+// Creates an Ini with the given filename and with the given .ini file
+// text. Provided to ease testing.
+Ini ini_alloc_from_str(const char* filename, const char* text);
 
 // Must be called once the Ini is finished with.
 // Call ini_save() first if the data is to be preserved.
 void ini_free(Ini* ini);
 
-// Saves the Ini to its given filename and if successful, sets state to
-// IniSaved and returns true.
+// Saves the Ini to its given filename and if successful returns true.
+// Not const since it sorts the items first.
 bool ini_save(Ini* ini);
+
+// Saves the Ini to a string which the caller owns.
+// Not const since it sorts the items first.
+// Provided to ease testing.
+char* ini_save_to_str(Ini* ini);
+
+// Not const since it sorts the items first.
+// Provided to ease testing.
+bool ini_equal(Ini* ini1, Ini* ini2);
 
 IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
                       bool* value);

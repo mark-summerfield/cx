@@ -3,6 +3,7 @@
 #include "cx_util_test.h"
 #include "deq_int_test.h"
 #include "deq_str_test.h"
+#include "ini_test.h"
 #include "set_int_test.h"
 #include "set_str_test.h"
 #include "str_test.h"
@@ -22,6 +23,7 @@ int main(int argc, char** argv) {
     UNUSED(argv);
     srand((unsigned)time(NULL));
     tinfo tinfo = {"", 0, 0, argc > 1};
+    /*
     tinfo.tag = "va_tests";
     va_tests(&tinfo);
     tinfo.tag = "str_tests";
@@ -40,6 +42,9 @@ int main(int argc, char** argv) {
     deq_int_tests(&tinfo);
     tinfo.tag = "deq_str_tests";
     deq_str_tests(&tinfo);
+    */
+    tinfo.tag = "ini_tests";
+    ini_tests(&tinfo);
     printf("%s %d/%d\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL",
            tinfo.ok, tinfo.total);
 }

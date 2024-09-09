@@ -10,9 +10,10 @@
 #include <string.h>
 
 #define NOT_FOUND -1
-#define UNNAMED_SECTION "!"
 
-static void load_file(Ini* ini, const char* filename);
+static bool load_file(Ini* ini);
+bool parse_text(Ini* ini, const char* text);
+static void save_file(Ini* ini, FILE* file);
 static IniItem* item_alloc(const char* key, const char* value, int sectid);
 static void item_destroy(void* item_);
 static int item_cmp(const void* item1_, const void* item2_);
@@ -25,7 +26,16 @@ Ini ini_alloc(const char* filename) {
     Ini ini = {strdup(filename), vec_str_alloc(),
                vec_alloc(0, item_cmp, item_destroy)};
     if (is_file(filename))
-        load_file(&ini, filename);
+        load_file(&ini);
+    return ini;
+}
+
+Ini ini_alloc_from_str(const char* filename, const char* text) {
+    assert(filename && ".ini filename is required");
+    assert(text && ".ini text is required");
+    Ini ini = {strdup(filename), vec_str_alloc(),
+               vec_alloc(0, item_cmp, item_destroy)};
+    parse_text(&ini, text);
     return ini;
 }
 
@@ -35,8 +45,45 @@ void ini_free(Ini* ini) {
     vec_free(&ini->items);
 }
 
-static void load_file(Ini* ini, const char* filename) {
-    puts("load_file"); // TODO
+static bool load_file(Ini* ini) {
+    bool ok = true;
+    char* text = NULL;
+    FILE* file = fopen(ini->filename, "rb");
+    if (!file) {
+        ok = false;
+        goto end;
+    }
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    text = malloc(size + 1);
+    fread(text, size, 1, file);
+    parse_text(ini, text);
+    if (fclose(file)) {
+        ok = false;
+        goto end;
+    }
+end:
+    free(text);
+    return ok;
+}
+
+bool parse_text(Ini* ini, const char* text) {
+    // Use INI_UNNAMED_SECTION when needed
+    return false; // TODO
+}
+
+char* ini_save_to_str(Ini* ini) {
+    char* p = NULL;
+    size_t size;
+    FILE* file = open_memstream(&p, &size);
+    if (!file)
+        goto end;
+    save_file(ini, file);
+    if (fclose(file))
+        goto end;
+end:
+    return p;
 }
 
 bool ini_save(Ini* ini) {
@@ -46,6 +93,16 @@ bool ini_save(Ini* ini) {
         ok = false;
         goto end;
     }
+    save_file(ini, file);
+    if (fclose(file)) {
+        ok = false;
+        goto end;
+    }
+end:
+    return ok;
+}
+
+static void save_file(Ini* ini, FILE* file) {
     int prev_sectid = NOT_FOUND;
     vec_sort(&ini->items); // sectid x key
     for (int i = 0; i < vec_size(&ini->items); ++i) {
@@ -53,19 +110,38 @@ bool ini_save(Ini* ini) {
         if (item->sectid != prev_sectid) { // new section
             prev_sectid = item->sectid;
             const char* section = vec_str_get(&ini->sections, prev_sectid);
-            if (!str_eq(section, UNNAMED_SECTION))
+            if (!str_eq(section, INI_UNNAMED_SECTION))
                 fprintf(file, "[%s]\n", section);
         }
         if (item->comment)
             fprintf(file, "; %s\n", item->comment);
         fprintf(file, "%s = %s\n", item->key, item->value);
     }
-    if (fclose(file)) {
-        ok = false;
-        goto end;
+}
+
+bool ini_equal(Ini* ini1, Ini* ini2) {
+    if (vec_str_size(&ini1->sections) != vec_str_size(&ini2->sections))
+        return false;
+    if (vec_str_size(&ini1->items) != vec_str_size(&ini2->items))
+        return false;
+    vec_str_casesort(&ini1->sections);
+    vec_str_casesort(&ini2->sections);
+    for (int i = 0; i < vec_str_size(&ini1->sections); ++i) {
+        if (!str_eq_fold(vec_str_get(&ini1->sections, i),
+                         vec_str_get(&ini2->sections, i)))
+            return false;
     }
-end:
-    return ok;
+    vec_sort(&ini1->items);
+    vec_sort(&ini2->items);
+    for (int i = 0; i < vec_size(&ini1->items); ++i) {
+        const IniItem* item1 = vec_get(&ini1->items, i);
+        const IniItem* item2 = vec_get(&ini2->items, i);
+        if (!(item1->sectid == item2->sectid &&
+              str_eq_fold(item1->key, item2->key) &&
+              str_eq_fold(item1->value, item2->value)))
+            return false;
+    }
+    return true;
 }
 
 static int find_sectid(const Ini* ini, const char* section) {

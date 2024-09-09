@@ -1,7 +1,9 @@
 # Notes at the end
 
-ini.h # TODO
-ini.c
+# TODO reinstate cx_test.c
+
+ini.h
+ini.c # TODO parse_text()
 
 cx.h
 vecs.h
@@ -30,9 +32,11 @@ tx.h
 
 vaargs.h
 
-cx_test.c
+cx_test.c # TODO reinstate
 cx_util_test.h
 cx_util_test.c
+ini_test.h
+ini_test.c
 deq_str_test.h
 deq_str_test.c
 deq_int_test.h
