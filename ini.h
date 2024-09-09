@@ -28,12 +28,6 @@ typedef struct IniItem {
     char* value;
     char* comment;
     int sectid;
-    char kind; // 's' | 'b' | 'i' | 'r'
-    union {    // cached value if kind != 's'
-        int i;
-        double r;
-        bool b;
-    };
 } IniItem;
 
 // Creates an Ini with the given filename.
@@ -49,19 +43,14 @@ void ini_free(Ini* ini);
 // IniSaved and returns true.
 bool ini_save(Ini* ini);
 
-// The bool, int, and real getters convert and cache on first access to
-// a particular section/key pair.
-
-IniReply ini_get_bool(Ini* ini, const char* section, const char* key,
+IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
                       bool* value);
-IniReply ini_get_int(Ini* ini, const char* section, const char* key,
+IniReply ini_get_int(const Ini* ini, const char* section, const char* key,
                      int* value);
-IniReply ini_get_real(Ini* ini, const char* section, const char* key,
+IniReply ini_get_real(const Ini* ini, const char* section, const char* key,
                       double* value);
-const char* ini_get_str(Ini* ini, const char* section, const char* key);
-
-// The bool, int, and real setters set both the value string _and_ the
-// cache for each particular section/key pair.
+const char* ini_get_str(const Ini* ini, const char* section,
+                        const char* key);
 
 void ini_set_bool(Ini* ini, const char* section, const char* key,
                   bool value);
@@ -70,5 +59,5 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
                   double value);
 void ini_set_str(Ini* ini, const char* section, const char* key,
                  const char* value);
-void ini_set_comment(Ini* ini, const char* section, const char* key,
+bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment);
