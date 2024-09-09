@@ -18,20 +18,12 @@ typedef struct Vec {
     void (*_destroy)(void* value);
 } Vec;
 
-typedef struct {
-    int cap;
-    int (*cmp)(const void*, const void*);
-    void (*destroy)(void* values);
-} VecAllocArgs;
-
-// Allocates a new Vec of owned or borrowed void* with default capacity of
-// 0.
-// Set the initial capacity with .cap.
+// Allocates a new Vec of owned or borrowed void* with the given
+// capacity which may be 0.
 // Caller must supply cmp to compare values (for find, sort, and search),
 // and if owning, destroy to free a value.
-#define vec_alloc(...) \
-    vec_alloc_((VecAllocArgs){.cap = 0, .destroy = NULL, __VA_ARGS__})
-Vec vec_alloc_(VecAllocArgs args);
+Vec vec_alloc(int cap, int (*cmp)(const void*, const void*),
+              void (*destroy)(void* value));
 
 // Destroys the Vec freeing its memory and if owning, also freeing every
 // value. The Vec is not usable after this.

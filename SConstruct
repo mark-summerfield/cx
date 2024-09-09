@@ -8,6 +8,7 @@ else:
 
 FILES = Glob('*test.c') + [
     'fx.c',
+    'ini.c',
     'deq_int.c',
     'deq_str.c',
     'set_int.c',

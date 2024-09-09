@@ -1,45 +1,7 @@
 # Notes at the end
-#
-# TODO (1)
-# look for
-#   Vec...
-#   ...
-#   vec...free
-# & see if
-#   int|char* array[size]
-# could replace
 
-# TODO (2)
-# ini.[hc] to read/write INI files
-#   enum IniGetReply{IniKeyFound, IniKeyNotFound, IniInvalidValue};
-#   
-#   IniGetReply ini_get_bool(const Ini* ini, const char* section, const 
-#   char* key, bool* value)
-#   IniGetReply ini_get_int(const Ini* ini, const char* section, const char* 
-#   key, int* value)
-#   IniGetReply ini_get_real(const Ini* ini, const char* section, const 
-#   char* key, double* value)
-#   const char* ini_get_str(const char* section, const char* key)
-#   
-#   void ini_set_bool(Ini* ini, const char* section, const char* key, bool 
-#   value)
-#   void ini_set_int(Ini* ini, const char* section, const char* key, int 
-#   value)
-#   void ini_set_real(Ini* ini, const char* section, const char* key, double 
-#   value)
-#   boid ini_set_str(Ini* ini, const char* section, const char* key, const 
-#   char* value)
-#   void ini_set_comment(Ini* ini, const char* section, const char* key, 
-#   const char* comment)
-#   
-#   // if filename is not empty attempts to load
-#   Ini ini_alloc(const char* filename)
-#   bool ini_load(Ini *ini, const char* filename)
-#   // if filename is empty uses one given in make or load; otherwise uses & 
-#   sets new one
-#   bool ini_save(Ini *ini, const char* filename)
-#   void ini_free(Ini *ini)
-
+ini.h # TODO
+ini.c
 
 cx.h
 vecs.h

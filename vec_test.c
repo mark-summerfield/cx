@@ -33,7 +33,7 @@ static void misc_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tag_make(true);
-    Vec v1 = vec_alloc(.cap = 5, .cmp = tag_cmp, .destroy = tag_free);
+    Vec v1 = vec_alloc(5, tag_cmp, tag_free);
     check_size_cap(tinfo, &v1, 0, 5);
     check_bool_eq(tinfo, vec_owns(&v1), true);
 
@@ -165,7 +165,7 @@ static void merge_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tag_make(true);
-    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .destroy = tag_free);
+    Vec v1 = vec_alloc(7, tag_cmp, tag_free);
     check_bool_eq(tinfo, vec_owns(&v1), true);
     check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
@@ -173,7 +173,7 @@ static void merge_tests(tinfo* tinfo) {
     check_size_cap(tinfo, &v1, 5, 7);
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
 
-    Vec v2 = vec_alloc(.cap = 11, .cmp = tag_cmp, .destroy = tag_free);
+    Vec v2 = vec_alloc(11, tag_cmp, tag_free);
     check_bool_eq(tinfo, vec_owns(&v2), true);
     check_size_cap(tinfo, &v2, 0, 11);
     for (int i = 0; i < 6; ++i)
@@ -198,7 +198,7 @@ static void sort_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tag_make(true);
-    Vec v1 = vec_alloc(.cap = 7, .cmp = tag_cmp, .destroy = tag_free);
+    Vec v1 = vec_alloc(7, tag_cmp, tag_free);
     check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));

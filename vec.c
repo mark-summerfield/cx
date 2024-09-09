@@ -5,20 +5,20 @@
 
 static void vec_grow(Vec* vec);
 
-// This *is* used, via a macro in vec.h; clang-format gets confused.
-Vec vec_alloc_(VecAllocArgs args) {
-    assert(args.cmp && "must provide a cmp function");
-    args.cap = args.cap > 0 ? args.cap : 0;
+Vec vec_alloc(int cap, int (*cmp)(const void*, const void*),
+              void (*destroy)(void* value)) {
+    assert(cmp && "must provide a cmp function");
+    cap = cap > 0 ? cap : 0;
     void** values = NULL;
-    if (args.cap) {
-        values = malloc(args.cap * sizeof(void*));
+    if (cap) {
+        values = malloc(cap * sizeof(void*));
         assert_alloc(values);
     }
     return (Vec){._size = 0,
-                 ._cap = args.cap,
+                 ._cap = cap,
                  ._values = values,
-                 ._cmp = args.cmp,
-                 ._destroy = args.destroy};
+                 ._cmp = cmp,
+                 ._destroy = destroy};
 }
 
 void vec_free(Vec* vec) {
@@ -148,8 +148,7 @@ void vec_push(Vec* vec, void* value) {
 Vec vec_copy(const Vec* vec, void* (*cpy)(const void*)) {
 #pragma GCC diagnostic ignored "-Woverride-init"
 #pragma GCC diagnostic push
-    Vec out = vec_alloc(.cap = vec->_size, .cmp = vec->_cmp,
-                        .destroy = vec->_destroy);
+    Vec out = vec_alloc(vec->_size, vec->_cmp, vec->_destroy);
 #pragma GCC diagnostic pop
     for (int i = 0; i < vec->_size; ++i)
         vec_push(&out, cpy(vec->_values[i]));
