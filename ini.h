@@ -13,8 +13,7 @@ typedef struct Item Item;
 // owns all the strings it holds.
 typedef struct Ini {
     char* filename;
-    char* file_comment;
-    char* no_section_comment;
+    char* comment;
     VecStr sections; // index is section ID; *never* sort
     Vec items;
 } Ini;
@@ -84,8 +83,8 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
 void ini_set_str(Ini* ini, const char* section, const char* key,
                  const char* value);
 
-// If section is NULL, the comment will go before the “no section”
-// (unnamed) section. If both the section and the key are NULL, the
-// comment will go at the start of the file.
+// If both the section and the key are NULL, the comment will go at the
+// start of the file. For section/key comments only use if the
+// section/key exists (in which case true is returned).
 bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment);

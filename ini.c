@@ -13,9 +13,10 @@
 #define NOT_FOUND -2
 
 static Ini alloc(const char* filename);
-static void load_file(Ini* ini);
-bool parse_text(Ini* ini, const char* text);
-static void save_file(Ini* ini, FILE* file);
+static void read_file(Ini* ini);
+static void parse_text(Ini* ini, const char* text);
+static void save_to_file(Ini* ini, FILE* file);
+static void item_write(const IniItem* item, FILE* file);
 static IniItem* item_alloc(char* key, char* value, int sectid);
 static void item_destroy(void* item_);
 static int item_cmp(const void* item1_, const void* item2_);
@@ -26,7 +27,7 @@ static IniItem* find_item(Ini* ini, const char* section, const char* key);
 Ini ini_alloc(const char* filename) {
     Ini ini = alloc(filename);
     if (is_file(filename))
-        load_file(&ini);
+        read_file(&ini);
     return ini;
 }
 
@@ -39,19 +40,18 @@ Ini ini_alloc_from_str(const char* filename, const char* text) {
 
 static Ini alloc(const char* filename) {
     assert(filename && ".ini filename is required");
-    return (Ini){strdup(filename), NULL, NULL, vec_str_alloc(),
+    return (Ini){strdup(filename), NULL, vec_str_alloc(),
                  vec_alloc(0, item_cmp, item_destroy)};
 }
 
 void ini_free(Ini* ini) {
     vec_free(&ini->items);
     vec_str_free(&ini->sections);
-    free(ini->no_section_comment);
-    free(ini->file_comment);
+    free(ini->comment);
     free(ini->filename);
 }
 
-static void load_file(Ini* ini) {
+static void read_file(Ini* ini) {
     char* text = NULL;
     FILE* file = fopen(ini->filename, "rb");
     if (!file) {
@@ -69,9 +69,9 @@ static void load_file(Ini* ini) {
     free(text);
 }
 
-bool parse_text(Ini* ini, const char* text) {
+static void parse_text(Ini* ini, const char* text) {
     // Use INI_NO_SECTION when needed
-    return false; // TODO
+    // TODO
 }
 
 char* ini_save_to_str(Ini* ini) {
@@ -82,7 +82,7 @@ char* ini_save_to_str(Ini* ini) {
         warn(NULL);
         return p;
     }
-    save_file(ini, file);
+    save_to_file(ini, file);
     if (fclose(file))
         warn(NULL);
     return p;
@@ -94,7 +94,7 @@ bool ini_save(Ini* ini) {
         warn(NULL);
         return false;
     }
-    save_file(ini, file);
+    save_to_file(ini, file);
     if (fclose(file)) {
         warn(NULL);
         return false;
@@ -102,9 +102,14 @@ bool ini_save(Ini* ini) {
     return true;
 }
 
-static void save_file(Ini* ini, FILE* file) {
+static void save_to_file(Ini* ini, FILE* file) {
+    bool nl = false;
+    if (ini->comment) {
+        fprintf(file, "; %s\n", ini->comment);
+        nl = true;
+    }
     vec_sort(&ini->items); // sectid x key
-    int prev_sectid = INI_NO_SECTION;
+    int prev_sectid = NOT_FOUND;
     for (int i = 0; i < vec_size(&ini->items); ++i) {
         const IniItem* item = vec_get(&ini->items, i);
         if (item->sectid != prev_sectid) { // new section
@@ -112,13 +117,18 @@ static void save_file(Ini* ini, FILE* file) {
             if (prev_sectid != INI_NO_SECTION) {
                 const char* section =
                     vec_str_get(&ini->sections, prev_sectid);
-                fprintf(file, "[%s]\n", section);
-            }
+                fprintf(file, "\n[%s]\n", section);
+            } else if (nl)
+                fprintf(file, "\n");
         }
-        if (item->comment)
-            fprintf(file, "; %s\n", item->comment);
-        fprintf(file, "%s = %s\n", item->key, item->value);
+        item_write(item, file);
     }
+}
+
+static void item_write(const IniItem* item, FILE* file) {
+    if (item->comment)
+        fprintf(file, "; %s\n", item->comment);
+    fprintf(file, "%s = %s\n", item->key, item->value);
 }
 
 bool ini_equal(Ini* ini1, Ini* ini2) {
@@ -282,10 +292,17 @@ void ini_set_str(Ini* ini, const char* section, const char* key,
 
 bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment) {
+    if (!section && !key) {
+        if (!ini->comment || !str_eq(ini->comment, comment)) {
+            free(ini->comment);
+            ini->comment = strdup(comment);
+        }
+        return true;
+    }
     IniItem* item = find_item(ini, section, key);
     if (!item)
         return false;
-    if (!str_eq(item->comment, comment)) {
+    if (!item->comment || !str_eq(item->comment, comment)) {
         free(item->comment);
         item->comment = strdup(comment);
     }
@@ -294,8 +311,8 @@ bool ini_set_comment(Ini* ini, const char* section, const char* key,
 
 // Compares section & key only
 static int item_cmp(const void* item1_, const void* item2_) {
-    const IniItem* item1 = item1_;
-    const IniItem* item2 = item2_;
+    const IniItem* item1 = *(const IniItem**)item1_;
+    const IniItem* item2 = *(const IniItem**)item2_;
     if (item1->sectid < item2->sectid)
         return -1;
     if (item1->sectid > item2->sectid)

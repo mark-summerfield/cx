@@ -11,6 +11,7 @@ FILES = Glob('*test.c') + [
     'ini.c',
     'deq_int.c',
     'deq_str.c',
+    'mx.c',
     'set_int.c',
     'set_str.c',
     'str.c',

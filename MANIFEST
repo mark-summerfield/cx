@@ -26,11 +26,14 @@ str.c
 fx.h
 fx.c
 
+mx.h
+mx.c
+
 tx.h
 
 vaargs.h
 
-cx_test.c # TODO reinstate
+cx_test.c
 cx_util_test.h
 cx_util_test.c
 ini_test.h
@@ -75,6 +78,5 @@ doc.sh
 #	   _destroy != NULL)
 #   - MapStrStr (rbt; see set_str)
 #   - MapIntAny (rbt; see set_str)
-#   - mx.h (_Generic isclose(double|float|long double)
 
 # vim: syn=yaml
