@@ -92,4 +92,11 @@ char* str_lowercase(const char* s) {
     return u;
 }
 
+const char* str_trim_left(const char* s) {
+    char* p = (char*)s;
+    while (isspace(*p))
+        p++;
+    return p;
+}
+
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }

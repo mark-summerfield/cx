@@ -4,6 +4,7 @@
 
 #include "ini.h"
 #include "fx.h"
+#include "mx.h"
 #include "str.h"
 #include <err.h>
 #include <stdio.h>
@@ -11,10 +12,12 @@
 #include <string.h>
 
 #define NOT_FOUND -2
+#define LINE_MAX 1024
 
 static Ini alloc(const char* filename);
 static void read_file(Ini* ini);
 static void parse_text(Ini* ini, const char* text);
+static void parse_line(Ini* ini, const char* line, char* section);
 static void save_to_file(Ini* ini, FILE* file);
 static void item_write(const IniItem* item, FILE* file);
 static IniItem* item_alloc(char* key, char* value, int sectid);
@@ -69,14 +72,55 @@ static void read_file(Ini* ini) {
     free(text);
 }
 
+static void parse_text(Ini* ini, const char* text) {
+    char line[LINE_MAX] = "";
+    const char* p = text;
+    char section[LINE_MAX] = "";
+    while (p) {
+        const char* q = strchr(p, '\n');
+        int size;
+        if (q)
+            size = MIN(LINE_MAX - 1, (int)(q - p));
+        else
+            size = MIN(LINE_MAX - 1, (int)strlen(p));
+        strncpy(line, p, size);
+        line[size] = 0;
+        parse_line(ini, line, section);
+        if (!q)
+            break;
+        p = q + 1;
+    }
+}
+
 // Every comment, section, and key-value pair occupies a single line.
 // Comments:    /^\s*[;#].+$/
 // Sections:    /^\[[^]+\]\s*$/
 // Key-values:  /^[^[:=]+\s*[:=]\s*.+$/
-static void parse_text(Ini* ini, const char* text) {
-    // Use INI_NO_SECTION when needed
-    // TODO
+static void parse_line(Ini* ini, const char* line, char* section) {
+    char* p = (char*)str_trim_left(line);
+    if (!*p || *p == ';' || *p == '#') // skip blank lines and comments
+        return;
+    if (*p == '[') { // section
+        const char* q = strchr(p, ']');
+        if (q)
+            strncpy(section, p + 1, MIN(LINE_MAX, (int)(q - p)) - 1);
+        else
+            warn("invalid section: %s\n", p);
+    } else { // key-value item
+        char* q = strchr(p, '=');
+        if (!q) {
+            q = strchr(p, ':');
+            if (!q) {
+                warn("invalid key-value item: %s\n", p);
+                return;
+            }
+        }
+        // TODO
+    }
+    printf("parse_line «%s» [%s]\n", p, section);
 }
+// TODO Use INI_NO_SECTION when needed
+// TODO
 
 char* ini_save_to_str(Ini* ini) {
     char* p = NULL;

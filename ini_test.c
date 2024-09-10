@@ -7,6 +7,7 @@
 
 void test1(tinfo* tinfo);
 void test2(tinfo* tinfo);
+void test3(tinfo* tinfo);
 static void check_reply(tinfo* tinfo, IniReply actual, IniReply expected);
 static const char* reply_to_str(IniReply reply);
 
@@ -28,6 +29,7 @@ void ini_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     test1(tinfo);
     test2(tinfo);
+    test3(tinfo);
 }
 
 void test1(tinfo* tinfo) {
@@ -106,6 +108,14 @@ void test2(tinfo* tinfo) {
     reply = ini_get_int(&ini1, section, "port", &port);
     check_int_eq(tinfo, reply, IniItemFound);
     check_int_eq(tinfo, port, 143);
+
+    ini_free(&ini1);
+}
+
+void test3(tinfo* tinfo) {
+    if (tinfo->verbose)
+        printf("%s/test3\n", tinfo->tag);
+    Ini ini1 = ini_alloc_from_str("/tmp/test3.ini", EG1);
 
     ini_free(&ini1);
 }

@@ -47,6 +47,8 @@ int str_strcasecmp(const void* s, const void* t);
 
 const char* bool_to_str(bool b);
 
+const char* str_trim_left(const char* s);
+
 #define typename(x) \
     _Generic((x), \
         _Bool: "bool", \
