@@ -93,12 +93,3 @@ char* str_lowercase(const char* s) {
 }
 
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }
-
-/*[[noreturn]]*/ void expire(const char* fmt, ...) {
-    va_list ap;
-    va_start(ap, fmt);
-    vfprintf(stderr, fmt, ap);
-    va_end(ap);
-    fputc('\n', stderr);
-    exit(EXIT_FAILURE);
-}

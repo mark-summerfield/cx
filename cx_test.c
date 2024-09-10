@@ -6,6 +6,7 @@
 #include "ini_test.h"
 #include "set_int_test.h"
 #include "set_str_test.h"
+#include "str.h"
 #include "str_test.h"
 #include "va_test.h"
 #include "vec_int_test.h"
@@ -15,38 +16,61 @@
 #include <stdlib.h>
 #include <time.h>
 
+const char* get_args(int argc, char** argv, bool* verbose);
 void va_tests(tinfo*);
 
-#define UNUSED(x) (void)(x)
-
 int main(int argc, char** argv) {
-    UNUSED(argv);
+    bool verbose = false;
+    const char* pattern = get_args(argc, argv, &verbose);
     srand((unsigned)time(NULL));
-    tinfo tinfo = {"", 0, 0, argc > 1};
-    /*
+    tinfo tinfo = {"", 0, 0, verbose};
     tinfo.tag = "va_tests";
-    va_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        va_tests(&tinfo);
     tinfo.tag = "str_tests";
-    str_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        str_tests(&tinfo);
     tinfo.tag = "vec_int_tests";
-    vec_int_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        vec_int_tests(&tinfo);
     tinfo.tag = "vec_str_tests";
-    vec_str_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        vec_str_tests(&tinfo);
     tinfo.tag = "vec_tests";
-    vec_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        vec_tests(&tinfo);
     tinfo.tag = "set_int_tests";
-    set_int_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        set_int_tests(&tinfo);
     tinfo.tag = "set_str_tests";
-    set_str_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        set_str_tests(&tinfo);
     tinfo.tag = "deq_int_tests";
-    deq_int_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        deq_int_tests(&tinfo);
     tinfo.tag = "deq_str_tests";
-    deq_str_tests(&tinfo);
-    */
+    if (!pattern || strstr(tinfo.tag, pattern))
+        deq_str_tests(&tinfo);
     tinfo.tag = "ini_tests";
-    ini_tests(&tinfo);
+    if (!pattern || strstr(tinfo.tag, pattern))
+        ini_tests(&tinfo);
     printf("%s %d/%d\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL",
            tinfo.ok, tinfo.total);
+}
+
+const char* get_args(int argc, char** argv, bool* verbose) {
+    for (int n = 1; n < argc; ++n) {
+        if (str_eq(argv[n], "-h") || str_eq(argv[n], "--help")) {
+            printf("cx_test [-v|--verbose] [pattern]\n");
+            exit(EXIT_SUCCESS);
+        }
+        if (str_eq(argv[n], "-v") || str_eq(argv[n], "--verbose")) {
+            *verbose = true;
+            continue;
+        }
+        return argv[n];
+    }
+    return NULL;
 }
 
 void va_tests(tinfo* tinfo) {

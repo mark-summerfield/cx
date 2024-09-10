@@ -47,8 +47,6 @@ int str_strcasecmp(const void* s, const void* t);
 
 const char* bool_to_str(bool b);
 
-/*[[noreturn]]*/ void expire(const char* fmt, ...);
-
 #define typename(x) \
     _Generic((x), \
         _Bool: "bool", \
