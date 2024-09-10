@@ -1,5 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
+#include "str_test.h"
 #include "fx.h"
 #include "str.h"
 #include <stdio.h>
