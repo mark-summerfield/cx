@@ -69,6 +69,10 @@ static void read_file(Ini* ini) {
     free(text);
 }
 
+// Every comment, section, and key-value pair occupies a single line.
+// Comments:    /^\s*[;#].+$/
+// Sections:    /^\[[^]+\]\s*$/
+// Key-values:  /^[^[:=]+\s*[:=]\s*.+$/
 static void parse_text(Ini* ini, const char* text) {
     // Use INI_NO_SECTION when needed
     // TODO
