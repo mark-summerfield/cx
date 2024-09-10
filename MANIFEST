@@ -46,8 +46,8 @@ set_str_test.h
 set_str_test.c
 set_int_test.h
 set_int_test.c
-vec_common_test.h
-vec_common_test.c
+vecs_test.h
+vecs_test.c
 vec_int_test.h
 vec_int_test.c
 vec_str_test.h

@@ -1,3 +1,5 @@
+// Copyright © 2024 Mark Summerfield. All rights reserved.
+
 #include "ini_test.h"
 #include "ini.h"
 #include <stdio.h>
