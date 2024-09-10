@@ -39,13 +39,15 @@ Ini ini_alloc_from_str(const char* filename, const char* text) {
 
 static Ini alloc(const char* filename) {
     assert(filename && ".ini filename is required");
-    return (Ini){strdup(filename), vec_str_alloc(),
+    return (Ini){strdup(filename), NULL, NULL, vec_str_alloc(),
                  vec_alloc(0, item_cmp, item_destroy)};
 }
 
 void ini_free(Ini* ini) {
     vec_free(&ini->items);
     vec_str_free(&ini->sections);
+    free(ini->no_section_comment);
+    free(ini->file_comment);
     free(ini->filename);
 }
 

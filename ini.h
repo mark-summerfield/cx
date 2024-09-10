@@ -13,6 +13,8 @@ typedef struct Item Item;
 // owns all the strings it holds.
 typedef struct Ini {
     char* filename;
+    char* file_comment;
+    char* no_section_comment;
     VecStr sections; // index is section ID; *never* sort
     Vec items;
 } Ini;
@@ -55,6 +57,13 @@ char* ini_save_to_str(Ini* ini);
 // Provided to ease testing.
 bool ini_equal(Ini* ini1, Ini* ini2);
 
+// If section is NULL, the getters and setters will used the “no
+// section” (unnamed) section.
+
+// All values are held as strings. The bool, int, and real getters parse
+// the string on every call, so best to call once and keep the returned
+// value.
+
 IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
                       bool* value);
 IniReply ini_get_int(const Ini* ini, const char* section, const char* key,
@@ -64,6 +73,9 @@ IniReply ini_get_real(const Ini* ini, const char* section, const char* key,
 const char* ini_get_str(const Ini* ini, const char* section,
                         const char* key);
 
+// All values are held as strings. The bool, int, and real setters
+// convert their given value into strings.
+
 void ini_set_bool(Ini* ini, const char* section, const char* key,
                   bool value);
 void ini_set_int(Ini* ini, const char* section, const char* key, int value);
@@ -72,5 +84,8 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
 void ini_set_str(Ini* ini, const char* section, const char* key,
                  const char* value);
 
+// If section is NULL, the comment will go before the “no section”
+// (unnamed) section. If both the section and the key are NULL, the
+// comment will go at the start of the file.
 bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment);
