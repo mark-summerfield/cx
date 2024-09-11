@@ -80,7 +80,10 @@ static void parse_text(Ini* ini, const char* text) {
             size = MIN(LINE_MAX - 1, (int)(q - p));
         else
             size = MIN(LINE_MAX - 1, (int)strlen(p));
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#pragma GCC diagnostic push
         strncpy(line, p, size);
+#pragma GCC diagnostic pop
         line[size] = 0;
         parse_line(ini, line, section);
         if (!q)
