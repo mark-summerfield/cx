@@ -20,8 +20,8 @@ bool is_folder(const char* path);
 // owns.
 char* read_file(const char* filename, bool* ok);
 
-int min(int a, int b);
-int max(int a, int b);
+int mini(int a, int b);
+int maxi(int a, int b);
 long long minll(long long a, long long b);
 long long maxll(long long a, long long b);
 size_t minzu(size_t a, size_t b);
@@ -33,10 +33,10 @@ double maxd(double a, double b);
     type:                        \
     function
 
-#define min(T)                                                    \
-    _Generic((T), GEN_LINE(int, min), GEN_LINE(long long, minll), \
-             GEN_LINE(size_t, minzu), GEN_LINE(double, mind))(T)
+#define min(T, U)                                                 \
+    _Generic((T), GEN_LINE(int, mini), GEN_LINE(long long, minll), \
+             GEN_LINE(size_t, minzu), GEN_LINE(double, mind))(T, U)
 
-#define max(T)                                                    \
-    _Generic((T), GEN_LINE(int, max), GEN_LINE(long long, maxll), \
-             GEN_LINE(size_t, maxzu), GEN_LINE(double, maxd))(T)
+#define max(T, U)                                                 \
+    _Generic((T), GEN_LINE(int, maxi), GEN_LINE(long long, maxll), \
+             GEN_LINE(size_t, maxzu), GEN_LINE(double, maxd))(T, U)

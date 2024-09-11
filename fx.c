@@ -60,3 +60,19 @@ char* read_file(const char* filename, bool* ok) {
         *ok = true;
     return text;
 }
+
+inline int mini(int a, int b) { return a < b ? a : b; }
+
+inline int maxi(int a, int b) { return a > b ? a : b; }
+
+inline long long minll(long long a, long long b) { return a < b ? a : b; }
+
+inline long long maxll(long long a, long long b) { return a > b ? a : b; }
+
+inline size_t minzu(size_t a, size_t b) { return a < b ? a : b; }
+
+inline size_t maxzu(size_t a, size_t b) { return a > b ? a : b; }
+
+inline double mind(double a, double b) { return a < b ? a : b; }
+
+inline double maxd(double a, double b) { return a > b ? a : b; }
