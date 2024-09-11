@@ -128,7 +128,8 @@ char* str_trimn(const char* s, size_t n) {
     assert_notnull(q);
     while (isspace(*q)) // trim right
         q--;
-    assert(q > p && "expected string with at least one nonwhitespace here");
+    if (q <= p)
+        return NULL; // all whitespace
     size_t size = q - p + 1;
     char* r = calloc(1, size + 1); // allow for \0; calloc for valgrind
     return strncpy(r, p, size);

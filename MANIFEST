@@ -1,7 +1,7 @@
 # Notes at the end
 
 ini.h
-ini.c # TODO parse_line()
+ini.c
 
 cx.h
 vecs.h

@@ -105,19 +105,24 @@ void test3(tinfo* tinfo) {
     if (tinfo->verbose)
         printf("%s/test3\n", tinfo->tag);
     Ini ini1 = ini_alloc_from_str("/tmp/test3.ini", INI_EG1);
-    ini_set_comment(&ini1, NULL, NULL, " whole file comment\n");
-    ini_set_str(&ini1, NULL, "\tNAME", "John Doe\n");
-    ini_set_str(&ini1, NULL, " organization ", "\tAcme Widgets Inc.\t");
-    ini_set_real(&ini1, NULL, "  Ranking  ", 1.76);
     char* section = "DATABASE";
-    ini_set_str(&ini1, section, "Server", "192.0.2.62");
+    ini_set_comment(&ini1, NULL, NULL, " whole file comment\n");
     ini_set_comment(&ini1, section, "server", "IP address");
-    ini_set_int(&ini1, section, "port", 143);
-    ini_set_bool(&ini1, section, "EXCLUSIVE", true);
-    ini_set_str(&ini1, section, "file", "\"payroll.dat\"");
     ini_set_comment(&ini1, section, "FILE", "may include \"s for Windows");
 
     char* text = ini_save_to_str(&ini1);
+    check_casestr_eq(tinfo, text, INI_EG1);
+    free(text);
+
+    ini_set_str(&ini1, NULL, "NAME", "John Doe\n");
+    ini_set_str(&ini1, NULL, "organization", "\tAcme Widgets Inc.\t");
+    ini_set_real(&ini1, NULL, "Ranking", 1.76);
+    ini_set_str(&ini1, section, "Server", "192.0.2.62");
+    ini_set_int(&ini1, section, "port", 143);
+    ini_set_bool(&ini1, section, "EXCLUSIVE", true);
+    ini_set_str(&ini1, section, "file", "\"payroll.dat\"");
+
+    text = ini_save_to_str(&ini1);
     check_casestr_eq(tinfo, text, INI_EG1);
     free(text);
 
@@ -167,13 +172,17 @@ void test4(tinfo* tinfo) {
     if (tinfo->verbose)
         printf("%s/test4\n", tinfo->tag);
     Ini ini1 = ini_alloc_from_str("/tmp/test4.ini", INI_EG2);
+    ini_set_comment(
+        &ini1, NULL, NULL,
+        "Configuration file for Qtrac Ltd.'s comparepdfcmd program.\n"
+        "Shows all .ini options with their default values.\n");
 
-    /*
-     // TODO once we can parse lines
+    // TODO once we can parse lines
     char* text = ini_save_to_str(&ini1);
     check_casestr_eq(tinfo, text, INI_EG2);
     free(text);
 
+    /*
     char* section = "General";
     {
         const char* v = ini_get_str(&ini1, section, "Mode");

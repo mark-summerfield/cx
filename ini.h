@@ -86,5 +86,6 @@ void ini_set_str(Ini* ini, const char* section, const char* key,
 // If both the section and the key are NULL, the comment will go at the
 // start of the file. For section/key comments only use if the
 // section/key exists (in which case true is returned).
+// Note that only single line comments are supported.
 bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment);

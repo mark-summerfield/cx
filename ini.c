@@ -103,9 +103,11 @@ static void parse_line(Ini* ini, const char* line, char* section) {
         return;      // skip blank lines and comments
     if (*p == '[') { // section
         const char* q = strchr(p, ']');
-        if (q)
-            strncpy(section, p + 1, MIN(LINE_MAX, (int)(q - p)) - 1);
-        else
+        if (q) {
+            size_t size = MIN(LINE_MAX, (int)(q - p)) - 1;
+            strncpy(section, p + 1, size);
+            section[size] = 0;
+        } else
             warn("invalid section: %s\n", p);
     } else
         parse_item(ini, p, section);
@@ -116,13 +118,17 @@ static void parse_item(Ini* ini, char* p, const char* section) {
     if (!q) {
         q = strchr(p, ':');
         if (!q) {
-            warn("invalid key-value item: %s\n", p);
+            warn("invalid key-value item, no = or : separator: %s\n", p);
             return;
         }
     }
     q--; // _before_ the =
     char* key = str_trimn(p, q - p);
     q += 2; // skip _past_ the =
+    if (!q) {
+        warn("invalid key-value item, missing value: %s\n", p);
+        return;
+    }
     char* value = str_trim(q);
     int sectid = maybe_add_section(ini, section);
     IniItem* item = find_item(ini, section, key);
