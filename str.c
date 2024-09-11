@@ -104,7 +104,9 @@ const char* str_trim_left(const char* s) {
     return p;
 }
 
-char* str_trim(const char* s) {
+inline char* str_trim(const char* s) { return str_trimn(s, 0); }
+
+char* str_trimn(const char* s, size_t n) {
     if (!s || !*s)
         return NULL;
     char* p = (char*)s;
@@ -113,11 +115,16 @@ char* str_trim(const char* s) {
         p++;
     if (!*p)
         return NULL; // whole string is whitespace
-    char* q = p;
-    assert_notnull(q);
-    while (*q) // find \0
-        q++;
-    q--; // last char
+    char* q;
+    if (n)
+        q = (char*)s + n;
+    else {
+        q = p;
+        assert_notnull(q);
+        while (*q) // find \0
+            q++;
+        q--; // last char
+    }
     assert_notnull(q);
     while (isspace(*q)) // trim right
         q--;

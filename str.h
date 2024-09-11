@@ -57,6 +57,9 @@ const char* str_trim_left(const char* s);
 // whitespace this function is effectively the same as strdup().
 char* str_trim(const char* s);
 
+// Like str_trim but only operates on the first n chars of s.
+char* str_trimn(const char* s, size_t n);
+
 #define typename(x) \
     _Generic((x), \
         _Bool: "bool", \

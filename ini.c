@@ -18,6 +18,7 @@ static Ini alloc(const char* filename);
 static void read_file(Ini* ini);
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
+static void parse_item(Ini* ini, char* p, const char* section);
 static void save_to_file(Ini* ini, FILE* file);
 static void item_write(const IniItem* item, FILE* file);
 static IniItem* item_alloc(char* key, char* value, int sectid);
@@ -106,21 +107,35 @@ static void parse_line(Ini* ini, const char* line, char* section) {
             strncpy(section, p + 1, MIN(LINE_MAX, (int)(q - p)) - 1);
         else
             warn("invalid section: %s\n", p);
-    } else { // key-value item
-        char* q = strchr(p, '=');
-        if (!q) {
-            q = strchr(p, ':');
-            if (!q) {
-                warn("invalid key-value item: %s\n", p);
-                return;
-            }
-        }
-        // TODO
-    }
-    printf("parse_line «%s» [%s]\n", p, section);
+    } else
+        parse_item(ini, p, section);
 }
-// TODO Use INI_NO_SECTION when needed
-// TODO
+
+static void parse_item(Ini* ini, char* p, const char* section) {
+    char* q = strchr(p, '=');
+    if (!q) {
+        q = strchr(p, ':');
+        if (!q) {
+            warn("invalid key-value item: %s\n", p);
+            return;
+        }
+    }
+    q--; // _before_ the =
+    char* key = str_trimn(p, q - p);
+    q += 2; // skip _past_ the =
+    char* value = str_trim(q);
+    int sectid = maybe_add_section(ini, section);
+    IniItem* item = find_item(ini, section, key);
+    if (item) { // duplicate entry; replace value
+        if (!str_caseeq(item->value, value)) {
+            free(item->value);
+            item->value = value;
+        }
+    } else {
+        item = item_alloc(key, value, sectid); // item owns key and value
+        vec_push(&ini->items, item);
+    }
+}
 
 char* ini_save_to_str(Ini* ini) {
     char* p = NULL;
@@ -180,7 +195,7 @@ static void item_write(const IniItem* item, FILE* file) {
 }
 
 static int find_sectid(const Ini* ini, const char* section) {
-    if (!section)
+    if (!section || !strlen(section))
         return INI_NO_SECTION;
     for (int i = 0; i < vec_str_size(&ini->sections); ++i)
         if (str_caseeq(section, vec_str_get(&ini->sections, i)))

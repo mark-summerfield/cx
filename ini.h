@@ -5,7 +5,7 @@
 #include "vec_str.h"
 #include <stdbool.h>
 
-#define INI_NO_SECTION -1
+#define INI_NO_SECTION -91919
 
 typedef struct Item Item;
 
@@ -14,6 +14,7 @@ typedef struct Item Item;
 // Case is preserved but in all getters and setters section and key
 // names are case-insensitive, and in all setters, section and key names
 // and values are trimmed.
+// Comments are discarded on reading, but if set, are written on writing.
 typedef struct Ini {
     char* filename;
     char* comment;
