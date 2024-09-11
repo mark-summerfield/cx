@@ -52,10 +52,6 @@ bool ini_save(Ini* ini);
 // Provided to ease testing.
 char* ini_save_to_str(Ini* ini);
 
-// Not const since it sorts the items first.
-// Provided to ease testing.
-bool ini_equal(Ini* ini1, Ini* ini2);
-
 // If section is NULL, the getters and setters will used the “no
 // section” (unnamed) section.
 

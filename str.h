@@ -8,20 +8,20 @@
 #define str_eq(s, t) (!strcmp((s), (t)))
 
 // Returns true if char* s case-folded equals char* t
-#define str_eq_fold(s, t) (!strcasecmp((s), (t)))
+#define str_caseeq(s, t) (!strcasecmp((s), (t)))
 
 // Returns true if char* s begins with char* prefix
 #define str_begins(s, prefix) (strncmp((s), (prefix), strlen(prefix)) == 0)
 
 // Returns true if char* s begins with char* prefix, regardless of case
-#define str_begins_fold(s, prefix) \
+#define str_casebegins(s, prefix) \
     (strncasecmp((s), (prefix), strlen(prefix)) == 0)
 
 // Returns true if char* s ends with char* suffix
 bool str_ends(const char*, const char*);
 
 // Returns true if char* s ends with char* suffix, regardless of case
-bool str_ends_fold(const char*, const char*);
+bool str_caseends(const char*, const char*);
 
 // new means returned pointer must be free'd; _ip means changes in-place
 
@@ -47,7 +47,15 @@ int str_strcasecmp(const void* s, const void* t);
 
 const char* bool_to_str(bool b);
 
+// Returns a pointer to s's first non-whitespace char or NULL if s is
+// empty or all whitespace
 const char* str_trim_left(const char* s);
+
+// Returns a new string owned by the caller that is a copy of s with no
+// leading or trailing whitespace: or NULL if s is empty or all
+// whitespace. If s is nonempty and has no leading or trailing
+// whitespace this function is effectively the same as strdup().
+char* str_trim(const char* s);
 
 #define typename(x) \
     _Generic((x), \

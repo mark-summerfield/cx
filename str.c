@@ -30,7 +30,7 @@ bool str_ends(const char* s, const char* suffix) {
     return strcmp(s + size - strlen(suffix), suffix) == 0;
 }
 
-bool str_ends_fold(const char* s, const char* suffix) {
+bool str_caseends(const char* s, const char* suffix) {
     size_t size = strlen(s);
     if (size < strlen(suffix))
         return false;
@@ -93,10 +93,38 @@ char* str_lowercase(const char* s) {
 }
 
 const char* str_trim_left(const char* s) {
+    if (!s || !*s)
+        return NULL;
     char* p = (char*)s;
+    assert_notnull(p);
     while (isspace(*p))
         p++;
+    if (!*p)
+        return NULL; // whole string is whitespace
     return p;
+}
+
+char* str_trim(const char* s) {
+    if (!s || !*s)
+        return NULL;
+    char* p = (char*)s;
+    assert_notnull(p);
+    while (isspace(*p)) // trim left
+        p++;
+    if (!*p)
+        return NULL; // whole string is whitespace
+    char* q = p;
+    assert_notnull(q);
+    while (*q) // find \0
+        q++;
+    q--; // last char
+    assert_notnull(q);
+    while (isspace(*q)) // trim right
+        q--;
+    assert(q > p && "expected string with at least one nonwhitespace here");
+    size_t size = q - p + 1;
+    char* r = calloc(1, size + 1); // allow for \0; calloc for valgrind
+    return strncpy(r, p, size);
 }
 
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }

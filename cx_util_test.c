@@ -8,8 +8,25 @@
 #include <string.h>
 
 void check_str_eq(tinfo* tinfo, const char* s, const char* t) {
+    assert_notnull(s);
+    assert_notnull(t);
     tinfo->total++;
     if (strcmp(s, t) != 0) {
+        fprintf(stderr, "FAIL: %s expected\n", tinfo->tag);
+        if (strchr(s, '\n')) {
+            fprintf(stderr, "==========\n%s\n----------\n%s\n==========\n",
+                    s, t);
+        } else
+            fprintf(stderr, "\t\"%s\" !=\n\t\"%s\"\n", s, t);
+    } else
+        tinfo->ok++;
+}
+
+void check_casestr_eq(tinfo* tinfo, const char* s, const char* t) {
+    assert_notnull(s);
+    assert_notnull(t);
+    tinfo->total++;
+    if (strcasecmp(s, t) != 0) {
         fprintf(stderr, "FAIL: %s expected\n", tinfo->tag);
         if (strchr(s, '\n')) {
             fprintf(stderr, "==========\n%s\n----------\n%s\n==========\n",

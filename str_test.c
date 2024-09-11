@@ -14,6 +14,7 @@ static void str_test_lowercase(tinfo*);
 static void str_test_lowercase_ip(tinfo*);
 static void str_test_begins_ends(tinfo*);
 static void str_test_filename_ext(tinfo*);
+static void str_test_trim(tinfo*);
 
 void str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -32,6 +33,8 @@ void str_tests(tinfo* tinfo) {
     str_test_begins_ends(tinfo);
     tinfo->tag = "str_test_filename_ext";
     str_test_filename_ext(tinfo);
+    tinfo->tag = "str_test_trim";
+    str_test_trim(tinfo);
 }
 
 static void str_test_uppercase(tinfo* tinfo) {
@@ -114,29 +117,29 @@ static void str_test_begins_ends(tinfo* tinfo) {
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_begins_fold("alpha", "ALP")) {
-        fprintf(stderr, "FAIL: %s !str_begins_fold(\"alpha\", \"ALP\"\n",
+    if (!str_casebegins("alpha", "ALP")) {
+        fprintf(stderr, "FAIL: %s !str_casebegins(\"alpha\", \"ALP\"\n",
                 tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_begins_fold("alpha", "SCALP")) {
-        fprintf(stderr, "FAIL: %s str_begins_fold(\"alpha\", \"SCALP\"\n",
+    if (str_casebegins("alpha", "SCALP")) {
+        fprintf(stderr, "FAIL: %s str_casebegins(\"alpha\", \"SCALP\"\n",
                 tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_ends_fold("beta", "ETA")) {
-        fprintf(stderr, "FAIL: %s !str_ends_fold(\"beta\", \"ETA\"\n",
+    if (!str_caseends("beta", "ETA")) {
+        fprintf(stderr, "FAIL: %s !str_caseends(\"beta\", \"ETA\"\n",
                 tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_ends_fold("beta", "META")) {
-        fprintf(stderr, "FAIL: %s str_ends_fold(\"beta\", \"META\"\n",
+    if (str_caseends("beta", "META")) {
+        fprintf(stderr, "FAIL: %s str_caseends(\"beta\", \"META\"\n",
                 tinfo->tag);
     } else
         tinfo->ok++;
@@ -172,4 +175,43 @@ static void str_test_filename_ext(tinfo* tinfo) {
         const char* ext = file_extension(filename);
         check_str_eq(tinfo, "", ext);
     }
+}
+
+static void str_test_trim(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    char* s = NULL;
+    char* t = (char*)str_trim_left(s);
+    check_isnull(tinfo, t);
+    s = "";
+    t = (char*)str_trim_left(s);
+    check_isnull(tinfo, t);
+    s = " \t\n \t\n ";
+    t = (char*)str_trim_left(s);
+    check_isnull(tinfo, t);
+    s = "\t a typical string with leading ws";
+    t = (char*)str_trim_left(s);
+    check_str_eq(tinfo, t, "a typical string with leading ws");
+
+    s = NULL;
+    t = (char*)str_trim(s);
+    check_isnull(tinfo, t);
+    s = "";
+    t = (char*)str_trim(s);
+    check_isnull(tinfo, t);
+    s = " \t\n \t\n ";
+    t = (char*)str_trim(s);
+    check_isnull(tinfo, t);
+    s = "a string with no leading or trailing ws";
+    t = (char*)str_trim(s);
+    check_str_eq(tinfo, t, s);
+    free(t);
+    s = "\t a typical string with leading ws and newline\r\n";
+    t = (char*)str_trim(s);
+    check_str_eq(tinfo, t, "a typical string with leading ws and newline");
+    free(t);
+    s = "         \t key = \tvalue \n";
+    t = (char*)str_trim(s);
+    check_str_eq(tinfo, t, "key = \tvalue");
+    free(t);
 }

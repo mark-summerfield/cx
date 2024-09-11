@@ -98,8 +98,8 @@ static void parse_text(Ini* ini, const char* text) {
 // Key-values:  /^[^[:=]+\s*[:=]\s*.+$/
 static void parse_line(Ini* ini, const char* line, char* section) {
     char* p = (char*)str_trim_left(line);
-    if (!*p || *p == ';' || *p == '#') // skip blank lines and comments
-        return;
+    if (!p || !*p || *p == ';' || *p == '#')
+        return;      // skip blank lines and comments
     if (*p == '[') { // section
         const char* q = strchr(p, ']');
         if (q)
@@ -179,27 +179,11 @@ static void item_write(const IniItem* item, FILE* file) {
     fprintf(file, "%s = %s\n", item->key, item->value);
 }
 
-bool ini_equal(Ini* ini1, Ini* ini2) {
-    if (vec_str_size(&ini1->items) != vec_str_size(&ini2->items))
-        return false;
-    vec_sort(&ini1->items);
-    vec_sort(&ini2->items);
-    for (int i = 0; i < vec_size(&ini1->items); ++i) {
-        const IniItem* item1 = vec_get(&ini1->items, i);
-        const IniItem* item2 = vec_get(&ini2->items, i);
-        if (!(item1->sectid == item2->sectid &&
-              str_eq_fold(item1->key, item2->key) &&
-              str_eq_fold(item1->value, item2->value)))
-            return false;
-    }
-    return true;
-}
-
 static int find_sectid(const Ini* ini, const char* section) {
     if (!section)
         return INI_NO_SECTION;
     for (int i = 0; i < vec_str_size(&ini->sections); ++i)
-        if (str_eq_fold(section, vec_str_get(&ini->sections, i)))
+        if (str_caseeq(section, vec_str_get(&ini->sections, i)))
             return i;
     return NOT_FOUND;
 }
@@ -210,7 +194,7 @@ static IniItem* find_item(Ini* ini, const char* section, const char* key) {
         return NULL;
     for (int i = 0; i < vec_size(&ini->items); ++i) {
         IniItem* item = vec_get(&ini->items, i);
-        if (item->sectid == sectid && str_eq_fold(item->key, key))
+        if (item->sectid == sectid && str_caseeq(item->key, key))
             return item;
     }
     return NULL;
@@ -230,16 +214,15 @@ IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
     const IniItem* item = find_item((Ini*)ini, section, key);
     if (!item)
         return IniItemNotFound;
-    if (str_eq_fold(item->value, "true") || str_eq_fold(item->value, "t") ||
-        str_eq_fold(item->value, "yes") || str_eq_fold(item->value, "y") ||
-        str_eq_fold(item->value, "on") || str_eq_fold(item->value, "1")) {
+    if (str_caseeq(item->value, "true") || str_caseeq(item->value, "t") ||
+        str_caseeq(item->value, "yes") || str_caseeq(item->value, "y") ||
+        str_caseeq(item->value, "on") || str_caseeq(item->value, "1")) {
         *value = true;
         return IniItemFound;
     }
-    if (str_eq_fold(item->value, "false") ||
-        str_eq_fold(item->value, "f") || str_eq_fold(item->value, "no") ||
-        str_eq_fold(item->value, "n") || str_eq_fold(item->value, "off") ||
-        str_eq_fold(item->value, "0")) {
+    if (str_caseeq(item->value, "false") || str_caseeq(item->value, "f") ||
+        str_caseeq(item->value, "no") || str_caseeq(item->value, "n") ||
+        str_caseeq(item->value, "off") || str_caseeq(item->value, "0")) {
         *value = false;
         return IniItemFound;
     }
@@ -277,7 +260,7 @@ void ini_set_bool(Ini* ini, const char* section, const char* key,
     IniItem* item = find_item(ini, section, key);
     if (item) {
         const char* s = bool_to_str(value);
-        if (!str_eq_fold(item->value, s)) {
+        if (!str_caseeq(item->value, s)) {
             free(item->value);
             item->value = strdup(s);
         }
