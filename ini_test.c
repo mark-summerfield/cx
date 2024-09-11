@@ -105,11 +105,11 @@ void test3(tinfo* tinfo) {
     if (tinfo->verbose)
         printf("%s/test3\n", tinfo->tag);
     Ini ini1 = ini_alloc_from_str("/tmp/test3.ini", INI_EG1);
-    ini_set_comment(&ini1, NULL, NULL, "whole file comment");
-    ini_set_str(&ini1, NULL, "NAME", "John Doe");
-    ini_set_str(&ini1, NULL, "organization", "Acme Widgets Inc.");
-    ini_set_real(&ini1, NULL, "Ranking", 1.76);
-    char* section = "DATABASE";
+    ini_set_comment(&ini1, NULL, NULL, " whole file comment\n");
+    ini_set_str(&ini1, NULL, "\tNAME", "John Doe\n");
+    ini_set_str(&ini1, NULL, " organization ", "\tAcme Widgets Inc.\t");
+    ini_set_real(&ini1, NULL, "  Ranking  ", 1.76);
+    char* section = "DATABASE\n";
     ini_set_str(&ini1, section, "Server", "192.0.2.62");
     ini_set_comment(&ini1, section, "server", "IP address");
     ini_set_int(&ini1, section, "port", 143);

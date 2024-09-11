@@ -203,7 +203,7 @@ static IniItem* find_item(Ini* ini, const char* section, const char* key) {
 static int maybe_add_section(Ini* ini, const char* section) {
     int sectid = find_sectid(ini, section);
     if (sectid == NOT_FOUND) {
-        vec_str_push(&ini->sections, strdup(section));
+        vec_str_push(&ini->sections, str_trim(section));
         sectid = vec_str_size(&ini->sections) - 1;
     }
     return sectid;
@@ -262,12 +262,12 @@ void ini_set_bool(Ini* ini, const char* section, const char* key,
         const char* s = bool_to_str(value);
         if (!str_caseeq(item->value, s)) {
             free(item->value);
-            item->value = strdup(s);
+            item->value = str_trim(s);
         }
     } else {
         int sectid = maybe_add_section(ini, section);
         const char* v = bool_to_str(value);
-        item = item_alloc(strdup(key), strdup(v), sectid);
+        item = item_alloc(str_trim(key), str_trim(v), sectid);
         vec_push(&ini->items, item);
     }
 }
@@ -286,7 +286,7 @@ void ini_set_int(Ini* ini, const char* section, const char* key,
         int sectid = maybe_add_section(ini, section);
         char* v;
         asprintf(&v, "%d", value);
-        item = item_alloc(strdup(key), v, sectid);
+        item = item_alloc(str_trim(key), v, sectid);
         vec_push(&ini->items, item);
     }
 }
@@ -301,7 +301,7 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
         int sectid = maybe_add_section(ini, section);
         char* v;
         asprintf(&v, "%lg", value);
-        item = item_alloc(strdup(key), v, sectid);
+        item = item_alloc(str_trim(key), v, sectid);
         vec_push(&ini->items, item);
     }
 }
@@ -312,11 +312,11 @@ void ini_set_str(Ini* ini, const char* section, const char* key,
     if (item) {
         if (!str_eq(item->value, value)) {
             free(item->value);
-            item->value = strdup(value);
+            item->value = str_trim(value);
         }
     } else {
         int sectid = maybe_add_section(ini, section);
-        item = item_alloc(strdup(key), strdup(value), sectid);
+        item = item_alloc(str_trim(key), str_trim(value), sectid);
         vec_push(&ini->items, item);
     }
 }
@@ -326,7 +326,7 @@ bool ini_set_comment(Ini* ini, const char* section, const char* key,
     if (!section && !key) {
         if (!ini->comment || !str_eq(ini->comment, comment)) {
             free(ini->comment);
-            ini->comment = strdup(comment);
+            ini->comment = str_trim(comment);
         }
         return true;
     }
@@ -335,7 +335,7 @@ bool ini_set_comment(Ini* ini, const char* section, const char* key,
         return false;
     if (!item->comment || !str_eq(item->comment, comment)) {
         free(item->comment);
-        item->comment = strdup(comment);
+        item->comment = str_trim(comment);
     }
     return true;
 }

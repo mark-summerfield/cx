@@ -1,7 +1,7 @@
 # Notes at the end
 
 ini.h
-ini.c # TODO (1) use str_trim() not strdup(); (2) parse_text()
+ini.c # TODO parse_line()
 
 cx.h
 vecs.h
@@ -37,7 +37,7 @@ cx_test.c
 cx_util_test.h
 cx_util_test.c
 ini_test.h
-ini_test.c # TODO (3)
+ini_test.c # TODO
 deq_str_test.h
 deq_str_test.c
 deq_int_test.h
