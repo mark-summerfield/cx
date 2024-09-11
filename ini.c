@@ -15,7 +15,7 @@
 #define LINE_MAX 1024
 
 static Ini alloc();
-static void read_from_file(Ini* ini);
+static bool read_from_file(Ini* ini);
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
 static void parse_item(Ini* ini, char* p, const char* section);
@@ -30,30 +30,37 @@ static IniItem* find_item(Ini* ini, const char* section, const char* key);
 
 inline Ini ini_alloc() { return alloc(); }
 
-Ini ini_alloc_from_str(const char* filename, const char* text) {
-    assert(text && ".ini text is required");
-    Ini ini = alloc(filename);
-    parse_text(&ini, text);
+static Ini alloc() {
+    return (Ini){NULL, NULL, vec_str_alloc(),
+                 vec_alloc(0, item_cmp, item_destroy)};
+}
+
+Ini ini_alloc_from_file(const char* filename, bool* ok) {
+    Ini ini = alloc();
+    bool reply = ini_merge_from_file(&ini, filename);
+    if (ok)
+        *ok = reply;
     return ini;
 }
 
-void ini_merge_from_file(Ini* ini, const char* filename) {
+Ini ini_alloc_from_str(const char* text) {
+    Ini ini = alloc();
+    ini_merge_from_str(&ini, text);
+    return ini;
+}
+
+bool ini_merge_from_file(Ini* ini, const char* filename) {
     assert(filename && ".ini filename is required");
     if (!str_eq(ini->filename, filename)) {
         free(ini->filename);
         ini->filename = strdup(filename);
     }
-    read_from_file(ini);
+    return read_from_file(ini);
 }
 
 void ini_merge_from_str(Ini* ini, const char* text) {
     assert(text && ".ini text is required");
     parse_text(ini, text);
-}
-
-static Ini alloc() {
-    return (Ini){NULL, NULL, vec_str_alloc(),
-                 vec_alloc(0, item_cmp, item_destroy)};
 }
 
 void ini_free(Ini* ini) {
@@ -63,10 +70,12 @@ void ini_free(Ini* ini) {
     free(ini->filename);
 }
 
-static void read_from_file(Ini* ini) {
-    char* text = read_file(ini->filename);
+static bool read_from_file(Ini* ini) {
+    bool ok;
+    char* text = read_file(ini->filename, &ok);
     parse_text(ini, text);
     free(text);
+    return ok;
 }
 
 static void parse_text(Ini* ini, const char* text) {
@@ -77,9 +86,9 @@ static void parse_text(Ini* ini, const char* text) {
         const char* q = strchr(p, '\n');
         int size;
         if (q)
-            size = MIN(LINE_MAX - 1, (int)(q - p));
+            size = min(LINE_MAX - 1, (int)(q - p));
         else
-            size = MIN(LINE_MAX - 1, (int)strlen(p));
+            size = min(LINE_MAX - 1, (int)strlen(p));
 #pragma GCC diagnostic ignored "-Wstringop-truncation"
 #pragma GCC diagnostic push
         strncpy(line, p, size);
@@ -168,6 +177,14 @@ bool ini_save(Ini* ini) {
         return false;
     }
     return true;
+}
+
+bool ini_saveas(Ini* ini, const char* filename) {
+    if (!str_eq(ini->filename, filename)) {
+        free(ini->filename);
+        ini->filename = strdup(filename);
+    }
+    return ini_save(ini);
 }
 
 static void save_to_file(Ini* ini, FILE* file) {

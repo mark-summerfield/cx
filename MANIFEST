@@ -1,5 +1,10 @@
 # Notes at the end
 
+# TODO fix test (e.g., add missing comments; reorder if needed)
+
+# TODO test sequence:
+#   create ini, set defaults, merge from str, check, set values, check
+
 ini.h
 ini.c
 
@@ -37,7 +42,7 @@ cx_test.c
 cx_util_test.h
 cx_util_test.c
 ini_test.h
-ini_test.c # TODO test sequence: create ini, set default merge, check
+ini_test.c
 deq_str_test.h
 deq_str_test.c
 deq_int_test.h

@@ -104,7 +104,7 @@ void test2(tinfo* tinfo) {
 void test3(tinfo* tinfo) {
     if (tinfo->verbose)
         printf("%s/test3\n", tinfo->tag);
-    Ini ini1 = ini_alloc_from_str("/tmp/test3.ini", INI_EG1);
+    Ini ini1 = ini_alloc_from_str(INI_EG1);
     char* section = "DATABASE";
     ini_set_comment(&ini1, NULL, NULL, " whole file comment\n");
     ini_set_comment(&ini1, section, "server", "IP address");
@@ -171,7 +171,7 @@ void test3(tinfo* tinfo) {
 void test4(tinfo* tinfo) {
     if (tinfo->verbose)
         printf("%s/test4\n", tinfo->tag);
-    Ini ini1 = ini_alloc_from_str("/tmp/test4.ini", INI_EG2);
+    Ini ini1 = ini_alloc_from_str(INI_EG2);
     ini_set_comment(
         &ini1, NULL, NULL,
         "Configuration file for Qtrac Ltd.'s comparepdfcmd program.\n");

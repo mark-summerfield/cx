@@ -38,9 +38,11 @@ bool is_folder(const char* path) {
     return false;
 }
 
-char* read_file(const char* filename) {
+char* read_file(const char* filename, bool* ok) {
     FILE* file = fopen(filename, "rb");
     if (!file) {
+        if (ok)
+            *ok = false;
         warn(NULL);
         return NULL;
     }
@@ -49,7 +51,12 @@ char* read_file(const char* filename) {
     fseek(file, 0, SEEK_SET);
     char* text = malloc(size + 1);
     fread(text, size, 1, file);
-    if (fclose(file))
+    if (fclose(file)) {
+        if (ok)
+            *ok = false;
         warn(NULL);
+    }
+    if (ok)
+        *ok = true;
     return text;
 }
