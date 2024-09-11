@@ -24,29 +24,29 @@ void ini_tests(tinfo* tinfo);
     "\n"                                                             \
     "[general]\n"                                                    \
     "; [appearance, chars, words]\n"                                 \
-    "mode=words\n"                                                   \
+    "mode = words\n"                                                 \
     "; [10, 90]\n"                                                   \
-    "highlight-transparency=80\n"                                    \
+    "highlight-transparency = 80\n"                                  \
     "; [1, 1000]\n"                                                  \
-    "maxdirdepth=1000\n"                                             \
+    "maxdirdepth = 1000\n"                                           \
     "\n"                                                             \
     "[appearance]\n"                                                 \
     "; [80, 100]\n"                                                  \
-    "accuracy=100\n"                                                 \
+    "accuracy = 100\n"                                               \
     "; [4, 144]\n"                                                   \
-    "square-size=10\n"                                               \
-    "new-renderer=false\n"                                           \
+    "square-size = 10\n"                                             \
+    "new-renderer = false\n"                                         \
     "\n"                                                             \
     "[colors]\n"                                                     \
-    "change-bar=#F00\n"                                              \
-    "exclusion-line=#A42929\n"                                       \
-    "highlight=#FF0\n"                                               \
-    "delete=#F00\n"                                                  \
-    "insert=#0FF\n"                                                  \
-    "replace=#F0F\n"                                                 \
+    "change-bar = #F00\n"                                            \
+    "exclusion-line = #A42929\n"                                     \
+    "highlight = #FF0\n"                                             \
+    "delete = #F00\n"                                                \
+    "insert = #0FF\n"                                                \
+    "replace = #F0F\n"                                               \
     "\n"                                                             \
     "[report]\n"                                                     \
-    "compact=false\n"                                                \
-    "scale=1.4\n"                                                    \
-    "line-tolerance=10\n"                                            \
-    "normalize-hyphens=true\n"
+    "compact = false\n"                                              \
+    "scale = 1.4\n"                                                  \
+    "line-tolerance = 10\n"                                          \
+    "normalize-hyphens = true\n"
