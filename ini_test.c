@@ -109,7 +109,7 @@ void test3(tinfo* tinfo) {
     ini_set_str(&ini1, NULL, "\tNAME", "John Doe\n");
     ini_set_str(&ini1, NULL, " organization ", "\tAcme Widgets Inc.\t");
     ini_set_real(&ini1, NULL, "  Ranking  ", 1.76);
-    char* section = "DATABASE\n";
+    char* section = "DATABASE";
     ini_set_str(&ini1, section, "Server", "192.0.2.62");
     ini_set_comment(&ini1, section, "server", "IP address");
     ini_set_int(&ini1, section, "port", 143);
