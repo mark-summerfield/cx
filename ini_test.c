@@ -174,10 +174,9 @@ void test4(tinfo* tinfo) {
     Ini ini1 = ini_alloc_from_str("/tmp/test4.ini", INI_EG2);
     ini_set_comment(
         &ini1, NULL, NULL,
-        "Configuration file for Qtrac Ltd.'s comparepdfcmd program.\n"
-        "Shows all .ini options with their default values.\n");
+        "Configuration file for Qtrac Ltd.'s comparepdfcmd program.\n");
+    // TODO add other comments
 
-    // TODO once we can parse lines
     char* text = ini_save_to_str(&ini1);
     check_casestr_eq(tinfo, text, INI_EG2);
     free(text);
