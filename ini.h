@@ -11,6 +11,9 @@ typedef struct Item Item;
 
 // Ini represents a .ini file's sections, keys, values, and comments and
 // owns all the strings it holds.
+// Case is preserved but in all getters and setters section and key
+// names are case-insensitive, and in all setters, section and key names
+// and values are trimmed.
 typedef struct Ini {
     char* filename;
     char* comment;
