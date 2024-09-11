@@ -2,6 +2,9 @@
 
 #include "fx.h"
 #include <dirent.h>
+#include <err.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -33,4 +36,20 @@ bool is_folder(const char* path) {
         return true;
     }
     return false;
+}
+
+char* read_file(const char* filename) {
+    FILE* file = fopen(filename, "rb");
+    if (!file) {
+        warn(NULL);
+        return NULL;
+    }
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char* text = malloc(size + 1);
+    fread(text, size, 1, file);
+    if (fclose(file))
+        warn(NULL);
+    return text;
 }

@@ -14,8 +14,8 @@
 #define NOT_FOUND -2
 #define LINE_MAX 1024
 
-static Ini alloc(const char* filename);
-static void read_file(Ini* ini);
+static Ini alloc();
+static void read_from_file(Ini* ini);
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
 static void parse_item(Ini* ini, char* p, const char* section);
@@ -28,12 +28,7 @@ static int find_sectid(const Ini* ini, const char* section);
 static int maybe_add_section(Ini* ini, const char* section);
 static IniItem* find_item(Ini* ini, const char* section, const char* key);
 
-Ini ini_alloc(const char* filename) {
-    Ini ini = alloc(filename);
-    if (is_file(filename))
-        read_file(&ini);
-    return ini;
-}
+inline Ini ini_alloc() { return alloc(); }
 
 Ini ini_alloc_from_str(const char* filename, const char* text) {
     assert(text && ".ini text is required");
@@ -42,9 +37,22 @@ Ini ini_alloc_from_str(const char* filename, const char* text) {
     return ini;
 }
 
-static Ini alloc(const char* filename) {
+void ini_merge_from_file(Ini* ini, const char* filename) {
     assert(filename && ".ini filename is required");
-    return (Ini){strdup(filename), NULL, vec_str_alloc(),
+    if (!str_eq(ini->filename, filename)) {
+        free(ini->filename);
+        ini->filename = strdup(filename);
+    }
+    read_from_file(ini);
+}
+
+void ini_merge_from_str(Ini* ini, const char* text) {
+    assert(text && ".ini text is required");
+    parse_text(ini, text);
+}
+
+static Ini alloc() {
+    return (Ini){NULL, NULL, vec_str_alloc(),
                  vec_alloc(0, item_cmp, item_destroy)};
 }
 
@@ -55,20 +63,8 @@ void ini_free(Ini* ini) {
     free(ini->filename);
 }
 
-static void read_file(Ini* ini) {
-    char* text = NULL;
-    FILE* file = fopen(ini->filename, "rb");
-    if (!file) {
-        warn(NULL);
-        return;
-    }
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    text = malloc(size + 1);
-    fread(text, size, 1, file);
-    if (fclose(file))
-        warn(NULL);
+static void read_from_file(Ini* ini) {
+    char* text = read_file(ini->filename);
     parse_text(ini, text);
     free(text);
 }

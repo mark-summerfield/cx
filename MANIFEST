@@ -37,7 +37,7 @@ cx_test.c
 cx_util_test.h
 cx_util_test.c
 ini_test.h
-ini_test.c # TODO
+ini_test.c # TODO test sequence: create ini, set default merge, check
 deq_str_test.h
 deq_str_test.c
 deq_int_test.h

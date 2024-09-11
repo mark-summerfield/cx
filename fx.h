@@ -14,3 +14,7 @@ bool is_file(const char* path);
 
 // Returns true if the given folder exists.
 bool is_folder(const char* path);
+
+// Reads a whole file and returns it as a single string which the caller
+// owns.
+char* read_file(const char* filename);

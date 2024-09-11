@@ -37,7 +37,7 @@ typedef enum IniReply {
 } IniReply;
 
 // Creates an Ini with the given filename and if the file exists, loads it.
-Ini ini_alloc(const char* filename);
+Ini ini_alloc();
 
 // Creates an Ini with the given filename and with the given .ini file
 // text. Provided to ease testing.
@@ -46,6 +46,12 @@ Ini ini_alloc_from_str(const char* filename, const char* text);
 // Must be called once the Ini is finished with.
 // Call ini_save() first if the data is to be preserved.
 void ini_free(Ini* ini);
+
+// Merges the contents of the given .ini file
+void ini_merge_from_file(Ini* ini, const char* filename);
+
+// Merges the contents of the given .ini file's text
+void ini_merge_from_str(Ini* ini, const char* text);
 
 // Saves the Ini to its given filename and if successful returns true.
 // Not const since it sorts the items first.
