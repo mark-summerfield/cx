@@ -5,9 +5,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define COMMA_I64_SIZE 28
+
 bool is_zeroish(double a);
 
 bool is_equalish(double a, double b);
+
+// s should be COMMA_I64_SIZE
+void commas(char* s, int64_t n);
 
 int mx_mini(int a, int b);
 int mx_maxi(int a, int b);

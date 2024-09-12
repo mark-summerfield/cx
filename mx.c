@@ -1,7 +1,12 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "mx.h"
+#include "cx.h"
+#include <inttypes.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define ACCURACY 0.0000000001
 
@@ -26,3 +31,36 @@ inline size_t mx_maxzu(size_t a, size_t b) { return a > b ? a : b; }
 inline double mx_mind(double a, double b) { return a < b ? a : b; }
 
 inline double mx_maxd(double a, double b) { return a > b ? a : b; }
+
+void commas(char* s, int64_t n) {
+    assert_notnull(s);
+    char bare[COMMA_I64_SIZE] = "";
+    char reversed[COMMA_I64_SIZE] = "";
+    int bare_char_count = snprintf(bare, COMMA_I64_SIZE, "%" PRId64, n);
+    int digits = 0;
+    int j = 0;
+    for (int i = bare_char_count - 1; i >= 0; --i) {
+        digits++;
+        reversed[j++] = bare[i];
+        if (digits == 3) {
+            reversed[j++] = ',';
+            digits = 0;
+        }
+    }
+    int a = 0;
+    int b = j - 1;
+    char c;
+    for (; a < b; a++, b--) {
+        c = reversed[a];
+        reversed[a] = reversed[b];
+        reversed[b] = c;
+    }
+    char* p = reversed;
+    if (*p == '-' && *(p + 1) == ',') {
+        p++;
+        *p = '-';
+    } else if (*p == ',')
+        p++;
+    strncpy(s, p, j);
+    s[j] = 0;
+}

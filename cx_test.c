@@ -4,6 +4,8 @@
 #include "deq_int_test.h"
 #include "deq_str_test.h"
 #include "ini_test.h"
+#include "mx.h"
+#include "mx_test.h"
 #include "set_int_test.h"
 #include "set_str_test.h"
 #include "str.h"
@@ -24,6 +26,9 @@ int main(int argc, char** argv) {
     const char* pattern = get_args(argc, argv, &verbose);
     srand((unsigned)time(NULL));
     tinfo tinfo = {"", 0, 0, verbose};
+    tinfo.tag = "mx_tests";
+    if (!pattern || strstr(tinfo.tag, pattern))
+        mx_tests(&tinfo);
     tinfo.tag = "va_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         va_tests(&tinfo);
@@ -54,8 +59,12 @@ int main(int argc, char** argv) {
     tinfo.tag = "ini_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         ini_tests(&tinfo);
-    printf("%s %d/%d\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL",
-           tinfo.ok, tinfo.total);
+    char ok[COMMA_I64_SIZE];
+    commas(ok, tinfo.ok);
+    char total[COMMA_I64_SIZE];
+    commas(total, tinfo.total);
+    printf("%s %s/%s\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL", ok,
+           total);
 }
 
 const char* get_args(int argc, char** argv, bool* verbose) {

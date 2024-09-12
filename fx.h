@@ -16,7 +16,7 @@ bool is_file(const char* path);
 bool is_folder(const char* path);
 
 // Reads a whole file and returns it as a single string which the caller
-// owns.
+// owns and sets ok if given.
 char* read_file_max(const char* filename, long long max_size, bool* ok);
 
 #define read_file(filename, ok) read_file_max((filename), 1024 * 1024, (ok))

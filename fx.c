@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "fx.h"
+#include "cx.h"
 #include <dirent.h>
 #include <err.h>
 #include <stdio.h>
@@ -53,8 +54,8 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
         warn(NULL);
         goto end;
     }
-    long long size = ftell(file); // failed to tell
-    if (size == -1) {
+    long long size = ftell(file);
+    if (size == -1) { // failed to tell
         is_ok = false;
         warn(NULL);
         goto end;
@@ -70,6 +71,7 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
         goto end;
     }
     text = malloc(size + 1);
+    assert_alloc(text);
     fread(text, size, 1, file);
     if (ferror(file)) { // failed to read
         is_ok = false;
