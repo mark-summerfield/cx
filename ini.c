@@ -14,7 +14,6 @@
 #define NOT_FOUND -2
 #define LINE_MAX 1024
 
-static Ini alloc();
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
 static void parse_item(Ini* ini, char* p, const char* section);
@@ -27,15 +26,13 @@ static int find_sectid(const Ini* ini, const char* section);
 static int maybe_add_section(Ini* ini, const char* section);
 static IniItem* find_item(Ini* ini, const char* section, const char* key);
 
-inline Ini ini_alloc() { return alloc(); }
-
-static Ini alloc() {
+inline Ini ini_alloc() {
     return (Ini){NULL, vec_str_alloc(),
                  vec_alloc(0, item_cmp, item_destroy)};
 }
 
 Ini ini_alloc_from_file(const char* filename, bool* ok) {
-    Ini ini = alloc();
+    Ini ini = ini_alloc();
     bool reply = ini_merge_from_file(&ini, filename);
     if (ok)
         *ok = reply;
@@ -43,7 +40,7 @@ Ini ini_alloc_from_file(const char* filename, bool* ok) {
 }
 
 Ini ini_alloc_from_str(const char* text) {
-    Ini ini = alloc();
+    Ini ini = ini_alloc();
     ini_merge_from_str(&ini, text);
     return ini;
 }
@@ -141,20 +138,6 @@ static void parse_item(Ini* ini, char* p, const char* section) {
     }
 }
 
-char* ini_save_to_str(Ini* ini) {
-    char* p = NULL;
-    size_t size;
-    FILE* file = open_memstream(&p, &size);
-    if (!file) {
-        warn(NULL);
-        return p;
-    }
-    save_to_file(ini, file);
-    if (fclose(file))
-        warn(NULL);
-    return p;
-}
-
 bool ini_save(Ini* ini, const char* filename) {
     FILE* file = fopen(filename, "w");
     if (!file) {
@@ -167,6 +150,20 @@ bool ini_save(Ini* ini, const char* filename) {
         return false;
     }
     return true;
+}
+
+char* ini_save_to_str(Ini* ini) {
+    char* p = NULL;
+    size_t size;
+    FILE* file = open_memstream(&p, &size);
+    if (!file) {
+        warn(NULL);
+        return p;
+    }
+    save_to_file(ini, file);
+    if (fclose(file))
+        warn(NULL);
+    return p;
 }
 
 static void save_to_file(Ini* ini, FILE* file) {
@@ -373,6 +370,7 @@ static int item_cmp(const void* item1_, const void* item2_) {
 // Takes ownership of key and value
 static IniItem* item_alloc(char* key, char* value, int sectid) {
     IniItem* item = malloc(sizeof(IniItem));
+    assert_alloc(item);
     item->key = key;
     item->value = value;
     item->comment = NULL;

@@ -104,8 +104,6 @@ const char* str_trim_left(const char* s) {
     return p;
 }
 
-inline char* str_trim(const char* s) { return str_trimn(s, 0); }
-
 char* str_trimn(const char* s, size_t n) {
     if (!s || !*s)
         return NULL;
@@ -131,8 +129,11 @@ char* str_trimn(const char* s, size_t n) {
     if (q < p)
         return NULL; // all whitespace
     size_t size = q - p + 1;
-    char* r = calloc(1, size + 1); // allow for \0; calloc for valgrind
-    return strncpy(r, p, size);
+    char* r = malloc(size + 1); // allow for \0
+    assert_alloc(r);
+    strncpy(r, p, size);
+    r[size] = 0;
+    return r;
 }
 
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }

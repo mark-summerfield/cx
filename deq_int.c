@@ -98,6 +98,7 @@ int deq_int_pop_first(DeqInt* deq) {
 
 static DeqIntNode* node_alloc(int value) {
     DeqIntNode* node = malloc(sizeof(DeqIntNode));
+    assert_alloc(node);
     node->prev = node->next = NULL;
     node->value = value;
     return node;

@@ -24,6 +24,7 @@ Tag tag_make_key(char* name) {
 // caller owns
 Tag* tag_alloc(char* name, long id) {
     Tag* tag = malloc(sizeof(Tag));
+    assert_alloc(tag);
     tag->name = name;
     tag->id = id;
 #ifdef MEMCHECK

@@ -118,6 +118,7 @@ char* deq_str_join(DeqStr* deq, const char* sep) {
 
 static DeqStrNode* node_alloc(char* value) {
     DeqStrNode* node = malloc(sizeof(DeqStrNode));
+    assert_alloc(node);
     node->prev = node->next = NULL;
     node->value = value;
     return node;

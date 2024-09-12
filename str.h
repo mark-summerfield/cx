@@ -51,14 +51,14 @@ const char* bool_to_str(bool b);
 // empty or all whitespace
 const char* str_trim_left(const char* s);
 
+// Like str_trim but only operates on the first n chars of s.
+char* str_trimn(const char* s, size_t n);
+
 // Returns a new string owned by the caller that is a copy of s with no
 // leading or trailing whitespace: or NULL if s is empty or all
 // whitespace. If s is nonempty and has no leading or trailing
 // whitespace this function is effectively the same as strdup().
-char* str_trim(const char* s);
-
-// Like str_trim but only operates on the first n chars of s.
-char* str_trimn(const char* s, size_t n);
+#define str_trim(s) str_trimn((s), 0)
 
 #define typename(x) \
     _Generic((x), \
