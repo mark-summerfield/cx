@@ -1,6 +1,8 @@
 # Notes at the end
 
-# TODO fx: get_ini_filename(domain, appname)
+# TODO fx: get_config_filename(domain, appname, ext)
+#	   #define get_ini_filename(domain, appname) \
+#		get_config_filename((domain),(appname),".ini")
 # TODO mx: commas(n) // use _Generic for all kinds of ints
 
 ini.h
