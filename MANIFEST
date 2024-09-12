@@ -1,9 +1,9 @@
 # Notes at the end
 
 # TODO fix test (e.g., add missing comments; reorder if needed)
-
 # TODO test sequence:
 #   create ini, set defaults, merge from str, check, set values, check
+# TODO fx: get_ini_filename(domain, appname)
 
 ini.h
 ini.c

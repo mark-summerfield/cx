@@ -19,34 +19,22 @@ void ini_tests(tinfo* tinfo);
     "; IP address\n"                     \
     "server = 192.0.2.62\n"
 
-#define INI_EG2                                                      \
-    "; Configuration file for Qtrac Ltd.'s comparepdfcmd program.\n" \
-    "\n"                                                             \
-    "[general]\n"                                                    \
-    "; [appearance, chars, words]\n"                                 \
-    "mode = words\n"                                                 \
-    "; [10, 90]\n"                                                   \
-    "highlight-transparency = 80\n"                                  \
-    "; [1, 1000]\n"                                                  \
-    "maxdirdepth = 1000\n"                                           \
-    "\n"                                                             \
-    "[appearance]\n"                                                 \
-    "; [80, 100]\n"                                                  \
-    "accuracy = 100\n"                                               \
-    "; [4, 144]\n"                                                   \
-    "square-size = 10\n"                                             \
-    "new-renderer = false\n"                                         \
-    "\n"                                                             \
-    "[colors]\n"                                                     \
-    "change-bar = #F00\n"                                            \
-    "exclusion-line = #A42929\n"                                     \
-    "highlight = #FF0\n"                                             \
-    "delete = #F00\n"                                                \
-    "insert = #0FF\n"                                                \
-    "replace = #F0F\n"                                               \
-    "\n"                                                             \
-    "[report]\n"                                                     \
-    "compact = false\n"                                              \
-    "scale = 1.4\n"                                                  \
-    "line-tolerance = 10\n"                                          \
-    "normalize-hyphens = true\n"
+#define INI_EG2                        \
+    "; Configuration file for MyApp\n" \
+    "\n"                               \
+    "[Window]\n"                       \
+    "height = 561\n"                   \
+    "; 1.0-3.5\n"                      \
+    "scale = 1.15\n"                   \
+    "; [Base Gleam Gtk Oxy Plastic]\n" \
+    "theme = Oxy\n"                    \
+    "width = 407\n"                    \
+    "x = 101\n"                        \
+    "y = 343\n"                        \
+    "\n"                               \
+    "[UI]\n"                           \
+    "; 1-8\n"                          \
+    "LastCategory = 1\n"               \
+    "LastRegex = (?P<lig>f[fil])\n"    \
+    "; 0-4\n"                          \
+    "LastTab = 0\n"

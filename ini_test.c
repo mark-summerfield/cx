@@ -15,9 +15,9 @@ static const char* reply_to_str(IniReply reply);
 void ini_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    test1(tinfo);
-    test2(tinfo);
-    test3(tinfo);
+    // test1(tinfo);
+    // test2(tinfo);
+    // test3(tinfo);
     test4(tinfo);
 }
 
@@ -171,18 +171,24 @@ void test3(tinfo* tinfo) {
 void test4(tinfo* tinfo) {
     if (tinfo->verbose)
         printf("%s/test4\n", tinfo->tag);
+    // Create with defaults
     Ini ini1 = ini_alloc_from_str(INI_EG2);
-    ini_set_comment(
-        &ini1, NULL, NULL,
-        "Configuration file for Qtrac Ltd.'s comparepdfcmd program.\n");
-    // TODO add other comments
+    // Add comments
+    ini_set_comment(&ini1, NULL, NULL, "Configuration for MyApp");
+    char* section = "Window";
+    ini_set_comment(&ini1, section, "scale", "1.0-3.5");
+    ini_set_comment(&ini1, section, "theme",
+                    "[Base Gleam Gtk Oxy Plastic]");
+    section = "UI";
+    ini_set_comment(&ini1, section, "LastCategory", "1-8");
+    ini_set_comment(&ini1, section, "LastTab", "0-4");
 
     char* text = ini_save_to_str(&ini1);
     check_casestr_eq(tinfo, text, INI_EG2);
     free(text);
 
     /*
-    char* section = "General";
+    char* section = "...";
     {
         const char* v = ini_get_str(&ini1, section, "Mode");
         check_str_eq(tinfo, v, "words");

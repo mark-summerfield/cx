@@ -15,7 +15,6 @@
 #define LINE_MAX 1024
 
 static Ini alloc();
-static bool read_from_file(Ini* ini);
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
 static void parse_item(Ini* ini, char* p, const char* section);
@@ -31,7 +30,7 @@ static IniItem* find_item(Ini* ini, const char* section, const char* key);
 inline Ini ini_alloc() { return alloc(); }
 
 static Ini alloc() {
-    return (Ini){NULL, NULL, vec_str_alloc(),
+    return (Ini){NULL, vec_str_alloc(),
                  vec_alloc(0, item_cmp, item_destroy)};
 }
 
@@ -51,11 +50,11 @@ Ini ini_alloc_from_str(const char* text) {
 
 bool ini_merge_from_file(Ini* ini, const char* filename) {
     assert(filename && ".ini filename is required");
-    if (!str_eq(ini->filename, filename)) {
-        free(ini->filename);
-        ini->filename = strdup(filename);
-    }
-    return read_from_file(ini);
+    bool ok;
+    char* text = read_file(filename, &ok);
+    parse_text(ini, text);
+    free(text);
+    return ok;
 }
 
 void ini_merge_from_str(Ini* ini, const char* text) {
@@ -67,15 +66,6 @@ void ini_free(Ini* ini) {
     vec_free(&ini->items);
     vec_str_free(&ini->sections);
     free(ini->comment);
-    free(ini->filename);
-}
-
-static bool read_from_file(Ini* ini) {
-    bool ok;
-    char* text = read_file(ini->filename, &ok);
-    parse_text(ini, text);
-    free(text);
-    return ok;
 }
 
 static void parse_text(Ini* ini, const char* text) {
@@ -139,6 +129,7 @@ static void parse_item(Ini* ini, char* p, const char* section) {
     }
     char* value = str_trim(q);
     int sectid = maybe_add_section(ini, section);
+    printf("parse_line «%s»=«%s» §%d=%s\n", key, value, sectid, section);
     IniItem* item = find_item(ini, section, key);
     if (item) { // duplicate entry; replace value
         if (!str_caseeq(item->value, value)) {
@@ -165,8 +156,8 @@ char* ini_save_to_str(Ini* ini) {
     return p;
 }
 
-bool ini_save(Ini* ini) {
-    FILE* file = fopen(ini->filename, "w");
+bool ini_save(Ini* ini, const char* filename) {
+    FILE* file = fopen(filename, "w");
     if (!file) {
         warn(NULL);
         return false;
@@ -177,14 +168,6 @@ bool ini_save(Ini* ini) {
         return false;
     }
     return true;
-}
-
-bool ini_saveas(Ini* ini, const char* filename) {
-    if (!str_eq(ini->filename, filename)) {
-        free(ini->filename);
-        ini->filename = strdup(filename);
-    }
-    return ini_save(ini);
 }
 
 static void save_to_file(Ini* ini, FILE* file) {
