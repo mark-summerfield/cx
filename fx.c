@@ -38,41 +38,49 @@ bool is_folder(const char* path) {
     return false;
 }
 
-char* read_file(const char* filename, bool* ok) {
+char* read_file_max(const char* filename, long long max_size, bool* ok) {
     FILE* file = fopen(filename, "rb");
-    if (!file) {
+    if (!file) { // failed to open
         if (ok)
             *ok = false;
         warn(NULL);
         return NULL;
     }
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    char* text = malloc(size + 1);
+    char* text = NULL;
+    bool is_ok = true;
+    if (fseek(file, 0, SEEK_END) == -1) { // failed to seek
+        is_ok = false;
+        warn(NULL);
+        goto end;
+    }
+    long long size = ftell(file); // failed to tell
+    if (size == -1) {
+        is_ok = false;
+        warn(NULL);
+        goto end;
+    }
+    if (size >= max_size) { // too big
+        is_ok = false;
+        warn("%s is too big to read whole (%lld)", filename, size);
+        goto end;
+    }
+    if (fseek(file, 0, SEEK_SET) == -1) { // failed to seek
+        is_ok = false;
+        warn(NULL);
+        goto end;
+    }
+    text = malloc(size + 1);
     fread(text, size, 1, file);
+    if (ferror(file)) { // failed to read
+        is_ok = false;
+        warn(NULL);
+    }
+end:
     if (fclose(file)) {
-        if (ok)
-            *ok = false;
+        is_ok = false;
         warn(NULL);
     }
     if (ok)
-        *ok = true;
+        *ok = is_ok;
     return text;
 }
-
-inline int mini(int a, int b) { return a < b ? a : b; }
-
-inline int maxi(int a, int b) { return a > b ? a : b; }
-
-inline long long minll(long long a, long long b) { return a < b ? a : b; }
-
-inline long long maxll(long long a, long long b) { return a > b ? a : b; }
-
-inline size_t minzu(size_t a, size_t b) { return a < b ? a : b; }
-
-inline size_t maxzu(size_t a, size_t b) { return a > b ? a : b; }
-
-inline double mind(double a, double b) { return a < b ? a : b; }
-
-inline double maxd(double a, double b) { return a > b ? a : b; }

@@ -38,3 +38,23 @@ void ini_tests(tinfo* tinfo);
     "LastRegex = (?P<lig>f[fil])\n"    \
     "; 0-4\n"                          \
     "LastTab = 0\n"
+
+#define INI_EG3                                               \
+    "; Config file for MyApp\n"                               \
+    "\n"                                                      \
+    "[Window]\n"                                              \
+    "height = 480\n"                                          \
+    "; 1.0-3.5\n"                                             \
+    "scale = 1.7\n"                                           \
+    "; [Base Gleam Gtk Oxy Plastic]\n"                        \
+    "theme = Gleam\n"                                         \
+    "width = 640\n"                                           \
+    "x = 199\n"                                               \
+    "y = 343\n"                                               \
+    "\n"                                                      \
+    "[UI]\n"                                                  \
+    "; 1-8\n"                                                 \
+    "LastCategory = 2\n"                                      \
+    "LastRegex = ^\\s*(?P<key>\\S+)\\s*=\\s*(?P<value>.+)$\n" \
+    "; 0-4\n"                                                 \
+    "LastTab = 3\n"

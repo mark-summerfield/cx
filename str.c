@@ -128,7 +128,7 @@ char* str_trimn(const char* s, size_t n) {
     assert_notnull(q);
     while (isspace(*q)) // trim right
         q--;
-    if (q <= p)
+    if (q < p)
         return NULL; // all whitespace
     size_t size = q - p + 1;
     char* r = calloc(1, size + 1); // allow for \0; calloc for valgrind

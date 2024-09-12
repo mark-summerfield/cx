@@ -102,7 +102,7 @@ static void parse_line(Ini* ini, const char* line, char* section) {
     if (*p == '[') { // section
         const char* q = strchr(p, ']');
         if (q) {
-            size_t size = MIN(LINE_MAX, (int)(q - p)) - 1;
+            size_t size = min(LINE_MAX, (int)(q - p)) - 1;
             strncpy(section, p + 1, size);
             section[size] = 0;
         } else
@@ -129,7 +129,6 @@ static void parse_item(Ini* ini, char* p, const char* section) {
     }
     char* value = str_trim(q);
     int sectid = maybe_add_section(ini, section);
-    printf("parse_line «%s»=«%s» §%d=%s\n", key, value, sectid, section);
     IniItem* item = find_item(ini, section, key);
     if (item) { // duplicate entry; replace value
         if (!str_caseeq(item->value, value)) {

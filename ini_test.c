@@ -15,9 +15,9 @@ static const char* reply_to_str(IniReply reply);
 void ini_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    // test1(tinfo);
-    // test2(tinfo);
-    // test3(tinfo);
+    test1(tinfo);
+    test2(tinfo);
+    test3(tinfo);
     test4(tinfo);
 }
 
@@ -174,7 +174,7 @@ void test4(tinfo* tinfo) {
     // Create with defaults
     Ini ini1 = ini_alloc_from_str(INI_EG2);
     // Add comments
-    ini_set_comment(&ini1, NULL, NULL, "Configuration for MyApp");
+    ini_set_comment(&ini1, NULL, NULL, "Configuration file for MyApp");
     char* section = "Window";
     ini_set_comment(&ini1, section, "scale", "1.0-3.5");
     ini_set_comment(&ini1, section, "theme",
@@ -183,18 +183,29 @@ void test4(tinfo* tinfo) {
     ini_set_comment(&ini1, section, "LastCategory", "1-8");
     ini_set_comment(&ini1, section, "LastTab", "0-4");
 
+    // Test verify
     char* text = ini_save_to_str(&ini1);
     check_casestr_eq(tinfo, text, INI_EG2);
     free(text);
 
-    /*
-    char* section = "...";
-    {
-        const char* v = ini_get_str(&ini1, section, "Mode");
-        check_str_eq(tinfo, v, "words");
-    }
-    // TODO etc
-    */
+    // Make changes
+    ini_set_comment(&ini1, NULL, NULL, "Config file for MyApp");
+    section = "WINDOW";
+    ini_set_int(&ini1, section, "HEIGHT", 480);
+    ini_set_real(&ini1, section, "Scale", 1.7);
+    ini_set_str(&ini1, section, "THEME", "Gleam");
+    ini_set_int(&ini1, section, "Width", 640);
+    ini_set_int(&ini1, section, "X", 199);
+    section = "ui";
+    ini_set_int(&ini1, section, "lastcategory", 2);
+    ini_set_str(&ini1, section, "lastREGEX",
+                "^\\s*(?P<key>\\S+)\\s*=\\s*(?P<value>.+)$");
+    ini_set_int(&ini1, section, "LASTTAB", 3);
+
+    // Test verify
+    text = ini_save_to_str(&ini1);
+    check_casestr_eq(tinfo, text, INI_EG3);
+    free(text);
 
     ini_free(&ini1);
 }

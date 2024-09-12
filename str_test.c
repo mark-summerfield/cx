@@ -249,4 +249,12 @@ static void str_test_trim(tinfo* tinfo) {
     t = str_trimn(s, 0);
     check_str_eq(tinfo, t, "key = \tvalue");
     free(t);
+    s = " x ";
+    t = str_trimn(s, 2);
+    check_str_eq(tinfo, t, "x");
+    free(t);
+    s = "x";
+    t = str_trimn(s, 1);
+    check_str_eq(tinfo, t, "x");
+    free(t);
 }
