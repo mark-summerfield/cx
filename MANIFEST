@@ -1,9 +1,5 @@
 # Notes at the end
 
-# TODO fx: get_config_filename(domain, appname, ext)
-#	   #define get_ini_filename(domain, appname) \
-#		get_config_filename((domain),(appname),".ini")
-
 cx.h
 ini.h
 ini.c
@@ -41,6 +37,8 @@ cx_util_test.h
 cx_util_test.c
 mx_test.h
 mx_test.c
+fx_test.h
+fx_test.c
 ini_test.h
 ini_test.c
 deq_str_test.h

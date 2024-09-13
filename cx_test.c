@@ -3,6 +3,7 @@
 #include "cx_util_test.h"
 #include "deq_int_test.h"
 #include "deq_str_test.h"
+#include "fx.h"
 #include "ini_test.h"
 #include "mx.h"
 #include "mx_test.h"
@@ -32,6 +33,9 @@ int main(int argc, char** argv) {
     tinfo.tag = "va_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         va_tests(&tinfo);
+    tinfo.tag = "fx_tests";
+    if (!pattern || strstr(tinfo.tag, pattern))
+        fx_tests(&tinfo);
     tinfo.tag = "str_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         str_tests(&tinfo);

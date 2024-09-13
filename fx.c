@@ -86,3 +86,23 @@ end:
         *ok = is_ok;
     return text;
 }
+
+bool get_config_filename(char* filename, const char* domain,
+                         const char* appname, const char* ext) {
+    int n = snprintf(filename, FILENAME_MAX, "%s", getenv("HOME"));
+    char* end = stpcpy(filename + n, "/.config");
+    if (!is_folder(filename)) {
+        end = filename + n;
+        *end++ = '/';
+        *end++ = '.';
+        *end = 0;
+    } else {
+        *end++ = '/';
+        *end = 0;
+    }
+    if (domain && strlen(domain))
+        sprintf(end, "%s_%s%s", domain, appname, ext);
+    else
+        sprintf(end, "%s%s", appname, ext);
+    return is_file(filename);
+}
