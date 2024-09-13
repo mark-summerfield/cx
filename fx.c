@@ -4,6 +4,7 @@
 #include "cx.h"
 #include <dirent.h>
 #include <err.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,7 +90,8 @@ end:
 
 bool get_config_filename(char* filename, const char* domain,
                          const char* appname, const char* ext) {
-    int n = snprintf(filename, FILENAME_MAX, "%s", getenv("HOME"));
+    struct passwd* pw = getpwuid(getuid());
+    int n = snprintf(filename, FILENAME_MAX, "%s", pw->pw_dir);
     char* end = stpcpy(filename + n, "/.config");
     if (!is_folder(filename)) {
         end = filename + n;
