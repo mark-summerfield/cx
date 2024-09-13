@@ -4,6 +4,7 @@
 #include "deq_int_test.h"
 #include "deq_str_test.h"
 #include "fx.h"
+#include "fx_test.h"
 #include "ini_test.h"
 #include "mx.h"
 #include "mx_test.h"
