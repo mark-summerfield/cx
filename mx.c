@@ -35,27 +35,26 @@ inline double mx_maxd(double a, double b) { return a > b ? a : b; }
 void commas(char* s, int64_t n) {
     assert_notnull(s);
     char bare[COMMA_I64_SIZE] = "";
-    char reversed[COMMA_I64_SIZE] = "";
+    char commad[COMMA_I64_SIZE] = "";
     int bare_char_count = snprintf(bare, COMMA_I64_SIZE, "%" PRId64, n);
     int digits = 0;
     int j = 0;
     for (int i = bare_char_count - 1; i >= 0; --i) {
         digits++;
-        reversed[j++] = bare[i];
+        commad[j++] = bare[i];
         if (digits == 3) {
-            reversed[j++] = ',';
+            commad[j++] = ',';
             digits = 0;
         }
     }
-    int a = 0;
-    int b = j - 1;
-    char c;
-    for (; a < b; a++, b--) {
-        c = reversed[a];
-        reversed[a] = reversed[b];
-        reversed[b] = c;
+    char* p = commad;
+    char* q = commad + j - 1;
+    while (p < q) {
+        char c = *q;
+        *q-- = *p;
+        *p++ = c;
     }
-    char* p = reversed;
+    p = commad;
     if (*p == '-' && *(p + 1) == ',') {
         p++;
         *p = '-';
