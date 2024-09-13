@@ -73,7 +73,10 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
     }
     text = malloc(size + 1);
     assert_alloc(text);
-    fread(text, size, 1, file);
+#pragma GCC diagnostic ignored "-Wunused-result"
+#pragma GCC diagnostic push
+    (void)fread(text, size, 1, file);
+#pragma GCC diagnostic pop
     if (ferror(file)) { // failed to read
         is_ok = false;
         warn(NULL);
@@ -97,11 +100,9 @@ bool get_config_filename(char* filename, const char* domain,
         end = filename + n;
         *end++ = '/';
         *end++ = '.';
-        *end = 0;
-    } else {
+    } else
         *end++ = '/';
-        *end = 0;
-    }
+    *end = 0;
     if (domain && strlen(domain))
         sprintf(end, "%s_%s%s", domain, appname, ext);
     else

@@ -296,12 +296,14 @@ void ini_set_int(Ini* ini, const char* section, const char* key,
         int n = sscanf(item->value, "%d", &i);
         if (n != 1 || i != value) {
             free(item->value);
-            asprintf(&item->value, "%d", value);
+            if (asprintf(&item->value, "%d", value) == -1)
+                warn(NULL);
         }
     } else {
         int sectid = maybe_add_section(ini, section);
         char* v;
-        asprintf(&v, "%d", value);
+        if (asprintf(&v, "%d", value) == -1)
+            warn(NULL);
         item = item_alloc(str_trim(key), v, sectid);
         vec_push(&ini->items, item);
     }
@@ -312,11 +314,13 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
     IniItem* item = find_item(ini, section, key);
     if (item) {
         free(item->value);
-        asprintf(&item->value, "%lg", value);
+        if (asprintf(&item->value, "%lg", value) == -1)
+            warn(NULL);
     } else {
         int sectid = maybe_add_section(ini, section);
         char* v;
-        asprintf(&v, "%lg", value);
+        if (asprintf(&v, "%lg", value) == -1)
+            warn(NULL);
         item = item_alloc(str_trim(key), v, sectid);
         vec_push(&ini->items, item);
     }
