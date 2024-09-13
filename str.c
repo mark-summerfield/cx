@@ -109,9 +109,9 @@ char* str_trimn(const char* s, size_t n) {
         return NULL;
     char* p = (char*)s;
     assert_notnull(p);
-    while (isspace(*p)) // trim left
+    while (p && isspace(*p)) // trim left
         p++;
-    if (!*p)
+    if (p && !*p)
         return NULL; // whole string is whitespace
     char* q;
     if (n)
