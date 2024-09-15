@@ -66,7 +66,7 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
     assert_alloc(text);
 #pragma GCC diagnostic ignored "-Wunused-result"
 #pragma GCC diagnostic push
-    (void)fread(text, size, 1, file);
+    fread(text, size, 1, file);
 #pragma GCC diagnostic pop
     if (!ferror(file)) // read worked; else fallthrough to on_error
         goto end;
