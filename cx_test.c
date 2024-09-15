@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
     bool verbose = false;
     const char* pattern = get_args(argc, argv, &verbose);
     srand((unsigned)time(NULL));
+    clock_t begin = clock();
     tinfo tinfo = {"", 0, 0, verbose};
     tinfo.tag = "mx_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
@@ -64,12 +65,12 @@ int main(int argc, char** argv) {
     tinfo.tag = "ini_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         ini_tests(&tinfo);
-    char ok[COMMA_I64_SIZE];
-    commas(ok, tinfo.ok);
-    char total[COMMA_I64_SIZE];
-    commas(total, tinfo.total);
-    printf("%s %s/%s\n", (tinfo.ok == tinfo.total) ? "OK" : "FAIL", ok,
-           total);
+    double duration = (double)(clock() - begin) / CLOCKS_PER_SEC;
+    char buf[COMMA_I64_SIZE];
+    commas(buf, tinfo.ok);
+    printf("%s %s/", (tinfo.ok == tinfo.total) ? "OK" : "FAIL", buf);
+    commas(buf, tinfo.total);
+    printf("%s (%.4gs)\n", buf, duration);
 }
 
 const char* get_args(int argc, char** argv, bool* verbose) {
