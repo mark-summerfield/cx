@@ -50,37 +50,29 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
     }
     char* text = NULL;
     bool is_ok = true;
-    if (fseek(file, 0, SEEK_END) == -1) { // failed to seek
-        is_ok = false;
-        warn(NULL);
-        goto end;
-    }
+    if (fseek(file, 0, SEEK_END) == -1) // failed to seek
+        goto on_error;
     long long size = ftell(file);
-    if (size == -1) { // failed to tell
-        is_ok = false;
-        warn(NULL);
-        goto end;
-    }
+    if (size == -1) // failed to tell
+        goto on_error;
     if (size >= max_size) { // too big
         is_ok = false;
         warn("%s is too big to read whole (%lld)", filename, size);
         goto end;
     }
-    if (fseek(file, 0, SEEK_SET) == -1) { // failed to seek
-        is_ok = false;
-        warn(NULL);
-        goto end;
-    }
+    if (fseek(file, 0, SEEK_SET) == -1) // failed to seek
+        goto on_error;
     text = malloc(size + 1);
     assert_alloc(text);
 #pragma GCC diagnostic ignored "-Wunused-result"
 #pragma GCC diagnostic push
     (void)fread(text, size, 1, file);
 #pragma GCC diagnostic pop
-    if (ferror(file)) { // failed to read
-        is_ok = false;
-        warn(NULL);
-    }
+    if (!ferror(file)) // read worked; else fallthrough to on_error
+        goto end;
+on_error:
+    is_ok = false;
+    warn(NULL);
 end:
     if (fclose(file)) {
         is_ok = false;
