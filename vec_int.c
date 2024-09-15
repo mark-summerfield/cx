@@ -154,10 +154,10 @@ bool vec_int_equal(const VecInt* vec1, const VecInt* vec2) {
     assert_notnull(vec2);
     if (vec1->_size != vec2->_size)
         return false;
-    for (int i = 0; i < vec1->_size; ++i)
-        if (vec1->_values[i] != vec2->_values[i])
-            return false;
-    return true;
+    if (!vec1->_size)
+        return true; // both empty
+    return memcmp(vec1->_values, vec2->_values,
+                  sizeof(int) * vec1->_size) == 0;
 }
 
 int vec_int_find(const VecInt* vec, int value) {
