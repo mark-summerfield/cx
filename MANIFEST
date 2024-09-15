@@ -78,7 +78,8 @@ doc.sh
 #     set_str_issuperset
 #   - Deq (void* values, owned iff _destroy)
 #   - Map (based on SetStr; owned char* keys; void* values, owned iff
-#	   _destroy != NULL)
+#	   _destroy != NULL) — or just use a Set with a cmp function that
+#	   compares a 'key' field
 #   - MapStrStr (rbt; see set_str)
 #   - MapIntAny (rbt; see set_str)
 
