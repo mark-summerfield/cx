@@ -1,5 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
+#define _GNU_SOURCE // for utsname.domainname
+
 #include "cx_util_test.h"
 #include "deq_int_test.h"
 #include "deq_str_test.h"
@@ -18,6 +20,7 @@
 #include "vec_test.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/utsname.h>
 #include <time.h>
 
 const char* get_args(int argc, char** argv, bool* verbose);
@@ -71,6 +74,10 @@ int main(int argc, char** argv) {
     printf("%s %s/", (tinfo.ok == tinfo.total) ? "OK" : "FAIL", commabuf);
     commas(commabuf, tinfo.total);
     printf("%s • %.3fs\n", commabuf, duration);
+    struct utsname info;
+    uname(&info);
+    printf("%s %s • %s • %s\n", info.sysname, info.release, info.version,
+           info.machine);
 }
 
 const char* get_args(int argc, char** argv, bool* verbose) {
