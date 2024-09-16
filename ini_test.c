@@ -45,7 +45,7 @@ void test2(tinfo* tinfo) {
     Ini ini1 = ini_alloc("/tmp/test2.ini");
     ini_set_comment(&ini1, NULL, NULL, "whole file comment");
     ini_set_str(&ini1, NULL, "name", "John Doe");
-    ini_set_str(&ini1, NULL, "Organization", "Acme Widgets Inc.");
+    ini_set_str(&ini1, NULL, "Organization", "Acme Things Inc.");
     ini_set_real(&ini1, NULL, "RANKING", 1.76);
     char* section = "Database";
     ini_set_str(&ini1, section, "server", "192.0.2.62");
@@ -65,7 +65,7 @@ void test2(tinfo* tinfo) {
     }
     {
         const char* v = ini_get_str(&ini1, NULL, "organization");
-        check_str_eq(tinfo, v, "Acme Widgets Inc.");
+        check_str_eq(tinfo, v, "Acme Things Inc.");
     }
     check_isnull(tinfo, ini_get_str(&ini1, NULL, "no such key"));
     double r;
@@ -115,7 +115,7 @@ void test3(tinfo* tinfo) {
     free(text);
 
     ini_set_str(&ini1, NULL, "NAME", "John Doe\n");
-    ini_set_str(&ini1, NULL, "organization", "\tAcme Widgets Inc.\t");
+    ini_set_str(&ini1, NULL, "organization", "\tAcme Things Inc.\t");
     ini_set_real(&ini1, NULL, "Ranking", 1.76);
     ini_set_str(&ini1, section, "Server", "192.0.2.62");
     ini_set_int(&ini1, section, "port", 143);
@@ -132,7 +132,7 @@ void test3(tinfo* tinfo) {
     }
     {
         const char* v = ini_get_str(&ini1, NULL, "organization");
-        check_str_eq(tinfo, v, "Acme Widgets Inc.");
+        check_str_eq(tinfo, v, "Acme Things Inc.");
     }
     check_isnull(tinfo, ini_get_str(&ini1, NULL, "no such key"));
     double r;

@@ -5,18 +5,18 @@
 
 void ini_tests(tinfo* tinfo);
 
-#define INI_EG1                          \
-    "; whole file comment\n\n"           \
-    "name = John Doe\n"                  \
-    "Organization = Acme Widgets Inc.\n" \
-    "RANKING = 1.76\n"                   \
-    "\n"                                 \
-    "[Database]\n"                       \
-    "Exclusive = true\n"                 \
-    "; may include \"s for Windows\n"    \
-    "FILE = \"payroll.dat\"\n"           \
-    "Port = 143\n"                       \
-    "; IP address\n"                     \
+#define INI_EG1                         \
+    "; whole file comment\n\n"          \
+    "name = John Doe\n"                 \
+    "Organization = Acme Things Inc.\n" \
+    "RANKING = 1.76\n"                  \
+    "\n"                                \
+    "[Database]\n"                      \
+    "Exclusive = true\n"                \
+    "; may include \"s for Windows\n"   \
+    "FILE = \"payroll.dat\"\n"          \
+    "Port = 143\n"                      \
+    "; IP address\n"                    \
     "server = 192.0.2.62\n"
 
 #define INI_EG2                        \

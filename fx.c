@@ -50,9 +50,9 @@ char* file_read_size(const char* filename, long long max_size, bool* ok) {
     }
     bool is_ok = true;
     char* text = NULL;
-    if (fseek(file, 0, SEEK_END) == -1) // failed to seek
+    if (fseeko(file, 0, SEEK_END) == -1) // failed to seek
         goto on_error;
-    long long size = ftell(file);
+    long long size = ftello(file);
     if (size == -1) // failed to tell
         goto on_error;
     if (size >= max_size) { // too big
@@ -61,7 +61,7 @@ char* file_read_size(const char* filename, long long max_size, bool* ok) {
              max_size);
         goto end;
     }
-    if (fseek(file, 0, SEEK_SET) == -1) // failed to seek
+    if (fseeko(file, 0, SEEK_SET) == -1) // failed to seek
         goto on_error;
     text = malloc(size + 1);
     assert_alloc(text);
