@@ -5,15 +5,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define COMMA_I64_SIZE 28
-
 bool is_zeroish(double a);
 
 bool is_equalish(double a, double b);
 
-// s should be COMMA_I64_SIZE
-void commas(char* s, int64_t n);
-
+// Just call min(x, y) and let the generic macro choose one of these:
 int mx_mini(int a, int b);
 int mx_maxi(int a, int b);
 int64_t mx_minll(int64_t a, int64_t b);

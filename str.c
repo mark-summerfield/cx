@@ -137,3 +137,35 @@ char* str_trimn(const char* s, size_t n) {
 }
 
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }
+
+void commas(char* s, int64_t n) {
+    assert_notnull(s);
+    char bare[COMMA_I64_SIZE] = "";
+    char commad[COMMA_I64_SIZE] = "";
+    int bare_char_count = snprintf(bare, COMMA_I64_SIZE, "%" PRId64, n);
+    int digits = 0;
+    int j = 0;
+    for (int i = bare_char_count - 1; i >= 0; --i) {
+        digits++;
+        commad[j++] = bare[i];
+        if (digits == 3) {
+            commad[j++] = ',';
+            digits = 0;
+        }
+    }
+    char* p = commad;
+    char* q = commad + j - 1;
+    while (p < q) {
+        char c = *q;
+        *q-- = *p;
+        *p++ = c;
+    }
+    p = commad;
+    if (*p == '-' && *(p + 1) == ',') {
+        p++;
+        *p = '-';
+    } else if (*p == ',')
+        p++;
+    strncpy(s, p, j);
+    s[j] = 0;
+}

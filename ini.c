@@ -48,7 +48,7 @@ Ini ini_alloc_from_str(const char* text) {
 bool ini_merge_from_file(Ini* ini, const char* filename) {
     assert(filename && ".ini filename is required");
     bool ok;
-    char* text = read_file(filename, &ok);
+    char* text = file_read(filename, &ok);
     parse_text(ini, text);
     free(text);
     return ok;

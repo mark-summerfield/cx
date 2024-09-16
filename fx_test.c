@@ -28,7 +28,7 @@ void fx_tests(tinfo* tinfo) {
     }
     char config_filename[FILENAME_MAX + 1];
     char* e = "/home/mark/.config/cx_test.ini";
-    bool exists = get_ini_filename(config_filename, NULL, "cx_test");
+    bool exists = file_get_ini_name(config_filename, NULL, "cx_test");
     tinfo->total++;
     if (exists)
         fprintf(stderr, "FAIL: %s expected «%s» not to exist\n", tinfo->tag,
@@ -42,7 +42,7 @@ void fx_tests(tinfo* tinfo) {
     } else
         tinfo->ok++;
     e = "/home/mark/.config/qtrac_cx_test.ini";
-    exists = get_ini_filename(config_filename, "qtrac", "cx_test");
+    exists = file_get_ini_name(config_filename, "qtrac", "cx_test");
     tinfo->total++;
     if (exists)
         fprintf(stderr, "FAIL: %s expected «%s» not to exist\n", tinfo->tag,

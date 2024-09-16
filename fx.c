@@ -40,7 +40,7 @@ bool is_folder(const char* path) {
     return false;
 }
 
-char* read_file_max(const char* filename, long long max_size, bool* ok) {
+char* file_read_size(const char* filename, long long max_size, bool* ok) {
     FILE* file = fopen(filename, "rb");
     if (!file) { // failed to open
         if (ok)
@@ -48,8 +48,8 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
         warn(NULL);
         return NULL;
     }
-    char* text = NULL;
     bool is_ok = true;
+    char* text = NULL;
     if (fseek(file, 0, SEEK_END) == -1) // failed to seek
         goto on_error;
     long long size = ftell(file);
@@ -57,7 +57,8 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
         goto on_error;
     if (size >= max_size) { // too big
         is_ok = false;
-        warn("%s is too big to read whole (%lld)", filename, size);
+        warn("%s is too big to read whole: %lld >= %lld", filename, size,
+             max_size);
         goto end;
     }
     if (fseek(file, 0, SEEK_SET) == -1) // failed to seek
@@ -65,7 +66,7 @@ char* read_file_max(const char* filename, long long max_size, bool* ok) {
     text = malloc(size + 1);
     assert_alloc(text);
     (void)fread(text, size, 1, file);
-    if (!ferror(file)) // read worked; else fallthrough to on_error
+    if (!ferror(file)) // fread ok; else fallthrough to on_error
         goto end;
 on_error:
     is_ok = false;
@@ -80,8 +81,8 @@ end:
     return text;
 }
 
-bool get_config_filename(char* filename, const char* domain,
-                         const char* appname, const char* ext) {
+bool file_get_config_name(char* filename, const char* domain,
+                          const char* appname, const char* ext) {
     struct passwd* pw = getpwuid(getuid());
     int n = snprintf(filename, FILENAME_MAX, "%s", pw->pw_dir);
     char* end = stpcpy(filename + n, "/.config");
