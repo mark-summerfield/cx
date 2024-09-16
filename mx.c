@@ -2,17 +2,19 @@
 
 #include "mx.h"
 #include "cx.h"
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define ACCURACY 0.0000000001
-
-inline bool is_zeroish(double a) { return fabs(a) < ACCURACY; }
+inline bool is_zeroish(double a) {
+    double x = fabs(a);
+    return x < (DBL_EPSILON * x);
+}
 
 inline bool is_equalish(double a, double b) {
-    return fabs(a - b) < ACCURACY;
+    return fabs(a - b) < (DBL_EPSILON * fabs(a + b));
 }
 
 inline int mx_mini(int a, int b) { return a < b ? a : b; }
