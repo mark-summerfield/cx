@@ -30,3 +30,19 @@ inline size_t mx_maxzu(size_t a, size_t b) { return a > b ? a : b; }
 inline double mx_mind(double a, double b) { return a < b ? a : b; }
 
 inline double mx_maxd(double a, double b) { return a > b ? a : b; }
+
+inline int mx_clampi(int minval, int val, int maxval) {
+    return max(minval, min(val, maxval));
+}
+
+inline int64_t mx_clampll(int64_t minval, int64_t val, int64_t maxval) {
+    return max(minval, min(val, maxval));
+}
+
+inline size_t mx_clampzu(size_t minval, size_t val, size_t maxval) {
+    return max(minval, min(val, maxval));
+}
+
+inline double mx_clampd(double minval, double val, double maxval) {
+    return max(minval, min(val, maxval));
+}

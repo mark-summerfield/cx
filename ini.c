@@ -16,7 +16,7 @@
 
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
-static void parse_item(Ini* ini, char* p, const char* section);
+static void parse_item(Ini* ini, const char* p, const char* section);
 static void save_to_file(Ini* ini, FILE* file);
 static void item_write(const IniItem* item, FILE* file);
 static IniItem* item_alloc(char* key, char* value, int sectid);
@@ -67,19 +67,12 @@ void ini_free(Ini* ini) {
 
 static void parse_text(Ini* ini, const char* text) {
     char line[LINE_MAX] = "";
-    const char* p = text;
     char section[LINE_MAX] = "";
+    const char* p = text;
     while (p) {
         const char* q = strchr(p, '\n');
-        int size;
-        if (q)
-            size = min(LINE_MAX - 1, (int)(q - p));
-        else
-            size = min(LINE_MAX - 1, (int)strlen(p));
-#pragma GCC diagnostic ignored "-Wstringop-truncation"
-#pragma GCC diagnostic push
+        size_t size = min(LINE_MAX - 1, q ? (int)(q - p) : (int)strlen(p));
         strncpy(line, p, size);
-#pragma GCC diagnostic pop
         line[size] = 0;
         parse_line(ini, line, section);
         if (!q)
@@ -93,14 +86,15 @@ static void parse_text(Ini* ini, const char* text) {
 // Sections:    /^\[[^]+\]\s*$/
 // Key-values:  /^[^[:=]+\s*[:=]\s*.+$/
 static void parse_line(Ini* ini, const char* line, char* section) {
-    char* p = (char*)str_trim_left(line);
+    const char* p = str_trim_left(line);
     if (!p || !*p || *p == ';' || *p == '#')
         return;      // skip blank lines and comments
     if (*p == '[') { // section
+        p++;
         const char* q = strchr(p, ']');
         if (q) {
-            size_t size = min(LINE_MAX, (int)(q - p)) - 1;
-            strncpy(section, p + 1, size);
+            size_t size = min(LINE_MAX - 1, (int)(q - p));
+            strncpy(section, p, size);
             section[size] = 0;
         } else
             warn("invalid section: %s\n", p);
@@ -108,7 +102,7 @@ static void parse_line(Ini* ini, const char* line, char* section) {
         parse_item(ini, p, section);
 }
 
-static void parse_item(Ini* ini, char* p, const char* section) {
+static void parse_item(Ini* ini, const char* p, const char* section) {
     char* q = strchr(p, '=');
     if (!q) {
         q = strchr(p, ':');
