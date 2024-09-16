@@ -12,7 +12,7 @@
 #include <string.h>
 
 #define NOT_FOUND -2
-#define LINE_MAX 1024
+#define LINE_SIZE 1024
 
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
@@ -66,12 +66,12 @@ void ini_free(Ini* ini) {
 }
 
 static void parse_text(Ini* ini, const char* text) {
-    char line[LINE_MAX] = "";
-    char section[LINE_MAX] = "";
+    char line[LINE_SIZE] = "";
+    char section[LINE_SIZE] = "";
     const char* p = text;
     while (p) {
         const char* q = strchr(p, '\n');
-        size_t size = min(LINE_MAX - 1, q ? (int)(q - p) : (int)strlen(p));
+        size_t size = min(LINE_SIZE - 1, q ? (int)(q - p) : (int)strlen(p));
         strncpy(line, p, size);
         line[size] = 0;
         parse_line(ini, line, section);
@@ -93,7 +93,7 @@ static void parse_line(Ini* ini, const char* line, char* section) {
         p++;
         const char* q = strchr(p, ']');
         if (q) {
-            size_t size = min(LINE_MAX - 1, (int)(q - p));
+            size_t size = min(LINE_SIZE - 1, (int)(q - p));
             strncpy(section, p, size);
             section[size] = 0;
         } else

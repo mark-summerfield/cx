@@ -2,6 +2,9 @@
 #pragma once
 
 #include <stdbool.h>
+#include <limits.h>
+
+#define FILENAME_SIZE _POSIX_PATH_MAX
 
 // Returns true if the given filename or folder exists.
 bool is_file_or_folder(const char* path);
@@ -21,7 +24,7 @@ char* file_read_size(const char* filename, long long max_size, bool* ok);
 
 #define file_read(filename, ok) file_read_size(filename, 1024 * 1024, ok)
 
-// Populates filename (of size FILENAME_MAX) and returns true if it
+// Populates filename (of size FILENAME_SIZE) and returns true if it
 // exists. The filename is either $HOME/.config/domain_appname.ext or
 // $HOME/.domain_appname.ext. Domain may be NULL in which case filename is
 // $HOME/.config/appname.ext or $HOME/.appname.ext.

@@ -26,7 +26,7 @@ void fx_tests(tinfo* tinfo) {
         } else
             tinfo->ok++;
     }
-    char config_filename[FILENAME_MAX + 1];
+    char config_filename[FILENAME_SIZE + 1];
     char* e = "/home/mark/.config/cx_test.ini";
     bool exists = file_get_ini_name(config_filename, NULL, "cx_test");
     tinfo->total++;

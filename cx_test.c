@@ -1,7 +1,5 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
-#define _GNU_SOURCE // for utsname.domainname
-
 #include "cx_util_test.h"
 #include "deq_int_test.h"
 #include "deq_str_test.h"
@@ -76,8 +74,8 @@ int main(int argc, char** argv) {
     printf("%s • %.3fs\n", commabuf, duration);
     struct utsname info;
     uname(&info);
-    printf("%s %s • %s • %s\n", info.sysname, info.release, info.version,
-           info.machine);
+    printf("%s %s • %s • %s • %s\n", info.sysname, info.release,
+           info.version, info.machine, info.nodename);
 }
 
 const char* get_args(int argc, char** argv, bool* verbose) {

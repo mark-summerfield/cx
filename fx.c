@@ -84,7 +84,7 @@ end:
 bool file_get_config_name(char* filename, const char* domain,
                           const char* appname, const char* ext) {
     struct passwd* pw = getpwuid(getuid());
-    int n = snprintf(filename, FILENAME_MAX, "%s", pw->pw_dir);
+    int n = snprintf(filename, FILENAME_SIZE, "%s", pw->pw_dir);
     char* end = stpcpy(filename + n, "/.config");
     if (!is_folder(filename)) {
         end = filename + n;
