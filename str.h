@@ -65,7 +65,7 @@ char* str_trimn(const char* s, size_t n);
 
 const char* bool_to_str(bool b);
 
-// s should be COMMA_I64_SIZE
+// s should be of size COMMA_I64_SIZE
 void commas(char* s, int64_t n);
 
 #define typename(x) \

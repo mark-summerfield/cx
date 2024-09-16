@@ -17,7 +17,7 @@
 static void parse_text(Ini* ini, const char* text);
 static void parse_line(Ini* ini, const char* line, char* section);
 static void parse_item(Ini* ini, const char* p, const char* section);
-static void save_to_file(Ini* ini, FILE* file);
+static void save_to_stream(Ini* ini, FILE* file);
 static void item_write(const IniItem* item, FILE* file);
 static IniItem* item_alloc(char* key, char* value, int sectid);
 static void item_destroy(void* item_);
@@ -103,15 +103,12 @@ static void parse_line(Ini* ini, const char* line, char* section) {
 }
 
 static void parse_item(Ini* ini, const char* p, const char* section) {
-    char* q = strchr(p, '=');
-    if (!q) {
-        q = strchr(p, ':');
-        if (!q) {
-            warn("invalid key-value item, no = or : separator: %s\n", p);
-            return;
-        }
+    size_t i = strcspn(p, "=:");
+    if (!i) {
+        warn("invalid key-value item, no = or : separator: %s\n", p);
+        return;
     }
-    q--; // _before_ the =
+    const char* q = p + i - 1; // set q to just _before_ the =
     char* key = str_trimn(p, q - p);
     q += 2; // skip _past_ the =
     if (!q) {
@@ -138,7 +135,7 @@ bool ini_save(Ini* ini, const char* filename) {
         warn(NULL);
         return false;
     }
-    save_to_file(ini, file);
+    save_to_stream(ini, file);
     if (fclose(file)) {
         warn(NULL);
         return false;
@@ -154,13 +151,13 @@ char* ini_save_to_str(Ini* ini) {
         warn(NULL);
         return p;
     }
-    save_to_file(ini, file);
+    save_to_stream(ini, file);
     if (fclose(file))
         warn(NULL);
     return p;
 }
 
-static void save_to_file(Ini* ini, FILE* file) {
+static void save_to_stream(Ini* ini, FILE* file) {
     bool nl = false;
     if (ini->comment) {
         fprintf(file, "; %s\n", ini->comment);

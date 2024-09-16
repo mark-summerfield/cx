@@ -151,28 +151,28 @@ static void str_test_filename_ext(tinfo* tinfo) {
     {
         const char* filename = "file.zip";
         const char* exp = "zip";
-        const char* ext = file_extension(filename);
+        const char* ext = file_ext(filename);
         check_str_eq(tinfo, exp, ext);
     }
     {
         const char* filename = "file.tar.gz";
         const char* exp = "gz";
-        const char* ext = file_extension(filename);
+        const char* ext = file_ext(filename);
         check_str_eq(tinfo, exp, ext);
     }
     {
         const char* filename = "file.";
-        const char* ext = file_extension(filename);
+        const char* ext = file_ext(filename);
         check_str_eq(tinfo, "", ext);
     }
     {
         const char* filename = "file";
-        const char* ext = file_extension(filename);
+        const char* ext = file_ext(filename);
         check_str_eq(tinfo, "", ext);
     }
     {
         const char* filename = "...";
-        const char* ext = file_extension(filename);
+        const char* ext = file_ext(filename);
         check_str_eq(tinfo, "", ext);
     }
 }

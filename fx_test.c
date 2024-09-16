@@ -10,7 +10,7 @@ void fx_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     {
         tinfo->total++;
-        const char* ext = file_extension("archive.tar.gz");
+        const char* ext = file_ext("archive.tar.gz");
         if (!str_eq("gz", ext)) {
             fprintf(stderr, "FAIL: %s expected gz go %s\n", tinfo->tag,
                     ext);
@@ -19,7 +19,7 @@ void fx_tests(tinfo* tinfo) {
     }
     {
         tinfo->total++;
-        const char* ext = file_extension("README");
+        const char* ext = file_ext("README");
         if (!str_eq("", ext)) {
             fprintf(stderr, "FAIL: %s expected \"\" go %s\n", tinfo->tag,
                     ext);

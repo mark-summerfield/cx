@@ -66,11 +66,11 @@ int main(int argc, char** argv) {
     if (!pattern || strstr(tinfo.tag, pattern))
         ini_tests(&tinfo);
     double duration = (double)(clock() - begin) / CLOCKS_PER_SEC;
-    char commad[COMMA_I64_SIZE];
-    commas(commad, tinfo.ok);
-    printf("%s %s/", (tinfo.ok == tinfo.total) ? "OK" : "FAIL", commad);
-    commas(commad, tinfo.total);
-    printf("%s • %.3fs\n", commad, duration);
+    char commabuf[COMMA_I64_SIZE];
+    commas(commabuf, tinfo.ok);
+    printf("%s %s/", (tinfo.ok == tinfo.total) ? "OK" : "FAIL", commabuf);
+    commas(commabuf, tinfo.total);
+    printf("%s • %.3fs\n", commabuf, duration);
 }
 
 const char* get_args(int argc, char** argv, bool* verbose) {

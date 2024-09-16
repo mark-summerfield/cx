@@ -11,7 +11,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-inline const char* file_extension(const char* filename) {
+inline const char* file_ext(const char* filename) {
     const char* dot = strrchr(filename, '.');
     return (!dot || dot == filename) ? "" : dot + 1;
 }

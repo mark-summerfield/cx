@@ -3,9 +3,6 @@
 
 #include <stdbool.h>
 
-// Returns the given filename's extension excluding the leading dot.
-const char* file_extension(const char* filename);
-
 // Returns true if the given filename or folder exists.
 bool is_file_or_folder(const char* path);
 
@@ -14,6 +11,9 @@ bool is_file(const char* path);
 
 // Returns true if the given folder exists.
 bool is_folder(const char* path);
+
+// Returns the given filename's extension excluding the leading dot.
+const char* file_ext(const char* filename);
 
 // Reads a whole file and returns it as a single string which the caller
 // owns and sets ok if given.
