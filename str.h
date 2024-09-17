@@ -3,7 +3,6 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
 
 #define COMMA_I64_SIZE 28

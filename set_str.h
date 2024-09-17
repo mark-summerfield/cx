@@ -4,7 +4,6 @@
 #include "cx.h"
 #include "vec_str.h"
 #include <stdbool.h>
-#include <stddef.h>
 
 typedef struct SetStrNode SetStrNode;
 typedef void (*visitor_fn)(const char* value, void* state);

@@ -1,7 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "deq_str.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 

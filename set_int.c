@@ -2,7 +2,6 @@
 
 #include "set_int.h"
 #include <stdlib.h>
-#include <string.h>
 
 static void add_to_difference(SetInt* set, const SetIntNode* node,
                               const SetInt* set2);

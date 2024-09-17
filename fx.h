@@ -1,8 +1,8 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 #pragma once
 
-#include <stdbool.h>
 #include <limits.h>
+#include <stdbool.h>
 
 #define FILENAME_SIZE _POSIX_PATH_MAX
 

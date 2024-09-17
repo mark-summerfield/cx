@@ -3,6 +3,7 @@
 
 #include "cx.h"
 #include "vecs.h"
+#include <stdbool.h>
 #include <stdio.h>
 
 // A vector of int values.

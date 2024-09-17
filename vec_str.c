@@ -3,7 +3,6 @@
 #include "vec_str.h"
 #include "str.h"
 #include <stdlib.h>
-#include <string.h>
 
 static void vec_str_grow(VecStr* vec);
 

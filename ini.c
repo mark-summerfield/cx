@@ -9,7 +9,6 @@
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define NOT_FOUND -2
 #define LINE_SIZE 1024

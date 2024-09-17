@@ -1,7 +1,6 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "deq_int.h"
-#include <assert.h>
 #include <stdlib.h>
 
 #define assert_nonempty(d) assert((d->_size) && "unexpectedly empty queue")

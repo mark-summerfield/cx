@@ -3,6 +3,7 @@
 
 #include "cx.h"
 #include "vecs.h"
+#include <stdbool.h>
 
 // A vector of owned or borrowed char* values.
 // All data members are private; all accesses via functions.

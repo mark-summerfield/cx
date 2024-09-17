@@ -2,8 +2,6 @@
 #pragma once
 
 #include <assert.h>
-#include <stdbool.h>
-#include <stddef.h>
 
 #define VEC_NOT_FOUND -1
 
