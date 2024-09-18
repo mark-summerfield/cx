@@ -4,6 +4,16 @@ body {
   font-family: helvetica, sans-serif;
   font-size: 1.3em;
 }
+.returnvalue {
+  font-size: 1em;
+  font-weight: normal;
+  color: white; /* hide */
+}
+.parameters {
+  font-size: 1em;
+  font-weight: normal;
+  font-style: italic;
+}
 code {
   font-family: CommitMono, "dejavu sans mono", monospace;
   font-size: 1em;
