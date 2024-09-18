@@ -1,2 +1,3 @@
-# ligadoc -x macros.adoc
-asciidoctor -v -r ./doc.rb -a stylesheet=./doc.css -o cx.html doc.adoc
+codedoc --author 'Mark Summerfield' --title 'C eXtensions library (cx)' \
+    --copyright "" --css doc.css \
+    `efind .c|grep -v test` > cx.html

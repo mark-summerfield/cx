@@ -66,10 +66,8 @@ va_test.c
 SConstruct
 st.sh
 
-doc.adoc
-doc.rb
-doc.css
 doc.sh
+doc.css
 
 # Do these as needed:
 #   - set_int_symmetric_difference set_int_isdisjoint set_int_issubset

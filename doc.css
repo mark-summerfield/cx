@@ -1,40 +1,241 @@
-@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
-@import "https://cdn.jsdelivr.net/gh/asciidoctor/asciidoctor@2.0/data/stylesheets/asciidoctor-default.css";
-
 body {
-    font: 125% helvetica, sans-serif, tahoma, arial;
+  background: white;
+  color: black;
+  font-family: helvetica, sans-serif;
+  font-size: 1.3em;
 }
-
-p {
-    font: 110% helvetica, sans-serif, tahoma, arial;
-}
-
 code {
-    color: #000090;
-    font-size: 1em;
-    font-family: CommitMono "dejavu sans mono", consolas, monaco, monospace;
+  font-family: CommitMono, "dejavu sans mono", monospace;
+  font-size: 1em;
 }
-
-tt {
-    color: #000090;
-    font-size: 1em;
-    font-family: CommitMono "dejavu sans mono", consolas, monaco, monospace;
+a {
+  color: black;
 }
-
+a:link, a:visited {
+  color: #00f;
+}
+a:link:hover, a:visited:hover, a:active {
+  color: #c0c;
+}
+body, p, h1, h2, h3, h4, h5, h6 {
+  font-family: helvetica, sans-serif;
+  line-height: 1.4;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  page-break-inside: avoid;
+}
+h1 {
+  font-size: 2em;
+  margin: 0;
+}
+h2 {
+  font-size: 1.75em;
+  margin-top: 1.25em;
+}
+h3 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
+h4 {
+  font-size: 1.35em;
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
+h5 {
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+  margin-top: 0.85em;
+}
+h6 {
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+  margin-top: 0.75em;
+}
+img.title {
+  width: 256px;
+}
+div.header h1, div.header p {
+  text-align: center;
+}
+div.contents, div.body, div.footer {
+  page-break-before: always;
+}
+.class, .enumeration, .function, .struct, .typedef, .union {
+  border-bottom: solid 2px gray;
+}
+.description {
+  margin-top: 0.5em;
+}
+.function {
+  margin-bottom: 0;
+}
+blockquote {
+  border: solid thin gray;
+  box-shadow: 3px 3px 5px rgba(127,127,127,0.25);
+  padding: 0px 10px;
+  page-break-inside: avoid;
+}
+blockquote :first-child {
+  margin-top: 0;
+}
+blockquote :first-child {
+  margin-bottom: 0;
+}
+p code, li code, p.code, pre, ul.code li {
+  font-family: CommitMono, "dejavu sans mono", monospace;
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+p.code, pre, ul.code li {
+  background: rgba(127,127,127,0.25);
+  border: thin dotted gray;
+  padding: 10px;
+  page-break-inside: avoid;
+}
 pre {
+  white-space: pre-wrap;
+}
+a:link, a:visited {
+  text-decoration: none;
+}
+span.info {
+  background: black;
+  border: solid thin black;
+  color: white;
+  font-size: 12pt;
+  font-style: italic;
+  font-weight: bold;
+  white-space: nowrap;
+}
+h1 span.info, h2 span.info, h3 span.info, h4 span.info {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  float: right;
+  padding: 3px 6px;
+}
+ul.code, ul.contents, ul.subcontents {
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
+}
+ul.code li {
+  margin: 0;
+}
+ul.contents > li {
+  margin-top: 1em;
+}
+ul.contents li ul.code, ul.contents li ul.subcontents {
+  padding-left: 2em;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td {
+  border: solid 1px gray;
+  padding: 5px 10px;
+  vertical-align: top;
+}
+td.left {
+  text-align: left;
+}
+td.center {
+  text-align: center;
+}
+td.right {
+  text-align: right;
+}
+th {
+  border-bottom: solid 2px gray;
+  padding: 1px 5px;
+  text-align: center;
+  vertical-align: bottom;
+}
+tr:nth-child(even) {
+  background: rgba(127,127,127,0.25);
+}
+table.list {
+  border-collapse: collapse;
+  width: 100%;
+}
+table.list th {
+  border-bottom: none;
+  border-right: 2px solid gray;
+  font-family: CommitMono, "dejavu sans mono", monospace;
+  font-weight: normal;
+  padding: 5px 10px 5px 2px;
+  text-align: right;
+  vertical-align: top;
+}
+table.list td {
+  border: none;
+  padding: 5px 2px 5px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+h2.title, h3.title {
+  border-bottom: solid 2px gray;
+}
+/* Syntax highlighting */
+span.comment {
+  color: darkgreen;
+}
+span.directive {
+  color: purple;
+}
+span.number {
+  color: orange;
+}
+span.reserved {
+  color: blue;
+}
+span.string {
+  color: magenta;
+}
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: black;
+    color: #ccc;
+  }
+  a {
+    color: #ccc;
+  }
+  a:link, a:visited {
+    color: #66f;
+  }
+  a:link:hover, a:visited:hover, a:active {
+    color: #f06;
+  }
+}
+
+/* Show contents on left side in web browser */
+@media screen and (min-width: 800px) {
+  div.contents {
+    border-right: solid thin gray;
+    bottom: 0px;
+    box-shadow: 3px 3px 5px rgba(127,127,127,0.5);
     font-size: 1em;
-    font-family: CommitMono "dejavu sans mono", consolas, monaco, monospace;
+    left: 0px;
+    overflow: scroll;
+    padding: 1%;
+    position: fixed;
+    top: 0px;
+    width: 18%;
+  }
+  div.contents h2.title {
+    margin-top: 0px;
+  }
+  div.header, div.body, div.footer {
+    margin-left: 20%;
+    padding: 1% 2%;
+  }
 }
-
-h1, h2, h3, h4, h5, h6, #toctitle,
-.sidebarblock > .content > .title {
-  color: navy;
+/* Center title page content vertically */
+@media print {
+  div.header {
+    padding-top: 33%;
+  }
 }
-
-h1 { font-size: 2em; }
-
-h2 { font-size: 1.5em; }
-
-h3 { font-size: 1.2em; }
-
-h4 { font-size: 1.1em; }

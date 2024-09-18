@@ -7,30 +7,32 @@
 
 #define INI_NO_SECTION -91919
 
-typedef struct Item Item;
-
-// Ini represents a .ini file's sections, keys, values, and comments and
+// Ini represents a `.ini` file's sections, keys, values, and comments and
 // owns all the strings it holds.
 // Case is preserved but in all getters and setters section and key
 // names are case-insensitive, and in all setters, section and key names
 // and values are trimmed.
 // Comments are discarded on reading, but if set, are written on writing.
-// The easiest way to use Ini is as follows:
-//      // create with all sections & key-values with their default values
-//      Ini ini = ini_alloc_from_str();
-//      ini_set_comment(...); // add any comments wanted in the saved file
-//          :
-//      // if an existing .ini exists on disk, merge in its values
-//      if (is_file(filename))
-//          ini_merge_from_file(&ini, filename);
-//      ... // use the ini
-//      ini_free(&ini); // finish
+// The easiest way to use `Ini` is as follows:
+// ```
+// // create with all sections & key-values with their default values
+// Ini ini = ini_alloc_from_str();
+// ini_set_comment(...); // add any comments wanted in the saved file
+//     :
+// // if an existing .ini exists on disk, merge in its values
+// if (is_file(filename))
+//     ini_merge_from_file(&ini, filename);
+// ... // use the ini
+// ini_free(&ini); // finish
+// ```
+// See @link ini_alloc@.
 typedef struct Ini {
     char* comment;
     VecStr sections; // index is section ID; *never* sort
     Vec items;
 } Ini;
 
+// @private@
 typedef struct IniItem {
     char* key;
     char* value;
@@ -38,31 +40,24 @@ typedef struct IniItem {
     int sectid;
 } IniItem;
 
-// One of these is returned by most ini_get functions.
+// One of these is returned by most ini_get... functions.
 typedef enum IniReply {
-    IniItemNotFound,
-    IniInvalidValue,
-    IniItemFound
+    IniItemNotFound, // Item not found
+    IniInvalidValue, // Invalid item type for getter, e.g. not an int
+    IniItemFound     // Success
 } IniReply;
 
-// Creates an empty Ini.
 Ini ini_alloc();
 
-// Creates an Ini from the given .ini file which it parses and sets ok.
 Ini ini_alloc_from_file(const char* filename, bool* ok);
 
-// Creates an Ini with the given .ini file text.
 Ini ini_alloc_from_str(const char* text);
 
-// Must be called once the Ini is finished with.
-// Call ini_save() first if the data is to be preserved.
-void ini_free(Ini* ini);
-
-// Merges the contents of the given .ini file and returns true if ok.
 bool ini_merge_from_file(Ini* ini, const char* filename);
 
-// Merges the contents of the given .ini file text.
 void ini_merge_from_str(Ini* ini, const char* text);
+
+void ini_free(Ini* ini);
 
 // Saves the Ini to the given filename and if successful returns true.
 // Not const since it sorts the items first.

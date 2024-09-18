@@ -25,11 +25,15 @@ static int find_sectid(const Ini* ini, const char* section);
 static int maybe_add_section(Ini* ini, const char* section);
 static IniItem* find_item(Ini* ini, const char* section, const char* key);
 
+// Creates an empty Ini.
+// It must be freed with @link ini_free@. See also @link Ini@.
 inline Ini ini_alloc() {
     return (Ini){NULL, vec_str_alloc(),
                  vec_alloc(0, item_cmp, item_destroy)};
 }
 
+// Creates an Ini from the given .ini file which it parses and sets ok.
+// It must be freed with @link ini_free@. See also @link Ini@.
 Ini ini_alloc_from_file(const char* filename, bool* ok) {
     Ini ini = ini_alloc();
     bool reply = ini_merge_from_file(&ini, filename);
@@ -38,12 +42,15 @@ Ini ini_alloc_from_file(const char* filename, bool* ok) {
     return ini;
 }
 
+// Creates an Ini with the given .ini file text.
+// It must be freed with @link ini_free@. See also @link Ini@.
 Ini ini_alloc_from_str(const char* text) {
     Ini ini = ini_alloc();
     ini_merge_from_str(&ini, text);
     return ini;
 }
 
+// Merges the contents of the given .ini file and returns true if ok.
 bool ini_merge_from_file(Ini* ini, const char* filename) {
     assert(filename && ".ini filename is required");
     bool ok;
@@ -53,11 +60,14 @@ bool ini_merge_from_file(Ini* ini, const char* filename) {
     return ok;
 }
 
+// Merges the contents of the given .ini file text.
 void ini_merge_from_str(Ini* ini, const char* text) {
     assert(text && ".ini text is required");
     parse_text(ini, text);
 }
 
+// Must be called once the Ini is finished with.
+// Call ini_save() first if the data is to be preserved.
 void ini_free(Ini* ini) {
     vec_free(&ini->items);
     vec_str_free(&ini->sections);

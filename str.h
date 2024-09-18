@@ -62,9 +62,9 @@ char* str_trimn(const char* s, size_t n);
 // whitespace this function is effectively the same as strdup().
 #define str_trim(s) str_trimn((s), 0)
 
+// Returns true or false depending on b.
 const char* bool_to_str(bool b);
 
-// s should be of size COMMA_I64_SIZE
 void commas(char* s, int64_t n);
 
 #define typename(x) \
