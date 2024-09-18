@@ -79,12 +79,14 @@ static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
     if (node_is_red(node->left) && node_is_red(node->right))
         node_color_flip(node);
     int cmp = strcmp(key, node->key);
+    if (cmp == 0) {
+        node->value = value;
+        return node;
+    }
     if (cmp < 0)
         node->left = node_add(node->left, key, value, added);
     else if (cmp > 0)
         node->right = node_add(node->right, key, value, added);
-    else
-        node->value = value;
     return node_add_rotation(node);
 }
 
