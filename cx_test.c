@@ -6,6 +6,7 @@
 #include "fx.h"
 #include "fx_test.h"
 #include "ini_test.h"
+#include "map_str_real_test.h"
 #include "mx.h"
 #include "mx_test.h"
 #include "set_int_test.h"
@@ -66,6 +67,9 @@ int main(int argc, char** argv) {
     tinfo.tag = "ini_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         ini_tests(&tinfo);
+    tinfo.tag = "map_str_real_tests";
+    if (!pattern || strstr(tinfo.tag, pattern))
+        map_str_real_tests(&tinfo);
     double duration = (double)(clock() - begin) / CLOCKS_PER_SEC;
     char commabuf[COMMA_I64_SIZE];
     commas(commabuf, tinfo.ok);

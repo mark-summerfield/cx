@@ -1,4 +1,5 @@
 # Ideas for additions at the end
+# TODO map_str_real tests
 # TODO complete docs: migrate definition docs from .h to .c files
 
 cx.h
@@ -15,6 +16,8 @@ set_str.h
 set_str.c
 set_int.h
 set_int.c
+map_str_real.h
+map_str_real.c
 deq_str.h
 deq_str.c
 deq_int.h
@@ -46,6 +49,8 @@ deq_str_test.h
 deq_str_test.c
 deq_int_test.h
 deq_int_test.c
+map_str_real_test.h
+map_str_real_test.c # TODO
 set_str_test.h
 set_str_test.c
 set_int_test.h
