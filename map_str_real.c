@@ -85,7 +85,7 @@ static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
     }
     if (cmp < 0)
         node->left = node_add(node->left, key, value, added);
-    else if (cmp > 0)
+    else // cmp > 0
         node->right = node_add(node->right, key, value, added);
     return node_add_rotation(node);
 }
