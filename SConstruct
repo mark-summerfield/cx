@@ -4,7 +4,7 @@ env = Environment()
 if GetOption('dbg'):
     env.Append(CCFLAGS='-Wall -Wextra -pedantic -g')
 else:
-    env.Append(CCFLAGS='-Wall -Wextra -O3 -DNDEBUG')
+    env.Append(CCFLAGS='-Wall -Wextra -s -O3 -DNDEBUG')
 
 FILES = Glob('*test.c') + [
     'fx.c',
