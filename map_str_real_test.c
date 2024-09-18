@@ -14,7 +14,7 @@ void map_str_real_tests(tinfo* tinfo) {
     const int SIZE = 5;
     char* keys[] = {"one", "two", "three", "four", "five"};
     for (int i = 0; i < SIZE; ++i) {
-        map_str_real_add(&vars, keys[i], (i + 1) * 10.5);
+        map_str_real_set(&vars, keys[i], (i + 1) * 10.5);
         check_size(tinfo, &vars, i + 1);
     }
     check_size(tinfo, &vars, SIZE);
@@ -26,16 +26,18 @@ void map_str_real_tests(tinfo* tinfo) {
     check_bool_eq(tinfo, ok, true);
     check_real_eq(tinfo, d, 42);
 
-    map_str_real_add(&vars, keys[3], 99.9);
+    map_str_real_set(&vars, keys[3], 99.9);
     check_size(tinfo, &vars, SIZE);
     d = map_str_real_get(&vars, keys[3], &ok);
     check_bool_eq(tinfo, ok, true);
     check_real_eq(tinfo, d, 99.9);
 
     // TODO check gets
+    // TODO check contains
     // TODO check removes
-    // TODO check adds incl. dup keys
-    // TODO check to vec
+    // TODO check sets incl. dup keys
+    // TODO check to Vec
+    // TODO check to VecStr (keys)
 
     map_str_real_free(&vars);
     check_size(tinfo, &vars, 0);

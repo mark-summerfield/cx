@@ -25,6 +25,7 @@ static const MapStrRealNode* node_first(const MapStrRealNode* node);
 static MapStrRealNode* node_remove_minimum(MapStrRealNode* node, bool owns);
 static int str_real_pair_cmp(const void* p1, const void* p2);
 static void push_to_vec(Vec* vec, const MapStrRealNode* node);
+static void push_to_vec_str(VecStr* vec, const MapStrRealNode* node);
 
 inline MapStrReal map_str_real_alloc(bool owns) {
     return (MapStrReal){._root = NULL, ._size = 0, ._owns = owns};
@@ -60,7 +61,7 @@ static MapStrRealNode* node_alloc(char* key, double value) {
     return node;
 }
 
-bool map_str_real_add(MapStrReal* map, char* key, double value) {
+bool map_str_real_set(MapStrReal* map, char* key, double value) {
     assert_notnull(map);
     bool added = false;
     map->_root = node_add(map->_root, key, value, &added);
@@ -250,6 +251,21 @@ double map_str_real_get(const MapStrReal* map, const char* key, bool* ok) {
     return 0.0;
 }
 
+bool map_str_real_contains(const MapStrReal* map, const char* key) {
+    assert_notnull(map);
+    MapStrRealNode* node = map->_root;
+    while (node) {
+        int cmp = strcmp(key, node->key);
+        if (cmp < 0)
+            node = node->left;
+        else if (cmp > 0)
+            node = node->right;
+        else
+            return true;
+    }
+    return false;
+}
+
 static int str_real_pair_cmp(const void* p1, const void* p2) {
     return strcmp((*(const StrRealPair**)p1)->key,
                   (*(const StrRealPair**)p2)->key);
@@ -271,5 +287,20 @@ static void push_to_vec(Vec* vec, const MapStrRealNode* node) {
         pair->value = node->value;
         vec_push(vec, pair);
         push_to_vec(vec, node->right);
+    }
+}
+
+VecStr map_str_real_keys(const MapStrReal* map) {
+    assert_notnull(map);
+    VecStr vec = vec_str_alloc_custom(map->_size, BORROWS);
+    push_to_vec_str(&vec, map->_root);
+    return vec;
+}
+
+static void push_to_vec_str(VecStr* vec, const MapStrRealNode* node) {
+    if (node) {
+        push_to_vec_str(vec, node->left);
+        vec_str_push(vec, node->key);
+        push_to_vec_str(vec, node->right);
     }
 }
