@@ -4,6 +4,10 @@
 #include "fx.h"
 #include "str.h"
 #include <stdio.h>
+#include <stdlib.h>
+
+void check_file_change_ext(tinfo* tinfo, const char* filename,
+                           const char* ext, const char* expected);
 
 void fx_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -55,4 +59,26 @@ void fx_tests(tinfo* tinfo) {
                 config_filename);
     } else
         tinfo->ok++;
+
+    // append
+    check_file_change_ext(tinfo, "/home/mark/README", ".md",
+                          "/home/mark/README.md");
+    // replace
+    check_file_change_ext(tinfo, "/home/mark/apple.cgi", ".png",
+                          "/home/mark/apple.png");
+    // replace with longer
+    check_file_change_ext(tinfo, "/home/mark/archive.tar", ".tar.gz",
+                          "/home/mark/archive.tar.gz");
+}
+
+void check_file_change_ext(tinfo* tinfo, const char* filename,
+                           const char* ext, const char* expected) {
+    tinfo->total++;
+    char* name = file_change_ext(filename, ext);
+    if (!str_eq(expected, name)) {
+        fprintf(stderr, "FAIL: %s expected «%s» got «%s»\n", tinfo->tag,
+                expected, name);
+    } else
+        tinfo->ok++;
+    free(name);
 }

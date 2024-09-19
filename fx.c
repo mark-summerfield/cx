@@ -15,6 +15,17 @@ inline const char* file_ext(const char* filename) {
     return (!dot || dot == filename) ? "" : dot + 1;
 }
 
+char* file_change_ext(const char* filename, const char* ext) {
+    char* dot = strrchr(filename, '.');
+    const int ext_size = strlen(ext);
+    const int base_size = strlen(filename);
+    char* name = calloc(1, base_size + ext_size + 1);
+    assert_alloc(name);
+    char* p = stpncpy(name, filename, base_size - (dot ? strlen(dot) : 0));
+    strncpy(p, ext, ext_size);
+    return name;
+}
+
 bool is_file_or_folder(const char* path) {
     if (!access(path, F_OK))
         return true; // its a file

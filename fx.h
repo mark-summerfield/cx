@@ -18,6 +18,10 @@ bool is_folder(const char* path);
 // Returns the given filename's extension excluding the leading dot.
 const char* file_ext(const char* filename);
 
+// Returns a copy of the given filename with the given extension which the
+// caller must free.
+char* file_change_ext(const char* filename, const char* ext);
+
 // Reads a whole file and returns it as a single string which the caller
 // owns and sets ok if given.
 char* file_read_size(const char* filename, long long max_size, bool* ok);
