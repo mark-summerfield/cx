@@ -22,7 +22,7 @@ char* file_change_ext(const char* filename, const char* ext) {
     char* name = calloc(1, base_size + ext_size + 1);
     assert_alloc(name);
     char* p = stpncpy(name, filename, base_size - (dot ? strlen(dot) : 0));
-    strncpy(p, ext, ext_size);
+    strcpy(p, ext);
     return name;
 }
 
