@@ -50,7 +50,7 @@ deq_str_test.c
 deq_int_test.h
 deq_int_test.c
 map_str_real_test.h
-map_str_real_test.c # TODO
+map_str_real_test.c
 set_str_test.h
 set_str_test.c
 set_int_test.h

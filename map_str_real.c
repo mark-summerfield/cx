@@ -5,7 +5,7 @@
 #include <string.h>
 
 static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
-                                double value, bool* added);
+                                double value, bool* added, bool owns);
 static MapStrRealNode* node_alloc(char* key, double value);
 static bool node_is_red(const MapStrRealNode* node);
 static void node_color_flip(MapStrRealNode* node);
@@ -64,7 +64,7 @@ static MapStrRealNode* node_alloc(char* key, double value) {
 bool map_str_real_set(MapStrReal* map, char* key, double value) {
     assert_notnull(map);
     bool added = false;
-    map->_root = node_add(map->_root, key, value, &added);
+    map->_root = node_add(map->_root, key, value, &added, map->_owns);
     map->_root->_red = false;
     if (added)
         map->_size++;
@@ -72,7 +72,7 @@ bool map_str_real_set(MapStrReal* map, char* key, double value) {
 }
 
 static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
-                                double value, bool* added) {
+                                double value, bool* added, bool owns) {
     if (!node) { // If key was in the tree it would go here
         *added = true;
         return node_alloc(key, value);
@@ -81,13 +81,17 @@ static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
         node_color_flip(node);
     int cmp = strcmp(key, node->key);
     if (cmp == 0) {
+        if (owns && node->key != key) {
+            free(node->key); // both keys have the same string but
+            node->key = key; // are different pointers
+        }
         node->value = value;
         return node;
     }
     if (cmp < 0)
-        node->left = node_add(node->left, key, value, added);
+        node->left = node_add(node->left, key, value, added, owns);
     else // cmp > 0
-        node->right = node_add(node->right, key, value, added);
+        node->right = node_add(node->right, key, value, added, owns);
     return node_add_rotation(node);
 }
 
