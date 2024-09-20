@@ -15,6 +15,8 @@ static void str_test_lowercase_ip(tinfo*);
 static void str_test_begins_ends(tinfo*);
 static void str_test_filename_ext(tinfo*);
 static void str_test_trim(tinfo*);
+static void str_test_split_chr(tinfo*);
+static void str_test_split_ws(tinfo*);
 
 void str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -35,6 +37,10 @@ void str_tests(tinfo* tinfo) {
     str_test_filename_ext(tinfo);
     tinfo->tag = "str_test_trim";
     str_test_trim(tinfo);
+    tinfo->tag = "str_test_split_chr";
+    str_test_split_chr(tinfo);
+    tinfo->tag = "str_test_split_ws";
+    str_test_split_ws(tinfo);
 }
 
 static void str_test_uppercase(tinfo* tinfo) {
@@ -257,4 +263,60 @@ static void str_test_trim(tinfo* tinfo) {
     t = str_trimn(s, 1);
     check_str_eq(tinfo, t, "x");
     free(t);
+}
+
+static void str_test_split_chr(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    SplitParts parts1 = split_chr("one\ttwo\tthree\tfour", '\t');
+    check_int_eq(tinfo, parts1.nparts, 4);
+    check_str_eq(tinfo, parts1.parts[0], "one");
+    check_str_eq(tinfo, parts1.parts[1], "two");
+    check_str_eq(tinfo, parts1.parts[2], "three");
+    check_str_eq(tinfo, parts1.parts[3], "four");
+    split_parts_free(&parts1);
+
+    parts1 = split_chr("elephant", '\t');
+    check_int_eq(tinfo, parts1.nparts, 1);
+    check_str_eq(tinfo, parts1.parts[0], "elephant");
+    split_parts_free(&parts1);
+
+    parts1 = split_chr("moveto 3.5 7.45", ' ');
+    check_int_eq(tinfo, parts1.nparts, 3);
+    check_str_eq(tinfo, parts1.parts[0], "moveto");
+    check_str_eq(tinfo, parts1.parts[1], "3.5");
+    check_str_eq(tinfo, parts1.parts[2], "7.45");
+    split_parts_free(&parts1);
+
+    parts1 = split_chr("    ", ' ');
+    check_int_eq(tinfo, parts1.nparts, 0);
+    split_parts_free(&parts1);
+}
+
+static void str_test_split_ws(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    SplitParts parts1 = split_ws("  one\ttwo \tthree\tfour\n");
+    check_int_eq(tinfo, parts1.nparts, 4);
+    check_str_eq(tinfo, parts1.parts[0], "one");
+    check_str_eq(tinfo, parts1.parts[1], "two");
+    check_str_eq(tinfo, parts1.parts[2], "three");
+    check_str_eq(tinfo, parts1.parts[3], "four");
+    split_parts_free(&parts1);
+
+    parts1 = split_ws("   moveto 3.5\t 7.45\n");
+    check_int_eq(tinfo, parts1.nparts, 3);
+    check_str_eq(tinfo, parts1.parts[0], "moveto");
+    check_str_eq(tinfo, parts1.parts[1], "3.5");
+    check_str_eq(tinfo, parts1.parts[2], "7.45");
+    split_parts_free(&parts1);
+
+    parts1 = split_ws("elephant");
+    check_int_eq(tinfo, parts1.nparts, 1);
+    check_str_eq(tinfo, parts1.parts[0], "elephant");
+    split_parts_free(&parts1);
+
+    parts1 = split_ws("   ");
+    check_int_eq(tinfo, parts1.nparts, 0);
+    split_parts_free(&parts1);
 }

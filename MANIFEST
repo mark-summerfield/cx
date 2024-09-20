@@ -1,5 +1,5 @@
 # Ideas for additions at the end
-# TODO map_str_real tests
+# TODO refactor split_... functions
 # TODO complete docs: migrate definition docs from .h to .c files
 
 cx.h

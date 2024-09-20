@@ -166,3 +166,120 @@ void commas(char* s, int64_t n) {
     strncpy(s, p, j);
     s[j] = 0;
 }
+
+void split_parts_free(SplitParts* parts) {
+    for (int i = 0; i < parts->nparts; ++i) {
+        free(parts->parts[i]);
+        parts->parts[i] = NULL;
+    }
+    parts->nparts = 0;
+}
+
+SplitParts split_chr(const char* line, int sep) {
+    assert_notnull(line);
+    assert_notnull(sep);
+    SplitParts parts = {.nparts = 0};
+    char* p = (char*)line;
+    // Special case: no sep or all sep ∴ no splits ∴ copy line or empty
+    bool has_sep = false;
+    bool all_sep = true;
+    for (char* q = p; q && *q; q++)
+        if (sep == *q)
+            has_sep = true;
+        else
+            all_sep = false;
+    if (all_sep) // empty result
+        return parts;
+    if (!has_sep) { // copy line
+        char* part = parts.parts[parts.nparts++] = malloc(strlen(line) + 1);
+        assert_alloc(part);
+        strcpy(part, p);
+        return parts;
+    }
+    // Normal case: has sep
+    while (p) {
+        char* q = strchr(p, sep);
+        if (q) {
+            int size = q - p;
+            char* part = parts.parts[parts.nparts] = malloc(size + 1);
+            assert_alloc(part);
+            strncpy(part, p, size);
+            part[size] = 0;
+            parts.nparts++;
+            if (parts.nparts == MAX_SPLITS)
+                break;
+            p = q + 1;
+        } else {
+            if (p) {
+                int size = strlen(p);
+                char* part = parts.parts[parts.nparts] = malloc(size + 1);
+                assert_alloc(part);
+                strcpy(part, p);
+                parts.nparts++;
+            }
+            break;
+        }
+    }
+    return parts;
+}
+
+SplitParts split_ws(const char* line) {
+    assert_notnull(line);
+    SplitParts parts = {.nparts = 0};
+    char* p = (char*)line;
+    int size = strlen(p);
+    // Special case: no whitespace ∴ no splits ∴ first part is copy of line
+    bool ws = false;
+    char* q = p;
+    while (q && *q) {
+        if (isspace(*q++)) {
+            ws = true;
+            break;
+        }
+    }
+    if (!ws) {
+        char* part = parts.parts[parts.nparts++] = malloc(size + 1);
+        assert_alloc(part);
+        strcpy(part, p);
+        return parts;
+    }
+    // Normal case: whitespace
+    char* end = p + size;
+    while (p && isspace(*p)) // skip leading ws
+        p++;
+    while (p) {
+        char* q = p + 1;
+        while (q && !isspace(*q))
+            q++;
+        if (q >= end)
+            break;
+        if (q) {
+            int size = q - p;
+            char* part = parts.parts[parts.nparts] = malloc(size + 1);
+            assert_alloc(part);
+            strncpy(part, p, size);
+            part[size] = 0;
+            parts.nparts++;
+            if (parts.nparts == MAX_SPLITS)
+                break;
+            p = q + 1;
+            while (p && isspace(*p)) // skip ws
+                p++;
+        } else {
+            if (p) {
+                int size = strlen(p);
+                q = p + size;
+                while (q && isspace(*q)) {
+                    q--;
+                    size--;
+                }
+                char* part = parts.parts[parts.nparts] = malloc(size + 1);
+                assert_alloc(part);
+                strcpy(part, p);
+                parts.nparts++;
+            }
+            break;
+        }
+    }
+    return parts;
+}

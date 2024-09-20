@@ -67,6 +67,26 @@ const char* bool_to_str(bool b);
 
 void commas(char* s, int64_t n);
 
+#define MAX_SPLITS 20
+
+typedef struct SplitParts {
+    char* parts[MAX_SPLITS];
+    int nparts;
+} SplitParts;
+
+// Must be called when a SplitParts is finished with.
+void split_parts_free(SplitParts* parts);
+
+// Splits the given line by sep (a char) into parts (each of which is a
+// new string) and returns SplitParts. The caller must call
+// split_parts_free when finished with the SplitParts.
+SplitParts split_chr(const char* line, int sep);
+
+// Splits the given line by any amount of whitespace into parts (each of
+// which is a new string) and returns SplitParts. The caller must call
+// split_parts_free when finished with the SplitParts.
+SplitParts split_ws(const char* line);
+
 #define typename(x) \
     _Generic((x), \
         _Bool: "bool", \
