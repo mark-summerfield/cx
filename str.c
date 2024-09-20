@@ -266,7 +266,7 @@ SplitParts split_ws(const char* line) {
     p = (char*)skip_ws(p); // skip leading ws
     while (p) {
         char* q = (char*)skip_nonws(p + 1);
-        if (q >= end)
+        if (q > end)
             break;
         size = q ? q - p : (int)strlen(p);
         if (q) {
