@@ -210,13 +210,11 @@ SplitParts split_chr(const char* line, int sep) {
                 break;
             p = q + 1;
         } else {
-            if (p) {
-                int size = strlen(p);
-                char* part = parts.parts[parts.nparts] = malloc(size + 1);
-                assert_alloc(part);
-                strcpy(part, p);
-                parts.nparts++;
-            }
+            int size = strlen(p);
+            char* part = parts.parts[parts.nparts] = malloc(size + 1);
+            assert_alloc(part);
+            strcpy(part, p);
+            parts.nparts++;
             break;
         }
     }
@@ -248,13 +246,13 @@ SplitParts split_ws(const char* line) {
     while (p && isspace(*p)) // skip leading ws
         p++;
     while (p) {
-        char* q = p + 1;
+        q = p + 1;
         while (q && !isspace(*q))
             q++;
         if (q >= end)
             break;
         if (q) {
-            int size = q - p;
+            size = q - p;
             char* part = parts.parts[parts.nparts] = malloc(size + 1);
             assert_alloc(part);
             strncpy(part, p, size);
@@ -266,18 +264,16 @@ SplitParts split_ws(const char* line) {
             while (p && isspace(*p)) // skip ws
                 p++;
         } else {
-            if (p) {
-                int size = strlen(p);
-                q = p + size;
-                while (q && isspace(*q)) {
-                    q--;
-                    size--;
-                }
-                char* part = parts.parts[parts.nparts] = malloc(size + 1);
-                assert_alloc(part);
-                strcpy(part, p);
-                parts.nparts++;
+            size = strlen(p);
+            q = p + size;
+            while (q && isspace(*q)) {
+                q--;
+                size--;
             }
+            char* part = parts.parts[parts.nparts] = malloc(size + 1);
+            assert_alloc(part);
+            strcpy(part, p);
+            parts.nparts++;
             break;
         }
     }
