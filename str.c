@@ -261,21 +261,21 @@ SplitParts split_ws(const char* line) {
     const char* p = skip_ws(line); // skip leading ws
     size = strlen(p);
     const char* end = p + size;
-    while (p) {
+    while (p && *p) {
         const char* q = skip_nonws(p);
         size = q ? q - p : (int)strlen(p);
         char* part = parts.parts[parts.nparts++] = malloc(size + 1);
         assert_alloc(part);
         strncpy(part, p, size);
+        part[size] = 0;
         if (q) {
-            part[size] = 0;
             if (parts.nparts == MAX_SPLITS) {
                 warn("more than %d parts (skipped remainder)", MAX_SPLITS);
                 break;
             }
             if (q >= end)
                 break;
-            p = q + 1;
+            p = skip_ws(q + 1);
         } else
             break;
     }

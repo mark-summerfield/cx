@@ -332,7 +332,7 @@ static void str_test_split_chr(tinfo* tinfo) {
 static void str_test_split_ws(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    puts("*** A ***");
+
     SplitParts parts1 = split_ws("  one\ttwo \tthree\tfour\n");
     check_int_eq(tinfo, parts1.nparts, 4);
     check_str_eq(tinfo, parts1.parts[0], "one");
@@ -341,7 +341,6 @@ static void str_test_split_ws(tinfo* tinfo) {
     check_str_eq(tinfo, parts1.parts[3], "four");
     split_parts_free(&parts1);
 
-    puts("*** B ***");
     parts1 = split_ws("   moveto 3.5\t 7.45\n");
     check_int_eq(tinfo, parts1.nparts, 3);
     check_str_eq(tinfo, parts1.parts[0], "moveto");
@@ -349,38 +348,31 @@ static void str_test_split_ws(tinfo* tinfo) {
     check_str_eq(tinfo, parts1.parts[2], "7.45");
     split_parts_free(&parts1);
 
-    puts("*** C ***");
     parts1 = split_ws("elephant");
     check_int_eq(tinfo, parts1.nparts, 1);
     check_str_eq(tinfo, parts1.parts[0], "elephant");
     split_parts_free(&parts1);
 
-    puts("*** D ***");
     parts1 = split_ws("   ");
     check_int_eq(tinfo, parts1.nparts, 0);
     split_parts_free(&parts1);
 
-    puts("*** E ***");
     parts1 = split_ws("");
     check_int_eq(tinfo, parts1.nparts, 0);
     split_parts_free(&parts1);
 
-    puts("*** F ***");
     SplitParts parts2 = split_ws("width 240");
-    split_parts_dump(&parts2); // TODO delete
     check_int_eq(tinfo, parts2.nparts, 2);
     check_str_eq(tinfo, parts2.parts[0], "width");
     check_str_eq(tinfo, parts2.parts[1], "240");
     split_parts_free(&parts2);
 
-    puts("*** G ***");
     SplitParts parts3 = split_ws("height 160");
     check_int_eq(tinfo, parts3.nparts, 2);
     check_str_eq(tinfo, parts3.parts[0], "height");
     check_str_eq(tinfo, parts3.parts[1], "160");
     split_parts_free(&parts3);
 
-    puts("*** H ***");
     SplitParts parts4 =
         split_ws("rect x=10 y=10 w=220 h=140 fg=blue bg=green");
     check_int_eq(tinfo, parts4.nparts, 7);
