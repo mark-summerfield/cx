@@ -171,7 +171,7 @@ void commas(char* s, int64_t n) {
 void split_parts_dump(const SplitParts* parts) {
     if (parts->nparts)
         for (int i = 0; i < parts->nparts; ++i)
-            printf("#%i«%s»", i, parts->parts[i]);
+            printf("#%i«%s»\n", i, parts->parts[i]);
     else
         puts("(empty)");
 }
