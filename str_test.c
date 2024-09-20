@@ -288,11 +288,19 @@ static void str_test_split_chr(tinfo* tinfo) {
     check_str_eq(tinfo, parts1.parts[2], "7.45");
     split_parts_free(&parts1);
 
+    parts1 = split_chr("    ", '\t');
+    check_int_eq(tinfo, parts1.nparts, 1); // no tabs so whole str
+    split_parts_free(&parts1);
+
     parts1 = split_chr("    ", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
     split_parts_free(&parts1);
 
     parts1 = split_chr("", '\t');
+    check_int_eq(tinfo, parts1.nparts, 0);
+    split_parts_free(&parts1);
+
+    parts1 = split_chr("", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
     split_parts_free(&parts1);
 }

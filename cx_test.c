@@ -76,10 +76,12 @@ int main(int argc, char** argv) {
     printf("%s %s/", (tinfo.ok == tinfo.total) ? "OK" : "FAIL", commabuf);
     commas(commabuf, tinfo.total);
     printf("%s • %.3fs\n", commabuf, duration);
-    struct utsname info;
-    uname(&info);
-    printf("%s %s • %s • %s • %s\n", info.sysname, info.release,
-           info.version, info.machine, info.nodename);
+    if (verbose) {
+        struct utsname info;
+        uname(&info);
+        printf("%s %s • %s • %s • %s\n", info.sysname, info.release,
+               info.version, info.machine, info.nodename);
+    }
 }
 
 const char* get_args(int argc, char** argv, bool* verbose) {

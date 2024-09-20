@@ -177,8 +177,8 @@ void split_parts_free(SplitParts* parts) {
 }
 
 static inline bool all_sep(const char* p, int sep) {
-    for (const char* q = p; q && *q; q++)
-        if (sep != *q)
+    for (; p && *p; ++p)
+        if (sep != *p)
             return false;
     return true;
 }
@@ -214,7 +214,7 @@ SplitParts split_chr(const char* line, int sep) {
 }
 
 static inline bool has_ws(const char* p) {
-    for (; p && *p; p++)
+    for (; p && *p; ++p)
         if (isspace(*p))
             return true;
     return false;
@@ -226,36 +226,43 @@ static inline const char* skip_ws(const char* p) {
     return p;
 }
 
+static inline const char* skip_nonws(const char* p) {
+    while (p && !isspace(*p))
+        p++;
+    return p;
+}
+
+static inline char* make_part(const char* p, int size, bool upto_size) {
+    char* q = malloc(size + 1);
+    assert_alloc(q);
+    if (upto_size) {
+        strncpy(q, p, size);
+        q[size] = 0;
+    } else
+        strcpy(q, p);
+    return q;
+}
+
 SplitParts split_ws(const char* line) {
     assert_notnull(line);
     SplitParts parts = {.nparts = 0};
     char* p = (char*)line;
     int size = strlen(p);
-    if (!size)
-        return parts; // empty
-    // Special case: no whitespace ∴ no splits ∴ first part is copy of line
-    if (!has_ws(line)) {
-        char* part = parts.parts[parts.nparts++] = malloc(size + 1);
-        assert_alloc(part);
-        strcpy(part, p);
+    if (!size) // empty
+        return parts;
+    if (!has_ws(line)) { // no whitespace ∴ no splits ∴ just copy line
+        parts.parts[parts.nparts++] = make_part(p, size, false);
         return parts;
     }
-    // Normal case: whitespace
     char* end = p + size;
     p = (char*)skip_ws(p); // skip leading ws
     while (p) {
-        char* q = p + 1;
-        while (q && !isspace(*q))
-            q++;
+        char* q = (char*)skip_nonws(p + 1);
         if (q >= end)
             break;
         size = q ? q - p : (int)strlen(p);
         if (q) {
-            char* part = parts.parts[parts.nparts] = malloc(size + 1);
-            assert_alloc(part);
-            strncpy(part, p, size);
-            part[size] = 0;
-            parts.nparts++;
+            parts.parts[parts.nparts++] = make_part(p, size, true);
             if (parts.nparts == MAX_SPLITS) {
                 warn("more than %d parts (skipped remainder)", MAX_SPLITS);
                 break;
@@ -267,10 +274,7 @@ SplitParts split_ws(const char* line) {
                 q--;
                 size--;
             }
-            char* part = parts.parts[parts.nparts] = malloc(size + 1);
-            assert_alloc(part);
-            strcpy(part, p);
-            parts.nparts++;
+            parts.parts[parts.nparts++] = make_part(p, size, false);
             break;
         }
     }
