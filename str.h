@@ -77,6 +77,9 @@ typedef struct SplitParts {
 // Mainly for debugging & development; dumps the parts to stdout.
 void split_parts_dump(const SplitParts* parts);
 
+// Frees all the parts and sets nparts to 0 ready for reuse.
+#define split_parts_clear(parts) split_parts_free(parts)
+
 // Must be called when a SplitParts is finished with.
 void split_parts_free(SplitParts* parts);
 

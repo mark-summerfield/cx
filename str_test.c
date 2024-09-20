@@ -274,31 +274,31 @@ static void str_test_split_chr(tinfo* tinfo) {
     check_str_eq(tinfo, parts1.parts[1], "two");
     check_str_eq(tinfo, parts1.parts[2], "three");
     check_str_eq(tinfo, parts1.parts[3], "four");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("elephant", '\t');
     check_int_eq(tinfo, parts1.nparts, 1);
     check_str_eq(tinfo, parts1.parts[0], "elephant");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("moveto 3.5 7.45", ' ');
     check_int_eq(tinfo, parts1.nparts, 3);
     check_str_eq(tinfo, parts1.parts[0], "moveto");
     check_str_eq(tinfo, parts1.parts[1], "3.5");
     check_str_eq(tinfo, parts1.parts[2], "7.45");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("    ", '\t');
     check_int_eq(tinfo, parts1.nparts, 1); // no tabs so whole str
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("    ", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("", '\t');
     check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
@@ -326,7 +326,7 @@ static void str_test_split_chr(tinfo* tinfo) {
     check_str_eq(tinfo, parts4.parts[4], "h=140");
     check_str_eq(tinfo, parts4.parts[5], "fg=blue");
     check_str_eq(tinfo, parts4.parts[6], "bg=green");
-    split_parts_free(&parts4);
+    split_parts_clear(&parts4);
 
     parts4 =
         split_chr("a b c d e f g h i j k l m n o p q r s t u v w x y z "
@@ -355,23 +355,23 @@ static void str_test_split_ws(tinfo* tinfo) {
     check_str_eq(tinfo, parts1.parts[1], "two");
     check_str_eq(tinfo, parts1.parts[2], "three");
     check_str_eq(tinfo, parts1.parts[3], "four");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("   moveto 3.5\t 7.45\n");
     check_int_eq(tinfo, parts1.nparts, 3);
     check_str_eq(tinfo, parts1.parts[0], "moveto");
     check_str_eq(tinfo, parts1.parts[1], "3.5");
     check_str_eq(tinfo, parts1.parts[2], "7.45");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("elephant");
     check_int_eq(tinfo, parts1.nparts, 1);
     check_str_eq(tinfo, parts1.parts[0], "elephant");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("   ");
     check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("");
     check_int_eq(tinfo, parts1.nparts, 0);
@@ -399,7 +399,7 @@ static void str_test_split_ws(tinfo* tinfo) {
     check_str_eq(tinfo, parts4.parts[4], "h=140");
     check_str_eq(tinfo, parts4.parts[5], "fg=blue");
     check_str_eq(tinfo, parts4.parts[6], "bg=green");
-    split_parts_free(&parts4);
+    split_parts_clear(&parts4);
 
     parts4 =
         split_ws("\ta b c d e f g h i j k l m n o p q r s t u v w x  y z "
