@@ -221,13 +221,6 @@ SplitParts split_chr(const char* line, int sep) {
     return parts;
 }
 
-static inline bool has_ws(const char* p) {
-    for (; p && *p; ++p)
-        if (isspace(*p))
-            return true;
-    return false;
-}
-
 static inline const char* skip_ws(const char* p) {
     while (p && isspace(*p))
         p++;
@@ -251,39 +244,41 @@ static inline char* make_part(const char* p, int size, bool upto_size) {
     return q;
 }
 
-// TODO fix or rewrite
 SplitParts split_ws(const char* line) {
     assert_notnull(line);
     SplitParts parts = {.nparts = 0};
-    char* p = (char*)line;
-    int size = strlen(p);
+    int size = strlen(line);
     if (!size) // empty
         return parts;
-    if (!has_ws(line)) { // no whitespace ∴ no splits ∴ just copy line
-        parts.parts[parts.nparts++] = make_part(p, size, false);
-        return parts;
-    }
-    char* end = p + size;
-    p = (char*)skip_ws(p); // skip leading ws
-    while (p) {
-        char* q = (char*)skip_nonws(p + 1);
-        if (q > end)
+    bool all_ws = true;
+    for (const char* p = line; p && *p; ++p)
+        if (!isspace(*p)) {
+            all_ws = false;
             break;
+        }
+    if (all_ws)
+        return parts;              // empty;
+    const char* p = skip_ws(line); // skip leading ws
+    const char* end = p + strlen(p);
+    while (p) {
+        const char* q = skip_nonws(p);
         size = q ? q - p : (int)strlen(p);
+        char* part = parts.parts[parts.nparts] = malloc(size + 1);
+        assert_alloc(part);
         if (q) {
-            parts.parts[parts.nparts++] = make_part(p, size, true);
+            strncpy(part, p, size);
+            part[size] = 0;
+            parts.nparts++;
             if (parts.nparts == MAX_SPLITS) {
                 warn("more than %d parts (skipped remainder)", MAX_SPLITS);
                 break;
             }
-            p = (char*)skip_ws(q + 1); // skip ws
+            if (q > end)
+                break;
+            p = q + 1;
         } else {
-            q = p + size;
-            while (q && isspace(*q)) {
-                q--;
-                size--;
-            }
-            parts.parts[parts.nparts++] = make_part(p, size, false);
+            strcpy(part, p);
+            parts.nparts++;
             break;
         }
     }
