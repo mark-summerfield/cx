@@ -291,6 +291,10 @@ static void str_test_split_chr(tinfo* tinfo) {
     parts1 = split_chr("    ", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
     split_parts_free(&parts1);
+
+    parts1 = split_chr("", '\t');
+    check_int_eq(tinfo, parts1.nparts, 0);
+    split_parts_free(&parts1);
 }
 
 static void str_test_split_ws(tinfo* tinfo) {
@@ -317,6 +321,10 @@ static void str_test_split_ws(tinfo* tinfo) {
     split_parts_free(&parts1);
 
     parts1 = split_ws("   ");
+    check_int_eq(tinfo, parts1.nparts, 0);
+    split_parts_free(&parts1);
+
+    parts1 = split_ws("");
     check_int_eq(tinfo, parts1.nparts, 0);
     split_parts_free(&parts1);
 }

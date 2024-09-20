@@ -3,6 +3,7 @@
 #include "str.h"
 #include "cx.h"
 #include <ctype.h>
+#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -175,44 +176,35 @@ void split_parts_free(SplitParts* parts) {
     parts->nparts = 0;
 }
 
+static inline bool all_sep(const char* p, int sep) {
+    for (const char* q = p; q && *q; q++)
+        if (sep != *q)
+            return false;
+    return true;
+}
+
 SplitParts split_chr(const char* line, int sep) {
     assert_notnull(line);
     assert_notnull(sep);
     SplitParts parts = {.nparts = 0};
+    if (all_sep(line, sep))
+        return parts;
     char* p = (char*)line;
-    // Special case: no sep or all sep ∴ no splits ∴ copy line or empty
-    bool has_sep = false;
-    bool all_sep = true;
-    for (char* q = p; q && *q; q++)
-        if (sep == *q)
-            has_sep = true;
-        else
-            all_sep = false;
-    if (all_sep) // empty result
-        return parts;
-    if (!has_sep) { // copy line
-        char* part = parts.parts[parts.nparts++] = malloc(strlen(line) + 1);
-        assert_alloc(part);
-        strcpy(part, p);
-        return parts;
-    }
-    // Normal case: has sep
     while (p) {
         char* q = strchr(p, sep);
+        int size = q ? q - p : (int)strlen(p);
+        char* part = parts.parts[parts.nparts] = malloc(size + 1);
+        assert_alloc(part);
         if (q) {
-            int size = q - p;
-            char* part = parts.parts[parts.nparts] = malloc(size + 1);
-            assert_alloc(part);
             strncpy(part, p, size);
             part[size] = 0;
             parts.nparts++;
-            if (parts.nparts == MAX_SPLITS)
+            if (parts.nparts == MAX_SPLITS) {
+                warn("more than %d parts (skipped remainder)", MAX_SPLITS);
                 break;
+            }
             p = q + 1;
         } else {
-            int size = strlen(p);
-            char* part = parts.parts[parts.nparts] = malloc(size + 1);
-            assert_alloc(part);
             strcpy(part, p);
             parts.nparts++;
             break;
@@ -221,21 +213,28 @@ SplitParts split_chr(const char* line, int sep) {
     return parts;
 }
 
+static inline bool has_ws(const char* p) {
+    for (; p && *p; p++)
+        if (isspace(*p))
+            return true;
+    return false;
+}
+
+static inline const char* skip_ws(const char* p) {
+    while (p && isspace(*p))
+        p++;
+    return p;
+}
+
 SplitParts split_ws(const char* line) {
     assert_notnull(line);
     SplitParts parts = {.nparts = 0};
     char* p = (char*)line;
     int size = strlen(p);
+    if (!size)
+        return parts; // empty
     // Special case: no whitespace ∴ no splits ∴ first part is copy of line
-    bool ws = false;
-    char* q = p;
-    while (q && *q) {
-        if (isspace(*q++)) {
-            ws = true;
-            break;
-        }
-    }
-    if (!ws) {
+    if (!has_ws(line)) {
         char* part = parts.parts[parts.nparts++] = malloc(size + 1);
         assert_alloc(part);
         strcpy(part, p);
@@ -243,28 +242,26 @@ SplitParts split_ws(const char* line) {
     }
     // Normal case: whitespace
     char* end = p + size;
-    while (p && isspace(*p)) // skip leading ws
-        p++;
+    p = (char*)skip_ws(p); // skip leading ws
     while (p) {
-        q = p + 1;
+        char* q = p + 1;
         while (q && !isspace(*q))
             q++;
         if (q >= end)
             break;
+        int size = q ? q - p : (int)strlen(p);
         if (q) {
-            size = q - p;
             char* part = parts.parts[parts.nparts] = malloc(size + 1);
             assert_alloc(part);
             strncpy(part, p, size);
             part[size] = 0;
             parts.nparts++;
-            if (parts.nparts == MAX_SPLITS)
+            if (parts.nparts == MAX_SPLITS) {
+                warn("more than %d parts (skipped remainder)", MAX_SPLITS);
                 break;
-            p = q + 1;
-            while (p && isspace(*p)) // skip ws
-                p++;
+            }
+            p = (char*)skip_ws(q + 1); // skip ws
         } else {
-            size = strlen(p);
             q = p + size;
             while (q && isspace(*q)) {
                 q--;

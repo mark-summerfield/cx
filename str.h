@@ -67,7 +67,7 @@ const char* bool_to_str(bool b);
 
 void commas(char* s, int64_t n);
 
-#define MAX_SPLITS 20
+#define MAX_SPLITS 32
 
 typedef struct SplitParts {
     char* parts[MAX_SPLITS];
