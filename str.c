@@ -249,7 +249,7 @@ SplitParts split_ws(const char* line) {
             q++;
         if (q >= end)
             break;
-        int size = q ? q - p : (int)strlen(p);
+        size = q ? q - p : (int)strlen(p);
         if (q) {
             char* part = parts.parts[parts.nparts] = malloc(size + 1);
             assert_alloc(part);
