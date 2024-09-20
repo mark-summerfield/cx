@@ -332,11 +332,11 @@ static void str_test_split_chr(tinfo* tinfo) {
         split_chr("a b c d e f g h i j k l m n o p q r s t u v w x y z "
                   "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z",
                   ' ');
-    check_int_eq(tinfo, parts4.nparts, MAX_SPLITS);
+    check_int_eq(tinfo, parts4.nparts, MAX_SPLIT_PARTS);
     char buf[2];
     buf[0] = 'a';
     buf[1] = 0;
-    for (int i = 0; i < MAX_SPLITS; ++i) {
+    for (int i = 0; i < MAX_SPLIT_PARTS; ++i) {
         check_str_eq(tinfo, parts4.parts[i], buf);
         buf[0]++;
         if (i == 25)
@@ -404,11 +404,11 @@ static void str_test_split_ws(tinfo* tinfo) {
     parts4 =
         split_ws("\ta b c d e f g h i j k l m n o p q r s t u v w x  y z "
                  "A B C D E F G H I J K L M N O P Q R S T U V W X  Y Z\n");
-    check_int_eq(tinfo, parts4.nparts, MAX_SPLITS);
+    check_int_eq(tinfo, parts4.nparts, MAX_SPLIT_PARTS);
     char buf[2];
     buf[0] = 'a';
     buf[1] = 0;
-    for (int i = 0; i < MAX_SPLITS; ++i) {
+    for (int i = 0; i < MAX_SPLIT_PARTS; ++i) {
         check_str_eq(tinfo, parts4.parts[i], buf);
         buf[0]++;
         if (i == 25)

@@ -190,33 +190,30 @@ static inline bool all_sep(const char* p, int sep) {
     return true;
 }
 
+const char* split_err = "split_%s: more than %d parts; skipped remainder\n";
+
 SplitParts split_chr(const char* line, int sep) {
     assert_notnull(line);
     assert_notnull(sep);
     SplitParts parts = {.nparts = 0};
-    if (all_sep(line, sep))
+    if (all_sep(line, sep)) // ∴ empty
         return parts;
     char* p = (char*)line;
     while (p) {
         char* q = strchr(p, sep);
         int size = q ? q - p : (int)strlen(p);
-        char* part = parts.parts[parts.nparts] = malloc(size + 1);
+        char* part = parts.parts[parts.nparts++] = malloc(size + 1);
         assert_alloc(part);
         if (q) {
             strncpy(part, p, size);
             part[size] = 0;
-            parts.nparts++;
-            if (parts.nparts == MAX_SPLITS) {
-                fprintf(
-                    stderr,
-                    "split_chr: more than %d parts (skipped remainder)\n",
-                    MAX_SPLITS);
+            if (parts.nparts == MAX_SPLIT_PARTS) {
+                fprintf(stderr, split_err, "chr", MAX_SPLIT_PARTS);
                 break;
             }
             p = q + 1;
         } else {
             strcpy(part, p);
-            parts.nparts++;
             break;
         }
     }
@@ -246,19 +243,20 @@ static inline char* make_part(const char* p, int size, bool upto_size) {
     return q;
 }
 
+static inline bool all_ws(const char* p) {
+    for (; p && *p; ++p)
+        if (!isspace(*p))
+            return false;
+    return true;
+}
+
 SplitParts split_ws(const char* line) {
     assert_notnull(line);
     SplitParts parts = {.nparts = 0};
     if (!*line) // empty
         return parts;
-    bool all_ws = true;
-    for (const char* p = line; p && *p; ++p)
-        if (!isspace(*p)) {
-            all_ws = false;
-            break;
-        }
-    if (all_ws)
-        return parts;              // empty;
+    if (all_ws(line)) // empty;
+        return parts;
     const char* p = skip_ws(line); // skip leading ws
     int size = strlen(p);
     const char* end = p + size;
@@ -270,14 +268,11 @@ SplitParts split_ws(const char* line) {
         strncpy(part, p, size);
         part[size] = 0;
         if (q) {
-            if (parts.nparts == MAX_SPLITS) {
-                fprintf(
-                    stderr,
-                    "split_ws: more than %d parts (skipped remainder)\n",
-                    MAX_SPLITS);
+            if (parts.nparts == MAX_SPLIT_PARTS) {
+                fprintf(stderr, split_err, "ws", MAX_SPLIT_PARTS);
                 break;
             }
-            if (q >= end)
+            if (q > end)
                 break;
             p = skip_ws(q + 1);
         } else

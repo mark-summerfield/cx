@@ -67,15 +67,15 @@ const char* bool_to_str(bool b);
 
 void commas(char* s, int64_t n);
 
-#define MAX_SPLITS 32
+#define MAX_SPLIT_PARTS 32
 
 typedef struct SplitParts {
-    char* parts[MAX_SPLITS];
+    char* parts[MAX_SPLIT_PARTS];
     int nparts;
 } SplitParts;
 
 // Mainly for debugging & development; dumps the parts to stdout.
-void split_parts_dump(const SplitParts*parts);
+void split_parts_dump(const SplitParts* parts);
 
 // Must be called when a SplitParts is finished with.
 void split_parts_free(SplitParts* parts);
