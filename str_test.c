@@ -303,6 +303,30 @@ static void str_test_split_chr(tinfo* tinfo) {
     parts1 = split_chr("", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
     split_parts_free(&parts1);
+
+    SplitParts parts2 = split_chr("width 240", ' ');
+    check_int_eq(tinfo, parts2.nparts, 2);
+    check_str_eq(tinfo, parts2.parts[0], "width");
+    check_str_eq(tinfo, parts2.parts[1], "240");
+    split_parts_free(&parts2);
+
+    SplitParts parts3 = split_chr("height 160", ' ');
+    check_int_eq(tinfo, parts3.nparts, 2);
+    check_str_eq(tinfo, parts3.parts[0], "height");
+    check_str_eq(tinfo, parts3.parts[1], "160");
+    split_parts_free(&parts3);
+
+    SplitParts parts4 =
+        split_chr("rect x=10 y=10 w=220 h=140 fg=blue bg=green", ' ');
+    check_int_eq(tinfo, parts4.nparts, 7);
+    check_str_eq(tinfo, parts4.parts[0], "rect");
+    check_str_eq(tinfo, parts4.parts[1], "x=10");
+    check_str_eq(tinfo, parts4.parts[2], "y=10");
+    check_str_eq(tinfo, parts4.parts[3], "w=220");
+    check_str_eq(tinfo, parts4.parts[4], "h=140");
+    check_str_eq(tinfo, parts4.parts[5], "fg=blue");
+    check_str_eq(tinfo, parts4.parts[6], "bg=green");
+    split_parts_free(&parts4);
 }
 
 static void str_test_split_ws(tinfo* tinfo) {
