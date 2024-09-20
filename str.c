@@ -251,6 +251,7 @@ static inline char* make_part(const char* p, int size, bool upto_size) {
     return q;
 }
 
+// TODO fix or rewrite
 SplitParts split_ws(const char* line) {
     assert_notnull(line);
     SplitParts parts = {.nparts = 0};
