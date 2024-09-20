@@ -74,6 +74,9 @@ typedef struct SplitParts {
     int nparts;
 } SplitParts;
 
+// Mainly for debugging & development; dumps the parts to stdout.
+void split_parts_dump(const SplitParts*parts);
+
 // Must be called when a SplitParts is finished with.
 void split_parts_free(SplitParts* parts);
 

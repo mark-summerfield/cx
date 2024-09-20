@@ -168,6 +168,14 @@ void commas(char* s, int64_t n) {
     s[j] = 0;
 }
 
+void split_parts_dump(const SplitParts* parts) {
+    if (parts->nparts)
+        for (int i = 0; i < parts->nparts; ++i)
+            printf("#%i«%s»", i, parts->parts[i]);
+    else
+        puts("(empty)");
+}
+
 void split_parts_free(SplitParts* parts) {
     for (int i = 0; i < parts->nparts; ++i) {
         free(parts->parts[i]);
