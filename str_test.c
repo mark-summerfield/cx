@@ -327,6 +327,22 @@ static void str_test_split_chr(tinfo* tinfo) {
     check_str_eq(tinfo, parts4.parts[5], "fg=blue");
     check_str_eq(tinfo, parts4.parts[6], "bg=green");
     split_parts_free(&parts4);
+
+    parts4 =
+        split_chr("a b c d e f g h i j k l m n o p q r s t u v w x y z "
+                  "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z",
+                  ' ');
+    check_int_eq(tinfo, parts4.nparts, MAX_SPLITS);
+    char buf[2];
+    buf[0] = 'a';
+    buf[1] = 0;
+    for (int i = 0; i < MAX_SPLITS; ++i) {
+        check_str_eq(tinfo, parts4.parts[i], buf);
+        buf[0]++;
+        if (i == 25)
+            buf[0] = 'A';
+    }
+    split_parts_free(&parts4);
 }
 
 static void str_test_split_ws(tinfo* tinfo) {
@@ -383,5 +399,20 @@ static void str_test_split_ws(tinfo* tinfo) {
     check_str_eq(tinfo, parts4.parts[4], "h=140");
     check_str_eq(tinfo, parts4.parts[5], "fg=blue");
     check_str_eq(tinfo, parts4.parts[6], "bg=green");
+    split_parts_free(&parts4);
+
+    parts4 =
+        split_ws("\ta b c d e f g h i j k l m n o p q r s t u v w x  y z "
+                 "A B C D E F G H I J K L M N O P Q R S T U V W X  Y Z\n");
+    check_int_eq(tinfo, parts4.nparts, MAX_SPLITS);
+    char buf[2];
+    buf[0] = 'a';
+    buf[1] = 0;
+    for (int i = 0; i < MAX_SPLITS; ++i) {
+        check_str_eq(tinfo, parts4.parts[i], buf);
+        buf[0]++;
+        if (i == 25)
+            buf[0] = 'A';
+    }
     split_parts_free(&parts4);
 }

@@ -3,7 +3,6 @@
 #include "str.h"
 #include "cx.h"
 #include <ctype.h>
-#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -208,7 +207,10 @@ SplitParts split_chr(const char* line, int sep) {
             part[size] = 0;
             parts.nparts++;
             if (parts.nparts == MAX_SPLITS) {
-                warn("more than %d parts (skipped remainder)", MAX_SPLITS);
+                fprintf(
+                    stderr,
+                    "split_chr: more than %d parts (skipped remainder)\n",
+                    MAX_SPLITS);
                 break;
             }
             p = q + 1;
@@ -269,7 +271,10 @@ SplitParts split_ws(const char* line) {
         part[size] = 0;
         if (q) {
             if (parts.nparts == MAX_SPLITS) {
-                warn("more than %d parts (skipped remainder)", MAX_SPLITS);
+                fprintf(
+                    stderr,
+                    "split_ws: more than %d parts (skipped remainder)\n",
+                    MAX_SPLITS);
                 break;
             }
             if (q >= end)
