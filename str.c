@@ -247,8 +247,7 @@ static inline char* make_part(const char* p, int size, bool upto_size) {
 SplitParts split_ws(const char* line) {
     assert_notnull(line);
     SplitParts parts = {.nparts = 0};
-    int size = strlen(line);
-    if (!size) // empty
+    if (!*line) // empty
         return parts;
     bool all_ws = true;
     for (const char* p = line; p && *p; ++p)
@@ -259,7 +258,7 @@ SplitParts split_ws(const char* line) {
     if (all_ws)
         return parts;              // empty;
     const char* p = skip_ws(line); // skip leading ws
-    size = strlen(p);
+    int size = strlen(p);
     const char* end = p + size;
     while (p && *p) {
         const char* q = skip_nonws(p);
