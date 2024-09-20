@@ -272,7 +272,7 @@ SplitParts split_ws(const char* line) {
                 fprintf(stderr, split_err, "ws", MAX_SPLIT_PARTS);
                 break;
             }
-            if (q > end)
+            if (q >= end)
                 break;
             p = skip_ws(q + 1);
         } else
