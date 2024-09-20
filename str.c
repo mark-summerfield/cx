@@ -90,7 +90,7 @@ char* str_lowercase(const char* s) {
 const char* str_trim_left(const char* s) {
     if (!s || !*s)
         return NULL;
-    char* p = (char*)s;
+    const char* p = s;
     assert_notnull(p);
     while (isspace(*p))
         p++;
@@ -102,15 +102,15 @@ const char* str_trim_left(const char* s) {
 char* str_trimn(const char* s, size_t n) {
     if (!s || !*s)
         return NULL;
-    char* p = (char*)s;
+    const char* p = s;
     assert_notnull(p);
     while (p && isspace(*p)) // trim left
         p++;
     if (p && !*p)
         return NULL; // whole string is whitespace
-    char* q;
+    const char* q;
     if (n)
-        q = (char*)s + n;
+        q = s + n;
     else {
         q = p;
         assert_notnull(q);
@@ -198,9 +198,9 @@ SplitParts split_chr(const char* line, int sep) {
     SplitParts parts = {.nparts = 0};
     if (all_sep(line, sep)) // ∴ empty
         return parts;
-    char* p = (char*)line;
+    const char* p = line;
     while (p) {
-        char* q = strchr(p, sep);
+        const char* q = strchr(p, sep);
         int size = q ? q - p : (int)strlen(p);
         char* part = parts.parts[parts.nparts++] = malloc(size + 1);
         assert_alloc(part);
