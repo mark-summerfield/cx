@@ -3,6 +3,7 @@
 #include "cx_util_test.h"
 #include "deq_int_test.h"
 #include "deq_str_test.h"
+#include "exit.h"
 #include "fx.h"
 #include "fx_test.h"
 #include "ini_test.h"
@@ -86,10 +87,8 @@ int main(int argc, char** argv) {
 
 const char* get_args(int argc, char** argv, bool* verbose) {
     for (int n = 1; n < argc; ++n) {
-        if (str_eq(argv[n], "-h") || str_eq(argv[n], "--help")) {
-            printf("cx_test [-v|--verbose] [pattern]\n");
-            exit(EXIT_SUCCESS);
-        }
+        if (str_eq(argv[n], "-h") || str_eq(argv[n], "--help"))
+            EXIT("cx_test [-v|--verbose] [pattern]\n");
         if (str_eq(argv[n], "-v") || str_eq(argv[n], "--verbose")) {
             *verbose = true;
             continue;
@@ -104,14 +103,14 @@ void va_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     tinfo->total++;
     int i = va_test(5);
-    if (i != 8) {
-        fprintf(stderr, "FAIL: %s expected 8 go %d\n", tinfo->tag, i);
-    } else
+    if (i != 8)
+        WARN("FAIL: %s expected 8 go %d\n", tinfo->tag, i);
+    else
         tinfo->ok++;
     tinfo->total++;
     i = va_test(2, 9);
-    if (i != 11) {
-        fprintf(stderr, "FAIL: %s expected 11 go %d\n", tinfo->tag, i);
-    } else
+    if (i != 11)
+        WARN("FAIL: %s expected 11 go %d\n", tinfo->tag, i);
+    else
         tinfo->ok++;
 }

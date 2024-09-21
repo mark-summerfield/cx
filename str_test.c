@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "str_test.h"
+#include "exit.h"
 #include "fx.h"
 #include "str.h"
 #include <stdio.h>
@@ -95,59 +96,51 @@ static void str_test_begins_ends(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tinfo->total++;
-    if (!str_begins("alpha", "alp")) {
-        fprintf(stderr, "FAIL: %s !str_begins(\"alpha\", \"alp\"\n",
-                tinfo->tag);
-    } else
+    if (!str_begins("alpha", "alp"))
+        WARN("FAIL: %s !str_begins(\"alpha\", \"alp\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_begins("alpha", "scalp")) {
-        fprintf(stderr, "FAIL: %s str_begins(\"alpha\", \"scalp\"\n",
-                tinfo->tag);
-    } else
+    if (str_begins("alpha", "scalp"))
+        WARN("FAIL: %s str_begins(\"alpha\", \"scalp\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_ends("beta", "eta")) {
-        fprintf(stderr, "FAIL: %s !str_ends(\"beta\", \"eta\"\n",
-                tinfo->tag);
-    } else
+    if (!str_ends("beta", "eta"))
+        WARN("FAIL: %s !str_ends(\"beta\", \"eta\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_ends("beta", "meta")) {
-        fprintf(stderr, "FAIL: %s str_ends(\"beta\", \"meta\"\n",
-                tinfo->tag);
-    } else
+    if (str_ends("beta", "meta"))
+        WARN("FAIL: %s str_ends(\"beta\", \"meta\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_casebegins("alpha", "ALP")) {
-        fprintf(stderr, "FAIL: %s !str_casebegins(\"alpha\", \"ALP\"\n",
-                tinfo->tag);
-    } else
+    if (!str_casebegins("alpha", "ALP"))
+        WARN("FAIL: %s !str_casebegins(\"alpha\", \"ALP\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_casebegins("alpha", "SCALP")) {
-        fprintf(stderr, "FAIL: %s str_casebegins(\"alpha\", \"SCALP\"\n",
-                tinfo->tag);
-    } else
+    if (str_casebegins("alpha", "SCALP"))
+        WARN("FAIL: %s str_casebegins(\"alpha\", \"SCALP\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_caseends("beta", "ETA")) {
-        fprintf(stderr, "FAIL: %s !str_caseends(\"beta\", \"ETA\"\n",
-                tinfo->tag);
-    } else
+    if (!str_caseends("beta", "ETA"))
+        WARN("FAIL: %s !str_caseends(\"beta\", \"ETA\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_caseends("beta", "META")) {
-        fprintf(stderr, "FAIL: %s str_caseends(\"beta\", \"META\"\n",
-                tinfo->tag);
-    } else
+    if (str_caseends("beta", "META"))
+        WARN("FAIL: %s str_caseends(\"beta\", \"META\"\n", tinfo->tag);
+    else
         tinfo->ok++;
 }
 
@@ -274,31 +267,31 @@ static void str_test_split_chr(tinfo* tinfo) {
     check_str_eq(tinfo, parts1.parts[1], "two");
     check_str_eq(tinfo, parts1.parts[2], "three");
     check_str_eq(tinfo, parts1.parts[3], "four");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("elephant", '\t');
     check_int_eq(tinfo, parts1.nparts, 1);
     check_str_eq(tinfo, parts1.parts[0], "elephant");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("moveto 3.5 7.45", ' ');
     check_int_eq(tinfo, parts1.nparts, 3);
     check_str_eq(tinfo, parts1.parts[0], "moveto");
     check_str_eq(tinfo, parts1.parts[1], "3.5");
     check_str_eq(tinfo, parts1.parts[2], "7.45");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("    ", '\t');
     check_int_eq(tinfo, parts1.nparts, 1); // no tabs so whole str
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("    ", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("", '\t');
     check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_chr("", ' ');
     check_int_eq(tinfo, parts1.nparts, 0);
@@ -326,6 +319,22 @@ static void str_test_split_chr(tinfo* tinfo) {
     check_str_eq(tinfo, parts4.parts[4], "h=140");
     check_str_eq(tinfo, parts4.parts[5], "fg=blue");
     check_str_eq(tinfo, parts4.parts[6], "bg=green");
+    split_parts_clear(&parts4);
+
+    parts4 =
+        split_chr("a b c d e f g h i j k l m n o p q r s t u v w x y z "
+                  "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z",
+                  ' ');
+    check_int_eq(tinfo, parts4.nparts, MAX_SPLIT_PARTS);
+    char buf[2];
+    buf[0] = 'a';
+    buf[1] = 0;
+    for (int i = 0; i < MAX_SPLIT_PARTS; ++i) {
+        check_str_eq(tinfo, parts4.parts[i], buf);
+        buf[0]++;
+        if (i == 25)
+            buf[0] = 'A';
+    }
     split_parts_free(&parts4);
 }
 
@@ -339,23 +348,23 @@ static void str_test_split_ws(tinfo* tinfo) {
     check_str_eq(tinfo, parts1.parts[1], "two");
     check_str_eq(tinfo, parts1.parts[2], "three");
     check_str_eq(tinfo, parts1.parts[3], "four");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("   moveto 3.5\t 7.45\n");
     check_int_eq(tinfo, parts1.nparts, 3);
     check_str_eq(tinfo, parts1.parts[0], "moveto");
     check_str_eq(tinfo, parts1.parts[1], "3.5");
     check_str_eq(tinfo, parts1.parts[2], "7.45");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("elephant");
     check_int_eq(tinfo, parts1.nparts, 1);
     check_str_eq(tinfo, parts1.parts[0], "elephant");
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("   ");
     check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
+    split_parts_clear(&parts1);
 
     parts1 = split_ws("");
     check_int_eq(tinfo, parts1.nparts, 0);
@@ -383,5 +392,20 @@ static void str_test_split_ws(tinfo* tinfo) {
     check_str_eq(tinfo, parts4.parts[4], "h=140");
     check_str_eq(tinfo, parts4.parts[5], "fg=blue");
     check_str_eq(tinfo, parts4.parts[6], "bg=green");
+    split_parts_clear(&parts4);
+
+    parts4 =
+        split_ws("\ta b c d e f g h i j k l m n o p q r s t u v w x  y z "
+                 "A B C D E F G H I J K L M N O P Q R S T U V W X  Y Z\n");
+    check_int_eq(tinfo, parts4.nparts, MAX_SPLIT_PARTS);
+    char buf[2];
+    buf[0] = 'a';
+    buf[1] = 0;
+    for (int i = 0; i < MAX_SPLIT_PARTS; ++i) {
+        check_str_eq(tinfo, parts4.parts[i], buf);
+        buf[0]++;
+        if (i == 25)
+            buf[0] = 'A';
+    }
     split_parts_free(&parts4);
 }

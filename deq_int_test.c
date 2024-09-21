@@ -2,6 +2,7 @@
 
 #include "deq_int_test.h"
 #include "deq_int.h"
+#include "exit.h"
 #include <stdio.h>
 
 static void check_size_and_contents(tinfo* tinfo, DeqInt* deq, int size,
@@ -54,34 +55,29 @@ static void check_size_and_contents(tinfo* tinfo, DeqInt* deq, int size,
     if (size) {
         tinfo->total++;
         if (ints[0] != deq_int_first(deq))
-            fprintf(stderr,
-                    "FAIL: %s check_size_and_contents: wrong first\n",
-                    tinfo->tag);
+            WARN("FAIL: %s check_size_and_contents: wrong first\n",
+                 tinfo->tag);
         else
             tinfo->ok++;
         tinfo->total++;
         if (ints[size - 1] != deq_int_last(deq))
-            fprintf(stderr,
-                    "FAIL: %s check_size_and_contents: wrong last\n",
-                    tinfo->tag);
+            WARN("FAIL: %s check_size_and_contents: wrong last\n",
+                 tinfo->tag);
         else
             tinfo->ok++;
         int i = 0;
         for (DeqIntNode* node = deq->head; node; node = node->next) {
             tinfo->total++;
             if (i == size) {
-                fprintf(
-                    stderr,
-                    "FAIL: %s check_size_and_contents: too few values\n",
-                    tinfo->tag);
+                WARN("FAIL: %s check_size_and_contents: too few values\n",
+                     tinfo->tag);
                 return;
             } else
                 tinfo->ok++;
             tinfo->total++;
             if (ints[i] != node->value) {
-                fprintf(stderr,
-                        "FAIL: %s check_size_and_contents: %d != %d\n",
-                        tinfo->tag, ints[i], node->value);
+                WARN("FAIL: %s check_size_and_contents: %d != %d\n",
+                     tinfo->tag, ints[i], node->value);
                 return;
             } else
                 tinfo->ok++;

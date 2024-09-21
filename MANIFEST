@@ -34,6 +34,8 @@ mx.c
 
 tx.h
 
+exit.h
+
 vaargs.h
 
 cx_test.c

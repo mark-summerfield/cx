@@ -2,10 +2,16 @@
 
 #include "str.h"
 #include "cx.h"
+#include "exit.h"
 #include <ctype.h>
-#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+static inline const char* skip_ws(const char* p) {
+    while (p && isspace(*p))
+        p++;
+    return p;
+}
 
 // Each void* argument is actually a pointer to a pointer, so first we
 // must cast to pointer to pointer to the actual type, then we must
@@ -91,10 +97,7 @@ char* str_lowercase(const char* s) {
 const char* str_trim_left(const char* s) {
     if (!s || !*s)
         return NULL;
-    char* p = (char*)s;
-    assert_notnull(p);
-    while (isspace(*p))
-        p++;
+    const char* p = skip_ws(s);
     if (!*p)
         return NULL; // whole string is whitespace
     return p;
@@ -103,15 +106,12 @@ const char* str_trim_left(const char* s) {
 char* str_trimn(const char* s, size_t n) {
     if (!s || !*s)
         return NULL;
-    char* p = (char*)s;
-    assert_notnull(p);
-    while (p && isspace(*p)) // trim left
-        p++;
+    const char* p = skip_ws(s);
     if (p && !*p)
         return NULL; // whole string is whitespace
-    char* q;
+    const char* q;
     if (n)
-        q = (char*)s + n;
+        q = s + n;
     else {
         q = p;
         assert_notnull(q);
@@ -191,40 +191,34 @@ static inline bool all_sep(const char* p, int sep) {
     return true;
 }
 
+const char* split_err = "split_%s: more than %d parts; skipped remainder\n";
+
 SplitParts split_chr(const char* line, int sep) {
     assert_notnull(line);
     assert_notnull(sep);
     SplitParts parts = {.nparts = 0};
-    if (all_sep(line, sep))
+    if (all_sep(line, sep)) // ∴ empty
         return parts;
-    char* p = (char*)line;
+    const char* p = line;
     while (p) {
-        char* q = strchr(p, sep);
+        const char* q = strchr(p, sep);
         int size = q ? q - p : (int)strlen(p);
-        char* part = parts.parts[parts.nparts] = malloc(size + 1);
+        char* part = parts.parts[parts.nparts++] = malloc(size + 1);
         assert_alloc(part);
         if (q) {
             strncpy(part, p, size);
             part[size] = 0;
-            parts.nparts++;
-            if (parts.nparts == MAX_SPLITS) {
-                warn("more than %d parts (skipped remainder)", MAX_SPLITS);
+            if (parts.nparts == MAX_SPLIT_PARTS) {
+                WARN(split_err, "chr", MAX_SPLIT_PARTS);
                 break;
             }
             p = q + 1;
         } else {
             strcpy(part, p);
-            parts.nparts++;
             break;
         }
     }
     return parts;
-}
-
-static inline const char* skip_ws(const char* p) {
-    while (p && isspace(*p))
-        p++;
-    return p;
 }
 
 static inline const char* skip_nonws(const char* p) {
@@ -244,22 +238,22 @@ static inline char* make_part(const char* p, int size, bool upto_size) {
     return q;
 }
 
+static inline bool all_ws(const char* p) {
+    for (; p && *p; ++p)
+        if (!isspace(*p))
+            return false;
+    return true;
+}
+
 SplitParts split_ws(const char* line) {
     assert_notnull(line);
     SplitParts parts = {.nparts = 0};
-    int size = strlen(line);
-    if (!size) // empty
+    if (!*line) // empty
         return parts;
-    bool all_ws = true;
-    for (const char* p = line; p && *p; ++p)
-        if (!isspace(*p)) {
-            all_ws = false;
-            break;
-        }
-    if (all_ws)
-        return parts;              // empty;
+    if (all_ws(line)) // empty;
+        return parts;
     const char* p = skip_ws(line); // skip leading ws
-    size = strlen(p);
+    int size = strlen(p);
     const char* end = p + size;
     while (p && *p) {
         const char* q = skip_nonws(p);
@@ -269,8 +263,8 @@ SplitParts split_ws(const char* line) {
         strncpy(part, p, size);
         part[size] = 0;
         if (q) {
-            if (parts.nparts == MAX_SPLITS) {
-                warn("more than %d parts (skipped remainder)", MAX_SPLITS);
+            if (parts.nparts == MAX_SPLIT_PARTS) {
+                WARN(split_err, "ws", MAX_SPLIT_PARTS);
                 break;
             }
             if (q >= end)

@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_int_test.h"
+#include "exit.h"
 #include "str.h"
 #include "vec_int.h"
 #include "vecs_test.h"
@@ -218,34 +219,33 @@ static void match(tinfo* tinfo, VecInt* v, char* expected) {
 
 static void check_size_cap(tinfo* tinfo, VecInt* v, int size, int cap) {
     tinfo->total++;
-    if (vec_int_size(v) != size) {
-        fprintf(stderr, "FAIL: %s vec_int_size() expected %d != %d\n",
-                tinfo->tag, size, vec_int_size(v));
-    } else
+    if (vec_int_size(v) != size)
+        WARN("FAIL: %s vec_int_size() expected %d != %d\n", tinfo->tag,
+             size, vec_int_size(v));
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_int_isempty(v) != (size == 0)) {
-        fprintf(stderr,
-                "FAIL: %s vec_int_isempty() expected %s != %s size=%d\n",
-                tinfo->tag, bool_to_str(size == 0),
-                bool_to_str(vec_int_isempty(v)), size);
-    } else
+    if (vec_int_isempty(v) != (size == 0))
+        WARN("FAIL: %s vec_int_isempty() expected %s != %s size=%d\n",
+             tinfo->tag, bool_to_str(size == 0),
+             bool_to_str(vec_int_isempty(v)), size);
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_int_cap(v) != cap) {
-        fprintf(stderr, "FAIL: %s vec_int_cap() expected %d != %d\n",
-                tinfo->tag, cap, vec_int_cap(v));
-    } else
+    if (vec_int_cap(v) != cap)
+        WARN("FAIL: %s vec_int_cap() expected %d != %d\n", tinfo->tag, cap,
+             vec_int_cap(v));
+    else
         tinfo->ok++;
 }
 
 static void equal(tinfo* tinfo, VecInt* v1, VecInt* v2) {
     tinfo->total++;
-    if (!vec_int_equal(v1, v2)) {
-        fprintf(stderr, "FAIL: %s vec_int_equal() expected true != false\n",
-                tinfo->tag);
-    } else
+    if (!vec_int_equal(v1, v2))
+        WARN("FAIL: %s vec_int_equal() expected true != false\n",
+             tinfo->tag);
+    else
         tinfo->ok++;
 }
