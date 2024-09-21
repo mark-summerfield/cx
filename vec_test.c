@@ -310,39 +310,39 @@ static void match(tinfo* tinfo, const Vec* v, const char* expected) {
 
 static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
     tinfo->total++;
-    if (vec_size(v) != size) {
+    if (vec_size(v) != size)
         WARN("FAIL: %s vec_size() expected %d != %d\n", tinfo->tag, size,
              vec_size(v));
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_isempty(v) != (size == 0)) {
+    if (vec_isempty(v) != (size == 0))
         WARN("FAIL: %s vec_isempty() expected %s != %s size=%d\n",
              tinfo->tag, bool_to_str(size == 0),
              bool_to_str(vec_isempty(v)), size);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_cap(v) != cap) {
+    if (vec_cap(v) != cap)
         WARN("FAIL: %s vec_cap() expected %d != %d\n", tinfo->tag, cap,
              vec_cap(v));
-    } else
+    else
         tinfo->ok++;
 }
 
 static void equal(tinfo* tinfo, const Vec* v1, const Vec* v2, bool same) {
     tinfo->total++;
-    if (!vec_equal(v1, v2)) {
+    if (!vec_equal(v1, v2))
         WARN("FAIL: %s vec_equal() true != false\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
     tinfo->total++;
-    if (same != vec_same(v1, v2)) {
+    if (same != vec_same(v1, v2))
         WARN("FAIL: %s vec_same() %s != %s\n", tinfo->tag,
              bool_to_str(same), bool_to_str(!same));
-    } else
+    else
         tinfo->ok++;
 }
 

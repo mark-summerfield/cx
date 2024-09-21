@@ -213,10 +213,10 @@ void test4(tinfo* tinfo) {
 
 static void check_reply(tinfo* tinfo, IniReply actual, IniReply expected) {
     tinfo->total++;
-    if (actual != expected) {
+    if (actual != expected)
         WARN("FAIL: %s check_reply: %s != %s\n", tinfo->tag,
              reply_to_str(actual), reply_to_str(expected));
-    } else
+    else
         tinfo->ok++;
 }
 

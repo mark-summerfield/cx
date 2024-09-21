@@ -96,51 +96,51 @@ static void str_test_begins_ends(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
     tinfo->total++;
-    if (!str_begins("alpha", "alp")) {
+    if (!str_begins("alpha", "alp"))
         WARN("FAIL: %s !str_begins(\"alpha\", \"alp\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_begins("alpha", "scalp")) {
+    if (str_begins("alpha", "scalp"))
         WARN("FAIL: %s str_begins(\"alpha\", \"scalp\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_ends("beta", "eta")) {
+    if (!str_ends("beta", "eta"))
         WARN("FAIL: %s !str_ends(\"beta\", \"eta\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_ends("beta", "meta")) {
+    if (str_ends("beta", "meta"))
         WARN("FAIL: %s str_ends(\"beta\", \"meta\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_casebegins("alpha", "ALP")) {
+    if (!str_casebegins("alpha", "ALP"))
         WARN("FAIL: %s !str_casebegins(\"alpha\", \"ALP\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_casebegins("alpha", "SCALP")) {
+    if (str_casebegins("alpha", "SCALP"))
         WARN("FAIL: %s str_casebegins(\"alpha\", \"SCALP\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (!str_caseends("beta", "ETA")) {
+    if (!str_caseends("beta", "ETA"))
         WARN("FAIL: %s !str_caseends(\"beta\", \"ETA\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (str_caseends("beta", "META")) {
+    if (str_caseends("beta", "META"))
         WARN("FAIL: %s str_caseends(\"beta\", \"META\"\n", tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 }
 

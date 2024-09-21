@@ -40,33 +40,33 @@ void check_casestr_eq(tinfo* tinfo, const char* s, const char* t) {
 
 void check_int_eq(tinfo* tinfo, int a, int b) {
     tinfo->total++;
-    if (a != b) {
+    if (a != b)
         WARN("FAIL: %s %d != %d\n", tinfo->tag, a, b);
-    } else
+    else
         tinfo->ok++;
 }
 
 void check_real_eq(tinfo* tinfo, double a, double b) {
     tinfo->total++;
-    if (!is_equalish(a, b)) {
+    if (!is_equalish(a, b))
         WARN("FAIL: %s %g != %g\n", tinfo->tag, a, b);
-    } else
+    else
         tinfo->ok++;
 }
 
 void check_bool_eq(tinfo* tinfo, bool actual, bool expected) {
     tinfo->total++;
-    if (actual != expected) {
+    if (actual != expected)
         WARN("FAIL: %s %s != %s\n", tinfo->tag, bool_to_str(expected),
              bool_to_str(actual));
-    } else
+    else
         tinfo->ok++;
 }
 
 void check_isnull(tinfo* tinfo, const void* p) {
     tinfo->total++;
-    if (p) {
+    if (p)
         WARN("FAIL: %s expected NULL != %p\n", tinfo->tag, p);
-    } else
+    else
         tinfo->ok++;
 }

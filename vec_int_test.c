@@ -219,33 +219,33 @@ static void match(tinfo* tinfo, VecInt* v, char* expected) {
 
 static void check_size_cap(tinfo* tinfo, VecInt* v, int size, int cap) {
     tinfo->total++;
-    if (vec_int_size(v) != size) {
+    if (vec_int_size(v) != size)
         WARN("FAIL: %s vec_int_size() expected %d != %d\n", tinfo->tag,
              size, vec_int_size(v));
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_int_isempty(v) != (size == 0)) {
+    if (vec_int_isempty(v) != (size == 0))
         WARN("FAIL: %s vec_int_isempty() expected %s != %s size=%d\n",
              tinfo->tag, bool_to_str(size == 0),
              bool_to_str(vec_int_isempty(v)), size);
-    } else
+    else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_int_cap(v) != cap) {
+    if (vec_int_cap(v) != cap)
         WARN("FAIL: %s vec_int_cap() expected %d != %d\n", tinfo->tag, cap,
              vec_int_cap(v));
-    } else
+    else
         tinfo->ok++;
 }
 
 static void equal(tinfo* tinfo, VecInt* v1, VecInt* v2) {
     tinfo->total++;
-    if (!vec_int_equal(v1, v2)) {
+    if (!vec_int_equal(v1, v2))
         WARN("FAIL: %s vec_int_equal() expected true != false\n",
              tinfo->tag);
-    } else
+    else
         tinfo->ok++;
 }

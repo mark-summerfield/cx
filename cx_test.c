@@ -103,14 +103,14 @@ void va_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     tinfo->total++;
     int i = va_test(5);
-    if (i != 8) {
+    if (i != 8)
         WARN("FAIL: %s expected 8 go %d\n", tinfo->tag, i);
-    } else
+    else
         tinfo->ok++;
     tinfo->total++;
     i = va_test(2, 9);
-    if (i != 11) {
+    if (i != 11)
         WARN("FAIL: %s expected 11 go %d\n", tinfo->tag, i);
-    } else
+    else
         tinfo->ok++;
 }

@@ -6,9 +6,8 @@
 
 void check_found(tinfo* tinfo, const int i1, const int i2) {
     tinfo->total++;
-    if (i1 == i2) {
+    if (i1 == i2)
         tinfo->ok++;
-    } else {
+    else
         WARN("FAIL: %s vec_{find,search}() %d != %d\n", tinfo->tag, i1, i2);
-    }
 }

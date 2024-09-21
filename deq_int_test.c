@@ -54,16 +54,16 @@ static void check_size_and_contents(tinfo* tinfo, DeqInt* deq, int size,
     check_int_eq(tinfo, size, deq_int_size(deq));
     if (size) {
         tinfo->total++;
-        if (ints[0] != deq_int_first(deq)) {
+        if (ints[0] != deq_int_first(deq))
             WARN("FAIL: %s check_size_and_contents: wrong first\n",
                  tinfo->tag);
-        } else
+        else
             tinfo->ok++;
         tinfo->total++;
-        if (ints[size - 1] != deq_int_last(deq)) {
+        if (ints[size - 1] != deq_int_last(deq))
             WARN("FAIL: %s check_size_and_contents: wrong last\n",
                  tinfo->tag);
-        } else
+        else
             tinfo->ok++;
         int i = 0;
         for (DeqIntNode* node = deq->head; node; node = node->next) {
