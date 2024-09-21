@@ -7,6 +7,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static inline const char* skip_ws(const char* p) {
+    while (p && isspace(*p))
+        p++;
+    return p;
+}
+
 // Each void* argument is actually a pointer to a pointer, so first we
 // must cast to pointer to pointer to the actual type, then we must
 // dereference the outer pointer to get the inner pointer which is
@@ -91,10 +97,7 @@ char* str_lowercase(const char* s) {
 const char* str_trim_left(const char* s) {
     if (!s || !*s)
         return NULL;
-    const char* p = s;
-    assert_notnull(p);
-    while (isspace(*p))
-        p++;
+    const char* p = skip_ws(s);
     if (!*p)
         return NULL; // whole string is whitespace
     return p;
@@ -103,10 +106,7 @@ const char* str_trim_left(const char* s) {
 char* str_trimn(const char* s, size_t n) {
     if (!s || !*s)
         return NULL;
-    const char* p = s;
-    assert_notnull(p);
-    while (p && isspace(*p)) // trim left
-        p++;
+    const char* p = skip_ws(s);
     if (p && !*p)
         return NULL; // whole string is whitespace
     const char* q;
@@ -219,12 +219,6 @@ SplitParts split_chr(const char* line, int sep) {
         }
     }
     return parts;
-}
-
-static inline const char* skip_ws(const char* p) {
-    while (p && isspace(*p))
-        p++;
-    return p;
 }
 
 static inline const char* skip_nonws(const char* p) {
