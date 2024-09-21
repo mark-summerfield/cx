@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "set_str_test.h"
+#include "exit.h"
 #include "set_str.h"
 #include "str.h"
 #include "vec_str.h"
@@ -85,14 +86,14 @@ static void test_copy(tinfo* tinfo) {
         puts(tinfo->tag);
     SetStr set = prep_set(tinfo);
     tinfo->total++;
-    if (!set_str_equal(&set, &set))
-        fprintf(stderr, "FAIL: %s set not equal to itself!\n", tinfo->tag);
-    else
+    if (!set_str_equal(&set, &set)) {
+        WARN("FAIL: %s set not equal to itself!\n", tinfo->tag);
+    } else
         tinfo->ok++;
     SetStr dup = set_str_copy(&set, BORROWS);
     tinfo->total++;
     if (!set_str_equal(&set, &dup)) {
-        fprintf(stderr, "FAIL: %s set not equal to dup\n", tinfo->tag);
+        WARN("FAIL: %s set not equal to dup\n", tinfo->tag);
     } else
         tinfo->ok++;
     set_str_free(&dup);
@@ -118,7 +119,7 @@ static void test_union(tinfo* tinfo) {
     set3 = set_str_union(&set1, &set2, BORROWS);
     tinfo->total++;
     if (!set_str_equal(&set1, &set3)) {
-        fprintf(stderr, "FAIL: %s set1 != set3\n", tinfo->tag);
+        WARN("FAIL: %s set1 != set3\n", tinfo->tag);
     } else
         tinfo->ok++;
     set_str_free(&set3);
@@ -241,8 +242,8 @@ static void test_visit(tinfo* tinfo) {
 static void check_all(tinfo* tinfo, const SetStr* set, int size) {
     tinfo->total++;
     if (set_str_size(set) != size) {
-        fprintf(stderr, "FAIL: %s set_str_size() expected %d != %d\n",
-                tinfo->tag, size, set_str_size(set));
+        WARN("FAIL: %s set_str_size() expected %d != %d\n", tinfo->tag,
+             size, set_str_size(set));
     } else
         tinfo->ok++;
 
@@ -254,12 +255,11 @@ static void check_all(tinfo* tinfo, const SetStr* set, int size) {
         tinfo->total++;
         int exp_rbtree_depth = (int)round(2 * log2f(size + 1));
         int depth = set_str_max_depth(set);
-        if (depth > exp_rbtree_depth)
-            fprintf(stderr,
-                    "FAIL: %s SetStr unexpectedly deep: size=%8d depth=%3d "
-                    "2×lg(n)=%3d %s\n",
-                    tinfo->tag, size, depth, exp_rbtree_depth, cross);
-        else
+        if (depth > exp_rbtree_depth) {
+            WARN("FAIL: %s SetStr unexpectedly deep: size=%8d depth=%3d "
+                 "2×lg(n)=%3d %s\n",
+                 tinfo->tag, size, depth, exp_rbtree_depth, cross);
+        } else
             tinfo->ok++;
         if (size < 1000001)
             check_order(tinfo, set);
@@ -282,19 +282,19 @@ static void check_order(tinfo* tinfo, const SetStr* set) {
         }
     if (ok)
         tinfo->ok++;
-    else
-        fprintf(stderr, "FAIL: %s check_order\n", tinfo->tag);
+    else {
+        WARN("FAIL: %s check_order\n", tinfo->tag);
+    }
     vec_str_free(&vec);
 }
 
 static void check_set_strs(tinfo* tinfo, const SetStr* set, const char* s) {
     tinfo->total++;
     char* a = set_str_join(set, "|");
-    if (strcmp(a, s) != 0)
-        fprintf(stderr,
-                "FAIL: %s check_set_strs got\n\"%s\", expected\n\"%s\"\n",
-                tinfo->tag, a, s);
-    else
+    if (strcmp(a, s) != 0) {
+        WARN("FAIL: %s check_set_strs got\n\"%s\", expected\n\"%s\"\n",
+             tinfo->tag, a, s);
+    } else
         tinfo->ok++;
     free(a);
 }

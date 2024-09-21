@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "ini_test.h"
+#include "exit.h"
 #include "ini.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -212,10 +213,10 @@ void test4(tinfo* tinfo) {
 
 static void check_reply(tinfo* tinfo, IniReply actual, IniReply expected) {
     tinfo->total++;
-    if (actual != expected)
-        fprintf(stderr, "FAIL: %s check_reply: %s != %s\n", tinfo->tag,
-                reply_to_str(actual), reply_to_str(expected));
-    else
+    if (actual != expected) {
+        WARN("FAIL: %s check_reply: %s != %s\n", tinfo->tag,
+             reply_to_str(actual), reply_to_str(expected));
+    } else
         tinfo->ok++;
 }
 
@@ -228,7 +229,7 @@ static const char* reply_to_str(IniReply reply) {
     case IniItemFound:
         return "IniItemFound";
     default:
-        fprintf(stderr, "invalid reply %d\n", reply);
+        WARN("invalid reply %d\n", reply);
         return "***INVALID***";
     }
 }

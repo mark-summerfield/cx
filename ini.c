@@ -3,6 +3,7 @@
 #define _GNU_SOURCE // for asprintf
 
 #include "ini.h"
+#include "exit.h"
 #include "fx.h"
 #include "mx.h"
 #include "str.h"
@@ -106,7 +107,7 @@ static void parse_line(Ini* ini, const char* line, char* section) {
             strncpy(section, p, size);
             section[size] = 0;
         } else
-            warn("invalid section: %s\n", p);
+            WARN("invalid section: %s\n", p);
     } else
         parse_item(ini, p, section);
 }
@@ -114,14 +115,14 @@ static void parse_line(Ini* ini, const char* line, char* section) {
 static void parse_item(Ini* ini, const char* p, const char* section) {
     size_t i = strcspn(p, "=:");
     if (!i) {
-        warn("invalid key-value item, no = or : separator: %s\n", p);
+        WARN("invalid key-value item, no = or : separator: %s\n", p);
         return;
     }
     const char* q = p + i - 1; // set q to just _before_ the =
     char* key = str_trimn(p, q - p);
     q += 2; // skip _past_ the =
     if (!q) {
-        warn("invalid key-value item, missing value: %s\n", p);
+        WARN("invalid key-value item, missing value: %s\n", p);
         return;
     }
     char* value = str_trim(q);

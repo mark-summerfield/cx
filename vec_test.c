@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_test.h"
+#include "exit.h"
 #include "str.h"
 #include "tag_test.h"
 #include "vec.h"
@@ -310,24 +311,23 @@ static void match(tinfo* tinfo, const Vec* v, const char* expected) {
 static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
     tinfo->total++;
     if (vec_size(v) != size) {
-        fprintf(stderr, "FAIL: %s vec_size() expected %d != %d\n",
-                tinfo->tag, size, vec_size(v));
+        WARN("FAIL: %s vec_size() expected %d != %d\n", tinfo->tag, size,
+             vec_size(v));
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (vec_isempty(v) != (size == 0)) {
-        fprintf(stderr,
-                "FAIL: %s vec_isempty() expected %s != %s size=%d\n",
-                tinfo->tag, bool_to_str(size == 0),
-                bool_to_str(vec_isempty(v)), size);
+        WARN("FAIL: %s vec_isempty() expected %s != %s size=%d\n",
+             tinfo->tag, bool_to_str(size == 0),
+             bool_to_str(vec_isempty(v)), size);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (vec_cap(v) != cap) {
-        fprintf(stderr, "FAIL: %s vec_cap() expected %d != %d\n",
-                tinfo->tag, cap, vec_cap(v));
+        WARN("FAIL: %s vec_cap() expected %d != %d\n", tinfo->tag, cap,
+             vec_cap(v));
     } else
         tinfo->ok++;
 }
@@ -335,13 +335,13 @@ static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
 static void equal(tinfo* tinfo, const Vec* v1, const Vec* v2, bool same) {
     tinfo->total++;
     if (!vec_equal(v1, v2)) {
-        fprintf(stderr, "FAIL: %s vec_equal() true != false\n", tinfo->tag);
+        WARN("FAIL: %s vec_equal() true != false\n", tinfo->tag);
     } else
         tinfo->ok++;
     tinfo->total++;
     if (same != vec_same(v1, v2)) {
-        fprintf(stderr, "FAIL: %s vec_same() %s != %s\n", tinfo->tag,
-                bool_to_str(same), bool_to_str(!same));
+        WARN("FAIL: %s vec_same() %s != %s\n", tinfo->tag,
+             bool_to_str(same), bool_to_str(!same));
     } else
         tinfo->ok++;
 }

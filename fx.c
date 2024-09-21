@@ -2,6 +2,7 @@
 
 #include "fx.h"
 #include "cx.h"
+#include "exit.h"
 #include <dirent.h>
 #include <err.h>
 #include <pwd.h>
@@ -67,7 +68,7 @@ char* file_read_size(const char* filename, long long max_size, bool* ok) {
         goto on_error;
     if (size >= max_size) { // too big
         is_ok = false;
-        warn("%s is too big to read whole: %lld >= %lld", filename, size,
+        WARN("%s is too big to read whole: %lld >= %lld", filename, size,
              max_size);
         goto end;
     }

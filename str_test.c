@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "str_test.h"
+#include "exit.h"
 #include "fx.h"
 #include "str.h"
 #include <stdio.h>
@@ -96,57 +97,49 @@ static void str_test_begins_ends(tinfo* tinfo) {
         puts(tinfo->tag);
     tinfo->total++;
     if (!str_begins("alpha", "alp")) {
-        fprintf(stderr, "FAIL: %s !str_begins(\"alpha\", \"alp\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s !str_begins(\"alpha\", \"alp\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (str_begins("alpha", "scalp")) {
-        fprintf(stderr, "FAIL: %s str_begins(\"alpha\", \"scalp\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s str_begins(\"alpha\", \"scalp\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (!str_ends("beta", "eta")) {
-        fprintf(stderr, "FAIL: %s !str_ends(\"beta\", \"eta\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s !str_ends(\"beta\", \"eta\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (str_ends("beta", "meta")) {
-        fprintf(stderr, "FAIL: %s str_ends(\"beta\", \"meta\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s str_ends(\"beta\", \"meta\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (!str_casebegins("alpha", "ALP")) {
-        fprintf(stderr, "FAIL: %s !str_casebegins(\"alpha\", \"ALP\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s !str_casebegins(\"alpha\", \"ALP\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (str_casebegins("alpha", "SCALP")) {
-        fprintf(stderr, "FAIL: %s str_casebegins(\"alpha\", \"SCALP\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s str_casebegins(\"alpha\", \"SCALP\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (!str_caseends("beta", "ETA")) {
-        fprintf(stderr, "FAIL: %s !str_caseends(\"beta\", \"ETA\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s !str_caseends(\"beta\", \"ETA\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 
     tinfo->total++;
     if (str_caseends("beta", "META")) {
-        fprintf(stderr, "FAIL: %s str_caseends(\"beta\", \"META\"\n",
-                tinfo->tag);
+        WARN("FAIL: %s str_caseends(\"beta\", \"META\"\n", tinfo->tag);
     } else
         tinfo->ok++;
 }

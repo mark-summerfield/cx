@@ -11,7 +11,7 @@ void ini_tests(tinfo* tinfo);
     "Organization = Acme Things Inc.\n" \
     "RANKING = 1.76\n"                  \
     "\n"                                \
-    "[Database]\n"                      \
+    "[Database]\n"                       \
     "Exclusive = true\n"                \
     "; may include \"s for Windows\n"   \
     "FILE = \"payroll.dat\"\n"          \

@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "set_int_test.h"
+#include "exit.h"
 #include "set_int.h"
 #include "vec_int.h"
 #include <math.h>
@@ -102,14 +103,14 @@ static void test_union(tinfo* tinfo) {
         (int[]){11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22}, 12);
     tinfo->total++;
     if (!set_int_equal(&set1, &set3)) {
-        fprintf(stderr, "FAIL: %s set1 != set3\n", tinfo->tag);
+        WARN("FAIL: %s set1 != set3\n", tinfo->tag);
     } else
         tinfo->ok++;
     set_int_clear(&set2);
     set2 = set_int_union(&set1, &set2);
     tinfo->total++;
     if (!set_int_equal(&set1, &set2)) {
-        fprintf(stderr, "FAIL: %s set1 != set2\n", tinfo->tag);
+        WARN("FAIL: %s set1 != set2\n", tinfo->tag);
     } else
         tinfo->ok++;
     set_int_free(&set3);
@@ -133,8 +134,7 @@ static void test_intersection(tinfo* tinfo) {
     SetInt set3 = set_int_intersection(&set1, &set2);
     tinfo->total++;
     if (!set_int_isempty(&set3)) {
-        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
-                tinfo->tag);
+        WARN("FAIL: %s set3 unexpectedly nonempty\n", tinfo->tag);
     } else
         tinfo->ok++;
     for (int i = 12; i < 20; ++i)
@@ -166,7 +166,7 @@ static void test_difference(tinfo* tinfo) {
         17);
     tinfo->total++;
     if (!set_int_equal(&set1, &set2)) {
-        fprintf(stderr, "FAIL: %s set1 != set2\n", tinfo->tag);
+        WARN("FAIL: %s set1 != set2\n", tinfo->tag);
     } else
         tinfo->ok++;
     for (int i = 2; i < SIZE - 3; i += 2)
@@ -194,8 +194,7 @@ static void test_difference(tinfo* tinfo) {
     set3 = set_int_difference(&set1, &set2);
     tinfo->total++;
     if (!set_int_isempty(&set3)) {
-        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
-                tinfo->tag);
+        WARN("FAIL: %s set3 unexpectedly nonempty\n", tinfo->tag);
     } else
         tinfo->ok++;
     set_int_clear(&set3);
@@ -205,8 +204,7 @@ static void test_difference(tinfo* tinfo) {
     set3 = set_int_difference(&set1, &set2);
     tinfo->total++;
     if (!set_int_isempty(&set3)) {
-        fprintf(stderr, "FAIL: %s set3 unexpectedly nonempty\n",
-                tinfo->tag);
+        WARN("FAIL: %s set3 unexpectedly nonempty\n", tinfo->tag);
     } else
         tinfo->ok++;
     set_int_clear(&set3);
@@ -234,14 +232,14 @@ static void test_copy(tinfo* tinfo) {
     }
     check_all(tinfo, &set, size);
     tinfo->total++;
-    if (!set_int_equal(&set, &set))
-        fprintf(stderr, "FAIL: %s set not equal to itself!\n", tinfo->tag);
-    else
+    if (!set_int_equal(&set, &set)) {
+        WARN("FAIL: %s set not equal to itself!\n", tinfo->tag);
+    } else
         tinfo->ok++;
     SetInt dup = set_int_copy(&set);
     tinfo->total++;
     if (!set_int_equal(&set, &dup)) {
-        fprintf(stderr, "FAIL: %s set not equal to dup\n", tinfo->tag);
+        WARN("FAIL: %s set not equal to dup\n", tinfo->tag);
     } else
         tinfo->ok++;
     set_int_free(&dup);
@@ -312,10 +310,10 @@ static void test_remove(tinfo* tinfo) {
     }
     for (int i = 0; i < to_remove_size; ++i) {
         tinfo->total++;
-        if (!set_int_remove(&set, to_remove[i]))
-            fprintf(stderr, "FAIL: %s failed to remove %d\n", tinfo->tag,
-                    to_remove[i]);
-        else {
+        if (!set_int_remove(&set, to_remove[i])) {
+            WARN("FAIL: %s failed to remove %d\n", tinfo->tag,
+                 to_remove[i]);
+        } else {
             size--;
             tinfo->ok++;
         }
@@ -364,8 +362,8 @@ static void test_bigs(tinfo* tinfo) {
 static void check_all(tinfo* tinfo, const SetInt* set, int size) {
     tinfo->total++;
     if (set_int_size(set) != size) {
-        fprintf(stderr, "FAIL: %s set_int_size() expected %d != %d\n",
-                tinfo->tag, size, set_int_size(set));
+        WARN("FAIL: %s set_int_size() expected %d != %d\n", tinfo->tag,
+             size, set_int_size(set));
     } else
         tinfo->ok++;
 
@@ -377,12 +375,11 @@ static void check_all(tinfo* tinfo, const SetInt* set, int size) {
         tinfo->total++;
         int exp_rbtree_depth = (int)round(2 * log2f(size + 1));
         int depth = set_int_max_depth(set);
-        if (depth > exp_rbtree_depth)
-            fprintf(stderr,
-                    "FAIL: %s SetInt unexpectedly deep: size=%8d depth=%3d "
-                    "2×lg(n)=%3d %s\n",
-                    tinfo->tag, size, depth, exp_rbtree_depth, cross);
-        else
+        if (depth > exp_rbtree_depth) {
+            WARN("FAIL: %s SetInt unexpectedly deep: size=%8d depth=%3d "
+                 "2×lg(n)=%3d %s\n",
+                 tinfo->tag, size, depth, exp_rbtree_depth, cross);
+        } else
             tinfo->ok++;
         if (size < 1000001)
             check_order(tinfo, set);
@@ -405,16 +402,14 @@ static void test_contains(tinfo* tinfo) {
             size++;
     }
     tinfo->total++;
-    if (!set_int_add(&set, 111))
-        fprintf(stderr, "FAIL: %s test_contains() failed to add 111\n",
-                tinfo->tag);
-    else
+    if (!set_int_add(&set, 111)) {
+        WARN("FAIL: %s test_contains() failed to add 111\n", tinfo->tag);
+    } else
         tinfo->ok++;
     tinfo->total++;
-    if (!set_int_add(&set, -2))
-        fprintf(stderr, "FAIL: %s test_contains() failed to add 101\n",
-                tinfo->tag);
-    else
+    if (!set_int_add(&set, -2)) {
+        WARN("FAIL: %s test_contains() failed to add 101\n", tinfo->tag);
+    } else
         tinfo->ok++;
     // These may already be present
     set_int_add(&set, 19);
@@ -423,10 +418,10 @@ static void test_contains(tinfo* tinfo) {
     int values[] = {-2, 111, 19, 98, 47};
     for (int i = 0; i < (int)(sizeof(values) / sizeof(int)); ++i) {
         tinfo->total++;
-        if (!set_int_contains(&set, values[i]))
-            fprintf(stderr, "FAIL: %s test_contains() failed to find %d\n",
-                    tinfo->tag, values[i]);
-        else
+        if (!set_int_contains(&set, values[i])) {
+            WARN("FAIL: %s test_contains() failed to find %d\n", tinfo->tag,
+                 values[i]);
+        } else
             tinfo->ok++;
     }
     values[0] *= 10;
@@ -436,11 +431,10 @@ static void test_contains(tinfo* tinfo) {
     values[4] += 97;
     for (int i = 0; i < (int)(sizeof(values) / sizeof(int)); ++i) {
         tinfo->total++;
-        if (set_int_contains(&set, values[i]))
-            fprintf(stderr,
-                    "FAIL: %s test_contains() unexpectedly found %d\n",
-                    tinfo->tag, values[i]);
-        else
+        if (set_int_contains(&set, values[i])) {
+            WARN("FAIL: %s test_contains() unexpectedly found %d\n",
+                 tinfo->tag, values[i]);
+        } else
             tinfo->ok++;
     }
     set_int_free(&set);
@@ -457,8 +451,9 @@ static void check_order(tinfo* tinfo, const SetInt* set) {
         }
     if (ok)
         tinfo->ok++;
-    else
-        fprintf(stderr, "FAIL: %s check_order\n", tinfo->tag);
+    else {
+        WARN("FAIL: %s check_order\n", tinfo->tag);
+    }
     vec_int_free(&vec);
 }
 
@@ -466,11 +461,10 @@ static void check_equal_ints(tinfo* tinfo, const SetInt* set,
                              const int* ints, int size) {
     tinfo->total++;
     const int SIZE = set_int_size(set);
-    if (SIZE != size)
-        fprintf(stderr,
-                "FAIL: %s check_equal_ints set size %d expected %d\n",
-                tinfo->tag, SIZE, size);
-    else
+    if (SIZE != size) {
+        WARN("FAIL: %s check_equal_ints set size %d expected %d\n",
+             tinfo->tag, SIZE, size);
+    } else
         tinfo->ok++;
     tinfo->total++;
     bool ok = true;
@@ -483,8 +477,9 @@ static void check_equal_ints(tinfo* tinfo, const SetInt* set,
     }
     if (ok)
         tinfo->ok++;
-    else
-        fprintf(stderr, "FAIL: %s check_equal_ints\n", tinfo->tag);
+    else {
+        WARN("FAIL: %s check_equal_ints\n", tinfo->tag);
+    }
 }
 
 /*
