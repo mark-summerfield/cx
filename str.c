@@ -2,6 +2,7 @@
 
 #include "str.h"
 #include "cx.h"
+#include "exit.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,7 +209,7 @@ SplitParts split_chr(const char* line, int sep) {
             strncpy(part, p, size);
             part[size] = 0;
             if (parts.nparts == MAX_SPLIT_PARTS) {
-                fprintf(stderr, split_err, "chr", MAX_SPLIT_PARTS);
+                WARN(split_err, "chr", MAX_SPLIT_PARTS);
                 break;
             }
             p = q + 1;
@@ -269,7 +270,7 @@ SplitParts split_ws(const char* line) {
         part[size] = 0;
         if (q) {
             if (parts.nparts == MAX_SPLIT_PARTS) {
-                fprintf(stderr, split_err, "ws", MAX_SPLIT_PARTS);
+                WARN(split_err, "ws", MAX_SPLIT_PARTS);
                 break;
             }
             if (q >= end)
