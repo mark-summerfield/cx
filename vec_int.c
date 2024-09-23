@@ -1,6 +1,7 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_int.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -218,6 +219,14 @@ char* vec_int_to_str(const VecInt* vec) {
     }
     s[pos - 1] = 0; // avoid trailing space
     return s;
+}
+
+void vec_int_dump(const VecInt* vec) {
+    if (vec->_size)
+        for (int i = 0; i < vec->_size; ++i)
+            printf("[%d]=%d\n", i, vec->_values[i]);
+    else
+        printf("(empty)");
 }
 
 static void vec_int_grow(VecInt* vec) {

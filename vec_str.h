@@ -166,6 +166,9 @@ VecStr split_chr(const char* s, int sep);
 // owning VecStr (which may be empty).
 VecStr split_ws(const char* s);
 
+// For debugging.
+void vec_str_dump(const VecStr* vec);
+
 // To iterate:
 //      for (int i = 0; i < vec_str_size(vec); ++i)
 //          const char* value = vec_str_get(vec, i);

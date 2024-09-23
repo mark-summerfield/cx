@@ -3,6 +3,7 @@
 #include "vec_str.h"
 #include "str.h"
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 static void vec_str_grow(VecStr* vec);
@@ -384,6 +385,14 @@ VecStr split_ws(const char* s) {
             break;
     }
     return vec;
+}
+
+void vec_str_dump(const VecStr* vec) {
+    if (vec->_size)
+        for (int i = 0; i < vec->_size; ++i)
+            printf("[%d]«%s»\n", i, vec->_values[i]);
+    else
+        printf("(empty)");
 }
 
 static void vec_str_grow(VecStr* vec) {

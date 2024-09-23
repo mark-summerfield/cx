@@ -108,6 +108,9 @@ int vec_int_search(const VecInt* vec, int i);
 // The returned char* value is now owns by the caller.
 char* vec_int_to_str(const VecInt* vec);
 
+// For debugging.
+void vec_int_dump(const VecInt* vec);
+
 // To iterate:
 //      for (int i = 0; i < vec_int_size(vec); ++i)
 //          int value = vec_int_get(vec, i);
