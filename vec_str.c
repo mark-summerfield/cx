@@ -300,12 +300,6 @@ char* vec_str_longest_common_path(const VecStr* vec) {
     return prefix;
 }
 
-static void vec_str_grow(VecStr* vec) {
-    vec->_cap = GROW_CAP(vec->_cap);
-    vec->_values = realloc(vec->_values, vec->_cap * sizeof(char*));
-    assert_alloc(vec->_values);
-}
-
 VecStr split_str(const char* s, const char* sep) {
     assert_notnull(s);
     assert_notnull(sep);
@@ -390,4 +384,11 @@ VecStr split_ws(const char* line) {
             break;
     }
     return parts;
+}
+
+static void vec_str_grow(VecStr* vec) {
+    int cap = vec->_cap;
+    vec->_cap = GROW_CAP(cap);
+    vec->_values = realloc(vec->_values, vec->_cap * sizeof(char*));
+    assert_alloc(vec->_values);
 }

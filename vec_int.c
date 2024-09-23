@@ -221,7 +221,8 @@ char* vec_int_to_str(const VecInt* vec) {
 }
 
 static void vec_int_grow(VecInt* vec) {
-    vec->_cap = GROW_CAP(vec->_cap);
+    int cap = vec->_cap;
+    vec->_cap = GROW_CAP(cap);
     vec->_values = realloc(vec->_values, vec->_cap * sizeof(int));
     assert_alloc(vec->_values);
 }
