@@ -9,6 +9,8 @@ bool is_zeroish(double a);
 
 bool is_equalish(double a, double b);
 
+double str_to_real(const char*s, bool*ok);
+
 // Just call min(x, y) and let the generic macro choose one of these:
 int mx_mini(int a, int b);
 int mx_maxi(int a, int b);
