@@ -14,7 +14,7 @@
 #define NOT_FOUND -2
 #define LINE_SIZE 1024
 
-static void parse_text(Ini* ini, const char* text);
+static void parse_text(Ini* ini, const char* s);
 static void parse_line(Ini* ini, const char* line, char* section);
 static void parse_item(Ini* ini, const char* p, const char* section);
 static void save_to_stream(Ini* ini, FILE* file);
@@ -45,9 +45,10 @@ Ini ini_alloc_from_file(const char* filename, bool* ok) {
 
 // Creates an @link Ini@ with the given `.ini` file text.
 // It must be freed with @link ini_free@. See also @link Ini@.
-Ini ini_alloc_from_str(const char* text) {
+Ini ini_alloc_from_str(const char* s) {
+    assert_notnull(s);
     Ini ini = ini_alloc();
-    ini_merge_from_str(&ini, text);
+    ini_merge_from_str(&ini, s);
     return ini;
 }
 
@@ -55,16 +56,17 @@ Ini ini_alloc_from_str(const char* text) {
 bool ini_merge_from_file(Ini* ini, const char* filename) {
     assert(filename && ".ini filename is required");
     bool ok;
-    char* text = file_read(filename, &ok);
-    parse_text(ini, text);
-    free(text);
+    char* s = file_read(filename, &ok);
+    if (ok)
+        parse_text(ini, s);
+    free(s);
     return ok;
 }
 
 // Merges the contents of the given `.ini` file text.
-void ini_merge_from_str(Ini* ini, const char* text) {
-    assert(text && ".ini text is required");
-    parse_text(ini, text);
+void ini_merge_from_str(Ini* ini, const char* s) {
+    assert(s && ".ini text is required");
+    parse_text(ini, s);
 }
 
 // Must be called once the @link Ini@ is finished with.
@@ -75,19 +77,18 @@ void ini_free(Ini* ini) {
     free(ini->comment);
 }
 
-static void parse_text(Ini* ini, const char* text) {
+static void parse_text(Ini* ini, const char* s) {
     char line[LINE_SIZE] = "";
     char section[LINE_SIZE] = "";
-    const char* p = text;
-    while (p) {
-        const char* q = strchr(p, '\n');
-        size_t size = min(LINE_SIZE - 1, q ? (int)(q - p) : (int)strlen(p));
-        strncpy(line, p, size);
+    while (s) {
+        const char* q = strchr(s, '\n');
+        size_t size = min(LINE_SIZE - 1, q ? (int)(q - s) : (int)strlen(s));
+        strncpy(line, s, size);
         line[size] = 0;
         parse_line(ini, line, section);
         if (!q)
             break;
-        p = q + 1;
+        s = q + 1;
     }
 }
 
@@ -107,7 +108,7 @@ static void parse_line(Ini* ini, const char* line, char* section) {
             strncpy(section, p, size);
             section[size] = 0;
         } else
-            WARN("invalid section: %s\n", p);
+            WARN("section, missing ']': %s\n", p);
     } else
         parse_item(ini, p, section);
 }

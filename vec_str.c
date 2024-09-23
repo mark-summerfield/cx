@@ -304,15 +304,15 @@ char* vec_str_join(const VecStr* vec, const char* sep) {
 VecStr split_str(const char* s, const char* sep) {
     assert_notnull(s);
     assert_notnull(sep);
-    int sep_size = strlen(sep);
-    assert(sep_size && "can't split with empty sep");
+    const int SEP_SIZE = strlen(sep);
+    assert(SEP_SIZE && "can't split with empty sep");
     VecStr vec = vec_str_alloc();
     const char* p = s;
     while (p) {
         const char* q = strstr(p, sep);
         if (q) {
             vec_str_push(&vec, strndup(p, q - p));
-            p = q + sep_size;
+            p = q + SEP_SIZE;
         } else {
             if (strlen(p))
                 vec_str_push(&vec, strdup(p));
