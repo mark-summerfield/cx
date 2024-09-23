@@ -455,6 +455,157 @@ static void prefix_tests(tinfo* tinfo) {
     vec_str_free(&v1);
 }
 
+static void test_split_chr(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    VecStr parts1 = split_chr("one\ttwo\tthree\tfour", '\t');
+    check_int_eq(tinfo, vec_str_size(&parts1), 4);
+    check_str_eq(tinfo, vec_str_get(&parts1, 0), "one");
+    check_str_eq(tinfo, vec_str_get(&parts1, 1), "two");
+    check_str_eq(tinfo, vec_str_get(&parts1, 2), "three");
+    check_str_eq(tinfo, vec_str_get(&parts1, 3), "four");
+    vec_str_free(&parts1);
+
+    parts1 = split_chr("elephant", '\t');
+    check_int_eq(tinfo, vec_str_size(&parts1), 1);
+    check_str_eq(tinfo, vec_str_get(&parts1, 0), "elephant");
+    vec_str_free(&parts1);
+
+    parts1 = split_chr("moveto 3.5 7.45", ' ');
+    check_int_eq(tinfo, vec_str_size(&parts1), 3);
+    check_str_eq(tinfo, vec_str_get(&parts1, 0), "moveto");
+    check_str_eq(tinfo, vec_str_get(&parts1, 1), "3.5");
+    check_str_eq(tinfo, vec_str_get(&parts1, 2), "7.45");
+    vec_str_free(&parts1);
+
+    parts1 = split_chr("    ", '\t');
+    check_int_eq(tinfo, vec_str_size(&parts1), 1); // no tabs so whole str
+    vec_str_free(&parts1);
+
+    parts1 = split_chr("    ", ' ');
+    check_int_eq(tinfo, vec_str_size(&parts1), 0);
+    vec_str_free(&parts1);
+
+    parts1 = split_chr("", '\t');
+    check_int_eq(tinfo, vec_str_size(&parts1), 0);
+    vec_str_free(&parts1);
+
+    parts1 = split_chr("", ' ');
+    check_int_eq(tinfo, vec_str_size(&parts1), 0);
+    vec_str_free(&parts1);
+
+    VecStr parts2 = split_chr("width 240", ' ');
+    check_int_eq(tinfo, vec_str_size(&parts2), 2);
+    check_str_eq(tinfo, vec_str_get(&parts2, 0), "width");
+    check_str_eq(tinfo, vec_str_get(&parts2, 1), "240");
+    vec_str_free(&parts2);
+
+    VecStr parts3 = split_chr("height 160", ' ');
+    check_int_eq(tinfo, vec_str_size(&parts3), 2);
+    check_str_eq(tinfo, vec_str_get(&parts3, 0), "height");
+    check_str_eq(tinfo, vec_str_get(&parts3, 1), "160");
+    vec_str_free(&parts3);
+
+    VecStr parts4 =
+        split_chr("rect x=10 y=10 w=220 h=140 fg=blue bg=green", ' ');
+    check_int_eq(tinfo, vec_str_size(&parts4), 7);
+    check_str_eq(tinfo, vec_str_get(&parts4, 0), "rect");
+    check_str_eq(tinfo, vec_str_get(&parts4, 1), "x=10");
+    check_str_eq(tinfo, vec_str_get(&parts4, 2), "y=10");
+    check_str_eq(tinfo, vec_str_get(&parts4, 3), "w=220");
+    check_str_eq(tinfo, vec_str_get(&parts4, 4), "h=140");
+    check_str_eq(tinfo, vec_str_get(&parts4, 5), "fg=blue");
+    check_str_eq(tinfo, vec_str_get(&parts4, 6), "bg=green");
+    vec_str_free(&parts4);
+
+    parts4 =
+        split_chr("a b c d e f g h i j k l m n o p q r s t u v w x y z "
+                  "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z",
+                  ' ');
+    check_int_eq(tinfo, vec_str_size(&parts4), 52);
+    char buf[2];
+    buf[0] = 'a';
+    buf[1] = 0;
+    for (int i = 0; i < 52; ++i) {
+        check_str_eq(tinfo, vec_str_get(&parts4, i), buf);
+        buf[0]++;
+        if (i == 25)
+            buf[0] = 'A';
+    }
+    vec_str_free(&parts4);
+}
+
+static void test_split_ws(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+
+    VecStr parts1 = split_ws("  one\ttwo \tthree\tfour\n");
+    check_int_eq(tinfo, vec_str_size(&parts1), 4);
+    check_str_eq(tinfo, vec_str_get(&parts1, 0), "one");
+    check_str_eq(tinfo, vec_str_get(&parts1, 1), "two");
+    check_str_eq(tinfo, vec_str_get(&parts1, 2), "three");
+    check_str_eq(tinfo, vec_str_get(&parts1, 3), "four");
+    vec_str_free(&parts1);
+
+    parts1 = split_ws("   moveto 3.5\t 7.45\n");
+    check_int_eq(tinfo, vec_str_size(&parts1), 3);
+    check_str_eq(tinfo, vec_str_get(&parts1, 0), "moveto");
+    check_str_eq(tinfo, vec_str_get(&parts1, 1), "3.5");
+    check_str_eq(tinfo, vec_str_get(&parts1, 2), "7.45");
+    vec_str_free(&parts1);
+
+    parts1 = split_ws("elephant");
+    check_int_eq(tinfo, vec_str_size(&parts1), 1);
+    check_str_eq(tinfo, vec_str_get(&parts1, 0), "elephant");
+    vec_str_free(&parts1);
+
+    parts1 = split_ws("   ");
+    check_int_eq(tinfo, vec_str_size(&parts1), 0);
+    vec_str_free(&parts1);
+
+    parts1 = split_ws("");
+    check_int_eq(tinfo, vec_str_size(&parts1), 0);
+    vec_str_free(&parts1);
+
+    VecStr parts2 = split_ws("width 240");
+    check_int_eq(tinfo, vec_str_size(&parts2), 2);
+    check_str_eq(tinfo, vec_str_get(&parts2, 0), "width");
+    check_str_eq(tinfo, vec_str_get(&parts2, 1), "240");
+    vec_str_free(&parts2);
+
+    VecStr parts3 = split_ws("height 160");
+    check_int_eq(tinfo, vec_str_size(&parts3), 2);
+    check_str_eq(tinfo, vec_str_get(&parts3, 0), "height");
+    check_str_eq(tinfo, vec_str_get(&parts3, 1), "160");
+    vec_str_free(&parts3);
+
+    VecStr parts4 = split_ws("rect x=10 y=10 w=220 h=140 fg=blue bg=green");
+    check_int_eq(tinfo, vec_str_size(&parts4), 7);
+    check_str_eq(tinfo, vec_str_get(&parts4, 0), "rect");
+    check_str_eq(tinfo, vec_str_get(&parts4, 1), "x=10");
+    check_str_eq(tinfo, vec_str_get(&parts4, 2), "y=10");
+    check_str_eq(tinfo, vec_str_get(&parts4, 3), "w=220");
+    check_str_eq(tinfo, vec_str_get(&parts4, 4), "h=140");
+    check_str_eq(tinfo, vec_str_get(&parts4, 5), "fg=blue");
+    check_str_eq(tinfo, vec_str_get(&parts4, 6), "bg=green");
+    vec_str_free(&parts4);
+
+    parts4 =
+        split_ws("\ta b c d e f g h i j k l m n o p q r s t u v w x  y z "
+                 "A B C D E F G H I J K L M N O P Q R S T U V W X  Y Z\n");
+    check_int_eq(tinfo, vec_str_size(&parts4), 52);
+    char buf[2];
+    buf[0] = 'a';
+    buf[1] = 0;
+    for (int i = 0; i < 52; ++i) {
+        check_str_eq(tinfo, vec_str_get(&parts4, i), buf);
+        buf[0]++;
+        if (i == 25)
+            buf[0] = 'A';
+    }
+    vec_str_free(&parts4);
+}
+
 static void match(tinfo* tinfo, const VecStr* v, const char* expected) {
     char* out = vec_str_join(v, "|");
     check_str_eq(tinfo, out, expected);
@@ -507,155 +658,4 @@ static void check_join(tinfo* tinfo, const VecStr* vec, const char* sep,
     else
         tinfo->ok++;
     free(actual);
-}
-
-static void test_split_chr(tinfo* tinfo) {
-    if (tinfo->verbose)
-        puts(tinfo->tag);
-    VecStr parts1 = split_chr("one\ttwo\tthree\tfour", '\t');
-    check_int_eq(tinfo, vec_str_size(&parts1), 4);
-    check_str_eq(tinfo, vec_str_get(&parts1, 0), "one");
-    check_str_eq(tinfo, vec_str_get(&parts1, 1), "two");
-    check_str_eq(tinfo, vec_str_get(&parts1, 2), "three");
-    check_str_eq(tinfo, vec_str_get(&parts1, 3), "four");
-    vec_str_clear(&parts1);
-
-    parts1 = split_chr("elephant", '\t');
-    check_int_eq(tinfo, vec_str_size(&parts1), 1);
-    check_str_eq(tinfo, vec_str_get(&parts1, 0), "elephant");
-    vec_str_clear(&parts1);
-
-    parts1 = split_chr("moveto 3.5 7.45", ' ');
-    check_int_eq(tinfo, vec_str_size(&parts1), 3);
-    check_str_eq(tinfo, vec_str_get(&parts1, 0), "moveto");
-    check_str_eq(tinfo, vec_str_get(&parts1, 1), "3.5");
-    check_str_eq(tinfo, vec_str_get(&parts1, 2), "7.45");
-    vec_str_clear(&parts1);
-
-    parts1 = split_chr("    ", '\t');
-    check_int_eq(tinfo, vec_str_size(&parts1), 1); // no tabs so whole str
-    vec_str_clear(&parts1);
-
-    parts1 = split_chr("    ", ' ');
-    check_int_eq(tinfo, vec_str_size(&parts1), 0);
-    vec_str_clear(&parts1);
-
-    parts1 = split_chr("", '\t');
-    check_int_eq(tinfo, vec_str_size(&parts1), 0);
-    vec_str_clear(&parts1);
-
-    parts1 = split_chr("", ' ');
-    check_int_eq(tinfo, vec_str_size(&parts1), 0);
-    vec_str_free(&parts1);
-
-    VecStr parts2 = split_chr("width 240", ' ');
-    check_int_eq(tinfo, vec_str_size(&parts2), 2);
-    check_str_eq(tinfo, vec_str_get(&parts2, 0), "width");
-    check_str_eq(tinfo, vec_str_get(&parts2, 1), "240");
-    vec_str_free(&parts2);
-
-    VecStr parts3 = split_chr("height 160", ' ');
-    check_int_eq(tinfo, vec_str_size(&parts3), 2);
-    check_str_eq(tinfo, vec_str_get(&parts3, 0), "height");
-    check_str_eq(tinfo, vec_str_get(&parts3, 1), "160");
-    vec_str_free(&parts3);
-
-    VecStr parts4 =
-        split_chr("rect x=10 y=10 w=220 h=140 fg=blue bg=green", ' ');
-    check_int_eq(tinfo, vec_str_size(&parts4), 7);
-    check_str_eq(tinfo, vec_str_get(&parts4, 0), "rect");
-    check_str_eq(tinfo, vec_str_get(&parts4, 1), "x=10");
-    check_str_eq(tinfo, vec_str_get(&parts4, 2), "y=10");
-    check_str_eq(tinfo, vec_str_get(&parts4, 3), "w=220");
-    check_str_eq(tinfo, vec_str_get(&parts4, 4), "h=140");
-    check_str_eq(tinfo, vec_str_get(&parts4, 5), "fg=blue");
-    check_str_eq(tinfo, vec_str_get(&parts4, 6), "bg=green");
-    vec_str_clear(&parts4);
-
-    parts4 =
-        split_chr("a b c d e f g h i j k l m n o p q r s t u v w x y z "
-                  "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z",
-                  ' ');
-    check_int_eq(tinfo, vec_str_size(&parts4), 52);
-    char buf[2];
-    buf[0] = 'a';
-    buf[1] = 0;
-    for (int i = 0; i < 52; ++i) {
-        check_str_eq(tinfo, vec_str_get(&parts4, i), buf);
-        buf[0]++;
-        if (i == 25)
-            buf[0] = 'A';
-    }
-    vec_str_free(&parts4);
-}
-
-static void test_split_ws(tinfo* tinfo) {
-    if (tinfo->verbose)
-        puts(tinfo->tag);
-
-    VecStr parts1 = split_ws("  one\ttwo \tthree\tfour\n");
-    check_int_eq(tinfo, vec_str_size(&parts1), 4);
-    check_str_eq(tinfo, vec_str_get(&parts1, 0), "one");
-    check_str_eq(tinfo, vec_str_get(&parts1, 1), "two");
-    check_str_eq(tinfo, vec_str_get(&parts1, 2), "three");
-    check_str_eq(tinfo, vec_str_get(&parts1, 3), "four");
-    vec_str_clear(&parts1);
-
-    parts1 = split_ws("   moveto 3.5\t 7.45\n");
-    check_int_eq(tinfo, vec_str_size(&parts1), 3);
-    check_str_eq(tinfo, vec_str_get(&parts1, 0), "moveto");
-    check_str_eq(tinfo, vec_str_get(&parts1, 1), "3.5");
-    check_str_eq(tinfo, vec_str_get(&parts1, 2), "7.45");
-    vec_str_clear(&parts1);
-
-    parts1 = split_ws("elephant");
-    check_int_eq(tinfo, vec_str_size(&parts1), 1);
-    check_str_eq(tinfo, vec_str_get(&parts1, 0), "elephant");
-    vec_str_clear(&parts1);
-
-    parts1 = split_ws("   ");
-    check_int_eq(tinfo, vec_str_size(&parts1), 0);
-    vec_str_clear(&parts1);
-
-    parts1 = split_ws("");
-    check_int_eq(tinfo, vec_str_size(&parts1), 0);
-    vec_str_free(&parts1);
-
-    VecStr parts2 = split_ws("width 240");
-    check_int_eq(tinfo, vec_str_size(&parts2), 2);
-    check_str_eq(tinfo, vec_str_get(&parts2, 0), "width");
-    check_str_eq(tinfo, vec_str_get(&parts2, 1), "240");
-    vec_str_free(&parts2);
-
-    VecStr parts3 = split_ws("height 160");
-    check_int_eq(tinfo, vec_str_size(&parts3), 2);
-    check_str_eq(tinfo, vec_str_get(&parts3, 0), "height");
-    check_str_eq(tinfo, vec_str_get(&parts3, 1), "160");
-    vec_str_free(&parts3);
-
-    VecStr parts4 = split_ws("rect x=10 y=10 w=220 h=140 fg=blue bg=green");
-    check_int_eq(tinfo, vec_str_size(&parts4), 7);
-    check_str_eq(tinfo, vec_str_get(&parts4, 0), "rect");
-    check_str_eq(tinfo, vec_str_get(&parts4, 1), "x=10");
-    check_str_eq(tinfo, vec_str_get(&parts4, 2), "y=10");
-    check_str_eq(tinfo, vec_str_get(&parts4, 3), "w=220");
-    check_str_eq(tinfo, vec_str_get(&parts4, 4), "h=140");
-    check_str_eq(tinfo, vec_str_get(&parts4, 5), "fg=blue");
-    check_str_eq(tinfo, vec_str_get(&parts4, 6), "bg=green");
-    vec_str_clear(&parts4);
-
-    parts4 =
-        split_ws("\ta b c d e f g h i j k l m n o p q r s t u v w x  y z "
-                 "A B C D E F G H I J K L M N O P Q R S T U V W X  Y Z\n");
-    check_int_eq(tinfo, vec_str_size(&parts4), 52);
-    char buf[2];
-    buf[0] = 'a';
-    buf[1] = 0;
-    for (int i = 0; i < 52; ++i) {
-        check_str_eq(tinfo, vec_str_get(&parts4, i), buf);
-        buf[0]++;
-        if (i == 25)
-            buf[0] = 'A';
-    }
-    vec_str_free(&parts4);
 }

@@ -116,11 +116,6 @@ void vec_str_merge(VecStr* vec1, VecStr* vec2);
 // Returns true if the two VecStr's have the same values.
 bool vec_str_equal(const VecStr* vec1, const VecStr* vec2);
 
-// Returns a char* of all the vec's strings joined together with sep, or
-// NULL if vec is empty. If sep is NULL they are joined with no separator.
-// The returned char* value is now owned by the caller.
-char* vec_str_join(const VecStr* vec, const char* sep);
-
 // Returns the index where the value was found in the vec or
 // VEC_NOT_FOUND (-1). Uses a linear search.
 int vec_str_find(const VecStr* vec, const char* value);
@@ -154,17 +149,22 @@ char* vec_str_longest_common_prefix(const VecStr* vec);
 // the returned string.
 char* vec_str_longest_common_path(const VecStr* vec);
 
+// Returns a char* of all the vec's strings joined together with sep, or
+// NULL if vec is empty. If sep is NULL they are joined with no separator.
+// The returned char* value is now owned by the caller.
+char* vec_str_join(const VecStr* vec, const char* sep);
+
 // Splits the given string on the sep string, neither of which may be
 // NULL and returns an owning VecStr (which may be empty).
 VecStr split_str(const char* s, const char* sep);
 
 // Splits the given string (which may not be NULL) on the sep char and
 // returns an owning VecStr (which may be empty).
-VecStr split_chr(const char* line, int sep);
+VecStr split_chr(const char* s, int sep);
 
-// Splits the given line by any amount of whitespace into parts (each of
-// new string) and returns an owning VecStr (which may be empty).
-VecStr split_ws(const char* line);
+// Splits the given string by any amount of whitespace and returns an
+// owning VecStr (which may be empty).
+VecStr split_ws(const char* s);
 
 // To iterate:
 //      for (int i = 0; i < vec_str_size(vec); ++i)

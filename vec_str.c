@@ -235,27 +235,6 @@ int vec_str_search(const VecStr* vec, const char* s) {
     return VEC_NOT_FOUND;
 }
 
-char* vec_str_join(const VecStr* vec, const char* sep) {
-    assert_notnull(vec);
-    const int VEC_SIZE = vec->_size;
-    if (!VEC_SIZE)
-        return NULL; // empty
-    const int SEP_SIZE = sep ? strlen(sep) : 0;
-    int size = 0;
-    for (int i = 0; i < VEC_SIZE; ++i)
-        size += strlen(vec->_values[i]);
-    size += ((VEC_SIZE - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
-    char* s = malloc(size);
-    assert_alloc(s);
-    char* p = s;
-    for (int i = 0; i < VEC_SIZE; ++i) {
-        p = stpcpy(p, vec->_values[i]);
-        if (sep && (i + 1 < VEC_SIZE)) // avoid adding sep at the end
-            p = stpncpy(p, sep, SEP_SIZE);
-    }
-    return s;
-}
-
 char* vec_str_longest_common_prefix(const VecStr* vec) {
     if (!vec->_size)
         return NULL;
@@ -300,25 +279,46 @@ char* vec_str_longest_common_path(const VecStr* vec) {
     return prefix;
 }
 
+char* vec_str_join(const VecStr* vec, const char* sep) {
+    assert_notnull(vec);
+    const int VEC_SIZE = vec->_size;
+    if (!VEC_SIZE)
+        return NULL; // empty
+    const int SEP_SIZE = sep ? strlen(sep) : 0;
+    int size = 0;
+    for (int i = 0; i < VEC_SIZE; ++i)
+        size += strlen(vec->_values[i]);
+    size += ((VEC_SIZE - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
+    char* s = malloc(size);
+    assert_alloc(s);
+    char* p = s;
+    for (int i = 0; i < VEC_SIZE; ++i) {
+        p = stpcpy(p, vec->_values[i]);
+        if (sep && (i + 1 < VEC_SIZE)) // avoid adding sep at the end
+            p = stpncpy(p, sep, SEP_SIZE);
+    }
+    return s;
+}
+
 VecStr split_str(const char* s, const char* sep) {
     assert_notnull(s);
     assert_notnull(sep);
     int sep_size = strlen(sep);
     assert(sep_size && "can't split with empty sep");
-    VecStr out = vec_str_alloc();
+    VecStr vec = vec_str_alloc();
     const char* p = s;
     while (p) {
         const char* q = strstr(p, sep);
         if (q) {
-            vec_str_push(&out, strndup(p, q - p));
+            vec_str_push(&vec, strndup(p, q - p));
             p = q + sep_size;
         } else {
             if (strlen(p))
-                vec_str_push(&out, strdup(p));
+                vec_str_push(&vec, strdup(p));
             break;
         }
     }
-    return out;
+    return vec;
 }
 
 static inline bool all_sep(const char* p, int sep) {
@@ -328,13 +328,13 @@ static inline bool all_sep(const char* p, int sep) {
     return true;
 }
 
-VecStr split_chr(const char* line, int sep) {
-    assert_notnull(line);
+VecStr split_chr(const char* s, int sep) {
+    assert_notnull(s);
     assert_notnull(sep);
-    VecStr parts = vec_str_alloc();
-    if (all_sep(line, sep)) // ∴ empty
-        return parts;
-    const char* p = line;
+    VecStr vec = vec_str_alloc();
+    if (all_sep(s, sep)) // ∴ empty
+        return vec;
+    const char* p = s;
     while (p) {
         const char* q = strchr(p, sep);
         int size = q ? q - p : (int)strlen(p);
@@ -342,13 +342,13 @@ VecStr split_chr(const char* line, int sep) {
         assert_alloc(part);
         strncpy(part, p, size);
         part[size] = 0;
-        vec_str_push(&parts, part);
+        vec_str_push(&vec, part);
         if (q)
             p = q + 1;
         else
             break;
     }
-    return parts;
+    return vec;
 }
 
 static inline bool all_ws(const char* p) {
@@ -358,14 +358,14 @@ static inline bool all_ws(const char* p) {
     return true;
 }
 
-VecStr split_ws(const char* line) {
-    assert_notnull(line);
-    VecStr parts = vec_str_alloc();
-    if (!*line) // empty
-        return parts;
-    if (all_ws(line)) // empty;
-        return parts;
-    const char* p = skip_ws(line); // skip leading ws
+VecStr split_ws(const char* s) {
+    assert_notnull(s);
+    VecStr vec = vec_str_alloc();
+    if (!*s) // empty
+        return vec;
+    if (all_ws(s)) // empty;
+        return vec;
+    const char* p = skip_ws(s); // skip leading ws
     int size = strlen(p);
     const char* end = p + size;
     while (p && *p) {
@@ -375,7 +375,7 @@ VecStr split_ws(const char* line) {
         assert_alloc(part);
         strncpy(part, p, size);
         part[size] = 0;
-        vec_str_push(&parts, part);
+        vec_str_push(&vec, part);
         if (q) {
             if (q >= end)
                 break;
@@ -383,11 +383,12 @@ VecStr split_ws(const char* line) {
         } else
             break;
     }
-    return parts;
+    return vec;
 }
 
 static void vec_str_grow(VecStr* vec) {
     int cap = vec->_cap;
+    assert((!cap && !vec->_values) || (cap && vec->_values));
     vec->_cap = GROW_CAP(cap);
     vec->_values = realloc(vec->_values, vec->_cap * sizeof(char*));
     assert_alloc(vec->_values);

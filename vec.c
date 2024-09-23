@@ -234,6 +234,7 @@ int vec_search(const Vec* vec, const void* value) {
 
 static void vec_grow(Vec* vec) {
     int cap = vec->_cap;
+    assert((!cap && !vec->_values) || (cap && vec->_values));
     vec->_cap = GROW_CAP(cap);
     vec->_values = realloc(vec->_values, vec->_cap * sizeof(void*));
     assert_alloc(vec->_values);
