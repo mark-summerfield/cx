@@ -67,31 +67,11 @@ const char* bool_to_str(bool b);
 
 void commas(char* s, int64_t n);
 
-#define MAX_SPLIT_PARTS 32
+// Returns a pointer to the first non-whitespace char in p or NULL.
+const char* skip_ws(const char* p);
 
-typedef struct SplitParts {
-    char* parts[MAX_SPLIT_PARTS];
-    int nparts;
-} SplitParts;
-
-// Mainly for debugging & development; dumps the parts to stdout.
-void split_parts_dump(const SplitParts* parts);
-
-// Frees all the parts and sets nparts to 0 ready for reuse.
-#define split_parts_clear(parts) split_parts_free(parts)
-
-// Must be called when a SplitParts is finished with.
-void split_parts_free(SplitParts* parts);
-
-// Splits the given line by sep (a char) into parts (each of which is a
-// new string) and returns SplitParts. The caller must call
-// split_parts_free when finished with the SplitParts.
-SplitParts split_chr(const char* line, int sep);
-
-// Splits the given line by any amount of whitespace into parts (each of
-// which is a new string) and returns SplitParts. The caller must call
-// split_parts_free when finished with the SplitParts.
-SplitParts split_ws(const char* line);
+// Returns a pointer to the first whitespace char in p or NULL.
+const char* skip_nonws(const char* p);
 
 #define typename(x) \
     _Generic((x), \

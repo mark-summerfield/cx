@@ -1,7 +1,10 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_str.h"
+#include "exit.h" // TODO delete when get rid of WARN
 #include "str.h"
+#include <ctype.h>
+#include <stdio.h> // TODO delete when get rid of WARN
 #include <stdlib.h>
 
 static void vec_str_grow(VecStr* vec);
@@ -326,4 +329,106 @@ static void vec_str_grow(VecStr* vec) {
     assert_alloc(p);
     vec->_values = p;
     vec->_cap = cap;
+}
+
+void split_parts_dump(const SplitParts* parts) {
+    if (parts->nparts)
+        for (int i = 0; i < parts->nparts; ++i)
+            printf("#%i«%s»\n", i, parts->parts[i]);
+    else
+        puts("(empty)");
+}
+
+void split_parts_free(SplitParts* parts) {
+    for (int i = 0; i < parts->nparts; ++i) {
+        free(parts->parts[i]);
+        parts->parts[i] = NULL;
+    }
+    parts->nparts = 0;
+}
+
+static inline bool all_sep(const char* p, int sep) {
+    for (; p && *p; ++p)
+        if (sep != *p)
+            return false;
+    return true;
+}
+
+const char* split_err = "split_%s: more than %d parts; skipped remainder\n";
+
+SplitParts split_chr(const char* line, int sep) {
+    assert_notnull(line);
+    assert_notnull(sep);
+    SplitParts parts = {.nparts = 0};
+    if (all_sep(line, sep)) // ∴ empty
+        return parts;
+    const char* p = line;
+    while (p) {
+        const char* q = strchr(p, sep);
+        int size = q ? q - p : (int)strlen(p);
+        char* part = parts.parts[parts.nparts++] = malloc(size + 1);
+        assert_alloc(part);
+        if (q) {
+            strncpy(part, p, size);
+            part[size] = 0;
+            if (parts.nparts == MAX_SPLIT_PARTS) {
+                WARN(split_err, "chr", MAX_SPLIT_PARTS);
+                break;
+            }
+            p = q + 1;
+        } else {
+            strcpy(part, p);
+            break;
+        }
+    }
+    return parts;
+}
+
+static inline char* make_part(const char* p, int size, bool upto_size) {
+    char* q = malloc(size + 1);
+    assert_alloc(q);
+    if (upto_size) {
+        strncpy(q, p, size);
+        q[size] = 0;
+    } else
+        strcpy(q, p);
+    return q;
+}
+
+static inline bool all_ws(const char* p) {
+    for (; p && *p; ++p)
+        if (!isspace(*p))
+            return false;
+    return true;
+}
+
+SplitParts split_ws(const char* line) {
+    assert_notnull(line);
+    SplitParts parts = {.nparts = 0};
+    if (!*line) // empty
+        return parts;
+    if (all_ws(line)) // empty;
+        return parts;
+    const char* p = skip_ws(line); // skip leading ws
+    int size = strlen(p);
+    const char* end = p + size;
+    while (p && *p) {
+        const char* q = skip_nonws(p);
+        size = q ? q - p : (int)strlen(p);
+        char* part = parts.parts[parts.nparts++] = malloc(size + 1);
+        assert_alloc(part);
+        strncpy(part, p, size);
+        part[size] = 0;
+        if (q) {
+            if (parts.nparts == MAX_SPLIT_PARTS) {
+                WARN(split_err, "ws", MAX_SPLIT_PARTS);
+                break;
+            }
+            if (q >= end)
+                break;
+            p = skip_ws(q + 1);
+        } else
+            break;
+    }
+    return parts;
 }

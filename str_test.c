@@ -16,8 +16,6 @@ static void str_test_lowercase_ip(tinfo*);
 static void str_test_begins_ends(tinfo*);
 static void str_test_filename_ext(tinfo*);
 static void str_test_trim(tinfo*);
-static void str_test_split_chr(tinfo*);
-static void str_test_split_ws(tinfo*);
 
 void str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
@@ -38,10 +36,6 @@ void str_tests(tinfo* tinfo) {
     str_test_filename_ext(tinfo);
     tinfo->tag = "str_test_trim";
     str_test_trim(tinfo);
-    tinfo->tag = "str_test_split_chr";
-    str_test_split_chr(tinfo);
-    tinfo->tag = "str_test_split_ws";
-    str_test_split_ws(tinfo);
 }
 
 static void str_test_uppercase(tinfo* tinfo) {
@@ -256,156 +250,4 @@ static void str_test_trim(tinfo* tinfo) {
     t = str_trimn(s, 1);
     check_str_eq(tinfo, t, "x");
     free(t);
-}
-
-static void str_test_split_chr(tinfo* tinfo) {
-    if (tinfo->verbose)
-        puts(tinfo->tag);
-    SplitParts parts1 = split_chr("one\ttwo\tthree\tfour", '\t');
-    check_int_eq(tinfo, parts1.nparts, 4);
-    check_str_eq(tinfo, parts1.parts[0], "one");
-    check_str_eq(tinfo, parts1.parts[1], "two");
-    check_str_eq(tinfo, parts1.parts[2], "three");
-    check_str_eq(tinfo, parts1.parts[3], "four");
-    split_parts_clear(&parts1);
-
-    parts1 = split_chr("elephant", '\t');
-    check_int_eq(tinfo, parts1.nparts, 1);
-    check_str_eq(tinfo, parts1.parts[0], "elephant");
-    split_parts_clear(&parts1);
-
-    parts1 = split_chr("moveto 3.5 7.45", ' ');
-    check_int_eq(tinfo, parts1.nparts, 3);
-    check_str_eq(tinfo, parts1.parts[0], "moveto");
-    check_str_eq(tinfo, parts1.parts[1], "3.5");
-    check_str_eq(tinfo, parts1.parts[2], "7.45");
-    split_parts_clear(&parts1);
-
-    parts1 = split_chr("    ", '\t');
-    check_int_eq(tinfo, parts1.nparts, 1); // no tabs so whole str
-    split_parts_clear(&parts1);
-
-    parts1 = split_chr("    ", ' ');
-    check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_clear(&parts1);
-
-    parts1 = split_chr("", '\t');
-    check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_clear(&parts1);
-
-    parts1 = split_chr("", ' ');
-    check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
-
-    SplitParts parts2 = split_chr("width 240", ' ');
-    check_int_eq(tinfo, parts2.nparts, 2);
-    check_str_eq(tinfo, parts2.parts[0], "width");
-    check_str_eq(tinfo, parts2.parts[1], "240");
-    split_parts_free(&parts2);
-
-    SplitParts parts3 = split_chr("height 160", ' ');
-    check_int_eq(tinfo, parts3.nparts, 2);
-    check_str_eq(tinfo, parts3.parts[0], "height");
-    check_str_eq(tinfo, parts3.parts[1], "160");
-    split_parts_free(&parts3);
-
-    SplitParts parts4 =
-        split_chr("rect x=10 y=10 w=220 h=140 fg=blue bg=green", ' ');
-    check_int_eq(tinfo, parts4.nparts, 7);
-    check_str_eq(tinfo, parts4.parts[0], "rect");
-    check_str_eq(tinfo, parts4.parts[1], "x=10");
-    check_str_eq(tinfo, parts4.parts[2], "y=10");
-    check_str_eq(tinfo, parts4.parts[3], "w=220");
-    check_str_eq(tinfo, parts4.parts[4], "h=140");
-    check_str_eq(tinfo, parts4.parts[5], "fg=blue");
-    check_str_eq(tinfo, parts4.parts[6], "bg=green");
-    split_parts_clear(&parts4);
-
-    parts4 =
-        split_chr("a b c d e f g h i j k l m n o p q r s t u v w x y z "
-                  "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z",
-                  ' ');
-    check_int_eq(tinfo, parts4.nparts, MAX_SPLIT_PARTS);
-    char buf[2];
-    buf[0] = 'a';
-    buf[1] = 0;
-    for (int i = 0; i < MAX_SPLIT_PARTS; ++i) {
-        check_str_eq(tinfo, parts4.parts[i], buf);
-        buf[0]++;
-        if (i == 25)
-            buf[0] = 'A';
-    }
-    split_parts_free(&parts4);
-}
-
-static void str_test_split_ws(tinfo* tinfo) {
-    if (tinfo->verbose)
-        puts(tinfo->tag);
-
-    SplitParts parts1 = split_ws("  one\ttwo \tthree\tfour\n");
-    check_int_eq(tinfo, parts1.nparts, 4);
-    check_str_eq(tinfo, parts1.parts[0], "one");
-    check_str_eq(tinfo, parts1.parts[1], "two");
-    check_str_eq(tinfo, parts1.parts[2], "three");
-    check_str_eq(tinfo, parts1.parts[3], "four");
-    split_parts_clear(&parts1);
-
-    parts1 = split_ws("   moveto 3.5\t 7.45\n");
-    check_int_eq(tinfo, parts1.nparts, 3);
-    check_str_eq(tinfo, parts1.parts[0], "moveto");
-    check_str_eq(tinfo, parts1.parts[1], "3.5");
-    check_str_eq(tinfo, parts1.parts[2], "7.45");
-    split_parts_clear(&parts1);
-
-    parts1 = split_ws("elephant");
-    check_int_eq(tinfo, parts1.nparts, 1);
-    check_str_eq(tinfo, parts1.parts[0], "elephant");
-    split_parts_clear(&parts1);
-
-    parts1 = split_ws("   ");
-    check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_clear(&parts1);
-
-    parts1 = split_ws("");
-    check_int_eq(tinfo, parts1.nparts, 0);
-    split_parts_free(&parts1);
-
-    SplitParts parts2 = split_ws("width 240");
-    check_int_eq(tinfo, parts2.nparts, 2);
-    check_str_eq(tinfo, parts2.parts[0], "width");
-    check_str_eq(tinfo, parts2.parts[1], "240");
-    split_parts_free(&parts2);
-
-    SplitParts parts3 = split_ws("height 160");
-    check_int_eq(tinfo, parts3.nparts, 2);
-    check_str_eq(tinfo, parts3.parts[0], "height");
-    check_str_eq(tinfo, parts3.parts[1], "160");
-    split_parts_free(&parts3);
-
-    SplitParts parts4 =
-        split_ws("rect x=10 y=10 w=220 h=140 fg=blue bg=green");
-    check_int_eq(tinfo, parts4.nparts, 7);
-    check_str_eq(tinfo, parts4.parts[0], "rect");
-    check_str_eq(tinfo, parts4.parts[1], "x=10");
-    check_str_eq(tinfo, parts4.parts[2], "y=10");
-    check_str_eq(tinfo, parts4.parts[3], "w=220");
-    check_str_eq(tinfo, parts4.parts[4], "h=140");
-    check_str_eq(tinfo, parts4.parts[5], "fg=blue");
-    check_str_eq(tinfo, parts4.parts[6], "bg=green");
-    split_parts_clear(&parts4);
-
-    parts4 =
-        split_ws("\ta b c d e f g h i j k l m n o p q r s t u v w x  y z "
-                 "A B C D E F G H I J K L M N O P Q R S T U V W X  Y Z\n");
-    check_int_eq(tinfo, parts4.nparts, MAX_SPLIT_PARTS);
-    char buf[2];
-    buf[0] = 'a';
-    buf[1] = 0;
-    for (int i = 0; i < MAX_SPLIT_PARTS; ++i) {
-        check_str_eq(tinfo, parts4.parts[i], buf);
-        buf[0]++;
-        if (i == 25)
-            buf[0] = 'A';
-    }
-    split_parts_free(&parts4);
 }

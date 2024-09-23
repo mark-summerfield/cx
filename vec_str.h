@@ -2,6 +2,7 @@
 #pragma once
 
 #include "cx.h"
+#include "str.h"
 #include "vecs.h"
 #include <stdbool.h>
 
@@ -156,6 +157,32 @@ char* vec_str_longest_common_prefix(const VecStr* vec);
 // if there is no common path. This is Unix-specific. The caller owns
 // the returned string.
 char* vec_str_longest_common_path(const VecStr* vec);
+
+#define MAX_SPLIT_PARTS 32
+
+typedef struct SplitParts {
+    char* parts[MAX_SPLIT_PARTS];
+    int nparts;
+} SplitParts;
+
+// Mainly for debugging & development; dumps the parts to stdout.
+void split_parts_dump(const SplitParts* parts);
+
+// Frees all the parts and sets nparts to 0 ready for reuse.
+#define split_parts_clear(parts) split_parts_free(parts)
+
+// Must be called when a SplitParts is finished with.
+void split_parts_free(SplitParts* parts);
+
+// Splits the given line by sep (a char) into parts (each of which is a
+// new string) and returns SplitParts. The caller must call
+// split_parts_free when finished with the SplitParts.
+SplitParts split_chr(const char* line, int sep);
+
+// Splits the given line by any amount of whitespace into parts (each of
+// which is a new string) and returns SplitParts. The caller must call
+// split_parts_free when finished with the SplitParts.
+SplitParts split_ws(const char* line);
 
 // To iterate:
 //      for (int i = 0; i < vec_str_size(vec); ++i)

@@ -23,7 +23,7 @@ deq_str.c
 deq_int.h
 deq_int.c
 
-str.h # TODO replace SplitParts with VecStr
+str.h
 str.c
 
 fx.h
