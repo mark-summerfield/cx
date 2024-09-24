@@ -126,11 +126,8 @@ char* str_trimn(const char* s, size_t n) {
     return r;
 }
 
-// Returns "true" or "false" depending on b.
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }
 
-// Populates `s` with `n`'s digits plus grouping commas.
-// s should be of size `COMMA_I64_SIZE`.
 void commas(char* s, int64_t n) {
     assert_notnull(s);
     char raw[COMMA_I64_SIZE] = "";

@@ -26,15 +26,11 @@ static int find_sectid(const Ini* ini, const char* section);
 static int maybe_add_section(Ini* ini, const char* section);
 static IniItem* find_item(Ini* ini, const char* section, const char* key);
 
-// Creates an empty @link Ini@.
-// It must be freed with @link ini_free@. See also @link Ini@.
 inline Ini ini_alloc() {
     return (Ini){NULL, vec_str_alloc(),
                  vec_alloc(0, item_cmp, item_destroy)};
 }
 
-// Creates an @link Ini@ from the given `.ini` file which it parses and
-// sets ok. It must be freed with @link ini_free@. See also @link Ini@.
 Ini ini_alloc_from_file(const char* filename, bool* ok) {
     Ini ini = ini_alloc();
     bool reply = ini_merge_from_file(&ini, filename);
@@ -43,8 +39,6 @@ Ini ini_alloc_from_file(const char* filename, bool* ok) {
     return ini;
 }
 
-// Creates an @link Ini@ with the given `.ini` file text.
-// It must be freed with @link ini_free@. See also @link Ini@.
 Ini ini_alloc_from_str(const char* s) {
     assert_notnull(s);
     Ini ini = ini_alloc();
@@ -52,7 +46,6 @@ Ini ini_alloc_from_str(const char* s) {
     return ini;
 }
 
-// Merges the contents of the given `.ini` file and returns `true` if ok.
 bool ini_merge_from_file(Ini* ini, const char* filename) {
     assert(filename && ".ini filename is required");
     bool ok;
@@ -63,14 +56,11 @@ bool ini_merge_from_file(Ini* ini, const char* filename) {
     return ok;
 }
 
-// Merges the contents of the given `.ini` file text.
 void ini_merge_from_str(Ini* ini, const char* s) {
     assert(s && ".ini text is required");
     parse_text(ini, s);
 }
 
-// Must be called once the @link Ini@ is finished with.
-// Call @link ini_save@ first if the data is to be preserved.
 void ini_free(Ini* ini) {
     vec_free(&ini->items);
     vec_str_free(&ini->sections);
@@ -140,9 +130,6 @@ static void parse_item(Ini* ini, const char* p, const char* section) {
     }
 }
 
-// Saves the @link Ini@ to the given `filename` and if successful
-// returns `true`.
-// Not const since it sorts the items first.
 bool ini_save(Ini* ini, const char* filename) {
     FILE* file = fopen(filename, "w");
     if (!file) {
@@ -157,9 +144,6 @@ bool ini_save(Ini* ini, const char* filename) {
     return true;
 }
 
-// Saves the @link Ini@ to a string which the caller owns.
-// Not const since it sorts the items first.
-// Provided to ease testing.
 char* ini_save_to_str(Ini* ini) {
     char* p = NULL;
     size_t size;
@@ -233,12 +217,6 @@ static int maybe_add_section(Ini* ini, const char* section) {
     return sectid;
 }
 
-// Applicable to all the getters:
-// If section is NULL, the getters and setters will used the "no
-// section" (unnamed) section.
-// All values are held as strings. The bool, int, and real getters parse
-// the string on every call, so best to call once and keep the returned
-// value.
 IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
                       bool* value) {
     const IniItem* item = find_item((Ini*)ini, section, key);
@@ -259,9 +237,6 @@ IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
     return IniInvalidValue;
 }
 
-// Applicable to all the setters:
-// All values are held as strings. The bool, int, and real setters
-// convert their given value into strings.
 IniReply ini_get_int(const Ini* ini, const char* section, const char* key,
                      int* value) {
     const IniItem* item = find_item((Ini*)ini, section, key);
@@ -358,10 +333,6 @@ void ini_set_str(Ini* ini, const char* section, const char* key,
     }
 }
 
-// If both the section and the key are NULL, the comment will go at the
-// start of the file. For section/key comments only use if the
-// section/key exists (in which case true is returned).
-// Note that only single line comments are supported.
 bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment) {
     if (!section && !key) {

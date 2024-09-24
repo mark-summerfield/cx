@@ -47,22 +47,44 @@ typedef enum IniReply {
     IniItemFound     // Success
 } IniReply;
 
+// Creates an empty @link Ini@.
+// It must be freed with @link ini_free@. See also @link Ini@.
 Ini ini_alloc();
 
+// Creates an @link Ini@ from the given `.ini` file which it parses and
+// sets ok. It must be freed with @link ini_free@. See also @link Ini@.
 Ini ini_alloc_from_file(const char* filename, bool* ok);
 
+// Creates an @link Ini@ with the given `.ini` file text.
+// It must be freed with @link ini_free@. See also @link Ini@.
 Ini ini_alloc_from_str(const char* text);
 
+// Merges the contents of the given `.ini` file and returns `true` if ok.
 bool ini_merge_from_file(Ini* ini, const char* filename);
 
+// Merges the contents of the given `.ini` file text.
 void ini_merge_from_str(Ini* ini, const char* text);
 
+// Must be called once the @link Ini@ is finished with.
+// Call @link ini_save@ first if the data is to be preserved.
 void ini_free(Ini* ini);
 
+// Saves the @link Ini@ to the given `filename` and if successful
+// returns `true`.
+// Not const since it sorts the items first.
 bool ini_save(Ini* ini, const char* filename);
 
+// Saves the @link Ini@ to a string which the caller owns.
+// Not const since it sorts the items first.
+// Provided to ease testing.
 char* ini_save_to_str(Ini* ini);
 
+// For all getters:
+// If section is NULL, the getters and setters will used the "no
+// section" (unnamed) section.
+// All values are held as strings. The bool, int, and real getters parse
+// the string on every call, so best to call once and keep the returned
+// value.
 IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
                       bool* value);
 IniReply ini_get_int(const Ini* ini, const char* section, const char* key,
@@ -72,6 +94,9 @@ IniReply ini_get_real(const Ini* ini, const char* section, const char* key,
 const char* ini_get_str(const Ini* ini, const char* section,
                         const char* key);
 
+// For all setters:
+// All values are held as strings. The bool, int, and real setters
+// convert their given value into strings.
 void ini_set_bool(Ini* ini, const char* section, const char* key,
                   bool value);
 void ini_set_int(Ini* ini, const char* section, const char* key, int value);
@@ -80,5 +105,9 @@ void ini_set_real(Ini* ini, const char* section, const char* key,
 void ini_set_str(Ini* ini, const char* section, const char* key,
                  const char* value);
 
+// If both the section and the key are NULL, the comment will go at the
+// start of the file. For section/key comments only use if the
+// section/key exists (in which case true is returned).
+// Note that only single line comments are supported.
 bool ini_set_comment(Ini* ini, const char* section, const char* key,
                      const char* comment);
