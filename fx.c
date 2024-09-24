@@ -23,7 +23,10 @@ char* file_change_ext(const char* filename, const char* ext) {
     const int base_size = strlen(filename);
     char* name = calloc(1, base_size + (ext_size - dot_size) + 1);
     assert_alloc(name);
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#pragma GCC diagnostic push
     char* p = stpncpy(name, filename, base_size - dot_size);
+#pragma GCC diagnostic pop
     strcpy(p, ext);
     return name;
 }
