@@ -18,11 +18,12 @@ inline const char* file_ext(const char* filename) {
 
 char* file_change_ext(const char* filename, const char* ext) {
     char* dot = strrchr(filename, '.');
+    const int dot_size = dot ? strlen(dot) : 0;
     const int ext_size = strlen(ext);
     const int base_size = strlen(filename);
-    char* name = calloc(1, base_size + ext_size + 1);
+    char* name = calloc(1, base_size + (ext_size - dot_size) + 1);
     assert_alloc(name);
-    char* p = stpncpy(name, filename, base_size - (dot ? strlen(dot) : 0));
+    char* p = stpncpy(name, filename, base_size - dot_size);
     strcpy(p, ext);
     return name;
 }

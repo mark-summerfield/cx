@@ -1,8 +1,6 @@
 # Ideas for additions at the end
 
 cx.h
-ini.h
-ini.c
 vecs.h
 vec.h
 vec.c
@@ -25,6 +23,8 @@ deq_str.h
 deq_str.c
 deq_int.h
 deq_int.c
+ini.h
+ini.c
 
 str.h
 str.c

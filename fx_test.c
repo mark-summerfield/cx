@@ -68,6 +68,9 @@ void fx_tests(tinfo* tinfo) {
     // replace with longer
     check_file_change_ext(tinfo, "/home/mark/archive.tar", ".tar.gz",
                           "/home/mark/archive.tar.gz");
+    // replace with shorter
+    check_file_change_ext(tinfo, "/home/mark/archive.tar-gz", ".tgz",
+                          "/home/mark/archive.tgz");
 }
 
 void check_file_change_ext(tinfo* tinfo, const char* filename,
