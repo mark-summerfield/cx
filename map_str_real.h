@@ -44,12 +44,6 @@ void map_str_real_clear(MapStrReal* map);
 // Returns true if the MapStrReal is owning.
 #define map_str_real_owns(map) ((map)->_owns)
 
-// Returns true if the MapStrReal is empty.
-#define map_str_real_isempty(map) ((map)->_size == 0)
-
-// Returns the MapStrReal's size.
-#define map_str_real_size(map) ((map)->_size)
-
 // Adds the key-value in key order if the key isn't present and returns
 // true. If the key was already present, updates the value and returns
 // false.

@@ -32,12 +32,6 @@ void set_int_free(SetInt* set);
 // Calls destroy on all the SetInt's values.
 void set_int_clear(SetInt* set);
 
-// Returns true if the SetInt is empty.
-#define set_int_isempty(set) ((set)->_size == 0)
-
-// Returns the SetInt's size.
-#define set_int_size(set) ((set)->_size)
-
 // Adds the value in order. If the value was already present, does nothing
 // and returns false; otherwise inserts the new value and returns true.
 bool set_int_add(SetInt* set, int value);

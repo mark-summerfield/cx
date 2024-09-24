@@ -3,6 +3,7 @@
 #include "set_int_test.h"
 #include "exit.h"
 #include "set_int.h"
+#include "sets.h"
 #include "vec_int.h"
 #include <math.h>
 #include <stdlib.h>
@@ -66,13 +67,13 @@ static void test_visit(tinfo* tinfo) {
         set_int_add(&set1, i);
     check_equal_ints(tinfo, &set1, (int[]){1, 2, 3, 4, 5, 6, 7, 8}, 8);
     set_int_visit(&set1, &state, summer);
-    check_int_eq(tinfo, set_int_size(&set1), 8);
+    check_int_eq(tinfo, SET_SIZE(&set1), 8);
     check_int_eq(tinfo, state.sum, 36);
     for (int i = 1; i < 111; ++i)
         set_int_add(&set1, i);
     state.sum = 0;
     set_int_visit(&set1, &state, summer);
-    check_int_eq(tinfo, set_int_size(&set1), 110);
+    check_int_eq(tinfo, SET_SIZE(&set1), 110);
     check_int_eq(tinfo, state.sum, 6105);
     set_int_free(&set1);
 }
@@ -133,7 +134,7 @@ static void test_intersection(tinfo* tinfo) {
     check_equal_ints(tinfo, &set2, (int[]){12, 14, 16, 18, 20, 22}, 6);
     SetInt set3 = set_int_intersection(&set1, &set2);
     tinfo->total++;
-    if (!set_int_isempty(&set3))
+    if (!SET_ISEMPTY(&set3))
         WARN("FAIL: %s set3 unexpectedly nonempty\n", tinfo->tag);
     else
         tinfo->ok++;
@@ -193,7 +194,7 @@ static void test_difference(tinfo* tinfo) {
     set_int_clear(&set3);
     set3 = set_int_difference(&set1, &set2);
     tinfo->total++;
-    if (!set_int_isempty(&set3))
+    if (!SET_ISEMPTY(&set3))
         WARN("FAIL: %s set3 unexpectedly nonempty\n", tinfo->tag);
     else
         tinfo->ok++;
@@ -203,7 +204,7 @@ static void test_difference(tinfo* tinfo) {
     set_int_clear(&set3);
     set3 = set_int_difference(&set1, &set2);
     tinfo->total++;
-    if (!set_int_isempty(&set3))
+    if (!SET_ISEMPTY(&set3))
         WARN("FAIL: %s set3 unexpectedly nonempty\n", tinfo->tag);
     else
         tinfo->ok++;
@@ -361,9 +362,9 @@ static void test_bigs(tinfo* tinfo) {
 
 static void check_all(tinfo* tinfo, const SetInt* set, int size) {
     tinfo->total++;
-    if (set_int_size(set) != size)
-        WARN("FAIL: %s set_int_size() expected %d != %d\n", tinfo->tag,
-             size, set_int_size(set));
+    if (SET_SIZE(set) != size)
+        WARN("FAIL: %s SET_SIZE() expected %d != %d\n", tinfo->tag, size,
+             SET_SIZE(set));
     else
         tinfo->ok++;
 
@@ -459,7 +460,7 @@ static void check_order(tinfo* tinfo, const SetInt* set) {
 static void check_equal_ints(tinfo* tinfo, const SetInt* set,
                              const int* ints, int size) {
     tinfo->total++;
-    const int SIZE = set_int_size(set);
+    const int SIZE = SET_SIZE(set);
     if (SIZE != size)
         WARN("FAIL: %s check_equal_ints set size %d expected %d\n",
              tinfo->tag, SIZE, size);

@@ -36,12 +36,6 @@ void set_str_clear(SetStr* set);
 // Returns true if the SetStr is owning.
 #define set_str_owns(set) ((set)->_owns)
 
-// Returns true if the SetStr is empty.
-#define set_str_isempty(set) ((set)->_size == 0)
-
-// Returns the SetStr's size.
-#define set_str_size(set) ((set)->_size)
-
 // Adds the value in order. If the value was already present, does nothing
 // and returns false; otherwise inserts the new value and returns true.
 // If owning, SetStr takes ownership of the new value (e.g., use strdup()).

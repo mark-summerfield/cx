@@ -3,6 +3,7 @@
 #include "set_str_test.h"
 #include "exit.h"
 #include "set_str.h"
+#include "sets.h"
 #include "str.h"
 #include "vec_str.h"
 #include <math.h>
@@ -140,7 +141,7 @@ static void test_difference(tinfo* tinfo) {
     SetStr set3 = set_str_difference(&set1, &set2, BORROWS);
     check_set_strs(tinfo, &set3, "eight|eleven|four|six|ten|two");
     SetStr set4 = set_str_difference(&set3, &set3, BORROWS);
-    check_bool_eq(tinfo, set_str_isempty(&set4), true);
+    check_bool_eq(tinfo, SET_ISEMPTY(&set4), true);
     set_str_clear(&set3);
     set3 = set_str_difference(&set2, &set1, BORROWS);
     check_set_strs(tinfo, &set3, "nine");
@@ -164,12 +165,12 @@ static void test_intersection(tinfo* tinfo) {
     set_str_clear(&set4);
     set_str_clear(&set3);
     set3 = set_str_intersection(&set1, &set4, BORROWS);
-    check_bool_eq(tinfo, set_str_isempty(&set3), true);
+    check_bool_eq(tinfo, SET_ISEMPTY(&set3), true);
     set_str_add(&set4, "ABC");
     set_str_add(&set4, "XY");
     set_str_clear(&set3);
     set3 = set_str_intersection(&set1, &set4, BORROWS);
-    check_bool_eq(tinfo, set_str_isempty(&set3), true);
+    check_bool_eq(tinfo, SET_ISEMPTY(&set3), true);
     set_str_free(&set4);
     set_str_free(&set3);
     set_str_free(&set2);
@@ -241,9 +242,9 @@ static void test_visit(tinfo* tinfo) {
 
 static void check_all(tinfo* tinfo, const SetStr* set, int size) {
     tinfo->total++;
-    if (set_str_size(set) != size)
-        WARN("FAIL: %s set_str_size() expected %d != %d\n", tinfo->tag,
-             size, set_str_size(set));
+    if (SET_SIZE(set) != size)
+        WARN("FAIL: %s SET_SIZE() expected %d != %d\n", tinfo->tag, size,
+             SET_SIZE(set));
     else
         tinfo->ok++;
 
