@@ -1,42 +1,44 @@
 # Ideas for additions at the end
 
+# TODO fixhtml.py to strip out Parameters and Return Value
 # TODO complete docs: migrate definition docs from .h to .c files
 
-cx.h
-ini.h
-ini.c
-vecs.h
-vec.h
-vec.c
-vec_str.h
-vec_str.c
-vec_int.h
-vec_int.c
-set_str.h
-set_str.c
-set_int.h
-set_int.c
-map_str_real.h
-map_str_real.c
-deq_str.h
-deq_str.c
-deq_int.h
-deq_int.c
+R D (R=review D=docs)
+- - cx.h
+- - ini.h
+- - ini.c
+- - vecs.h
+- - vec.h
+- - vec.c
+- - vec_str.h
+- - vec_str.c
+- - vec_int.h
+- - vec_int.c
+- - set_str.h
+- - set_str.c
+- - set_int.h
+- - set_int.c
+- - map_str_real.h
+- - map_str_real.c
+- - deq_str.h
+- - deq_str.c
+- - deq_int.h
+- - deq_int.c
 
-str.h
-str.c
+- - str.h
+- - str.c
 
-fx.h
-fx.c
+- - fx.h
+- - fx.c
 
-mx.h
-mx.c
+- - mx.h
+- - mx.c
 
-tx.h
+- - tx.h
 
-exit.h
+- - exit.h
 
-vaargs.h
+- - vaargs.h
 
 cx_test.c
 cx_util_test.h
@@ -75,6 +77,7 @@ SConstruct
 st.sh
 
 doc.sh
+fixhtml.py
 doc.css
 
 # Do these as needed:

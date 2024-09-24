@@ -28,12 +28,15 @@ void vec_int_tests(tinfo* tinfo) {
         vec_int_push(&v1, i);
         if (i < 10)
             vec_int_push(&v2, i);
-        check_size_cap(tinfo, &v1, i, i <= 32 ? 32 : 64);
+        int size = i <= VEC_INITIAL_CAP     ? VEC_INITIAL_CAP
+                   : i <= VEC_INITIAL_CAPx2 ? VEC_INITIAL_CAPx2
+                                            : VEC_INITIAL_CAPx4;
+        check_size_cap(tinfo, &v1, i, size);
     }
     tinfo->ok++;
 
-    check_size_cap(tinfo, &v1, 35, 64);
-    check_size_cap(tinfo, &v2, 9, 32);
+    check_size_cap(tinfo, &v1, 35, VEC_INITIAL_CAPx4);
+    check_size_cap(tinfo, &v2, 9, VEC_INITIAL_CAP);
     match(tinfo, &v1,
           "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 "
           "20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35");
@@ -173,13 +176,13 @@ void vec_int_tests(tinfo* tinfo) {
     check_found(tinfo, index, 16);
 
     vec_int_clear(&v1);
-    check_size_cap(tinfo, &v1, 0, 64);
+    check_size_cap(tinfo, &v1, 0, VEC_INITIAL_CAPx4);
     vec_int_push(&v1, -19);
     match(tinfo, &v1, "-19");
     vec_int_free(&v1);
     check_size_cap(tinfo, &v1, 0, 0);
     vec_int_clear(&v2);
-    check_size_cap(tinfo, &v2, 0, 32);
+    check_size_cap(tinfo, &v2, 0, VEC_INITIAL_CAP);
     vec_int_free(&v2);
     check_size_cap(tinfo, &v2, 0, 0);
     vec_int_free(&v3);
@@ -200,7 +203,7 @@ static void merge_tests(tinfo* tinfo) {
     check_size_cap(tinfo, &v2, 0, 0);
     for (int i = 6; i < 12; ++i)
         vec_int_push(&v2, i);
-    check_size_cap(tinfo, &v2, 6, 32);
+    check_size_cap(tinfo, &v2, 6, VEC_INITIAL_CAP);
     match(tinfo, &v2, "6 7 8 9 10 11");
 
     vec_int_merge(&v1, &v2);

@@ -126,6 +126,7 @@ char* str_trimn(const char* s, size_t n) {
     return r;
 }
 
+// Returns "true" or "false" depending on b.
 inline const char* bool_to_str(bool b) { return b ? "true" : "false"; }
 
 // Populates `s` with `n`'s digits plus grouping commas.

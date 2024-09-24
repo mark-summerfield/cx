@@ -55,17 +55,21 @@ void vec_str_tests(tinfo* tinfo) {
     tinfo->total++;
     int WORD_COUNT = sizeof(WORDS) / sizeof(char*);
     for (int i = 0; i < WORD_COUNT; ++i) {
-        check_size_cap(tinfo, &v1, i, i == 0 ? 0 : i <= 32 ? 32 : 64);
+        int size = i == 0                   ? 0
+                   : i <= VEC_INITIAL_CAP   ? VEC_INITIAL_CAP
+                   : i <= VEC_INITIAL_CAPx2 ? VEC_INITIAL_CAPx2
+                                            : VEC_INITIAL_CAPx4;
+        check_size_cap(tinfo, &v1, i, size);
         vec_str_push(&v1, strdup(WORDS[i]));
         if (i < 10) {
-            check_size_cap(tinfo, &v2, i, i == 0 ? 0 : 32);
+            check_size_cap(tinfo, &v2, i, i == 0 ? 0 : VEC_INITIAL_CAP);
             vec_str_push(&v2, (char*)WORDS[i]);
         }
     }
     tinfo->ok++;
 
-    check_size_cap(tinfo, &v1, WORD_COUNT, 64);
-    check_size_cap(tinfo, &v2, 10, 32);
+    check_size_cap(tinfo, &v1, WORD_COUNT, VEC_INITIAL_CAPx4);
+    check_size_cap(tinfo, &v2, 10, VEC_INITIAL_CAP);
     const char* V2 =
         "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa";
     match(tinfo, &v2, V2);
@@ -78,8 +82,8 @@ void vec_str_tests(tinfo* tinfo) {
         free(s);
     }
     match(tinfo, &v1, V2);
-    check_size_cap(tinfo, &v1, 10, 64);
-    check_size_cap(tinfo, &v2, 10, 32);
+    check_size_cap(tinfo, &v1, 10, VEC_INITIAL_CAPx4);
+    check_size_cap(tinfo, &v2, 10, VEC_INITIAL_CAP);
     equal(tinfo, &v1, &v2);
 
     vec_str_push(&v1, strdup("alpha"));
@@ -168,16 +172,16 @@ void vec_str_tests(tinfo* tinfo) {
     check_found(tinfo, index, 6);
 
     vec_str_clear(&v1);
-    check_size_cap(tinfo, &v1, 0, 64);
+    check_size_cap(tinfo, &v1, 0, VEC_INITIAL_CAPx4);
     vec_str_push(&v1, strdup("more"));
     const char* more = vec_str_get(&v1, 0);
     check_str_eq(tinfo, more, "more");
     match(tinfo, &v1, "more");
-    check_size_cap(tinfo, &v1, 1, 64);
+    check_size_cap(tinfo, &v1, 1, VEC_INITIAL_CAPx4);
     vec_str_free(&v1);
     check_size_cap(tinfo, &v1, 0, 0);
     vec_str_clear(&v2);
-    check_size_cap(tinfo, &v2, 0, 32);
+    check_size_cap(tinfo, &v2, 0, VEC_INITIAL_CAP);
     vec_str_free(&v2);
     check_size_cap(tinfo, &v2, 0, 0);
 
@@ -216,7 +220,7 @@ static void merge_tests(tinfo* tinfo) {
 
     VecStr v2 = split_str("six\tseven\teight\tnine\tten\televen", "\t");
     match(tinfo, &v2, "six|seven|eight|nine|ten|eleven");
-    check_size_cap(tinfo, &v2, 6, 32);
+    check_size_cap(tinfo, &v2, 6, VEC_INITIAL_CAP);
 
     vec_str_merge(&v1, &v2);
     match(tinfo, &v1,
