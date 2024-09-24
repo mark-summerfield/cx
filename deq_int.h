@@ -27,12 +27,6 @@ void deq_int_free(DeqInt* deq);
 // Clears a DeqInt and all its values.
 void deq_int_clear(DeqInt* deq);
 
-// Returns true if the DeqInt is empty.
-#define deq_int_isempty(deq) ((deq)->_size == 0)
-
-// Returns the DeqInt's size.
-#define deq_int_size(deq) ((deq)->_size)
-
 // Returns the DeqInt's first value. The DeqInt must not be empty.
 int deq_int_first(DeqInt* deq);
 

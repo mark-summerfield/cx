@@ -86,10 +86,10 @@ void vec_add(Vec* vec, void* value) {
     assert_notnull(vec);
     assert_notnull(value);
     int high = vec->_size - 1;
-    if (!vec->_size || vec->_cmp(&vec->_values[high], &value) <= 0) {
+    if (!vec->_size || vec->_cmp(&vec->_values[high], &value) <= 0)
         vec_push(vec,
                  value); // Vec is empty -or- nonempty and value >= high
-    } else {
+    else {
         int low = 0;
         while (low < high) {
             int mid = (low + high) / 2;
@@ -146,10 +146,7 @@ void vec_push(Vec* vec, void* value) {
 }
 
 Vec vec_copy(const Vec* vec, void* (*cpy)(const void*)) {
-#pragma GCC diagnostic ignored "-Woverride-init"
-#pragma GCC diagnostic push
     Vec out = vec_alloc(vec->_size, vec->_cmp, vec->_destroy);
-#pragma GCC diagnostic pop
     for (int i = 0; i < vec->_size; ++i)
         vec_push(&out, cpy(vec->_values[i]));
     return out;
@@ -235,7 +232,7 @@ int vec_search(const Vec* vec, const void* value) {
 static void vec_grow(Vec* vec) {
     int cap = vec->_cap;
     assert((!cap && !vec->_values) || (cap && vec->_values));
-    vec->_cap = GROW_CAP(cap);
+    vec->_cap = VEC_GROW_CAP(cap);
     vec->_values = realloc(vec->_values, vec->_cap * sizeof(void*));
     assert_alloc(vec->_values);
 }

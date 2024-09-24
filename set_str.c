@@ -230,7 +230,7 @@ SetStr set_str_copy(const SetStr* set, bool owns) {
     SetStr set2 = set_str_alloc(owns);
     VecStr vec = set_str_to_vec(set, BORROWS);
     for (int i = 0; i < VEC_SIZE(&vec); i++) {
-        char* value = vec_str_get(&vec, i);
+        char* value = VEC_GET(&vec, i);
         set_str_add(&set2, owns ? strdup(value) : value);
     }
     vec_str_free(&vec);
@@ -325,13 +325,13 @@ void set_str_unite(SetStr* set1, const SetStr* set2) {
     VecStr vec = set_str_to_vec(set2, BORROWS);
     if (set1->_owns) // only add new values to avoid freeing dups
         for (int i = 0; i < VEC_SIZE(&vec); ++i) {
-            char* value = vec_str_get(&vec, i);
+            char* value = VEC_GET(&vec, i);
             if (!set_str_contains(set1, value))
                 set_str_add(set1, strdup(value));
         }
     else // no problem to add (or not if dup) borrowed pointer
         for (int i = 0; i < VEC_SIZE(&vec); ++i)
-            set_str_add(set1, vec_str_get(&vec, i));
+            set_str_add(set1, VEC_GET(&vec, i));
     vec_str_free(&vec);
 }
 

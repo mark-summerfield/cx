@@ -69,10 +69,10 @@ void vec_int_add(VecInt* vec, int value) {
     assert_notnull(vec);
     assert_notnull(value);
     int high = vec->_size - 1;
-    if (!vec->_size || vec->_values[high] <= value) {
+    if (!vec->_size || vec->_values[high] <= value)
         vec_int_push(vec,
                      value); // vec is empty -or- nonempty and value >= high
-    } else {
+    else {
         int low = 0;
         while (low < high) {
             int mid = (low + high) / 2;
@@ -207,7 +207,7 @@ char* vec_int_to_str(const VecInt* vec) {
     int pos = 0;
     char buf[BUF_SIZE];
     for (int i = 0; i < VEC_SIZE; ++i) {
-        size_t n = snprintf(buf, BUF_SIZE, "%d ", vec_int_get(vec, i));
+        size_t n = snprintf(buf, BUF_SIZE, "%d ", VEC_GET(vec, i));
         strncpy(&s[pos], buf, n);
         pos += n;
         if (pos + 4 > cap) {
@@ -232,7 +232,7 @@ void vec_int_dump(const VecInt* vec) {
 static void vec_int_grow(VecInt* vec) {
     int cap = vec->_cap;
     assert((!cap && !vec->_values) || (cap && vec->_values));
-    vec->_cap = GROW_CAP(cap);
+    vec->_cap = VEC_GROW_CAP(cap);
     vec->_values = realloc(vec->_values, vec->_cap * sizeof(int));
     assert_alloc(vec->_values);
 }

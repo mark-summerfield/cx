@@ -33,12 +33,6 @@ void deq_str_clear(DeqStr* deq);
 // Returns true if the DeqStr is owning.
 #define deq_str_owns(deq) ((deq)->_owns)
 
-// Returns true if the DeqStr is empty.
-#define deq_str_isempty(deq) ((deq)->_size == 0)
-
-// Returns the DeqStr's size.
-#define deq_str_size(deq) ((deq)->_size)
-
 // Returns the DeqStr's first value or NULL if empty.
 const char* deq_str_first(DeqStr* deq);
 

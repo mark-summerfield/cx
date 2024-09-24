@@ -182,7 +182,7 @@ void vec_byte_dump(const VecByte* vec) {
 static void vec_byte_grow(VecByte* vec) {
     int cap = vec->_cap;
     assert((!cap && !vec->_values) || (cap && vec->_values));
-    vec->_cap = GROW_CAP(cap);
+    vec->_cap = VEC_GROW_CAP(cap);
     vec->_values = realloc(vec->_values, vec->_cap * sizeof(byte));
     assert_alloc(vec->_values);
 }

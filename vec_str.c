@@ -80,10 +80,10 @@ void vec_str_add(VecStr* vec, char* value) {
     assert_notnull(vec);
     assert_notnull(value);
     int high = vec->_size - 1;
-    if (!vec->_size || strcmp(vec->_values[high], value) <= 0) {
+    if (!vec->_size || strcmp(vec->_values[high], value) <= 0)
         vec_str_push(vec,
                      value); // vec is empty -or- nonempty and value >= high
-    } else {
+    else {
         int low = 0;
         while (low < high) {
             int mid = (low + high) / 2;
@@ -282,20 +282,20 @@ char* vec_str_longest_common_path(const VecStr* vec) {
 
 char* vec_str_join(const VecStr* vec, const char* sep) {
     assert_notnull(vec);
-    const int VEC_SIZE = vec->_size;
-    if (!VEC_SIZE)
+    const int SIZE = vec->_size;
+    if (!SIZE)
         return NULL; // empty
     const int SEP_SIZE = sep ? strlen(sep) : 0;
     int size = 0;
-    for (int i = 0; i < VEC_SIZE; ++i)
+    for (int i = 0; i < SIZE; ++i)
         size += strlen(vec->_values[i]);
-    size += ((VEC_SIZE - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
+    size += ((SIZE - 1) * SEP_SIZE) + 1; // +1 for 0-terminator
     char* s = malloc(size);
     assert_alloc(s);
     char* p = s;
-    for (int i = 0; i < VEC_SIZE; ++i) {
+    for (int i = 0; i < SIZE; ++i) {
         p = stpcpy(p, vec->_values[i]);
-        if (sep && (i + 1 < VEC_SIZE)) // avoid adding sep at the end
+        if (sep && (i + 1 < SIZE)) // avoid adding sep at the end
             p = stpncpy(p, sep, SEP_SIZE);
     }
     return s;
@@ -398,7 +398,7 @@ void vec_str_dump(const VecStr* vec) {
 static void vec_str_grow(VecStr* vec) {
     int cap = vec->_cap;
     assert((!cap && !vec->_values) || (cap && vec->_values));
-    vec->_cap = GROW_CAP(cap);
+    vec->_cap = VEC_GROW_CAP(cap);
     vec->_values = realloc(vec->_values, vec->_cap * sizeof(char*));
     assert_alloc(vec->_values);
 }

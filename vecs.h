@@ -34,5 +34,5 @@
 // insert, or push on cap 0, cap goes to VEC_INITIAL_CAP, then doubles
 // each time until it exceeds 1MB, then grows by 1MB each time the cap
 // is reached.
-#define GROW_CAP(cap) \
+#define VEC_GROW_CAP(cap) \
     (!(cap) ? VEC_INITIAL_CAP : (cap) < 1048576 ? (cap)*2 : (cap) + 1048576)

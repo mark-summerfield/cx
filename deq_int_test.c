@@ -2,6 +2,7 @@
 
 #include "deq_int_test.h"
 #include "deq_int.h"
+#include "deqs.h"
 #include "exit.h"
 #include <stdio.h>
 
@@ -50,8 +51,8 @@ void deq_int_tests(tinfo* tinfo) {
 
 static void check_size_and_contents(tinfo* tinfo, DeqInt* deq, int size,
                                     int* ints) {
-    check_bool_eq(tinfo, size == 0, deq_int_isempty(deq));
-    check_int_eq(tinfo, size, deq_int_size(deq));
+    check_bool_eq(tinfo, size == 0, DEQ_ISEMPTY(deq));
+    check_int_eq(tinfo, size, DEQ_SIZE(deq));
     if (size) {
         tinfo->total++;
         if (ints[0] != deq_int_first(deq))

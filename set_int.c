@@ -312,7 +312,7 @@ void set_int_unite(SetInt* set1, const SetInt* set2) {
     assert_notnull(set2);
     VecInt vec = set_int_to_vec(set2);
     for (int i = 0; i < VEC_SIZE(&vec); ++i)
-        set_int_add(set1, vec_int_get(&vec, i));
+        set_int_add(set1, VEC_GET(&vec, i));
     vec_int_free(&vec);
 }
 

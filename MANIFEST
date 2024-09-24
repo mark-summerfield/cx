@@ -20,6 +20,7 @@ set_int.c
 maps.h
 map_str_real.h
 map_str_real.c
+deqs.h
 deq_str.h
 deq_str.c
 deq_int.h

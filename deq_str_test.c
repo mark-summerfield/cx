@@ -2,6 +2,7 @@
 
 #include "deq_str_test.h"
 #include "deq_str.h"
+#include "deqs.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -94,8 +95,8 @@ static void check_size_and_contents(tinfo* tinfo, DeqStr* deq,
                                     const char* expected, const char* first,
                                     const char* last) {
     bool empty = !strlen(expected);
-    check_bool_eq(tinfo, empty, deq_str_isempty(deq));
-    if (!deq_str_isempty(deq)) {
+    check_bool_eq(tinfo, empty, DEQ_ISEMPTY(deq));
+    if (!DEQ_ISEMPTY(deq)) {
         check_str_eq(tinfo, first, deq_str_first(deq));
         check_str_eq(tinfo, last, deq_str_last(deq));
         char* actual = deq_str_join(deq, "|");
