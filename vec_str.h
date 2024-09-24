@@ -32,15 +32,6 @@ void vec_str_clear(VecStr* vec);
 // Returns true if the VecStr owns its strings.
 #define vec_str_owns(vec) ((vec)->_owns)
 
-// Returns true if the VecStr is empty.
-#define vec_str_isempty(vec) ((vec)->_size == 0)
-
-// Returns the VecStr's size.
-#define vec_str_size(vec) ((vec)->_size)
-
-// Returns the VecStr's capacity.
-#define vec_str_cap(vec) ((vec)->_cap)
-
 // Returns the VecStr's value at position index.
 // VecStr retains ownership (if owns), so do not delete the value.
 // The VEC_GET() macro is faster but unchecked.
@@ -173,5 +164,5 @@ VecStr split_ws(const char* s);
 void vec_str_dump(const VecStr* vec);
 
 // To iterate:
-//      for (int i = 0; i < vec_str_size(vec); ++i)
+//      for (int i = 0; i < VEC_SIZE(vec); ++i)
 //          const char* value = VEC_GET(vec, i);

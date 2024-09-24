@@ -444,7 +444,7 @@ static void check_order(tinfo* tinfo, const SetInt* set) {
     tinfo->total++;
     bool ok = true;
     VecInt vec = set_int_to_vec(set);
-    for (int i = 1; i < vec_int_size(&vec); ++i)
+    for (int i = 1; i < VEC_SIZE(&vec); ++i)
         if (vec_int_get(&vec, i - 1) > vec_int_get(&vec, i)) {
             ok = false;
             break;

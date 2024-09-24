@@ -163,10 +163,10 @@ static void check_size(tinfo* tinfo, const MapStrReal* map, int size) {
 static void check_pairs(tinfo* tinfo, const MapStrReal* map) {
     Vec pairs = map_str_real_to_vec(map);
     VecStr keys = map_str_real_keys(map);
-    check_int_eq(tinfo, vec_size(&pairs), map_str_real_size(map));
-    check_int_eq(tinfo, vec_str_size(&keys), map_str_real_size(map));
+    check_int_eq(tinfo, VEC_SIZE(&pairs), map_str_real_size(map));
+    check_int_eq(tinfo, VEC_SIZE(&keys), map_str_real_size(map));
     bool ok;
-    for (int i = 0; i < vec_size(&pairs); ++i) {
+    for (int i = 0; i < VEC_SIZE(&pairs); ++i) {
         const StrRealPair* pair = vec_get(&pairs, i);
         double d = map_str_real_get(map, pair->key, &ok);
         check_bool_eq(tinfo, ok, true);

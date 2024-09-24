@@ -30,15 +30,6 @@ void vec_byte_free(VecByte* vec);
 // Clears all the VecByte's values.
 void vec_byte_clear(VecByte* vec);
 
-// Returns true if the VecByte is empty.
-#define vec_byte_isempty(vec) ((vec)->_size == 0)
-
-// Returns the VecByte's size.
-#define vec_byte_size(vec) ((vec)->_size)
-
-// Returns the VecByte's capacity.
-#define vec_byte_cap(vec) ((vec)->_cap)
-
 // Returns the VecByte's byte value at position index.
 // The VEC_GET() macro is faster but unchecked.
 byte vec_byte_get(const VecByte* vec, int index);
@@ -107,5 +98,5 @@ char* vec_byte_to_str(const VecByte* vec);
 void vec_byte_dump(const VecByte* vec);
 
 // To iterate:
-//      for (int i = 0; i < vec_byte_size(vec); ++i)
+//      for (int i = 0; i < VEC_SIZE(vec); ++i)
 //          byte value = VEC_GET(vec, i);

@@ -113,7 +113,7 @@ static void misc_tests(tinfo* tinfo) {
     check_int_eq(tinfo, t2->id, 102);
 
     vec_set(&v1, 0, tag_make(false));
-    vec_set(&v1, vec_size(&v1) - 1, tag_make(false));
+    vec_set(&v1, VEC_SIZE(&v1) - 1, tag_make(false));
     vec_set(&v1, 3, tag_make(false));
     vec_push(&v1, tag_make(false));
     check_size_cap(tinfo, &v1, 6, 10);
@@ -125,7 +125,7 @@ static void misc_tests(tinfo* tinfo) {
     t1 = vec_replace(&v1, 4, tag_make(false));
     tag_free(t1);
     free(t1);
-    t1 = vec_replace(&v1, vec_size(&v1) - 1, tag_make(false));
+    t1 = vec_replace(&v1, VEC_SIZE(&v1) - 1, tag_make(false));
     tag_free(t1);
     free(t1);
     check_size_cap(tinfo, &v1, 6, 10);
@@ -135,7 +135,7 @@ static void misc_tests(tinfo* tinfo) {
     check_size_cap(tinfo, &v1, 5, 10);
     match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112|An#113");
 
-    vec_remove(&v1, vec_size(&v1) - 1);
+    vec_remove(&v1, VEC_SIZE(&v1) - 1);
     check_size_cap(tinfo, &v1, 4, 10);
     match(tinfo, &v1, "Ab#101|Ac#102|Aj#109|Am#112");
 
@@ -311,7 +311,7 @@ static void sort_tests(tinfo* tinfo) {
 static void match(tinfo* tinfo, const Vec* v, const char* expected) {
     char buf[1000] = {0}; // guarantee start with NUL if Vec is empty
     int n = 0;
-    for (int i = 0; i < vec_size(v); ++i) {
+    for (int i = 0; i < VEC_SIZE(v); ++i) {
         const Tag* tag = vec_get(v, i);
         n += sprintf(&buf[n], "%s|", tag->name);
     }
@@ -322,24 +322,24 @@ static void match(tinfo* tinfo, const Vec* v, const char* expected) {
 
 static void check_size_cap(tinfo* tinfo, const Vec* v, int size, int cap) {
     tinfo->total++;
-    if (vec_size(v) != size)
-        WARN("FAIL: %s vec_size() expected %d != %d\n", tinfo->tag, size,
-             vec_size(v));
+    if (VEC_SIZE(v) != size)
+        WARN("FAIL: %s VEC_SIZE() expected %d != %d\n", tinfo->tag, size,
+             VEC_SIZE(v));
     else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_isempty(v) != (size == 0))
-        WARN("FAIL: %s vec_isempty() expected %s != %s size=%d\n",
+    if (VEC_ISEMPTY(v) != (size == 0))
+        WARN("FAIL: %s VEC_ISEMPTY() expected %s != %s size=%d\n",
              tinfo->tag, bool_to_str(size == 0),
-             bool_to_str(vec_isempty(v)), size);
+             bool_to_str(VEC_ISEMPTY(v)), size);
     else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_cap(v) != cap)
-        WARN("FAIL: %s vec_cap() expected %d != %d\n", tinfo->tag, cap,
-             vec_cap(v));
+    if (VEC_CAP(v) != cap)
+        WARN("FAIL: %s VEC_CAP() expected %d != %d\n", tinfo->tag, cap,
+             VEC_CAP(v));
     else
         tinfo->ok++;
 }

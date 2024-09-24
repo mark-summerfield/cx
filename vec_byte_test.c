@@ -62,7 +62,7 @@ void vec_byte_tests(tinfo* tinfo) {
     match(tinfo, &v1, "17 21 01 02 03 04 37 05 06 07 08 09 63");
 
     VecByte v3 = vec_byte_copy(&v1);
-    check_size_cap(tinfo, &v3, vec_byte_size(&v1), vec_byte_size(&v1));
+    check_size_cap(tinfo, &v3, VEC_SIZE(&v1), VEC_SIZE(&v1));
 
     int x = vec_byte_get(&v1, 0);
     check_int_eq(tinfo, x, 0x17);
@@ -176,24 +176,24 @@ static void match(tinfo* tinfo, VecByte* v, char* expected) {
 
 static void check_size_cap(tinfo* tinfo, VecByte* v, int size, int cap) {
     tinfo->total++;
-    if (vec_byte_size(v) != size)
-        WARN("FAIL: %s vec_byte_size() expected %d != %d\n", tinfo->tag,
-             size, vec_byte_size(v));
+    if (VEC_SIZE(v) != size)
+        WARN("FAIL: %s VEC_SIZE() expected %d != %d\n", tinfo->tag,
+             size, VEC_SIZE(v));
     else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_byte_isempty(v) != (size == 0))
-        WARN("FAIL: %s vec_byte_isempty() expected %s != %s size=%d\n",
+    if (VEC_ISEMPTY(v) != (size == 0))
+        WARN("FAIL: %s VEC_ISEMPTY() expected %s != %s size=%d\n",
              tinfo->tag, bool_to_str(size == 0),
-             bool_to_str(vec_byte_isempty(v)), size);
+             bool_to_str(VEC_ISEMPTY(v)), size);
     else
         tinfo->ok++;
 
     tinfo->total++;
-    if (vec_byte_cap(v) != cap)
-        WARN("FAIL: %s vec_byte_cap() expected %d != %d\n", tinfo->tag, cap,
-             vec_byte_cap(v));
+    if (VEC_CAP(v) != cap)
+        WARN("FAIL: %s VEC_CAP() expected %d != %d\n", tinfo->tag, cap,
+             VEC_CAP(v));
     else
         tinfo->ok++;
 }

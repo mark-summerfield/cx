@@ -166,7 +166,7 @@ static void save_to_stream(Ini* ini, FILE* file) {
     }
     vec_sort(&ini->items); // sectid x key
     int prev_sectid = NOT_FOUND;
-    for (int i = 0; i < vec_size(&ini->items); ++i) {
+    for (int i = 0; i < VEC_SIZE(&ini->items); ++i) {
         const IniItem* item = vec_get(&ini->items, i);
         if (item->sectid != prev_sectid) { // new section
             prev_sectid = item->sectid;
@@ -190,7 +190,7 @@ static void item_write(const IniItem* item, FILE* file) {
 static int find_sectid(const Ini* ini, const char* section) {
     if (!section || !strlen(section))
         return INI_NO_SECTION;
-    for (int i = 0; i < vec_str_size(&ini->sections); ++i)
+    for (int i = 0; i < VEC_SIZE(&ini->sections); ++i)
         if (str_caseeq(section, vec_str_get(&ini->sections, i)))
             return i;
     return NOT_FOUND;
@@ -200,7 +200,7 @@ static IniItem* find_item(Ini* ini, const char* section, const char* key) {
     int sectid = find_sectid(ini, section);
     if (sectid == NOT_FOUND)
         return NULL;
-    for (int i = 0; i < vec_size(&ini->items); ++i) {
+    for (int i = 0; i < VEC_SIZE(&ini->items); ++i) {
         IniItem* item = vec_get(&ini->items, i);
         if (item->sectid == sectid && str_caseeq(item->key, key))
             return item;
@@ -212,7 +212,7 @@ static int maybe_add_section(Ini* ini, const char* section) {
     int sectid = find_sectid(ini, section);
     if (sectid == NOT_FOUND) {
         vec_str_push(&ini->sections, str_trim(section));
-        sectid = vec_str_size(&ini->sections) - 1;
+        sectid = VEC_SIZE(&ini->sections) - 1;
     }
     return sectid;
 }

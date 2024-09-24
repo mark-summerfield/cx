@@ -36,15 +36,6 @@ void vec_clear(Vec* vec);
 // Returns true if the Vec is owning.
 #define vec_owns(vec) ((vec)->_destroy != NULL)
 
-// Returns true if the Vec is empty.
-#define vec_isempty(vec) ((vec)->_size == 0)
-
-// Returns the Vec's size.
-#define vec_size(vec) ((vec)->_size)
-
-// Returns the Vec's capacity.
-#define vec_cap(vec) ((vec)->_cap)
-
 // Returns the Vec's value at position index.
 // If owning, Vec retains ownership, so do not delete the value.
 // The VEC_GET() macro is faster but unchecked.
@@ -145,5 +136,5 @@ void vec_sort(Vec* vec);
 int vec_search(const Vec* vec, const void* value);
 
 // To iterate:
-//      for (int i = 0; i < vec_size(vec); ++i)
+//      for (int i = 0; i < VEC_SIZE(vec); ++i)
 //          const MyType* value = VEC_GET(vec, i);

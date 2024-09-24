@@ -200,7 +200,7 @@ int vec_int_search(const VecInt* vec, int i) {
 char* vec_int_to_str(const VecInt* vec) {
     assert_notnull(vec);
     const int BUF_SIZE = 128;
-    const int VEC_SIZE = vec_int_size(vec);
+    const int VEC_SIZE = VEC_SIZE(vec);
     int cap = VEC_SIZE * 4;
     char* s = malloc(cap);
     assert_alloc(s);

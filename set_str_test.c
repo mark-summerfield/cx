@@ -275,7 +275,7 @@ static void check_order(tinfo* tinfo, const SetStr* set) {
     tinfo->total++;
     bool ok = true;
     VecStr vec = set_str_to_vec(set, BORROWS);
-    for (int i = 1; i < vec_str_size(&vec); ++i)
+    for (int i = 1; i < VEC_SIZE(&vec); ++i)
         if (strcmp(vec_str_get(&vec, i - 1), vec_str_get(&vec, i)) > 0) {
             ok = false;
             break;

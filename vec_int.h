@@ -27,15 +27,6 @@ void vec_int_free(VecInt* vec);
 // Clears all the VecInt's values.
 void vec_int_clear(VecInt* vec);
 
-// Returns true if the VecInt is empty.
-#define vec_int_isempty(vec) ((vec)->_size == 0)
-
-// Returns the VecInt's size.
-#define vec_int_size(vec) ((vec)->_size)
-
-// Returns the VecInt's capacity.
-#define vec_int_cap(vec) ((vec)->_cap)
-
 // Returns the VecInt's int value at position index.
 // The VEC_GET() macro is faster but unchecked.
 int vec_int_get(const VecInt* vec, int index);
@@ -115,5 +106,5 @@ char* vec_int_to_str(const VecInt* vec);
 void vec_int_dump(const VecInt* vec);
 
 // To iterate:
-//      for (int i = 0; i < vec_int_size(vec); ++i)
+//      for (int i = 0; i < VEC_SIZE(vec); ++i)
 //          int value = VEC_GET(vec, i);

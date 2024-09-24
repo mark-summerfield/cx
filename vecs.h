@@ -6,6 +6,15 @@
 #define VEC_NOT_FOUND -1
 #define VEC_INITIAL_CAP 16
 
+// Returns true if the Vec is empty.
+#define VEC_ISEMPTY(vec) ((vec)->_size == 0)
+
+// Returns the Vec's size.
+#define VEC_SIZE(vec) ((vec)->_size)
+
+// Returns the Vec's capacity.
+#define VEC_CAP(vec) ((vec)->_cap)
+
 // Fast unchecked access to an element in any vector.
 #define VEC_GET(vec, index) (vec)->_values[(index)]
 
