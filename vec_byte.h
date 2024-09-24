@@ -10,11 +10,11 @@
 typedef uint8_t byte;
 
 // A vector of byte values.
-// All accesses via functions, but reading `raw` is okay.
+// All accesses via functions, but _reading_ `_values` is okay.
 typedef struct VecByte {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
-    byte* raw;
+    byte* _values;
 } VecByte;
 
 // Allocates a new empty VecByte with the given capacity.
@@ -40,12 +40,15 @@ void vec_byte_clear(VecByte* vec);
 #define vec_byte_cap(vec) ((vec)->_cap)
 
 // Returns the VecByte's byte value at position index.
+// The VEC_GET() macro is faster but unchecked.
 byte vec_byte_get(const VecByte* vec, int index);
 
 // Returns the VecByte's int value at its first valid index.
+// The VEC_GET_FIRST() macro is faster but unchecked.
 byte vec_byte_get_first(const VecByte* vec);
 
 // Returns the VecByte's int value at its last valid index.
+// The VEC_GET_LAST() macro is faster but unchecked.
 byte vec_byte_get_last(const VecByte* vec);
 
 // Sets the VecByte's value at position index to the given byte.
@@ -105,4 +108,4 @@ void vec_byte_dump(const VecByte* vec);
 
 // To iterate:
 //      for (int i = 0; i < vec_byte_size(vec); ++i)
-//          int value = vec_byte_get(vec, i);
+//          byte value = VEC_GET(vec, i);

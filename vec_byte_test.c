@@ -38,69 +38,77 @@ void vec_byte_tests(tinfo* tinfo) {
     check_size_cap(tinfo, &v1, 35, VEC_INITIAL_CAPx4);
     check_size_cap(tinfo, &v2, 9, VEC_INITIAL_CAP);
     match(tinfo, &v1,
-          "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 "
-          "20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35");
-    match(tinfo, &v2, "1 2 3 4 5 6 7 8 9");
+          "01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12 13 "
+          "14 15 16 17 18 19 1A 1B 1C 1D 1E 1F 20 21 22 23");
+    match(tinfo, &v2, "01 02 03 04 05 06 07 08 09");
 
     for (int i = 35; i > 9; --i) {
         int v = vec_byte_pop(&v1);
         check_int_eq(tinfo, v, i);
     }
-    match(tinfo, &v1, "1 2 3 4 5 6 7 8 9");
+    match(tinfo, &v1, "01 02 03 04 05 06 07 08 09");
     equal(tinfo, &v1, &v2);
 
-    vec_byte_push(&v1, -99);
-    match(tinfo, &v1, "1 2 3 4 5 6 7 8 9 -99");
+    vec_byte_push(&v1, 0x63);
+    match(tinfo, &v1, "01 02 03 04 05 06 07 08 09 63");
 
-    vec_byte_insert(&v1, 4, -55);
-    match(tinfo, &v1, "1 2 3 4 -55 5 6 7 8 9 -99");
+    vec_byte_insert(&v1, 4, 0x37);
+    match(tinfo, &v1, "01 02 03 04 37 05 06 07 08 09 63");
 
-    vec_byte_insert(&v1, 0, 21);
-    match(tinfo, &v1, "21 1 2 3 4 -55 5 6 7 8 9 -99");
+    vec_byte_insert(&v1, 0, 0x21);
+    match(tinfo, &v1, "21 01 02 03 04 37 05 06 07 08 09 63");
 
-    vec_byte_insert(&v1, 0, 17);
-    match(tinfo, &v1, "17 21 1 2 3 4 -55 5 6 7 8 9 -99");
+    vec_byte_insert(&v1, 0, 0x17);
+    match(tinfo, &v1, "17 21 01 02 03 04 37 05 06 07 08 09 63");
 
     VecByte v3 = vec_byte_copy(&v1);
     check_size_cap(tinfo, &v3, vec_byte_size(&v1), vec_byte_size(&v1));
 
     int x = vec_byte_get(&v1, 0);
-    check_int_eq(tinfo, x, 17);
+    check_int_eq(tinfo, x, 0x17);
+    x = VEC_GET(&v1, 0);
+    check_int_eq(tinfo, x, 0x17);
     x = vec_byte_get_first(&v1);
-    check_int_eq(tinfo, x, 17);
+    check_int_eq(tinfo, x, 0x17);
+    x = VEC_GET_FIRST(&v1);
+    check_int_eq(tinfo, x, 0x17);
     x = vec_byte_get(&v1, 4);
     check_int_eq(tinfo, x, 3);
+    x = VEC_GET(&v1, 4);
+    check_int_eq(tinfo, x, 3);
     x = vec_byte_get_last(&v1);
-    check_int_eq(tinfo, x, -99);
+    check_int_eq(tinfo, x, 0x63);
+    x = VEC_GET_LAST(&v1);
+    check_int_eq(tinfo, x, 0x63);
 
     vec_byte_remove(&v1, 1);
-    match(tinfo, &v1, "17 1 2 3 4 -55 5 6 7 8 9 -99");
+    match(tinfo, &v1, "17 01 02 03 04 37 05 06 07 08 09 63");
 
     vec_byte_remove(&v1, 0);
-    match(tinfo, &v1, "1 2 3 4 -55 5 6 7 8 9 -99");
+    match(tinfo, &v1, "01 02 03 04 37 05 06 07 08 09 63");
 
-    vec_byte_set(&v1, 2, -33);
-    match(tinfo, &v1, "1 2 -33 4 -55 5 6 7 8 9 -99");
-    vec_byte_set(&v1, 10, 10);
-    match(tinfo, &v1, "1 2 -33 4 -55 5 6 7 8 9 10");
+    vec_byte_set(&v1, 2, 0x33);
+    match(tinfo, &v1, "01 02 33 04 37 05 06 07 08 09 63");
+    vec_byte_set(&v1, 10, 0x10);
+    match(tinfo, &v1, "01 02 33 04 37 05 06 07 08 09 10");
     vec_byte_set(&v1, 0, 0);
-    match(tinfo, &v1, "0 2 -33 4 -55 5 6 7 8 9 10");
+    match(tinfo, &v1, "00 02 33 04 37 05 06 07 08 09 10");
 
-    x = vec_byte_replace(&v1, 4, 111);
-    check_int_eq(tinfo, x, -55);
-    match(tinfo, &v1, "0 2 -33 4 111 5 6 7 8 9 10");
+    x = vec_byte_replace(&v1, 4, 0xFE);
+    check_int_eq(tinfo, x, 0x37);
+    match(tinfo, &v1, "00 02 33 04 FE 05 06 07 08 09 10");
 
     vec_byte_remove(&v1, 7);
-    match(tinfo, &v1, "0 2 -33 4 111 5 6 8 9 10");
+    match(tinfo, &v1, "00 02 33 04 FE 05 06 08 09 10");
     vec_byte_remove(&v1, 7);
-    match(tinfo, &v1, "0 2 -33 4 111 5 6 9 10");
+    match(tinfo, &v1, "00 02 33 04 FE 05 06 09 10");
 
     x = vec_byte_take(&v1, 0);
     check_int_eq(tinfo, x, 0);
-    match(tinfo, &v1, "2 -33 4 111 5 6 9 10");
+    match(tinfo, &v1, "02 33 04 FE 05 06 09 10");
     x = vec_byte_take(&v1, 7);
-    check_int_eq(tinfo, x, 10);
-    match(tinfo, &v1, "2 -33 4 111 5 6 9");
+    check_int_eq(tinfo, x, 0x10);
+    match(tinfo, &v1, "02 33 04 FE 05 06 09");
 
     int index;
     index = vec_byte_find(&v1, 8);
@@ -112,10 +120,10 @@ void vec_byte_tests(tinfo* tinfo) {
     index = vec_byte_find(&v1, 2);
     check_found(tinfo, index, 0);
 
-    index = vec_byte_find(&v1, 111);
+    index = vec_byte_find(&v1, 0xFE);
     check_found(tinfo, index, 3);
 
-    index = vec_byte_find_last(&v1, 111);
+    index = vec_byte_find_last(&v1, 0xFE);
     check_found(tinfo, index, 3);
 
     index = vec_byte_find(&v1, 9);
@@ -123,8 +131,8 @@ void vec_byte_tests(tinfo* tinfo) {
 
     vec_byte_clear(&v1);
     check_size_cap(tinfo, &v1, 0, VEC_INITIAL_CAPx4);
-    vec_byte_push(&v1, -19);
-    match(tinfo, &v1, "-19");
+    vec_byte_push(&v1, 0x19);
+    match(tinfo, &v1, "19");
     vec_byte_free(&v1);
     check_size_cap(tinfo, &v1, 0, 0);
     vec_byte_clear(&v2);
@@ -143,17 +151,17 @@ static void merge_tests(tinfo* tinfo) {
     for (int i = 1; i < 6; ++i)
         vec_byte_push(&v1, i);
     check_size_cap(tinfo, &v1, 5, 7);
-    match(tinfo, &v1, "1 2 3 4 5");
+    match(tinfo, &v1, "01 02 03 04 05");
 
     VecByte v2 = vec_byte_alloc();
     check_size_cap(tinfo, &v2, 0, 0);
     for (int i = 6; i < 12; ++i)
         vec_byte_push(&v2, i);
     check_size_cap(tinfo, &v2, 6, VEC_INITIAL_CAP);
-    match(tinfo, &v2, "6 7 8 9 10 11");
+    match(tinfo, &v2, "06 07 08 09 0A 0B");
 
     vec_byte_merge(&v1, &v2);
-    match(tinfo, &v1, "1 2 3 4 5 6 7 8 9 10 11");
+    match(tinfo, &v1, "01 02 03 04 05 06 07 08 09 0A 0B");
     check_size_cap(tinfo, &v1, 11, 11);
     check_size_cap(tinfo, &v2, 0, 0);
     // v2 already freed by merge

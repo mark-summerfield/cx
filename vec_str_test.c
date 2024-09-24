@@ -89,6 +89,8 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_push(&v1, strdup("alpha"));
     const char* s1 = vec_str_get_last(&v1);
     check_str_eq(tinfo, s1, "alpha");
+    s1 = VEC_GET_LAST(&v1);
+    check_str_eq(tinfo, s1, "alpha");
     match(
         tinfo, &v1,
         "One|Zulu|Victor|Romeo|Sierra|Whiskey|X-ray|Two|India|Papa|alpha");
@@ -96,15 +98,23 @@ void vec_str_tests(tinfo* tinfo) {
     vec_str_insert(&v1, 4, "beta"); // valgrind says strdup here would leak!
     const char* s2 = vec_str_get(&v1, 4); // but see "B2" later
     check_str_eq(tinfo, s2, "beta");
+    s2 = VEC_GET(&v1, 4);
+    check_str_eq(tinfo, s2, "beta");
     match(tinfo, &v1,
           "One|Zulu|Victor|Romeo|beta|Sierra|Whiskey|X-ray|Two|"
           "India|Papa|alpha");
 
     const char* s0 = vec_str_get(&v1, 0);
     check_str_eq(tinfo, s0, "One");
+    s0 = VEC_GET(&v1, 0);
+    check_str_eq(tinfo, s0, "One");
     s0 = vec_str_get_first(&v1);
     check_str_eq(tinfo, s0, "One");
+    s0 = VEC_GET_FIRST(&v1);
+    check_str_eq(tinfo, s0, "One");
     const char* s5 = vec_str_get(&v1, 5);
+    check_str_eq(tinfo, s5, "Sierra");
+    s5 = VEC_GET(&v1, 5);
     check_str_eq(tinfo, s5, "Sierra");
     const char* s6 = vec_str_get(&v1, 6);
     check_str_eq(tinfo, s6, "Whiskey");
@@ -603,6 +613,7 @@ static void test_split_ws(tinfo* tinfo) {
     buf[1] = 0;
     for (int i = 0; i < 52; ++i) {
         check_str_eq(tinfo, vec_str_get(&parts4, i), buf);
+        check_str_eq(tinfo, VEC_GET(&parts4, i), buf);
         buf[0]++;
         if (i == 25)
             buf[0] = 'A';

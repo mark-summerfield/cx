@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 // A vector of owned or borrowed void* values.
-// All data members are private; all accesses via functions.
+// All accesses via functions, but _reading_ `_values` is okay.
 //
 // To see an example of how to use store an arbitrary struct type in a
 // Vec see tag_test.h for the Tag struct and vec_test.[hc] for usage
@@ -47,14 +47,17 @@ void vec_clear(Vec* vec);
 
 // Returns the Vec's value at position index.
 // If owning, Vec retains ownership, so do not delete the value.
+// The VEC_GET() macro is faster but unchecked.
 void* vec_get(const Vec* vec, int index);
 
 // Returns the Vec's value at its first valid index.
 // If owning, Vec retains ownership, so do not delete the value.
+// The VEC_GET_FIRST() macro is faster but unchecked.
 void* vec_get_first(const Vec* vec);
 
 // Returns the Vec's value at its last valid index.
 // If owning, Vec retains ownership, so do not delete the value.
+// The VEC_GET_LAST() macro is faster but unchecked.
 void* vec_get_last(const Vec* vec);
 
 // Sets the Vec's value at position index to the given value.
@@ -143,4 +146,4 @@ int vec_search(const Vec* vec, const void* value);
 
 // To iterate:
 //      for (int i = 0; i < vec_size(vec); ++i)
-//          const MyType* value = vec_get(vec, i);
+//          const MyType* value = VEC_GET(vec, i);

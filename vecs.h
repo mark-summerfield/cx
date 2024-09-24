@@ -6,6 +6,15 @@
 #define VEC_NOT_FOUND -1
 #define VEC_INITIAL_CAP 16
 
+// Fast unchecked access to an element in any vector.
+#define VEC_GET(vec, index) (vec)->_values[(index)]
+
+// Fast unchecked access to the first element in any nonempty vector.
+#define VEC_GET_FIRST(vec) (vec)->_values[0]
+
+// Fast unchecked access to the last element in any nonempty vector.
+#define VEC_GET_LAST(vec) (vec)->_values[(vec)->_size - 1]
+
 // index must be a variable or literal, not an expression!
 #define assert_valid_index(vec, index) \
     assert(0 <= (index) && (index) < (vec)->_size && "index out of range")

@@ -77,6 +77,9 @@ static void misc_tests(tinfo* tinfo) {
     t1 = vec_get_first(&v1);
     check_str_eq(tinfo, t1->name, "Aa#100");
     check_int_eq(tinfo, t1->id, 100);
+    t1 = VEC_GET_FIRST(&v1);
+    check_str_eq(tinfo, t1->name, "Aa#100");
+    check_int_eq(tinfo, t1->id, 100);
 
     t1 = vec_pop(&v1);
     check_str_eq(tinfo, t1->name, "Af#105");
@@ -91,12 +94,21 @@ static void misc_tests(tinfo* tinfo) {
     const Tag* t2 = vec_get(&v1, 0);
     check_str_eq(tinfo, t2->name, "Aa#100");
     check_int_eq(tinfo, t2->id, 100);
+    t2 = VEC_GET(&v1, 0);
+    check_str_eq(tinfo, t2->name, "Aa#100");
+    check_int_eq(tinfo, t2->id, 100);
 
     t2 = vec_get_last(&v1);
     check_str_eq(tinfo, t2->name, "Ae#104");
     check_int_eq(tinfo, t2->id, 104);
+    t2 = VEC_GET_LAST(&v1);
+    check_str_eq(tinfo, t2->name, "Ae#104");
+    check_int_eq(tinfo, t2->id, 104);
 
     t2 = vec_get(&v1, 2);
+    check_str_eq(tinfo, t2->name, "Ac#102");
+    check_int_eq(tinfo, t2->id, 102);
+    t2 = VEC_GET(&v1, 2);
     check_str_eq(tinfo, t2->name, "Ac#102");
     check_int_eq(tinfo, t2->id, 102);
 

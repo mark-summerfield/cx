@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 // A vector of owned or borrowed char* values.
-// All data members are private; all accesses via functions.
+// All accesses via functions, but _reading_ `_values` is okay.
 typedef struct VecStr {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
@@ -43,14 +43,17 @@ void vec_str_clear(VecStr* vec);
 
 // Returns the VecStr's value at position index.
 // VecStr retains ownership (if owns), so do not delete the value.
+// The VEC_GET() macro is faster but unchecked.
 char* vec_str_get(const VecStr* vec, int index);
 
 // Returns the VecStr's value at its first valid index.
 // VecStr retains ownership (if owns), so do not delete the value.
+// The VEC_GET_FIRST() macro is faster but unchecked.
 char* vec_str_get_first(const VecStr* vec);
 
 // Returns the VecStr's value at its last valid index.
 // VecStr retains ownership (if owns), so do not delete the value.
+// The VEC_GET_LAST() macro is faster but unchecked.
 char* vec_str_get_last(const VecStr* vec);
 
 // Sets the VecStr's value at position index to the given value.
@@ -171,4 +174,4 @@ void vec_str_dump(const VecStr* vec);
 
 // To iterate:
 //      for (int i = 0; i < vec_str_size(vec); ++i)
-//          const char* value = vec_str_get(vec, i);
+//          const char* value = VEC_GET(vec, i);

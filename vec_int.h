@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 // A vector of int values.
-// All data members are private; all accesses via functions.
+// All accesses via functions, but _reading_ `_values` is okay.
 typedef struct VecInt {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
@@ -37,12 +37,15 @@ void vec_int_clear(VecInt* vec);
 #define vec_int_cap(vec) ((vec)->_cap)
 
 // Returns the VecInt's int value at position index.
+// The VEC_GET() macro is faster but unchecked.
 int vec_int_get(const VecInt* vec, int index);
 
 // Returns the VecInt's int value at its first valid index.
+// The VEC_GET_FIRST() macro is faster but unchecked.
 int vec_int_get_first(const VecInt* vec);
 
 // Returns the VecInt's int value at its last valid index.
+// The VEC_GET_LAST() macro is faster but unchecked.
 int vec_int_get_last(const VecInt* vec);
 
 // Sets the VecInt's value at position index to the given int.
@@ -113,4 +116,4 @@ void vec_int_dump(const VecInt* vec);
 
 // To iterate:
 //      for (int i = 0; i < vec_int_size(vec); ++i)
-//          int value = vec_int_get(vec, i);
+//          int value = VEC_GET(vec, i);
