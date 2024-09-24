@@ -19,6 +19,7 @@ FILES = Glob('*test.c') + [
     'vec.c',
     'vec_int.c',
     'vec_str.c',
+    'vec_byte.c',
     ]
 app = env.Program('cx_test', FILES, LIBS=['m'])
 

@@ -1,7 +1,5 @@
 # Ideas for additions at the end
 
-# TODO VecByte (like VecInt)
-
 cx.h
 ini.h
 ini.c
@@ -12,6 +10,8 @@ vec_str.h
 vec_str.c
 vec_int.h
 vec_int.c
+vec_byte.h
+vec_byte.c
 set_str.h
 set_str.c
 set_int.h
@@ -61,6 +61,8 @@ vecs_test.h
 vecs_test.c
 vec_int_test.h
 vec_int_test.c
+vec_byte_test.h
+vec_byte_test.c
 vec_str_test.h
 vec_str_test.c
 tag_test.h

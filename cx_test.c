@@ -15,6 +15,7 @@
 #include "str.h"
 #include "str_test.h"
 #include "va_test.h"
+#include "vec_byte_test.h"
 #include "vec_int_test.h"
 #include "vec_str_test.h"
 #include "vec_test.h"
@@ -47,6 +48,9 @@ int main(int argc, char** argv) {
     tinfo.tag = "vec_int_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         vec_int_tests(&tinfo);
+    tinfo.tag = "vec_byte_tests";
+    if (!pattern || strstr(tinfo.tag, pattern))
+        vec_byte_tests(&tinfo);
     tinfo.tag = "vec_str_tests";
     if (!pattern || strstr(tinfo.tag, pattern))
         vec_str_tests(&tinfo);

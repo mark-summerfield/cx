@@ -63,8 +63,8 @@ int vec_int_replace(VecInt* vec, int index, int value);
 // Removes the value at the given index and closes up the gap: O(n).
 void vec_int_remove(VecInt* vec, int index);
 
-// Returns and removes the int value at the given index and
-// closes up the gap: O(n).
+// Returns and removes the value at the given index and closes up the
+// gap: O(n).
 int vec_int_take(VecInt* vec, int index);
 
 // Removes and returns the last int value. Only use if
