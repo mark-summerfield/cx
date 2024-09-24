@@ -7,6 +7,7 @@
 
 // A vector of owned or borrowed void* values.
 // All accesses via functions, but _reading_ `_values` is okay.
+// See vecs.h for size and capacity macros.
 //
 // To see an example of how to use store an arbitrary struct type in a
 // Vec see tag_test.h for the Tag struct and vec_test.[hc] for usage

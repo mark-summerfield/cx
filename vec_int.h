@@ -8,6 +8,7 @@
 
 // A vector of int values.
 // All accesses via functions, but _reading_ `_values` is okay.
+// See vecs.h for size and capacity macros.
 typedef struct VecInt {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
