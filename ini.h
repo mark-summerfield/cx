@@ -32,7 +32,6 @@ typedef struct Ini {
     Vec items;
 } Ini;
 
-// @private@
 typedef struct IniItem {
     char* key;
     char* value;
