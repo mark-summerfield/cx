@@ -25,7 +25,7 @@
 // ... // use the ini
 // ini_free(&ini); // finish
 // ```
-// See @link ini_alloc@.
+// See ini_alloc().
 typedef struct Ini {
     char* comment;
     VecStr sections; // index is section ID; *never* sort
@@ -46,16 +46,16 @@ typedef enum IniReply {
     IniItemFound     // Success
 } IniReply;
 
-// Creates an empty @link Ini@.
-// It must be freed with @link ini_free@. See also @link Ini@.
+// Creates an empty Ini.
+// It must be freed with ini_free(). See also Ini.
 Ini ini_alloc();
 
-// Creates an @link Ini@ from the given `.ini` file which it parses and
-// sets ok. It must be freed with @link ini_free@. See also @link Ini@.
+// Creates an Ini from the given `.ini` file which it parses and
+// sets ok. It must be freed with ini_free(). See also Ini.
 Ini ini_alloc_from_file(const char* filename, bool* ok);
 
-// Creates an @link Ini@ with the given `.ini` file text.
-// It must be freed with @link ini_free@. See also @link Ini@.
+// Creates an Ini with the given `.ini` file text.
+// It must be freed with ini_free(). See also Ini.
 Ini ini_alloc_from_str(const char* text);
 
 // Merges the contents of the given `.ini` file and returns `true` if ok.
@@ -64,16 +64,16 @@ bool ini_merge_from_file(Ini* ini, const char* filename);
 // Merges the contents of the given `.ini` file text.
 void ini_merge_from_str(Ini* ini, const char* text);
 
-// Must be called once the @link Ini@ is finished with.
-// Call @link ini_save@ first if the data is to be preserved.
+// Must be called once the Ini is finished with.
+// Call ini_save() first if the data is to be preserved.
 void ini_free(Ini* ini);
 
-// Saves the @link Ini@ to the given `filename` and if successful
+// Saves the Ini to the given `filename` and if successful
 // returns `true`.
 // Not const since it sorts the items first.
 bool ini_save(Ini* ini, const char* filename);
 
-// Saves the @link Ini@ to a string which the caller owns.
+// Saves the Ini to a string which the caller owns.
 // Not const since it sorts the items first.
 // Provided to ease testing.
 char* ini_save_to_str(Ini* ini);
