@@ -80,9 +80,14 @@ char* file_read_size(const char* filename, long long max_size, bool* ok) {
         goto on_error;
     text = malloc(size + 1);
     assert_alloc(text);
-    (void)fread(text, size, 1, file);
-    if (!ferror(file)) // fread ok; else fallthrough to on_error
-        goto end;
+    long long n = fread(text, size, 1, file);
+    if (n != size) {
+        if (ferror(file))
+            goto on_error;
+        is_ok = false;
+        WARN("%s failed to read entire file: %lld/%lld", filename, n, size);
+    }
+    goto end; // fread ok; or we've already WARN-ed
 on_error:
     is_ok = false;
     warn(NULL);
