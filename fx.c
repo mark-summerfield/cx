@@ -11,6 +11,9 @@
 #include <string.h>
 #include <unistd.h>
 
+static char* fd_read_size(const char* filename, long long max_size,
+                          bool* ok, FILE* file);
+
 inline const char* file_ext(const char* filename) {
     const char* dot = strrchr(filename, '.');
     return (!dot || dot == filename) ? "" : dot + 1;
@@ -63,6 +66,11 @@ char* file_read_size(const char* filename, long long max_size, bool* ok) {
         warn(NULL);
         return NULL;
     }
+    return fd_read_size(filename, max_size, ok, file);
+}
+
+static char* fd_read_size(const char* filename, long long max_size,
+                          bool* ok, FILE* file) {
     bool is_ok = true;
     char* text = NULL;
     if (fseeko(file, 0, SEEK_END) == -1) // failed to seek

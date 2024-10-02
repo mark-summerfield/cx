@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <stdbool.h>
 
+// The maximum buffer size for a filename (normally 256, ∴ 255 chars)
 #define FILENAME_SIZE _POSIX_PATH_MAX
 
 // Returns true if the given filename or folder exists.
@@ -22,18 +23,24 @@ const char* file_ext(const char* filename);
 // caller must free.
 char* file_change_ext(const char* filename, const char* ext);
 
-// Reads a whole file and returns it as a single string which the caller
-// owns and sets ok if given.
+// Reads a whole file (if smaller than max_size) and returns it as a
+// single string which the caller owns and sets ok if given.
 char* file_read_size(const char* filename, long long max_size, bool* ok);
 
+// Reads a whole file (if it is < 1048576 bytes) and returns it as a
+// single string which the caller owns and sets ok if given.
 #define file_read(filename, ok) file_read_size(filename, 1024 * 1024, ok)
 
 // Populates filename (of size FILENAME_SIZE) and returns true if it
 // exists. The filename is either $HOME/.config/domain_appname.ext or
-// $HOME/.domain_appname.ext. Domain may be NULL in which case filename is
-// $HOME/.config/appname.ext or $HOME/.appname.ext.
+// $HOME/.domain_appname.ext. Domain may be NULL in which case filename
+// is $HOME/.config/appname.ext or $HOME/.appname.ext.
 bool file_get_config_name(char* filename, const char* domain,
                           const char* appname, const char* ext);
 
+// Populates filename (of size FILENAME_SIZE) and returns true if it
+// exists. The filename is either $HOME/.config/domain_appname.ini or
+// $HOME/.domain_appname.ini. Domain may be NULL in which case filename is
+// $HOME/.config/appname.ini or $HOME/.appname.ini.
 #define file_get_ini_name(filename, domain, appname) \
     file_get_config_name(filename, domain, appname, ".ini")

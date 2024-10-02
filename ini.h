@@ -12,6 +12,11 @@
 // Case is preserved but in all getters and setters section and key
 // names are case-insensitive, and in all setters, section and key names
 // and values are trimmed.
+// If section is `NULL`, the getters and setters will used the “no
+// section” (unnamed) section.
+// All values are held as strings. The bool, int, and real getters parse
+// the string on every call, so best to call once and keep the returned
+// value.
 // Comments are discarded on reading, but if set, are written on writing.
 // The easiest way to use `Ini` is as follows:
 // ```
@@ -39,7 +44,7 @@ typedef struct IniItem {
     int sectid;
 } IniItem;
 
-// One of these is returned by most ini_get... functions.
+// One of these is returned by most ini_get… functions.
 typedef enum IniReply {
     IniItemNotFound, // Item not found
     IniInvalidValue, // Invalid item type for getter, e.g. not an int
@@ -78,29 +83,34 @@ bool ini_save(Ini* ini, const char* filename);
 // Provided to ease testing.
 char* ini_save_to_str(Ini* ini);
 
-// For all getters:
-// If section is NULL, the getters and setters will used the "no
-// section" (unnamed) section.
-// All values are held as strings. The bool, int, and real getters parse
-// the string on every call, so best to call once and keep the returned
-// value.
+// Sets the bool value for the given optional section and required key.
 IniReply ini_get_bool(const Ini* ini, const char* section, const char* key,
                       bool* value);
+
+// Sets the int value for the given optional section and required key.
 IniReply ini_get_int(const Ini* ini, const char* section, const char* key,
                      int* value);
+
+// Sets the real value for the given optional section and required key.
 IniReply ini_get_real(const Ini* ini, const char* section, const char* key,
                       double* value);
+
+// Returns the char* value for the given optional section and required key.
 const char* ini_get_str(const Ini* ini, const char* section,
                         const char* key);
 
-// For all setters:
-// All values are held as strings. The bool, int, and real setters
-// convert their given value into strings.
+// Sets the bool value for the given optional sections and required key.
 void ini_set_bool(Ini* ini, const char* section, const char* key,
                   bool value);
+
+// Sets the int value for the given optional sections and required key.
 void ini_set_int(Ini* ini, const char* section, const char* key, int value);
+
+// Sets the real value for the given optional sections and required key.
 void ini_set_real(Ini* ini, const char* section, const char* key,
                   double value);
+
+// Sets the char* value for the given optional sections and required key.
 void ini_set_str(Ini* ini, const char* section, const char* key,
                  const char* value);
 
