@@ -21,28 +21,28 @@
     (strncasecmp((s), (prefix), strlen(prefix)) == 0)
 
 // Returns true if char* s ends with char* suffix
-bool str_ends(const char*, const char*);
+bool str_ends(const char* s, const char* suffix);
 
 // Returns true if char* s ends with char* suffix, regardless of case
-bool str_caseends(const char*, const char*);
+bool str_caseends(const char*s, const char*suffix);
 
 // new means returned pointer must be free'd; _ip means changes in-place
 
 // Modifies char*'s text in-place converting ASCII lowercase to uppercase
-void str_uppercase_ip(char*);
+void str_uppercase_ip(char*s);
 
 // Returns new char* of given char*'s ASCII chars uppercased
-char* str_uppercase(const char*);
+char* str_uppercase(const char*s);
 
 // Returns new char* of up to n chars from the given char*'s ASCII chars
 // uppercased
-char* str_uppercasen(const char*, int n);
+char* str_uppercasen(const char*s, int n);
 
 // Modifies char*'s text in-place converting ASCII lowercase to lowercase
-void str_lowercase_ip(char*);
+void str_lowercase_ip(char*s);
 
 // Returns new char* of given char*'s ASCII chars lowercased
-char* str_lowercase(const char*);
+char* str_lowercase(const char*s);
 
 int str_strcmp(const void* s, const void* t);
 

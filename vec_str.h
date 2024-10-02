@@ -8,7 +8,7 @@
 
 // A vector of owned or borrowed char* values.
 // All accesses via functions, but _reading_ `_values` is okay.
-// See vecs.h for size and capacity macros.
+// See also VEC_SIZE and VEC_CAP macros.
 typedef struct VecStr {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
@@ -17,10 +17,11 @@ typedef struct VecStr {
 } VecStr;
 
 // Allocates a new VecStr of owned char* with default capacity of 0.
+// See also vec_str_alloc_custom().
 #define vec_str_alloc() vec_str_alloc_custom(0, OWNS)
 
 // Allocates a new VecStr of char* (owns if owns, otherwise borrowed)
-// with the specified capacity.
+// with the specified capacity. See also vec_str_alloc().
 VecStr vec_str_alloc_custom(int cap, bool owns);
 
 // Destroys the VecStr freeing its memory and if owns, freeing every
