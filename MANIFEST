@@ -1,5 +1,8 @@
 # Ideas for additions at the end
 
+# TODO in vec_str
+# VecStr file_read_lines(const char* filename, long long max_size);
+
 cx.h
 vecs.h
 vec.h
