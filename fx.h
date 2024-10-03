@@ -25,10 +25,12 @@ char* file_change_ext(const char* filename, const char* ext);
 
 // Reads a whole file (if smaller than max_size) and returns it as a
 // single string which the caller owns and sets ok if not NULL.
+// See also file_read().
 char* file_read_size(const char* filename, long long max_size, bool* ok);
 
 // Reads a whole file (if < 1048576 bytes) and returns it as a
 // single string which the caller owns and sets ok if not NULL.
+// See also file_read_size().
 #define file_read(filename, ok) file_read_size(filename, 1024 * 1024, ok)
 
 // Populates filename (of size FILENAME_SIZE) and returns true if it
