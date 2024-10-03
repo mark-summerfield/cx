@@ -636,7 +636,7 @@ static void test_read_lines(tinfo* tinfo) {
     const char* s = VEC_GET(&vec, 2);
     check_bool_eq(tinfo, true, str_begins(s, "cppcheck"));
     check_str_eq(tinfo, VEC_GET(&vec, 5), "malloc_check.py *.[ch]");
-    check_str_eq(tinfo, VEC_GET(&vec, 6), "cdoc.py");
+    check_str_eq(tinfo, VEC_GET(&vec, 6), "cdoc.py -q");
     check_str_eq(tinfo, VEC_GET(&vec, 7), "git st");
     vec_str_free(&vec);
 }
