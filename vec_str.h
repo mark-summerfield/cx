@@ -162,6 +162,18 @@ VecStr split_chr(const char* s, int sep);
 // owning VecStr (which may be empty).
 VecStr split_ws(const char* s);
 
+// Reads a whole file (if smaller than max_size) and returns it as a
+// VecStr of lines (each an owned char*) and sets ok if not NULL.
+// See also file_read_lines().
+VecStr file_read_lines_size(const char* filename, long long max_size,
+                            bool* ok);
+
+// Reads a whole file (if < 1048576 bytes) and returns it as a VecStr of
+// lines (each an owned char*) and sets ok if not NULL.
+// See also file_read_lines_size().
+#define file_read_lines(filename, ok) \
+    file_read_lines_size(filename, 1024 * 1024, ok)
+
 // For debugging.
 void vec_str_dump(const VecStr* vec);
 

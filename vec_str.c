@@ -1,11 +1,16 @@
 // Copyright © 2024 Mark Summerfield. All rights reserved.
 
 #include "vec_str.h"
+#include "exit.h"
 #include "str.h"
 #include <ctype.h>
+#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+static void fd_read_lines_size(const char* filename, long long max_size,
+                               bool* ok, FILE* file, VecStr* vec);
+static void fd_read_lines_populate_vec(FILE* file, VecStr* vec);
 static void vec_str_grow(VecStr* vec);
 
 VecStr vec_str_alloc_custom(int cap, bool owns) {
@@ -385,6 +390,61 @@ VecStr split_ws(const char* s) {
             break;
     }
     return vec;
+}
+
+VecStr file_read_lines_size(const char* filename, long long max_size,
+                            bool* ok) {
+    VecStr vec = vec_str_alloc();
+    FILE* file = fopen(filename, "rt");
+    if (!file) { // failed to open
+        if (ok)
+            *ok = false;
+        warn(NULL);
+        return vec;
+    }
+    fd_read_lines_size(filename, max_size, ok, file, &vec);
+    return vec;
+}
+
+static void fd_read_lines_size(const char* filename, long long max_size,
+                               bool* ok, FILE* file, VecStr* vec) {
+    bool is_ok = true;
+    if (fseeko(file, 0, SEEK_END) == -1) // failed to seek
+        goto on_error;
+    long long size = ftello(file);
+    if (size == -1) // failed to tell
+        goto on_error;
+    if (size >= max_size) { // too big
+        is_ok = false;
+        WARN("%s is too big to read: %lld >= %lld", filename, size,
+             max_size);
+        goto end;
+    }
+    if (fseeko(file, 0, SEEK_SET) == -1) // failed to seek
+        goto on_error;
+    fd_read_lines_populate_vec(file, vec);
+    goto end; // ok or we've already WARN-ed
+on_error:
+    is_ok = false;
+    warn(NULL);
+end:
+    if (fclose(file)) {
+        is_ok = false;
+        warn(NULL);
+    }
+    if (ok)
+        *ok = is_ok;
+}
+
+static void fd_read_lines_populate_vec(FILE* file, VecStr* vec) {
+    const int LINE_SIZE = 1024;
+    char line[LINE_SIZE];
+    while (fgets(line, LINE_SIZE, file)) {
+        char* p = strrchr(line, '\n');
+        if (p)
+            *p = 0; // trim newline if present
+        vec_str_push(vec, strdup(line));
+    }
 }
 
 void vec_str_dump(const VecStr* vec) {

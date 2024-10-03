@@ -20,6 +20,7 @@ static void sort_tests(tinfo*);
 static void prefix_tests(tinfo*);
 static void test_split_chr(tinfo*);
 static void test_split_ws(tinfo*);
+static void test_read_lines(tinfo*);
 
 const char* WORDS[] = {
     "One",  "Zulu",    "Victor", "Romeo",  "Sierra",   "Whiskey", "X-ray",
@@ -42,6 +43,8 @@ void vec_str_tests(tinfo* tinfo) {
     test_split_chr(tinfo);
     tinfo->tag = "test_split_ws";
     test_split_ws(tinfo);
+    tinfo->tag = "test_read_lines";
+    test_read_lines(tinfo);
 
     tinfo->tag = "vec_str_tests continued";
     if (tinfo->verbose)
@@ -621,6 +624,23 @@ static void test_split_ws(tinfo* tinfo) {
     vec_str_free(&parts4);
 }
 
+static void test_read_lines(tinfo* tinfo) {
+    if (tinfo->verbose)
+        puts(tinfo->tag);
+    bool ok;
+    VecStr vec = file_read_lines("st.sh", &ok);
+    check_bool_eq(tinfo, true, ok);
+    check_int_eq(tinfo, VEC_SIZE(&vec), 8);
+    check_str_eq(tinfo, VEC_GET(&vec, 0), "rm -f core");
+    check_str_eq(tinfo, VEC_GET(&vec, 1), "clc -sL rb");
+    const char* s = VEC_GET(&vec, 2);
+    check_bool_eq(tinfo, true, str_begins(s, "cppcheck"));
+    check_str_eq(tinfo, VEC_GET(&vec, 5), "malloc_check.py *.[ch]");
+    check_str_eq(tinfo, VEC_GET(&vec, 6), "cdoc.py");
+    check_str_eq(tinfo, VEC_GET(&vec, 7), "git st");
+    vec_str_free(&vec);
+}
+
 static void match(tinfo* tinfo, const VecStr* v, const char* expected) {
     char* out = vec_str_join(v, "|");
     check_str_eq(tinfo, out, expected);
@@ -631,8 +651,8 @@ static void check_size_cap(tinfo* tinfo, const VecStr* v, int size,
                            int cap) {
     tinfo->total++;
     if (VEC_SIZE(v) != size)
-        WARN("FAIL: %s VEC_SIZE() expected %d != %d\n", tinfo->tag,
-             size, VEC_SIZE(v));
+        WARN("FAIL: %s VEC_SIZE() expected %d != %d\n", tinfo->tag, size,
+             VEC_SIZE(v));
     else
         tinfo->ok++;
 
