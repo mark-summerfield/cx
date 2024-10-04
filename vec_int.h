@@ -8,7 +8,12 @@
 
 // A vector of int values.
 // All accesses via functions, but _reading_ `_values` is okay.
-// See vecs.h for size and capacity macros.
+//
+// To iterate:
+// ```
+// for (int i = 0; i < VEC_SIZE(vec); ++i)
+//     int value = VEC_GET(vec, i);
+// ```
 typedef struct VecInt {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
@@ -105,7 +110,3 @@ char* vec_int_to_str(const VecInt* vec);
 
 // For debugging.
 void vec_int_dump(const VecInt* vec);
-
-// To iterate:
-//      for (int i = 0; i < VEC_SIZE(vec); ++i)
-//          int value = VEC_GET(vec, i);

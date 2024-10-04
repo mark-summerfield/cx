@@ -6,6 +6,12 @@
 typedef struct DeqIntNode DeqIntNode;
 
 // A doubly linked list of int values.
+//
+// To iterate:
+// ```
+// for (DeqIntNode* node = deq->head; node; node = node->next)
+//     int value = p->value;
+// ```
 typedef struct DeqInt {
     DeqIntNode* head;
     DeqIntNode* tail;
@@ -46,7 +52,3 @@ int deq_int_pop(DeqInt* deq);
 // Removes and frees the DeqInt's first node, returning its value.
 // The DeqInt must not be empty.
 int deq_int_pop_first(DeqInt* deq);
-
-// To iterate:
-//  for (DeqIntNode* node = deq->head; node; node = node->next)
-//      int value = p->value;

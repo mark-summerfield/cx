@@ -7,6 +7,12 @@
 typedef struct DeqStrNode DeqStrNode;
 
 // A doubly linked list of char* values.
+//
+// To iterate:
+// ````
+// for (DeqStrNode* node = deq->head; node; node = node->next)
+//     const char* value = p->value;
+// ```
 typedef struct DeqStr {
     DeqStrNode* head;
     DeqStrNode* tail;
@@ -63,7 +69,3 @@ char* deq_str_pop_first(DeqStr* deq);
 // NULL if deq is empty. If sep is NULL they are joined with no separator.
 // The returned char* value is now owned by the caller.
 char* deq_str_join(DeqStr* deq, const char* sep);
-
-// To iterate:
-//  for (DeqStrNode* node = deq->head; node; node = node->next)
-//      const char* value = p->value;

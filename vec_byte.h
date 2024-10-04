@@ -11,7 +11,12 @@ typedef uint8_t byte;
 
 // A vector of byte values.
 // All accesses via functions, but _reading_ `_values` is okay.
-// See vecs.h for size and capacity macros.
+//
+// To iterate:
+// ```
+// for (int i = 0; i < VEC_SIZE(vec); ++i)
+//     byte value = VEC_GET(vec, i);
+// ```
 typedef struct VecByte {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
@@ -97,7 +102,3 @@ char* vec_byte_to_str(const VecByte* vec);
 
 // For debugging.
 void vec_byte_dump(const VecByte* vec);
-
-// To iterate:
-//      for (int i = 0; i < VEC_SIZE(vec); ++i)
-//          byte value = VEC_GET(vec, i);

@@ -8,7 +8,12 @@
 
 // A vector of owned or borrowed char* values.
 // All accesses via functions, but _reading_ `_values` is okay.
-// See also VEC_SIZE and VEC_CAP macros.
+//
+// To iterate:
+// ```
+// for (int i = 0; i < VEC_SIZE(vec); ++i)
+//     const char* value = VEC_GET(vec, i);
+// ```
 typedef struct VecStr {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
@@ -176,7 +181,3 @@ VecStr file_read_lines_size(const char* filename, long long max_size,
 
 // For debugging.
 void vec_str_dump(const VecStr* vec);
-
-// To iterate:
-//      for (int i = 0; i < VEC_SIZE(vec); ++i)
-//          const char* value = VEC_GET(vec, i);

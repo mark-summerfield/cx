@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+// The buffer size required to convert an int of up to 64-bits into a
+// string with comma grouped digits. See commas().
 #define COMMA_I64_SIZE 28
 
 // Returns true if char* s equals char* t
@@ -75,6 +77,8 @@ const char* skip_ws(const char* p);
 // Returns a pointer to the first whitespace char in p or NULL.
 const char* skip_nonws(const char* p);
 
+// Returns the string representing the given object's typename. (For
+// debugging.)
 #define typename(x) \
     _Generic((x), \
         _Bool: "bool", \

@@ -8,5 +8,10 @@
 
 #define assert_notnull(p) assert((p) && "expected non-NULL pointer")
 
+// Used to specify that a collection owns its pointers. See also
+// BORROWS.
 #define OWNS true
+
+// Used to specify that a collection does not own its pointers. See also
+// OWNS.
 #define BORROWS (!OWNS)

@@ -12,6 +12,12 @@
 // To see an example of how to use store an arbitrary struct type in a
 // Vec see tag_test.h for the Tag struct and vec_test.[hc] for usage
 // examples.
+//
+// To iterate:
+// ```
+//  for (int i = 0; i < VEC_SIZE(vec); ++i)
+//      const MyType* value = VEC_GET(vec, i);
+// ```
 typedef struct Vec {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
@@ -135,7 +141,3 @@ void vec_sort(Vec* vec);
 // VEC_NOT_FOUND (-1). Uses a binary search that assumes vec_sort() has
 // been used.
 int vec_search(const Vec* vec, const void* value);
-
-// To iterate:
-//      for (int i = 0; i < VEC_SIZE(vec); ++i)
-//          const MyType* value = VEC_GET(vec, i);

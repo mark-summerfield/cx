@@ -3,7 +3,12 @@
 
 #include <assert.h>
 
+// The index returned by `vec…find()` methods when the value can't be
+// found.
 #define VEC_NOT_FOUND -1
+
+// Vecs start out empty, but at the first addition (e.g., first push)
+// they are first grown to this size.
 #define VEC_INITIAL_CAP 16
 
 // Returns true if the Vec is empty.
@@ -30,9 +35,10 @@
 
 #define assert_nonempty(vec) assert((vec)->_size && "empty vec");
 
-// The initial vec cap is 0 (unless specified). On the first add,
-// insert, or push on cap 0, cap goes to VEC_INITIAL_CAP, then doubles
-// each time until it exceeds 1MB, then grows by 1MB each time the cap
-// is reached.
+/* The initial vec cap is 0 (unless specified). On the first add,
+   insert, or push on cap 0, cap goes to VEC_INITIAL_CAP, then doubles
+   each time until it exceeds 1MB, then grows by 1MB each time the cap
+   is reached.
+*/
 #define VEC_GROW_CAP(cap) \
     (!(cap) ? VEC_INITIAL_CAP : (cap) < 1048576 ? (cap)*2 : (cap) + 1048576)
