@@ -8,8 +8,8 @@
 
 #define assert_notnull(p) assert((p) && "expected non-NULL pointer")
 
-// Used to set whether they own their element pointers (and must free them)
-// or not.
+// Used to set whether a collection owns its element pointers (and must
+// free them) or not.
 // See, for example, deq_str_alloc(), map_str_real_alloc(), set_str_copy(),
 // set_str_to_vec(), vec_str_alloc_custom(), and vec_str_copy().
 typedef enum Ownership {
