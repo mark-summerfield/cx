@@ -34,17 +34,17 @@ char* file_read_size(const char* filename, long long max_size, bool* ok);
 #define file_read(filename, ok) file_read_size(filename, 1024 * 1024, ok)
 
 // Populates filename (of size FILENAME_SIZE) and returns true if it
-// exists. The filename is either $HOME/.config/domain_appname.ext or
-// $HOME/.domain_appname.ext. Domain may be NULL in which case filename
-// is $HOME/.config/appname.ext or $HOME/.appname.ext.
-// See also `file_get_ini_name()`.
+// exists. The filename is either `$HOME/.config/domain_appname.ext` or
+// `$HOME/.domain_appname.ext`. Domain may be NULL in which case filename
+// is `$HOME/.config/appname.ext` or `$HOME/.appname.ext`.
+// See also file_get_ini_name().
 bool file_get_config_name(char* filename, const char* domain,
                           const char* appname, const char* ext);
 
 // Populates filename (of size FILENAME_SIZE) and returns true if it
-// exists. The filename is either $HOME/.config/domain_appname.ini or
-// $HOME/.domain_appname.ini. Domain may be NULL in which case filename is
-// $HOME/.config/appname.ini or $HOME/.appname.ini.
-// See also `file_get_config_name()`.
+// exists. The filename is either `$HOME/.config/domain_appname.ini` or
+// `$HOME/.domain_appname.ini`. Domain may be NULL in which case filename is
+// `$HOME/.config/appname.ini` or `$HOME/.appname.ini`.
+// See also file_get_config_name().
 #define file_get_ini_name(filename, domain, appname) \
     file_get_config_name(filename, domain, appname, ".ini")

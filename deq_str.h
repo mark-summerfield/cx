@@ -9,7 +9,7 @@ typedef struct DeqStrNode DeqStrNode;
 // A doubly linked list of char* values.
 //
 // To iterate:
-// ````
+// ```
 // for (DeqStrNode* node = deq->head; node; node = node->next)
 //     const char* value = p->value;
 // ```
