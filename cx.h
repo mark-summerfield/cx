@@ -8,10 +8,11 @@
 
 #define assert_notnull(p) assert((p) && "expected non-NULL pointer")
 
-// Used to specify that a collection owns its pointers. See also
-// BORROWS.
-#define OWNS true
-
-// Used to specify that a collection does not own its pointers. See also
-// OWNS.
-#define BORROWS (!OWNS)
+// Used to set whether they own their element pointers (and must free them)
+// or not.
+// See, for example, deq_str_alloc(), map_str_real_alloc(), set_str_copy(),
+// set_str_to_vec(), vec_str_alloc_custom(), and vec_str_copy().
+typedef enum Ownership {
+    Owns,    // Collection owns its element pointers and will free them
+    Borrows, // Collection will not free its element pointers
+} Ownership;

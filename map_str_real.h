@@ -14,7 +14,7 @@ typedef void (*visitor_fn)(const char* value, void* state);
 typedef struct MapStrReal {
     MapStrRealNode* _root;
     int _size;
-    bool _owns;
+    Ownership _ownership;
 } MapStrReal;
 
 typedef struct MapStrRealNode {
@@ -32,7 +32,7 @@ typedef struct StrRealPair {
 
 // Allocates a new empty MapStrReal of owned or borrowed char* keys and
 // double values.
-MapStrReal map_str_real_alloc(bool owns);
+MapStrReal map_str_real_alloc(Ownership ownership);
 
 // Destroys the MapStrReal freeing its memory, and if owning, also freeing
 // every char* key. The MapStrReal is not usable after this.
@@ -41,8 +41,8 @@ void map_str_real_free(MapStrReal* map);
 // Calls destroy on all the MapStrReal's char* keys if owning.
 void map_str_real_clear(MapStrReal* map);
 
-// Returns true if the MapStrReal is owning.
-#define map_str_real_owns(map) ((map)->_owns)
+// Returns Owns if the MapStrReal is owning, otherwise Borrows.
+#define map_str_real_ownership(map) ((map)->_ownership)
 
 // Adds the key-value in key order if the key isn't present and returns
 // true. If the key was already present, updates the value and returns

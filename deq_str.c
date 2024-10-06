@@ -6,10 +6,10 @@
 
 static void push_head(DeqStr* deq, DeqStrNode* node);
 static DeqStrNode* node_alloc(char* value);
-static void node_free(DeqStrNode* node, bool owns);
+static void node_free(DeqStrNode* node, Ownership ownership);
 
-inline DeqStr deq_str_alloc(bool owns) {
-    return (DeqStr){NULL, NULL, 0, owns};
+inline DeqStr deq_str_alloc(Ownership ownership) {
+    return (DeqStr){NULL, NULL, 0, ownership};
 }
 
 inline void deq_str_free(DeqStr* deq) { deq_str_clear(deq); }
@@ -18,7 +18,7 @@ void deq_str_clear(DeqStr* deq) {
     DeqStrNode* next = NULL;
     for (DeqStrNode* node = deq->head; node; node = next) {
         next = node->next;
-        node_free(node, deq->_owns);
+        node_free(node, deq->_ownership);
     }
     deq->head = deq->tail = NULL;
     deq->_size = 0;
@@ -75,7 +75,7 @@ char* deq_str_pop(DeqStr* deq) {
         node->prev->next = NULL;
         deq->tail = node->prev;
     }
-    node_free(node, false); // if DeqStr owned, caller now owns
+    node_free(node, Borrows); // if DeqStr owned, caller now owns
     deq->_size--;
     return value;
 }
@@ -91,7 +91,7 @@ char* deq_str_pop_first(DeqStr* deq) {
         node->next->prev = NULL;
         deq->head = node->next;
     }
-    node_free(node, false); // if DeqStr owned, caller now owns
+    node_free(node, Borrows); // if DeqStr owned, caller now owns
     deq->_size--;
     return value;
 }
@@ -123,8 +123,8 @@ static DeqStrNode* node_alloc(char* value) {
     return node;
 }
 
-static inline void node_free(DeqStrNode* node, bool owns) {
-    if (owns)
+static inline void node_free(DeqStrNode* node, Ownership ownership) {
+    if (ownership == Owns)
         free(node->value);
     free(node);
 }

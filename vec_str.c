@@ -13,15 +13,17 @@ static void fd_read_lines_size(const char* filename, long long max_size,
 static void fd_read_lines_populate_vec(FILE* file, VecStr* vec);
 static void vec_str_grow(VecStr* vec);
 
-VecStr vec_str_alloc_custom(int cap, bool owns) {
+VecStr vec_str_alloc_custom(int cap, Ownership ownership) {
     cap = cap > 0 ? cap : 0;
     char** values = NULL;
     if (cap) {
         values = malloc(cap * sizeof(char*));
         assert_alloc(values);
     }
-    return (VecStr){
-        ._size = 0, ._cap = cap, ._owns = owns, ._values = values};
+    return (VecStr){._size = 0,
+                    ._cap = cap,
+                    ._ownership = ownership,
+                    ._values = values};
 }
 
 void vec_str_free(VecStr* vec) {
@@ -34,7 +36,7 @@ void vec_str_free(VecStr* vec) {
 
 void vec_str_clear(VecStr* vec) {
     assert_notnull(vec);
-    if (vec->_owns)
+    if (vec->_ownership == Owns)
         for (int i = 0; i < vec->_size; ++i)
             free(vec->_values[i]);
     vec->_size = 0;
@@ -64,7 +66,7 @@ void vec_str_set(VecStr* vec, int index, char* value) {
     assert_nonempty(vec);
     assert_notnull(value);
     assert_valid_index(vec, index);
-    if (vec->_owns)
+    if (vec->_ownership == Owns)
         free(vec->_values[index]);
     vec->_values[index] = value;
 }
@@ -113,7 +115,7 @@ char* vec_str_replace(VecStr* vec, int index, char* value) {
 
 inline void vec_str_remove(VecStr* vec, int index) {
     char* old = vec_str_take(vec, index); // vec_str_take does asserts
-    if (vec->_owns)
+    if (vec->_ownership == Owns)
         free(old);
 }
 
@@ -143,12 +145,13 @@ void vec_str_push(VecStr* vec, char* value) {
     vec->_values[vec->_size++] = value;
 }
 
-VecStr vec_str_copy(const VecStr* vec, bool owns) {
+VecStr vec_str_copy(const VecStr* vec, Ownership ownership) {
     assert_notnull(vec);
-    VecStr out = vec_str_alloc_custom(vec->_size ? vec->_size : 0, owns);
+    VecStr out =
+        vec_str_alloc_custom(vec->_size ? vec->_size : 0, ownership);
     for (int i = 0; i < vec->_size; ++i) {
         char* value = vec->_values[i];
-        vec_str_push(&out, owns ? strdup(value) : value);
+        vec_str_push(&out, ownership == Owns ? strdup(value) : value);
     }
     return out;
 }
@@ -156,7 +159,7 @@ VecStr vec_str_copy(const VecStr* vec, bool owns) {
 void vec_str_merge(VecStr* vec1, VecStr* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
-    assert(vec1->_owns == vec2->_owns &&
+    assert(vec1->_ownership == vec2->_ownership &&
            "both vec_str's must be owners or both must be borrowers");
     if ((vec1->_cap - vec1->_size) <
         vec2->_size) { // vec1 doesn't have enough cap

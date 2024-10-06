@@ -17,7 +17,7 @@ typedef struct DeqStr {
     DeqStrNode* head;
     DeqStrNode* tail;
     int _size;
-    bool _owns;
+    Ownership _ownership;
 } DeqStr;
 
 typedef struct DeqStrNode {
@@ -27,7 +27,7 @@ typedef struct DeqStrNode {
 } DeqStrNode;
 
 // Returns a new empty DeqStr.
-DeqStr deq_str_alloc(bool owns);
+DeqStr deq_str_alloc(Ownership ownership);
 
 // Frees a DeqStr and frees all its values if owned. It can't be used
 // after this.
@@ -36,8 +36,8 @@ void deq_str_free(DeqStr* deq);
 // Clears a DeqStr and frees all its values if owned.
 void deq_str_clear(DeqStr* deq);
 
-// Returns true if the DeqStr is owning.
-#define deq_str_owns(deq) ((deq)->_owns)
+// Returns Owns if the DeqStr is owning, otherwise Borrows
+#define deq_str_ownership(deq) ((deq)->_ownership)
 
 // Returns the DeqStr's first value or NULL if empty.
 const char* deq_str_first(DeqStr* deq);

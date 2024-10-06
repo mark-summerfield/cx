@@ -15,36 +15,37 @@ static void node_color_flip(SetStrNode* node);
 static SetStrNode* node_add_rotation(SetStrNode* node);
 static SetStrNode* node_rotate_left(SetStrNode* node);
 static SetStrNode* node_rotate_right(SetStrNode* node);
-static void node_remove_all(SetStrNode* node, bool owns);
+static void node_remove_all(SetStrNode* node, Ownership ownership);
 static SetStrNode* node_remove(SetStrNode* node, const char* value,
-                               bool* deleted, bool owns);
+                               bool* deleted, Ownership ownership);
 static SetStrNode* node_move_red_left(SetStrNode* node);
 static SetStrNode* node_move_red_right(SetStrNode* node);
 static SetStrNode* node_remove_right(SetStrNode* node, const char* value,
-                                     bool* deleted, bool owns);
+                                     bool* deleted, Ownership ownership);
 static SetStrNode* node_fixup(SetStrNode* node);
 static const SetStrNode* node_first(const SetStrNode* node);
-static SetStrNode* node_remove_minimum(SetStrNode* node, bool owns);
+static SetStrNode* node_remove_minimum(SetStrNode* node,
+                                       Ownership ownership);
 static int node_max_depth(const SetStrNode* node);
 
-inline SetStr set_str_alloc(bool owns) {
-    return (SetStr){._root = NULL, ._size = 0, ._owns = owns};
+inline SetStr set_str_alloc(Ownership ownership) {
+    return (SetStr){._root = NULL, ._size = 0, ._ownership = ownership};
 }
 
 inline void set_str_free(SetStr* set) { set_str_clear(set); }
 
 void set_str_clear(SetStr* set) {
     assert_notnull(set);
-    node_remove_all(set->_root, set->_owns);
+    node_remove_all(set->_root, set->_ownership);
     set->_root = NULL;
     set->_size = 0;
 }
 
-static void node_remove_all(SetStrNode* node, bool owns) {
+static void node_remove_all(SetStrNode* node, Ownership ownership) {
     if (node) {
-        node_remove_all(node->left, owns);
-        node_remove_all(node->right, owns);
-        if (owns)
+        node_remove_all(node->left, ownership);
+        node_remove_all(node->right, ownership);
+        if (ownership == Owns)
             free(node->value);
         free(node);
     }
@@ -127,7 +128,8 @@ bool set_str_remove(SetStr* set, const char* value) {
     assert_notnull(set);
     bool deleted = false;
     if (set->_root) {
-        set->_root = node_remove(set->_root, value, &deleted, set->_owns);
+        set->_root =
+            node_remove(set->_root, value, &deleted, set->_ownership);
         if (set->_root)
             set->_root->_red = false;
     }
@@ -137,26 +139,26 @@ bool set_str_remove(SetStr* set, const char* value) {
 }
 
 static SetStrNode* node_remove(SetStrNode* node, const char* value,
-                               bool* deleted, bool owns) {
+                               bool* deleted, Ownership ownership) {
     int cmp = strcmp(value, node->value);
     if (cmp < 0) {
         if (node->left) {
             if (!node_is_red(node->left) && !node_is_red(node->left->left))
                 node = node_move_red_left(node);
-            node->left = node_remove(node->left, value, deleted, owns);
+            node->left = node_remove(node->left, value, deleted, ownership);
         }
     } else {
         if (node_is_red(node->left))
             node = node_rotate_right(node);
         if (cmp == 0 && !node->right) {
-            if (owns)
+            if (ownership == Owns)
                 free(node->value);
             free(node);
             *deleted = true;
             return NULL;
         }
         if (node->right)
-            node = node_remove_right(node, value, deleted, owns);
+            node = node_remove_right(node, value, deleted, ownership);
     }
     return node_fixup(node);
 }
@@ -181,18 +183,18 @@ static SetStrNode* node_move_red_right(SetStrNode* node) {
 }
 
 static SetStrNode* node_remove_right(SetStrNode* node, const char* value,
-                                     bool* deleted, bool owns) {
+                                     bool* deleted, Ownership ownership) {
     if (!node_is_red(node->right) && !node_is_red(node->right->left))
         node = node_move_red_right(node);
     if (strcmp(value, node->value) == 0) {
         const SetStrNode* first = node_first(node->right);
-        if (owns)
+        if (ownership == Owns)
             free(node->value);
         node->value = first->value;
-        node->right = node_remove_minimum(node->right, owns);
+        node->right = node_remove_minimum(node->right, ownership);
         *deleted = true;
     } else
-        node->right = node_remove(node->right, value, deleted, owns);
+        node->right = node_remove(node->right, value, deleted, ownership);
     return node;
 }
 
@@ -212,26 +214,27 @@ static const SetStrNode* node_first(const SetStrNode* node) {
     return node;
 }
 
-static SetStrNode* node_remove_minimum(SetStrNode* node, bool owns) {
+static SetStrNode* node_remove_minimum(SetStrNode* node,
+                                       Ownership ownership) {
     if (!node->left) {
-        if (owns)
+        if (ownership == Owns)
             free(node->value);
         free(node);
         return NULL;
     }
     if (!node_is_red(node->left) && !node_is_red(node->left->left))
         node = node_move_red_left(node);
-    node->left = node_remove_minimum(node->left, owns);
+    node->left = node_remove_minimum(node->left, ownership);
     return node_fixup(node);
 }
 
-SetStr set_str_copy(const SetStr* set, bool owns) {
+SetStr set_str_copy(const SetStr* set, Ownership ownership) {
     assert_notnull(set);
-    SetStr set2 = set_str_alloc(owns);
-    VecStr vec = set_str_to_vec(set, BORROWS);
+    SetStr set2 = set_str_alloc(ownership);
+    VecStr vec = set_str_to_vec(set, Borrows);
     for (int i = 0; i < VEC_SIZE(&vec); i++) {
         char* value = VEC_GET(&vec, i);
-        set_str_add(&set2, owns ? strdup(value) : value);
+        set_str_add(&set2, ownership == Owns ? strdup(value) : value);
     }
     vec_str_free(&vec);
     return set2;
@@ -242,8 +245,8 @@ bool set_str_equal(const SetStr* set1, const SetStr* set2) {
     assert_notnull(set2);
     if (set1->_size != set2->_size)
         return false;
-    VecStr vec1 = set_str_to_vec(set1, BORROWS);
-    VecStr vec2 = set_str_to_vec(set2, BORROWS);
+    VecStr vec1 = set_str_to_vec(set1, Borrows);
+    VecStr vec2 = set_str_to_vec(set2, Borrows);
     bool equal = vec_str_equal(&vec1, &vec2);
     vec_str_free(&vec2);
     vec_str_free(&vec1);
@@ -266,10 +269,10 @@ bool set_str_contains(const SetStr* set, const char* value) {
 }
 
 SetStr set_str_difference(const SetStr* set1, const SetStr* set2,
-                          bool owns) {
+                          Ownership ownership) {
     assert_notnull(set1);
     assert_notnull(set2);
-    SetStr set = set_str_alloc(owns);
+    SetStr set = set_str_alloc(ownership);
     add_to_difference(&set, set1->_root, set2);
     return set;
 }
@@ -285,12 +288,12 @@ static void add_to_difference(SetStr* set, const SetStrNode* node,
 }
 
 SetStr set_str_intersection(const SetStr* set1, const SetStr* set2,
-                            bool owns) {
+                            Ownership ownership) {
     assert_notnull(set1);
     assert_notnull(set2);
-    SetStr set = set_str_alloc(owns);
-    VecStr vec1 = set_str_to_vec(set1, BORROWS);
-    VecStr vec2 = set_str_to_vec(set2, BORROWS);
+    SetStr set = set_str_alloc(ownership);
+    VecStr vec1 = set_str_to_vec(set1, Borrows);
+    VecStr vec2 = set_str_to_vec(set2, Borrows);
     int i = 0;
     int j = 0;
     while (i < vec1._size && j < vec2._size) {
@@ -298,7 +301,7 @@ SetStr set_str_intersection(const SetStr* set1, const SetStr* set2,
         char* v2 = vec2._values[j];
         int cmp = strcmp(v1, v2);
         if (cmp == 0) {
-            set_str_add(&set, owns ? strdup(v1) : v1);
+            set_str_add(&set, ownership == Owns ? strdup(v1) : v1);
             i++;
             j++;
         } else if (cmp < 0)
@@ -311,10 +314,11 @@ SetStr set_str_intersection(const SetStr* set1, const SetStr* set2,
     return set;
 }
 
-SetStr set_str_union(const SetStr* set1, const SetStr* set2, bool owns) {
+SetStr set_str_union(const SetStr* set1, const SetStr* set2,
+                     Ownership ownership) {
     assert_notnull(set1);
     assert_notnull(set2);
-    SetStr set = set_str_copy(set1, owns);
+    SetStr set = set_str_copy(set1, ownership);
     set_str_unite(&set, set2);
     return set;
 }
@@ -322,8 +326,8 @@ SetStr set_str_union(const SetStr* set1, const SetStr* set2, bool owns) {
 void set_str_unite(SetStr* set1, const SetStr* set2) {
     assert_notnull(set1);
     assert_notnull(set2);
-    VecStr vec = set_str_to_vec(set2, BORROWS);
-    if (set1->_owns) // only add new values to avoid freeing dups
+    VecStr vec = set_str_to_vec(set2, Borrows);
+    if (set1->_ownership == Owns) // only add new vals to avoid freeing dups
         for (int i = 0; i < VEC_SIZE(&vec); ++i) {
             char* value = VEC_GET(&vec, i);
             if (!set_str_contains(set1, value))
@@ -335,9 +339,9 @@ void set_str_unite(SetStr* set1, const SetStr* set2) {
     vec_str_free(&vec);
 }
 
-VecStr set_str_to_vec(const SetStr* set, bool owns) {
+VecStr set_str_to_vec(const SetStr* set, Ownership ownership) {
     assert_notnull(set);
-    VecStr vec = vec_str_alloc_custom(set->_size, owns);
+    VecStr vec = vec_str_alloc_custom(set->_size, ownership);
     push_to_vec(&vec, set->_root);
     return vec;
 }
@@ -345,15 +349,16 @@ VecStr set_str_to_vec(const SetStr* set, bool owns) {
 static void push_to_vec(VecStr* vec, const SetStrNode* node) {
     if (node) {
         push_to_vec(vec, node->left);
-        vec_str_push(vec,
-                     vec_str_owns(vec) ? strdup(node->value) : node->value);
+        vec_str_push(vec, vec_str_ownership(vec) == Owns
+                              ? strdup(node->value)
+                              : node->value);
         push_to_vec(vec, node->right);
     }
 }
 
 char* set_str_join(const SetStr* set, const char* sep) {
     assert_notnull(set);
-    VecStr vec = set_str_to_vec(set, BORROWS);
+    VecStr vec = set_str_to_vec(set, Borrows);
     char* s = vec_str_join(&vec, sep);
     vec_str_free(&vec);
     return s;

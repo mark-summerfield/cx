@@ -49,10 +49,10 @@ void vec_str_tests(tinfo* tinfo) {
     tinfo->tag = "vec_str_tests continued";
     if (tinfo->verbose)
         puts(tinfo->tag);
-    VecStr v1 = vec_str_alloc(); // default of 0 size and OWNS
+    VecStr v1 = vec_str_alloc(); // default of 0 size and Owns
     check_size_cap(tinfo, &v1, 0, 0);
 
-    VecStr v2 = vec_str_copy(&v1, BORROWS);
+    VecStr v2 = vec_str_copy(&v1, Borrows);
     check_size_cap(tinfo, &v1, 0, 0);
 
     tinfo->total++;
@@ -209,7 +209,7 @@ void vec_str_tests(tinfo* tinfo) {
 static void merge_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    VecStr v1 = vec_str_alloc_custom(7, OWNS);
+    VecStr v1 = vec_str_alloc_custom(7, Owns);
     check_size_cap(tinfo, &v1, 0, 7);
     check_join(tinfo, &v1, ":", NULL);
     check_join(tinfo, &v1, NULL, NULL);
@@ -355,7 +355,7 @@ static void sort_tests(tinfo* tinfo) {
 static void prefix_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    VecStr v1 = vec_str_alloc_custom(3, BORROWS);
+    VecStr v1 = vec_str_alloc_custom(3, Borrows);
     vec_str_push(&v1, "fan");
     vec_str_push(&v1, "fate");
     vec_str_push(&v1, "fame");

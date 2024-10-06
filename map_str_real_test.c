@@ -19,7 +19,7 @@ void map_str_real_tests(tinfo* tinfo) {
 }
 
 static void test1(tinfo* tinfo) {
-    MapStrReal vars = map_str_real_alloc(BORROWS);
+    MapStrReal vars = map_str_real_alloc(Borrows);
     check_size(tinfo, &vars, 0);
 
     bool ok = map_str_real_contains(&vars, "zero");
@@ -88,7 +88,7 @@ static void test1(tinfo* tinfo) {
 }
 
 static void test2(tinfo* tinfo) {
-    MapStrReal vars = map_str_real_alloc(OWNS);
+    MapStrReal vars = map_str_real_alloc(Owns);
     check_size(tinfo, &vars, 0);
 
     bool ok = map_str_real_contains(&vars, "zero");

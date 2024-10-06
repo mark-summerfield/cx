@@ -14,7 +14,7 @@ static void check_size_and_contents(tinfo* tinfo, DeqStr* deq,
 void deq_str_tests(tinfo* tinfo) {
     if (tinfo->verbose)
         puts(tinfo->tag);
-    DeqStr deq1 = deq_str_alloc(OWNS);
+    DeqStr deq1 = deq_str_alloc(Owns);
     check_size_and_contents(tinfo, &deq1, "", "", "");
     check_isnull(tinfo, deq_str_first(&deq1));
     check_isnull(tinfo, deq_str_last(&deq1));
@@ -53,7 +53,7 @@ void deq_str_tests(tinfo* tinfo) {
     check_isnull(tinfo, deq_str_last(&deq1));
     deq_str_free(&deq1);
 
-    DeqStr deq2 = deq_str_alloc(BORROWS);
+    DeqStr deq2 = deq_str_alloc(Borrows);
     check_size_and_contents(tinfo, &deq2, "", "", "");
     check_isnull(tinfo, deq_str_first(&deq2));
     check_isnull(tinfo, deq_str_last(&deq2));

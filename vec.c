@@ -155,7 +155,8 @@ Vec vec_copy(const Vec* vec, void* (*cpy)(const void*)) {
 void vec_merge(Vec* vec1, Vec* vec2) {
     assert_notnull(vec1);
     assert_notnull(vec2);
-    assert(vec1->_cmp == vec2->_cmp && vec_owns(vec1) == vec_owns(vec2) &&
+    assert(vec1->_cmp == vec2->_cmp &&
+           vec_ownership(vec1) == vec_ownership(vec2) &&
            "incompatible vecs");
     if ((vec1->_cap - vec1->_size) <
         vec2->_size) { // vec1 doesn't have enough cap

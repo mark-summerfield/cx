@@ -18,16 +18,16 @@ typedef struct VecStr {
     int _size; // This is "end", i.e., one past the last value
     int _cap;  // The size of the allocated array
     char** _values;
-    bool _owns;
+    Ownership _ownership;
 } VecStr;
 
 // Allocates a new VecStr of owned char* with default capacity of 0.
 // See also vec_str_alloc_custom().
-#define vec_str_alloc() vec_str_alloc_custom(0, OWNS)
+#define vec_str_alloc() vec_str_alloc_custom(0, Owns)
 
 // Allocates a new VecStr of char* (owns if owns, otherwise borrowed)
 // with the specified capacity. See also vec_str_alloc().
-VecStr vec_str_alloc_custom(int cap, bool owns);
+VecStr vec_str_alloc_custom(int cap, Ownership ownership);
 
 // Destroys the VecStr freeing its memory and if owns, freeing every
 // value. The VecStr is not usable after this.
@@ -36,8 +36,8 @@ void vec_str_free(VecStr* vec);
 // Calls free on all the VecStr's values if owns.
 void vec_str_clear(VecStr* vec);
 
-// Returns true if the VecStr owns its strings.
-#define vec_str_owns(vec) ((vec)->_owns)
+// Returns Owns if the VecStr owns its strings, otherwise Borrows.
+#define vec_str_ownership(vec) ((vec)->_ownership)
 
 // Returns the VecStr's value at position index.
 // VecStr retains ownership (if owns), so do not delete the value.
@@ -104,7 +104,7 @@ char* vec_str_pop(VecStr* vec);
 void vec_str_push(VecStr* vec, char* value);
 
 // Returns a copy of the VecStr (a deep copy if owns is true).
-VecStr vec_str_copy(const VecStr* vec, bool owns);
+VecStr vec_str_copy(const VecStr* vec, Ownership ownership);
 
 // Moves all vec2's values to the end of vec1's values, after which vec2 is
 // freed and must not be used again.

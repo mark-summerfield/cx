@@ -40,8 +40,8 @@ void vec_free(Vec* vec);
 // Calls destroy on all the Vec's values if owning.
 void vec_clear(Vec* vec);
 
-// Returns true if the Vec is owning.
-#define vec_owns(vec) ((vec)->_destroy != NULL)
+// Returns Owns if the Vec is owning, otherwise Borrows.
+#define vec_ownership(vec) ((vec)->_destroy == NULL ? Borrows : Owns)
 
 // Returns the Vec's value at position index.
 // If owning, Vec retains ownership, so do not delete the value.

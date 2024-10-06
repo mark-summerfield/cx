@@ -5,46 +5,48 @@
 #include <string.h>
 
 static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
-                                double value, bool* added, bool owns);
+                                double value, bool* added,
+                                Ownership ownership);
 static MapStrRealNode* node_alloc(char* key, double value);
 static bool node_is_red(const MapStrRealNode* node);
 static void node_color_flip(MapStrRealNode* node);
 static MapStrRealNode* node_add_rotation(MapStrRealNode* node);
 static MapStrRealNode* node_rotate_left(MapStrRealNode* node);
 static MapStrRealNode* node_rotate_right(MapStrRealNode* node);
-static void node_remove_all(MapStrRealNode* node, bool owns);
+static void node_remove_all(MapStrRealNode* node, Ownership ownership);
 static MapStrRealNode* node_remove(MapStrRealNode* node, const char* key,
-                                   bool* deleted, bool owns);
+                                   bool* deleted, Ownership ownership);
 static MapStrRealNode* node_move_red_left(MapStrRealNode* node);
 static MapStrRealNode* node_move_red_right(MapStrRealNode* node);
 static MapStrRealNode* node_remove_right(MapStrRealNode* node,
                                          const char* key, bool* deleted,
-                                         bool owns);
+                                         Ownership ownership);
 static MapStrRealNode* node_fixup(MapStrRealNode* node);
 static const MapStrRealNode* node_first(const MapStrRealNode* node);
-static MapStrRealNode* node_remove_minimum(MapStrRealNode* node, bool owns);
+static MapStrRealNode* node_remove_minimum(MapStrRealNode* node,
+                                           Ownership ownership);
 static int str_real_pair_cmp(const void* p1, const void* p2);
 static void push_to_vec(Vec* vec, const MapStrRealNode* node);
 static void push_to_vec_str(VecStr* vec, const MapStrRealNode* node);
 
-inline MapStrReal map_str_real_alloc(bool owns) {
-    return (MapStrReal){._root = NULL, ._size = 0, ._owns = owns};
+inline MapStrReal map_str_real_alloc(Ownership ownership) {
+    return (MapStrReal){._root = NULL, ._size = 0, ._ownership = ownership};
 }
 
 inline void map_str_real_free(MapStrReal* map) { map_str_real_clear(map); }
 
 void map_str_real_clear(MapStrReal* map) {
     assert_notnull(map);
-    node_remove_all(map->_root, map->_owns);
+    node_remove_all(map->_root, map->_ownership);
     map->_root = NULL;
     map->_size = 0;
 }
 
-static void node_remove_all(MapStrRealNode* node, bool owns) {
+static void node_remove_all(MapStrRealNode* node, Ownership ownership) {
     if (node) {
-        node_remove_all(node->left, owns);
-        node_remove_all(node->right, owns);
-        if (owns)
+        node_remove_all(node->left, ownership);
+        node_remove_all(node->right, ownership);
+        if (ownership == Owns)
             free(node->key);
         free(node);
     }
@@ -64,7 +66,7 @@ static MapStrRealNode* node_alloc(char* key, double value) {
 bool map_str_real_set(MapStrReal* map, char* key, double value) {
     assert_notnull(map);
     bool added = false;
-    map->_root = node_add(map->_root, key, value, &added, map->_owns);
+    map->_root = node_add(map->_root, key, value, &added, map->_ownership);
     map->_root->_red = false;
     if (added)
         map->_size++;
@@ -72,7 +74,8 @@ bool map_str_real_set(MapStrReal* map, char* key, double value) {
 }
 
 static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
-                                double value, bool* added, bool owns) {
+                                double value, bool* added,
+                                Ownership ownership) {
     if (!node) { // If key was in the tree it would go here
         *added = true;
         return node_alloc(key, value);
@@ -81,7 +84,7 @@ static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
         node_color_flip(node);
     int cmp = strcmp(key, node->key);
     if (cmp == 0) {
-        if (owns && node->key != key) {
+        if (ownership == Owns && node->key != key) {
             free(node->key); // both keys have the same string but
             node->key = key; // are different pointers
         }
@@ -89,9 +92,9 @@ static MapStrRealNode* node_add(MapStrRealNode* node, char* key,
         return node;
     }
     if (cmp < 0)
-        node->left = node_add(node->left, key, value, added, owns);
+        node->left = node_add(node->left, key, value, added, ownership);
     else // cmp > 0
-        node->right = node_add(node->right, key, value, added, owns);
+        node->right = node_add(node->right, key, value, added, ownership);
     return node_add_rotation(node);
 }
 
@@ -137,7 +140,8 @@ bool map_str_real_remove(MapStrReal* map, const char* key) {
     assert_notnull(map);
     bool deleted = false;
     if (map->_root) {
-        map->_root = node_remove(map->_root, key, &deleted, map->_owns);
+        map->_root =
+            node_remove(map->_root, key, &deleted, map->_ownership);
         if (map->_root)
             map->_root->_red = false;
     }
@@ -147,26 +151,26 @@ bool map_str_real_remove(MapStrReal* map, const char* key) {
 }
 
 static MapStrRealNode* node_remove(MapStrRealNode* node, const char* key,
-                                   bool* deleted, bool owns) {
+                                   bool* deleted, Ownership ownership) {
     int cmp = strcmp(key, node->key);
     if (cmp < 0) {
         if (node->left) {
             if (!node_is_red(node->left) && !node_is_red(node->left->left))
                 node = node_move_red_left(node);
-            node->left = node_remove(node->left, key, deleted, owns);
+            node->left = node_remove(node->left, key, deleted, ownership);
         }
     } else {
         if (node_is_red(node->left))
             node = node_rotate_right(node);
         if (cmp == 0 && !node->right) {
-            if (owns)
+            if (ownership == Owns)
                 free(node->key);
             free(node);
             *deleted = true;
             return NULL;
         }
         if (node->right)
-            node = node_remove_right(node, key, deleted, owns);
+            node = node_remove_right(node, key, deleted, ownership);
     }
     return node_fixup(node);
 }
@@ -192,18 +196,18 @@ static MapStrRealNode* node_move_red_right(MapStrRealNode* node) {
 
 static MapStrRealNode* node_remove_right(MapStrRealNode* node,
                                          const char* key, bool* deleted,
-                                         bool owns) {
+                                         Ownership ownership) {
     if (!node_is_red(node->right) && !node_is_red(node->right->left))
         node = node_move_red_right(node);
     if (strcmp(key, node->key) == 0) {
         const MapStrRealNode* first = node_first(node->right);
-        if (owns)
+        if (ownership == Owns)
             free(node->key);
         node->key = first->key;
-        node->right = node_remove_minimum(node->right, owns);
+        node->right = node_remove_minimum(node->right, ownership);
         *deleted = true;
     } else
-        node->right = node_remove(node->right, key, deleted, owns);
+        node->right = node_remove(node->right, key, deleted, ownership);
     return node;
 }
 
@@ -224,16 +228,16 @@ static const MapStrRealNode* node_first(const MapStrRealNode* node) {
 }
 
 static MapStrRealNode* node_remove_minimum(MapStrRealNode* node,
-                                           bool owns) {
+                                           Ownership ownership) {
     if (!node->left) {
-        if (owns)
+        if (ownership == Owns)
             free(node->key);
         free(node);
         return NULL;
     }
     if (!node_is_red(node->left) && !node_is_red(node->left->left))
         node = node_move_red_left(node);
-    node->left = node_remove_minimum(node->left, owns);
+    node->left = node_remove_minimum(node->left, ownership);
     return node_fixup(node);
 }
 
@@ -296,7 +300,7 @@ static void push_to_vec(Vec* vec, const MapStrRealNode* node) {
 
 VecStr map_str_real_keys(const MapStrReal* map) {
     assert_notnull(map);
-    VecStr vec = vec_str_alloc_custom(map->_size, BORROWS);
+    VecStr vec = vec_str_alloc_custom(map->_size, Borrows);
     push_to_vec_str(&vec, map->_root);
     return vec;
 }

@@ -36,10 +36,10 @@ static void misc_tests(tinfo* tinfo) {
     tag_make(true);
     Vec v1 = vec_alloc(5, tag_cmp, tag_free);
     check_size_cap(tinfo, &v1, 0, 5);
-    check_bool_eq(tinfo, vec_owns(&v1), true);
+    check_bool_eq(tinfo, vec_ownership(&v1), Owns);
 
     Vec v2 = vec_copy(&v1, tag_copy);
-    check_bool_eq(tinfo, vec_owns(&v2), true);
+    check_bool_eq(tinfo, vec_ownership(&v2), Owns);
 
     check_size_cap(tinfo, &v1, 0, 5);
     check_size_cap(tinfo, &v2, 0, 0);
@@ -53,7 +53,7 @@ static void misc_tests(tinfo* tinfo) {
     vec_free(&v2);
 
     v2 = vec_copy(&v1, tag_copy);
-    check_bool_eq(tinfo, vec_owns(&v2), true);
+    check_bool_eq(tinfo, vec_ownership(&v2), Owns);
     check_size_cap(tinfo, &v2, 7, 7);
     match(tinfo, &v2, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     equal(tinfo, &v1, &v2, true);
@@ -166,7 +166,7 @@ static void misc_tests(tinfo* tinfo) {
 
 static void misc_test2(tinfo* tinfo, const Vec* v1) {
     Vec v3 = vec_copy(v1, tag_copy);
-    check_bool_eq(tinfo, vec_owns(&v3), true);
+    check_bool_eq(tinfo, vec_ownership(&v3), Owns);
     check_size_cap(tinfo, &v3, 7, 7);
     match(tinfo, &v3, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104|Af#105|Ag#106");
     equal(tinfo, v1, &v3, true);
@@ -179,7 +179,7 @@ static void merge_tests(tinfo* tinfo) {
         puts(tinfo->tag);
     tag_make(true);
     Vec v1 = vec_alloc(7, tag_cmp, tag_free);
-    check_bool_eq(tinfo, vec_owns(&v1), true);
+    check_bool_eq(tinfo, vec_ownership(&v1), Owns);
     check_size_cap(tinfo, &v1, 0, 7);
     for (int i = 0; i < 5; ++i)
         vec_push(&v1, tag_make(false));
@@ -187,7 +187,7 @@ static void merge_tests(tinfo* tinfo) {
     match(tinfo, &v1, "Aa#100|Ab#101|Ac#102|Ad#103|Ae#104");
 
     Vec v2 = vec_alloc(11, tag_cmp, tag_free);
-    check_bool_eq(tinfo, vec_owns(&v2), true);
+    check_bool_eq(tinfo, vec_ownership(&v2), Owns);
     check_size_cap(tinfo, &v2, 0, 11);
     for (int i = 0; i < 6; ++i)
         vec_push(&v2, tag_make(false));

@@ -91,7 +91,7 @@ static void test_copy(tinfo* tinfo) {
         WARN("FAIL: %s set not equal to itself!\n", tinfo->tag);
     else
         tinfo->ok++;
-    SetStr dup = set_str_copy(&set, BORROWS);
+    SetStr dup = set_str_copy(&set, Borrows);
     tinfo->total++;
     if (!set_str_equal(&set, &dup))
         WARN("FAIL: %s set not equal to dup\n", tinfo->tag);
@@ -108,7 +108,7 @@ static void test_union(tinfo* tinfo) {
     SetStr set2 = prep_set1(tinfo);
     set_str_add(&set1, "ten");
     set_str_add(&set1, "eleven");
-    SetStr set3 = set_str_union(&set1, &set2, BORROWS);
+    SetStr set3 = set_str_union(&set1, &set2, Borrows);
     check_set_strs(
         tinfo, &set3,
         "eight|eleven|five|four|nine|one|seven|six|ten|three|two");
@@ -117,7 +117,7 @@ static void test_union(tinfo* tinfo) {
         tinfo, &set1,
         "eight|eleven|five|four|nine|one|seven|six|ten|three|two");
     set_str_clear(&set3);
-    set3 = set_str_union(&set1, &set2, BORROWS);
+    set3 = set_str_union(&set1, &set2, Borrows);
     tinfo->total++;
     if (!set_str_equal(&set1, &set3))
         WARN("FAIL: %s set1 != set3\n", tinfo->tag);
@@ -138,12 +138,12 @@ static void test_difference(tinfo* tinfo) {
     check_set_strs(tinfo, &set1,
                    "eight|eleven|five|four|one|seven|six|ten|three|two");
     check_set_strs(tinfo, &set2, "five|nine|one|seven|three");
-    SetStr set3 = set_str_difference(&set1, &set2, BORROWS);
+    SetStr set3 = set_str_difference(&set1, &set2, Borrows);
     check_set_strs(tinfo, &set3, "eight|eleven|four|six|ten|two");
-    SetStr set4 = set_str_difference(&set3, &set3, BORROWS);
+    SetStr set4 = set_str_difference(&set3, &set3, Borrows);
     check_bool_eq(tinfo, SET_ISEMPTY(&set4), true);
     set_str_clear(&set3);
-    set3 = set_str_difference(&set2, &set1, BORROWS);
+    set3 = set_str_difference(&set2, &set1, Borrows);
     check_set_strs(tinfo, &set3, "nine");
     set_str_free(&set4);
     set_str_free(&set3);
@@ -158,18 +158,18 @@ static void test_intersection(tinfo* tinfo) {
     SetStr set2 = prep_set1(tinfo);
     check_set_strs(tinfo, &set1, "eight|five|four|one|seven|six|three|two");
     check_set_strs(tinfo, &set2, "five|nine|one|seven|three");
-    SetStr set3 = set_str_intersection(&set1, &set2, BORROWS);
+    SetStr set3 = set_str_intersection(&set1, &set2, Borrows);
     check_set_strs(tinfo, &set3, "five|one|seven|three");
-    SetStr set4 = set_str_intersection(&set3, &set3, BORROWS);
+    SetStr set4 = set_str_intersection(&set3, &set3, Borrows);
     check_set_strs(tinfo, &set4, "five|one|seven|three");
     set_str_clear(&set4);
     set_str_clear(&set3);
-    set3 = set_str_intersection(&set1, &set4, BORROWS);
+    set3 = set_str_intersection(&set1, &set4, Borrows);
     check_bool_eq(tinfo, SET_ISEMPTY(&set3), true);
     set_str_add(&set4, "ABC");
     set_str_add(&set4, "XY");
     set_str_clear(&set3);
-    set3 = set_str_intersection(&set1, &set4, BORROWS);
+    set3 = set_str_intersection(&set1, &set4, Borrows);
     check_bool_eq(tinfo, SET_ISEMPTY(&set3), true);
     set_str_free(&set4);
     set_str_free(&set3);
@@ -275,7 +275,7 @@ static void check_all(tinfo* tinfo, const SetStr* set, int size) {
 static void check_order(tinfo* tinfo, const SetStr* set) {
     tinfo->total++;
     bool ok = true;
-    VecStr vec = set_str_to_vec(set, BORROWS);
+    VecStr vec = set_str_to_vec(set, Borrows);
     for (int i = 1; i < VEC_SIZE(&vec); ++i)
         if (strcmp(vec_str_get(&vec, i - 1), vec_str_get(&vec, i)) > 0) {
             ok = false;
@@ -300,7 +300,7 @@ static void check_set_strs(tinfo* tinfo, const SetStr* set, const char* s) {
 }
 
 static SetStr prep_set(tinfo* tinfo) {
-    SetStr set = set_str_alloc(BORROWS);
+    SetStr set = set_str_alloc(Borrows);
     check_all(tinfo, &set, 0);
     char* a[] = {"one", "two", "three", "four",  "five",
                  "six", "two", "one",   "seven", "eight"};
@@ -312,7 +312,7 @@ static SetStr prep_set(tinfo* tinfo) {
 }
 
 static SetStr prep_set1(tinfo* tinfo) {
-    SetStr set = set_str_alloc(BORROWS);
+    SetStr set = set_str_alloc(Borrows);
     check_all(tinfo, &set, 0);
     char* a[] = {"one", "three", "five", "nine", "one", "seven"};
     int a_sz = sizeof(a) / sizeof(char*);
