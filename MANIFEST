@@ -76,7 +76,7 @@ str_test.c
 va_test.h
 va_test.c
 
-SConstruct
+makefile
 st.sh
 
 # Do these as needed:
