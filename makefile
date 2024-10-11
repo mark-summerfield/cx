@@ -12,12 +12,5 @@ dbg: cx_test
 
 cx_test: $(OBJECTS)
 
-run: cx_test
-	strip cx_test
-	./cx_test
-
-drun: dbg cx_test
-	./cx_test
-
 clean:
 	rm -f core $(OBJECTS) cx_test
