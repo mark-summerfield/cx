@@ -12,5 +12,8 @@ dbg: cx_test
 
 cx_test: $(OBJECTS)
 
-clean:
+distclean:
 	rm -f core $(OBJECTS) cx_test
+
+clean:
+	rm -f core $(OBJECTS)
