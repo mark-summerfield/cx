@@ -8,7 +8,7 @@
 #include <stdbool.h>
 
 // A vector of owned or borrowed char* values.
-// All accesses via functions, but _reading_ `_values` is okay.
+// All accesses via functions, but reading `values` is okay.
 //
 // To iterate:
 // ```
