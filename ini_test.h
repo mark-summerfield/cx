@@ -1,4 +1,5 @@
-// Copyright © 2024 Mark Summerfield. All rights reserved.
+// Copyright © 2024-25 Mark Summerfield. All rights reserved.
+// License: GPL-3
 #pragma once
 
 #include "cx_util_test.h"
@@ -11,7 +12,7 @@ void ini_tests(tinfo* tinfo);
     "Organization = Acme Things Inc.\n" \
     "RANKING = 1.76\n"                  \
     "\n"                                \
-    "[Database]\n"                       \
+    "[Database]\n"                      \
     "Exclusive = true\n"                \
     "; may include \"s for Windows\n"   \
     "FILE = \"payroll.dat\"\n"          \

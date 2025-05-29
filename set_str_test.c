@@ -1,4 +1,5 @@
-// Copyright © 2024 Mark Summerfield. All rights reserved.
+// Copyright © 2024-25 Mark Summerfield. All rights reserved.
+// License: GPL-3
 
 #include "set_str_test.h"
 #include "exit.h"

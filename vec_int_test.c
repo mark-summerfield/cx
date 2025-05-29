@@ -1,4 +1,5 @@
-// Copyright © 2024 Mark Summerfield. All rights reserved.
+// Copyright © 2024-25 Mark Summerfield. All rights reserved.
+// License: GPL-3
 
 #include "vec_int_test.h"
 #include "exit.h"
@@ -231,8 +232,8 @@ static void match(tinfo* tinfo, VecInt* v, char* expected) {
 static void check_size_cap(tinfo* tinfo, VecInt* v, int size, int cap) {
     tinfo->total++;
     if (VEC_SIZE(v) != size)
-        WARN("FAIL: %s VEC_SIZE() expected %d != %d\n", tinfo->tag,
-             size, VEC_SIZE(v));
+        WARN("FAIL: %s VEC_SIZE() expected %d != %d\n", tinfo->tag, size,
+             VEC_SIZE(v));
     else
         tinfo->ok++;
 

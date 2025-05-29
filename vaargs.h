@@ -1,3 +1,5 @@
+// Copyright © 2024-25 Mark Summerfield. All rights reserved.
+// License: GPL-3
 #pragma once
 
 /* // 1+ args example (cannot be used for 0|1 i.e., optional arg)

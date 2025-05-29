@@ -1,4 +1,5 @@
-// Copyright © 2024 Mark Summerfield. All rights reserved.
+// Copyright © 2024-25 Mark Summerfield. All rights reserved.
+// License: GPL-3
 #pragma once
 
 // Prints the file and line and printf-format message to stderr.

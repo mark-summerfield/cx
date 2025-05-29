@@ -1,4 +1,5 @@
-# Ideas at the end
+# make && ./cx_test to test; cdoc.py to generate doc; ideas at the end
+README.md
 
 cx.h
 vecs.h

@@ -1,4 +1,5 @@
-// Copyright © 2024 Mark Summerfield. All rights reserved.
+// Copyright © 2024-25 Mark Summerfield. All rights reserved.
+// License: GPL-3
 #pragma once
 
 #include <inttypes.h>
@@ -26,25 +27,25 @@
 bool str_ends(const char* s, const char* suffix);
 
 // Returns true if char* s ends with char* suffix, regardless of case
-bool str_caseends(const char*s, const char*suffix);
+bool str_caseends(const char* s, const char* suffix);
 
 // new means returned pointer must be free'd; _ip means changes in-place
 
 // Modifies char*'s text in-place converting ASCII lowercase to uppercase
-void str_uppercase_ip(char*s);
+void str_uppercase_ip(char* s);
 
 // Returns new char* of given char*'s ASCII chars uppercased
-char* str_uppercase(const char*s);
+char* str_uppercase(const char* s);
 
 // Returns new char* of up to n chars from the given char*'s ASCII chars
 // uppercased
-char* str_uppercasen(const char*s, int n);
+char* str_uppercasen(const char* s, int n);
 
 // Modifies char*'s text in-place converting ASCII lowercase to lowercase
-void str_lowercase_ip(char*s);
+void str_lowercase_ip(char* s);
 
 // Returns new char* of given char*'s ASCII chars lowercased
-char* str_lowercase(const char*s);
+char* str_lowercase(const char* s);
 
 int str_strcmp(const void* s, const void* t);
 
