@@ -49,5 +49,4 @@ build/
 zOld/
 .qmake.stash
 cx_test
-cx.html
 rb.c

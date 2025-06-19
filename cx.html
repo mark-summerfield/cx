@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>cx</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="style.css" rel="stylesheet" type="text/css" /> -->
+    <style>
+        .row{display: flex;flex-direction: row;align-items: flex-start;}
+        .col{display: flex;flex-direction: column;flex-grow: 1;}
+        .caption{line-height: 2em;}
+        body{font: helvetica, sans-serif;}
+        code{font-family: "dejavu sans mono", monospace;}
+        pre{font-family: "dejavu sans mono", monospace;}
+    </style>
+</head>
+<body>
+<div id="top">
+<h2>cx</h2>
+<div class="row">
+<div class="col">
+<div class="col">
+<div class="row caption">
+<b>Structs</b> <i>(10)</i>
+</div
+<ul>
+<li><code><a href="#DeqInt"><code>DeqInt</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#deq_int_alloc">9 methods</a>)</i></li>
+<li><code><a href="#DeqStr"><code>DeqStr</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#deq_str_alloc">10 methods</a>)</i></li>
+<li><code><a href="#Ini"><code>Ini</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#ini_alloc">17 methods</a>)</i></li>
+<li><code><a href="#MapStrReal"><code>MapStrReal</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#map_str_real_alloc">9 methods</a>)</i></li>
+<li><code><a href="#SetInt"><code>SetInt</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#set_int_alloc">16 methods</a>)</i></li>
+<li><code><a href="#SetStr"><code>SetStr</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#set_str_alloc">16 methods</a>)</i></li>
+<li><code><a href="#Vec"><code>Vec</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#map_str_real_to_vec">23 methods</a>)</i></li>
+<li><code><a href="#VecByte"><code>VecByte</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#vec_byte_alloc_cap">20 methods</a>)</i></li>
+<li><code><a href="#VecInt"><code>VecInt</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#set_int_to_vec">24 methods</a>)</i></li>
+<li><code><a href="#VecStr"><code>VecStr</code></a></code>&nbsp;&nbsp;&nbsp;<i>(<a href="#file_read_lines_size">34 methods</a>)</i></li>
+</ul>
+</div>
+<div class="col">
+<div class="row caption">
+<b>Enums</b> <i>(2)</i>
+</div
+<ul>
+<li><code><a href="#IniReply"><code>IniReply</code></a></code> <i>(<a href="#IniReply">3 values</a>)</i></li>
+<li><code><a href="#Ownership"><code>Ownership</code></a></code> <i>(<a href="#Ownership">2 values</a>)</i></li>
+</ul>
+</div>
+</div>
+<div class="col">
+<div class="row caption">
+<b>Functions</b> <i>(23)</i>
+</div
+<ul>
+<li><code><a href="#bool_to_str"><code>bool_to_str</code></a>()</code></li>
+<li><code><a href="#commas"><code>commas</code></a>()</code></li>
+<li><code><a href="#file_change_ext"><code>file_change_ext</code></a>()</code></li>
+<li><code><a href="#file_ext"><code>file_ext</code></a>()</code></li>
+<li><code><a href="#file_get_config_name"><code>file_get_config_name</code></a>()</code></li>
+<li><code><a href="#file_read_size"><code>file_read_size</code></a>()</code></li>
+<li><code><a href="#is_equalish"><code>is_equalish</code></a>()</code></li>
+<li><code><a href="#is_file"><code>is_file</code></a>()</code></li>
+<li><code><a href="#is_file_or_folder"><code>is_file_or_folder</code></a>()</code></li>
+<li><code><a href="#is_folder"><code>is_folder</code></a>()</code></li>
+<li><code><a href="#is_zeroish"><code>is_zeroish</code></a>()</code></li>
+<li><code><a href="#skip_nonws"><code>skip_nonws</code></a>()</code></li>
+<li><code><a href="#skip_ws"><code>skip_ws</code></a>()</code></li>
+<li><code><a href="#str_caseends"><code>str_caseends</code></a>()</code></li>
+<li><code><a href="#str_ends"><code>str_ends</code></a>()</code></li>
+<li><code><a href="#str_lowercase"><code>str_lowercase</code></a>()</code></li>
+<li><code><a href="#str_lowercase_ip"><code>str_lowercase_ip</code></a>()</code></li>
+<li><code><a href="#str_to_real"><code>str_to_real</code></a>()</code></li>
+<li><code><a href="#str_trim_left"><code>str_trim_left</code></a>()</code></li>
+<li><code><a href="#str_trimn"><code>str_trimn</code></a>()</code></li>
+<li><code><a href="#str_uppercase"><code>str_uppercase</code></a>()</code></li>
+<li><code><a href="#str_uppercase_ip"><code>str_uppercase_ip</code></a>()</code></li>
+<li><code><a href="#str_uppercasen"><code>str_uppercasen</code></a>()</code></li>
+</ul>
+</div>
+<div class="col">
+<div class="row caption">
+<b>Defines</b> <i>(42)</i>
+</div
+<ul>
+<li><code><a href="#ARG_ERR"><code>ARG_ERR</code></a></code></li>
+<li><code><a href="#ARGEXIT"><code>ARGEXIT</code></a>()</code></li>
+<li><code><a href="#assert_valid_index"><code>assert_valid_index</code></a>()</code></li>
+<li><code><a href="#clamp"><code>clamp</code></a>()</code></li>
+<li><code><a href="#COMMA_I64_SIZE"><code>COMMA_I64_SIZE</code></a></code></li>
+<li><code><a href="#DEQ_ISEMPTY"><code>DEQ_ISEMPTY</code></a>()</code></li>
+<li><code><a href="#DEQ_SIZE"><code>DEQ_SIZE</code></a>()</code></li>
+<li><code><a href="#deq_str_ownership"><code>deq_str_ownership</code></a>()</code></li>
+<li><code><a href="#EXIT"><code>EXIT</code></a>()</code></li>
+<li><code><a href="#FAIL"><code>FAIL</code></a>()</code></li>
+<li><code><a href="#file_get_ini_name"><code>file_get_ini_name</code></a>()</code></li>
+<li><code><a href="#file_read"><code>file_read</code></a>()</code></li>
+<li><code><a href="#file_read_lines"><code>file_read_lines</code></a>()</code></li>
+<li><code><a href="#FILENAME_SIZE"><code>FILENAME_SIZE</code></a></code></li>
+<li><code><a href="#MAP_ISEMPTY"><code>MAP_ISEMPTY</code></a>()</code></li>
+<li><code><a href="#MAP_SIZE"><code>MAP_SIZE</code></a>()</code></li>
+<li><code><a href="#map_str_real_ownership"><code>map_str_real_ownership</code></a>()</code></li>
+<li><code><a href="#max"><code>max</code></a>()</code></li>
+<li><code><a href="#min"><code>min</code></a>()</code></li>
+<li><code><a href="#SET_ISEMPTY"><code>SET_ISEMPTY</code></a>()</code></li>
+<li><code><a href="#SET_SIZE"><code>SET_SIZE</code></a>()</code></li>
+<li><code><a href="#set_str_ownership"><code>set_str_ownership</code></a>()</code></li>
+<li><code><a href="#str_begins"><code>str_begins</code></a>()</code></li>
+<li><code><a href="#str_casebegins"><code>str_casebegins</code></a>()</code></li>
+<li><code><a href="#str_caseeq"><code>str_caseeq</code></a>()</code></li>
+<li><code><a href="#str_eq"><code>str_eq</code></a>()</code></li>
+<li><code><a href="#str_trim"><code>str_trim</code></a>()</code></li>
+<li><code><a href="#typename"><code>typename</code></a>()</code></li>
+<li><code><a href="#vec_byte_alloc"><code>vec_byte_alloc</code></a>()</code></li>
+<li><code><a href="#VEC_CAP"><code>VEC_CAP</code></a>()</code></li>
+<li><code><a href="#VEC_GET"><code>VEC_GET</code></a>()</code></li>
+<li><code><a href="#VEC_GET_FIRST"><code>VEC_GET_FIRST</code></a>()</code></li>
+<li><code><a href="#VEC_GET_LAST"><code>VEC_GET_LAST</code></a>()</code></li>
+<li><code><a href="#VEC_INITIAL_CAP"><code>VEC_INITIAL_CAP</code></a></code></li>
+<li><code><a href="#vec_int_alloc"><code>vec_int_alloc</code></a>()</code></li>
+<li><code><a href="#VEC_ISEMPTY"><code>VEC_ISEMPTY</code></a>()</code></li>
+<li><code><a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a></code></li>
+<li><code><a href="#vec_ownership"><code>vec_ownership</code></a>()</code></li>
+<li><code><a href="#VEC_SIZE"><code>VEC_SIZE</code></a>()</code></li>
+<li><code><a href="#vec_str_alloc"><code>vec_str_alloc</code></a>()</code></li>
+<li><code><a href="#vec_str_ownership"><code>vec_str_ownership</code></a>()</code></li>
+<li><code><a href="#WARN"><code>WARN</code></a>()</code></li>
+</ul>
+</div>
+</div>
+</div>
+Generated by cdoc.py 2025-06-19 11:08:57<hr>
+<div class="docs">
+<h3>Structs</h3>
+<h3><a id="DeqInt"><code>struct DeqInt</code></a></h3>
+<p>
+ A doubly linked list of int values.
+
+ To iterate:
+ <pre>
+ for (DeqIntNode* node = deq-&gt;head; node; node = node-&gt;next)
+     int value = p-&gt;value;
+ </pre>
+
+</p>
+<ul>
+<li><code><a href="#deq_int_alloc"><code>deq_int_alloc()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#deq_int_free"><code>deq_int_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#deq_int_clear"><code>deq_int_clear()</code></a></code></li>
+<li><code><a href="#deq_int_first"><code>deq_int_first()</code></a></code></li>
+<li><code><a href="#deq_int_last"><code>deq_int_last()</code></a></code></li>
+<li><code><a href="#deq_int_pop"><code>deq_int_pop()</code></a></code></li>
+<li><code><a href="#deq_int_pop_first"><code>deq_int_pop_first()</code></a></code></li>
+<li><code><a href="#deq_int_push"><code>deq_int_push()</code></a></code></li>
+<li><code><a href="#deq_int_push_first"><code>deq_int_push_first()</code></a></code></li>
+</ul>
+<p><code><a href="#DeqInt"><code>DeqInt</code></a> <b><span style="color:navy"><a id="deq_int_alloc"><code>deq_int_alloc</code></a></span></b>()</code><br>
+<p>
+ Returns a new empty <a href="#DeqInt"><code>DeqInt</code></a>.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_int_free"><code>deq_int_free</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq)</code><br>
+<p>
+ Frees a <a href="#DeqInt"><code>DeqInt</code></a> and all its values. It can&#x27;t be used after this.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_int_clear"><code>deq_int_clear</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq)</code><br>
+<p>
+ Clears a <a href="#DeqInt"><code>DeqInt</code></a> and all its values.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="deq_int_first"><code>deq_int_first</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq)</code><br>
+<p>
+ Returns the <a href="#DeqInt"><code>DeqInt</code></a>&#x27;s first value. The <a href="#DeqInt"><code>DeqInt</code></a> must not be empty.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="deq_int_last"><code>deq_int_last</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq)</code><br>
+<p>
+ Returns the <a href="#DeqInt"><code>DeqInt</code></a>&#x27;s last value. The <a href="#DeqInt"><code>DeqInt</code></a> must not be empty.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="deq_int_pop"><code>deq_int_pop</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq)</code><br>
+<p>
+ Removes and frees the <a href="#DeqInt"><code>DeqInt</code></a>&#x27;s last node, returning its value.
+ The <a href="#DeqInt"><code>DeqInt</code></a> must not be empty.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="deq_int_pop_first"><code>deq_int_pop_first</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq)</code><br>
+<p>
+ Removes and frees the <a href="#DeqInt"><code>DeqInt</code></a>&#x27;s first node, returning its value.
+ The <a href="#DeqInt"><code>DeqInt</code></a> must not be empty.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_int_push"><code>deq_int_push</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq, int value)</code><br>
+<p>
+ Adds a new node with the given value at the end of the <a href="#DeqInt"><code>DeqInt</code></a>.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_int_push_first"><code>deq_int_push_first</code></a></span></b>(<a href="#DeqInt"><code>DeqInt</code></a>* deq, int value)</code><br>
+<p>
+ Adds a new node with the given value at the start of the <a href="#DeqInt"><code>DeqInt</code></a>.
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="DeqStr"><code>struct DeqStr</code></a></h3>
+<p>
+ A doubly linked list of <code>char*</code> values.
+
+ To iterate:
+ <pre>
+ for (DeqStrNode* node = deq-&gt;head; node; node = node-&gt;next)
+     const <code>char*</code> value = p-&gt;value;
+ </pre>
+
+</p>
+<ul>
+<li><code><a href="#deq_str_alloc"><code>deq_str_alloc()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#deq_str_free"><code>deq_str_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#deq_str_clear"><code>deq_str_clear()</code></a></code></li>
+<li><code><a href="#deq_str_first"><code>deq_str_first()</code></a></code></li>
+<li><code><a href="#deq_str_join"><code>deq_str_join()</code></a></code></li>
+<li><code><a href="#deq_str_last"><code>deq_str_last()</code></a></code></li>
+<li><code><a href="#deq_str_pop"><code>deq_str_pop()</code></a></code></li>
+<li><code><a href="#deq_str_pop_first"><code>deq_str_pop_first()</code></a></code></li>
+<li><code><a href="#deq_str_push"><code>deq_str_push()</code></a></code></li>
+<li><code><a href="#deq_str_push_first"><code>deq_str_push_first()</code></a></code></li>
+</ul>
+<p><code><a href="#DeqStr"><code>DeqStr</code></a> <b><span style="color:navy"><a id="deq_str_alloc"><code>deq_str_alloc</code></a></span></b>(<a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns a new empty <a href="#DeqStr"><code>DeqStr</code></a>.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_str_free"><code>deq_str_free</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq)</code><br>
+<p>
+ Frees a <a href="#DeqStr"><code>DeqStr</code></a> and frees all its values if owned. It can&#x27;t be used
+ after this.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_str_clear"><code>deq_str_clear</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq)</code><br>
+<p>
+ Clears a <a href="#DeqStr"><code>DeqStr</code></a> and frees all its values if owned.
+</p>
+</p>
+<p><code>const char* <b><span style="color:navy"><a id="deq_str_first"><code>deq_str_first</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq)</code><br>
+<p>
+ Returns the <a href="#DeqStr"><code>DeqStr</code></a>&#x27;s first value or <code>NULL</code> if empty.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="deq_str_join"><code>deq_str_join</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq, const char* sep)</code><br>
+<p>
+ Returns a <code>char*</code> of all the deq&#x27;s strings joined together with sep, or
+ <code>NULL</code> if deq is empty. If sep is <code>NULL</code> they are joined with no separator.
+ The returned <code>char*</code> value is now owned by the caller.
+</p>
+</p>
+<p><code>const char* <b><span style="color:navy"><a id="deq_str_last"><code>deq_str_last</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq)</code><br>
+<p>
+ Returns the <a href="#DeqStr"><code>DeqStr</code></a>&#x27;s last value or <code>NULL</code> if empty.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="deq_str_pop"><code>deq_str_pop</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq)</code><br>
+<p>
+ Removes and frees the <a href="#DeqStr"><code>DeqStr</code></a>&#x27;s last node, returning its value or <code>NULL</code>
+ if empty.
+ The caller owns the value if the <a href="#DeqStr"><code>DeqStr</code></a> is owning.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="deq_str_pop_first"><code>deq_str_pop_first</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq)</code><br>
+<p>
+ Removes and frees the <a href="#DeqStr"><code>DeqStr</code></a>&#x27;s first node, returning its value or
+ <code>NULL</code> if empty.
+ The caller owns the value if the <a href="#DeqStr"><code>DeqStr</code></a> is owning.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_str_push"><code>deq_str_push</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq, char* value)</code><br>
+<p>
+ Adds a new node with the given value at the end of the <a href="#DeqStr"><code>DeqStr</code></a>.
+ If owns, <a href="#DeqStr"><code>DeqStr</code></a> takes ownership of the value (e.g., if <code>char*</code> then use
+ strdup()).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="deq_str_push_first"><code>deq_str_push_first</code></a></span></b>(<a href="#DeqStr"><code>DeqStr</code></a>* deq, char* value)</code><br>
+<p>
+ Adds a new node with the given value at the start of the <a href="#DeqStr"><code>DeqStr</code></a>.
+ If owns, <a href="#DeqStr"><code>DeqStr</code></a> takes ownership of the value (e.g., if <code>char*</code> then use
+ strdup()).
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="Ini"><code>struct Ini</code></a></h3>
+<p>
+ <a href="#Ini"><code>Ini</code></a> represents a <code>.ini</code>
+ file&#x27;s sections, keys, values, and comments and
+ owns all the strings it holds.
+ Case is preserved but in all getters and setters section and key
+ names are case-insensitive, and in all setters, section and key names
+ and values are trimmed.
+ If section is <code><code>NULL</code></code>
+, the getters and setters will used the “no
+ section” (unnamed) section.
+ All values are held as strings. The bool, int, and real getters parse
+ the string on every call, so best to call once and keep the returned
+ value.
+ Comments are discarded on reading, but if set, are written on writing.
+ The easiest way to use <code><a href="#Ini"><code>Ini</code></a></code>
+ is as follows:
+ <pre>
+ // create with all sections &amp; key-values with their default values
+ <a href="#Ini"><code>Ini</code></a> ini = <a href="#ini_alloc_from_str"><code>ini_alloc_from_str</code></a>();
+ <a href="#ini_set_comment"><code>ini_set_comment</code></a>(...); // add any comments wanted in the saved file
+     :
+ // if an existing .ini exists on disk, merge in its values
+ if (<a href="#is_file"><code>is_file</code></a>(filename))
+     <a href="#ini_merge_from_file"><code>ini_merge_from_file</code></a>(&amp;ini, filename);
+ ... // use the ini
+ <a href="#ini_free"><code>ini_free</code></a>(&amp;ini); // finish
+ </pre>
+
+ See <a href="#ini_alloc"><code>ini_alloc</code></a>().
+</p>
+<ul>
+<li><code><a href="#ini_alloc"><code>ini_alloc()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#ini_alloc_from_file"><code>ini_alloc_from_file()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#ini_alloc_from_str"><code>ini_alloc_from_str()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#ini_free"><code>ini_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#ini_get_bool"><code>ini_get_bool()</code></a></code></li>
+<li><code><a href="#ini_get_int"><code>ini_get_int()</code></a></code></li>
+<li><code><a href="#ini_get_real"><code>ini_get_real()</code></a></code></li>
+<li><code><a href="#ini_get_str"><code>ini_get_str()</code></a></code></li>
+<li><code><a href="#ini_merge_from_file"><code>ini_merge_from_file()</code></a></code></li>
+<li><code><a href="#ini_merge_from_str"><code>ini_merge_from_str()</code></a></code></li>
+<li><code><a href="#ini_save"><code>ini_save()</code></a></code></li>
+<li><code><a href="#ini_save_to_str"><code>ini_save_to_str()</code></a></code></li>
+<li><code><a href="#ini_set_bool"><code>ini_set_bool()</code></a></code></li>
+<li><code><a href="#ini_set_comment"><code>ini_set_comment()</code></a></code></li>
+<li><code><a href="#ini_set_int"><code>ini_set_int()</code></a></code></li>
+<li><code><a href="#ini_set_real"><code>ini_set_real()</code></a></code></li>
+<li><code><a href="#ini_set_str"><code>ini_set_str()</code></a></code></li>
+</ul>
+<p><code><a href="#Ini"><code>Ini</code></a> <b><span style="color:navy"><a id="ini_alloc"><code>ini_alloc</code></a></span></b>()</code><br>
+<p>
+ Creates an empty <a href="#Ini"><code>Ini</code></a>.
+ It must be freed with <a href="#ini_free"><code>ini_free</code></a>(). See also <a href="#Ini"><code>Ini</code></a>.
+</p>
+</p>
+<p><code><a href="#Ini"><code>Ini</code></a> <b><span style="color:navy"><a id="ini_alloc_from_file"><code>ini_alloc_from_file</code></a></span></b>(const char* filename, bool* ok)</code><br>
+<p>
+ Creates an <a href="#Ini"><code>Ini</code></a> from the given <code>.ini</code>
+ file which it parses and
+ sets ok. It must be freed with <a href="#ini_free"><code>ini_free</code></a>(). See also <a href="#Ini"><code>Ini</code></a>.
+</p>
+</p>
+<p><code><a href="#Ini"><code>Ini</code></a> <b><span style="color:navy"><a id="ini_alloc_from_str"><code>ini_alloc_from_str</code></a></span></b>(const char* text)</code><br>
+<p>
+ Creates an <a href="#Ini"><code>Ini</code></a> with the given <code>.ini</code>
+ file text.
+ It must be freed with <a href="#ini_free"><code>ini_free</code></a>(). See also <a href="#Ini"><code>Ini</code></a>.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="ini_free"><code>ini_free</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini)</code><br>
+<p>
+ Must be called once the <a href="#Ini"><code>Ini</code></a> is finished with.
+ Call <a href="#ini_save"><code>ini_save</code></a>() first if the data is to be preserved.
+</p>
+</p>
+<p><code><a href="#IniReply"><code>IniReply</code></a> <b><span style="color:navy"><a id="ini_get_bool"><code>ini_get_bool</code></a></span></b>(const <a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, bool* value)</code><br>
+<p>
+ Sets the bool value for the given optional section and required key.
+</p>
+</p>
+<p><code><a href="#IniReply"><code>IniReply</code></a> <b><span style="color:navy"><a id="ini_get_int"><code>ini_get_int</code></a></span></b>(const <a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, int* value)</code><br>
+<p>
+ Sets the int value for the given optional section and required key.
+</p>
+</p>
+<p><code><a href="#IniReply"><code>IniReply</code></a> <b><span style="color:navy"><a id="ini_get_real"><code>ini_get_real</code></a></span></b>(const <a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, double* value)</code><br>
+<p>
+ Sets the real value for the given optional section and required key.
+</p>
+</p>
+<p><code>const char* <b><span style="color:navy"><a id="ini_get_str"><code>ini_get_str</code></a></span></b>(const <a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key)</code><br>
+<p>
+ Returns the <code>char*</code> value for the given optional section and required key.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="ini_merge_from_file"><code>ini_merge_from_file</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* filename)</code><br>
+<p>
+ Merges the contents of the given <code>.ini</code>
+ file and returns <code>true</code>
+ if ok.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="ini_merge_from_str"><code>ini_merge_from_str</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* text)</code><br>
+<p>
+ Merges the contents of the given <code>.ini</code>
+ file text.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="ini_save"><code>ini_save</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* filename)</code><br>
+<p>
+ Saves the <a href="#Ini"><code>Ini</code></a> to the given <code>filename</code>
+ and if successful
+ returns <code>true</code>
+.
+ Not const since it sorts the items first.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="ini_save_to_str"><code>ini_save_to_str</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini)</code><br>
+<p>
+ Saves the <a href="#Ini"><code>Ini</code></a> to a string which the caller owns.
+ Not const since it sorts the items first.
+ Provided to ease testing.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="ini_set_bool"><code>ini_set_bool</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, bool value)</code><br>
+<p>
+ Sets the bool value for the given optional sections and required key.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="ini_set_comment"><code>ini_set_comment</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, const char* comment)</code><br>
+<p>
+ If both the section and the key are <code>NULL</code>, the comment will go at the
+ start of the file. For section/key comments only use if the
+ section/key exists (in which case true is returned).
+ Note that only single line comments are supported.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="ini_set_int"><code>ini_set_int</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, int value)</code><br>
+<p>
+ Sets the int value for the given optional sections and required key.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="ini_set_real"><code>ini_set_real</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, double value)</code><br>
+<p>
+ Sets the real value for the given optional sections and required key.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="ini_set_str"><code>ini_set_str</code></a></span></b>(<a href="#Ini"><code>Ini</code></a>* ini, const char* section, const char* key, const char* value)</code><br>
+<p>
+ Sets the <code>char*</code> value for the given optional sections and required key.
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="MapStrReal"><code>struct MapStrReal</code></a></h3>
+<p>
+ A red-black tree of owned or borrowed <code>char*</code> values.
+ All data members are private; all accesses via functions.
+</p>
+<ul>
+<li><code><a href="#map_str_real_alloc"><code>map_str_real_alloc()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#map_str_real_free"><code>map_str_real_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#map_str_real_clear"><code>map_str_real_clear()</code></a></code></li>
+<li><code><a href="#map_str_real_contains"><code>map_str_real_contains()</code></a></code></li>
+<li><code><a href="#map_str_real_get"><code>map_str_real_get()</code></a></code></li>
+<li><code><a href="#map_str_real_keys"><code>map_str_real_keys()</code></a></code></li>
+<li><code><a href="#map_str_real_remove"><code>map_str_real_remove()</code></a></code></li>
+<li><code><a href="#map_str_real_set"><code>map_str_real_set()</code></a></code></li>
+<li><code><a href="#map_str_real_to_vec"><code>map_str_real_to_vec()</code></a></code></li>
+</ul>
+<p><code><a href="#MapStrReal"><code>MapStrReal</code></a> <b><span style="color:navy"><a id="map_str_real_alloc"><code>map_str_real_alloc</code></a></span></b>(<a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Allocates a new empty <a href="#MapStrReal"><code>MapStrReal</code></a> of owned or borrowed <code>char*</code> keys and
+ double values.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="map_str_real_free"><code>map_str_real_free</code></a></span></b>(<a href="#MapStrReal"><code>MapStrReal</code></a>* map)</code><br>
+<p>
+ Destroys the <a href="#MapStrReal"><code>MapStrReal</code></a> freeing its memory, and if owning, also freeing
+ every <code>char*</code> key. The <a href="#MapStrReal"><code>MapStrReal</code></a> is not usable after this.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="map_str_real_clear"><code>map_str_real_clear</code></a></span></b>(<a href="#MapStrReal"><code>MapStrReal</code></a>* map)</code><br>
+<p>
+ Calls destroy on all the <a href="#MapStrReal"><code>MapStrReal</code></a>&#x27;s <code>char*</code> keys if owning.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="map_str_real_contains"><code>map_str_real_contains</code></a></span></b>(const <a href="#MapStrReal"><code>MapStrReal</code></a>* map, const char* key)</code><br>
+<p>
+ Returns true if the given key is in the map.
+</p>
+</p>
+<p><code>double <b><span style="color:navy"><a id="map_str_real_get"><code>map_str_real_get</code></a></span></b>(const <a href="#MapStrReal"><code>MapStrReal</code></a>* map, const char* key, bool* ok)</code><br>
+<p>
+ Returns the given key&#x27;s value and sets ok to true or returns 0.0 and
+ sets ok to false if not found.
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="map_str_real_keys"><code>map_str_real_keys</code></a></span></b>(const <a href="#MapStrReal"><code>MapStrReal</code></a>* map)</code><br>
+<p>
+ Returns a <a href="#VecStr"><code>VecStr</code></a> of keys (with borrowed strings).
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="map_str_real_remove"><code>map_str_real_remove</code></a></span></b>(<a href="#MapStrReal"><code>MapStrReal</code></a>* map, const char* key)</code><br>
+<p>
+ Removes and if owning, frees the given key-value, and returns true;
+ or does nothing (if the key isn&#x27;t in the <a href="#MapStrReal"><code>MapStrReal</code></a>) and returns
+ false.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="map_str_real_set"><code>map_str_real_set</code></a></span></b>(<a href="#MapStrReal"><code>MapStrReal</code></a>* map, char* key, double value)</code><br>
+<p>
+ Adds the key-value in key order if the key isn&#x27;t present and returns
+ true. If the key was already present, updates the value and returns
+ false.
+ If owning, <a href="#MapStrReal"><code>MapStrReal</code></a> takes ownership of the new key (e.g., use
+ strdup()).
+</p>
+</p>
+<p><code><a href="#Vec"><code>Vec</code></a> <b><span style="color:navy"><a id="map_str_real_to_vec"><code>map_str_real_to_vec</code></a></span></b>(const <a href="#MapStrReal"><code>MapStrReal</code></a>* map)</code><br>
+<p>
+ Returns a <a href="#Vec"><code>Vec</code></a> of StrRealPairs (with borrowed strings).
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="SetInt"><code>struct SetInt</code></a></h3>
+<p>
+ A red-black tree of int values.
+ All data members are private; all accesses via functions.
+</p>
+<ul>
+<li><code><a href="#set_int_alloc"><code>set_int_alloc()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_int_copy"><code>set_int_copy()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_int_difference"><code>set_int_difference()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_int_intersection"><code>set_int_intersection()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_int_union"><code>set_int_union()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_int_free"><code>set_int_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#set_int_add"><code>set_int_add()</code></a></code></li>
+<li><code><a href="#set_int_clear"><code>set_int_clear()</code></a></code></li>
+<li><code><a href="#set_int_contains"><code>set_int_contains()</code></a></code></li>
+<li><code><a href="#set_int_equal"><code>set_int_equal()</code></a></code></li>
+<li><code><a href="#set_int_max_depth"><code>set_int_max_depth()</code></a></code></li>
+<li><code><a href="#set_int_remove"><code>set_int_remove()</code></a></code></li>
+<li><code><a href="#set_int_to_str"><code>set_int_to_str()</code></a></code></li>
+<li><code><a href="#set_int_to_vec"><code>set_int_to_vec()</code></a></code></li>
+<li><code><a href="#set_int_unite"><code>set_int_unite()</code></a></code></li>
+<li><code><a href="#set_int_visit"><code>set_int_visit()</code></a></code></li>
+</ul>
+<p><code><a href="#SetInt"><code>SetInt</code></a> <b><span style="color:navy"><a id="set_int_alloc"><code>set_int_alloc</code></a></span></b>()</code><br>
+<p>
+ Allocates a new empty <a href="#SetInt"><code>SetInt</code></a> of int values.
+</p>
+</p>
+<p><code><a href="#SetInt"><code>SetInt</code></a> <b><span style="color:navy"><a id="set_int_copy"><code>set_int_copy</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set)</code><br>
+<p>
+ Returns a copy of the <a href="#SetInt"><code>SetInt</code></a> which the caller now owns.
+</p>
+</p>
+<p><code><a href="#SetInt"><code>SetInt</code></a> <b><span style="color:navy"><a id="set_int_difference"><code>set_int_difference</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set1, const <a href="#SetInt"><code>SetInt</code></a>* set2)</code><br>
+<p>
+ Returns a new <a href="#SetInt"><code>SetInt</code></a> that contains the values which are in set1 that are
+ not in set2.
+</p>
+</p>
+<p><code><a href="#SetInt"><code>SetInt</code></a> <b><span style="color:navy"><a id="set_int_intersection"><code>set_int_intersection</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set1, const <a href="#SetInt"><code>SetInt</code></a>* set2)</code><br>
+<p>
+ Returns a new <a href="#SetInt"><code>SetInt</code></a> that contains the values that set1 and set2 have in
+ common.
+</p>
+</p>
+<p><code><a href="#SetInt"><code>SetInt</code></a> <b><span style="color:navy"><a id="set_int_union"><code>set_int_union</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set1, const <a href="#SetInt"><code>SetInt</code></a>* set2)</code><br>
+<p>
+ Returns a new <a href="#SetInt"><code>SetInt</code></a> that contains the values from set1 and from set2
+ (with no duplicates of course).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_int_free"><code>set_int_free</code></a></span></b>(<a href="#SetInt"><code>SetInt</code></a>* set)</code><br>
+<p>
+ Destroys the <a href="#SetInt"><code>SetInt</code></a> freeing its memory and also freeing every value. The
+ <a href="#SetInt"><code>SetInt</code></a> is not usable after this.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_int_add"><code>set_int_add</code></a></span></b>(<a href="#SetInt"><code>SetInt</code></a>* set, int value)</code><br>
+<p>
+ Adds the value in order. If the value was already present, does nothing
+ and returns false; otherwise inserts the new value and returns true.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_int_clear"><code>set_int_clear</code></a></span></b>(<a href="#SetInt"><code>SetInt</code></a>* set)</code><br>
+<p>
+ Calls destroy on all the <a href="#SetInt"><code>SetInt</code></a>&#x27;s values.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_int_contains"><code>set_int_contains</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set, int value)</code><br>
+<p>
+ Returns true if value is in the <a href="#SetInt"><code>SetInt</code></a>.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_int_equal"><code>set_int_equal</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set1, const <a href="#SetInt"><code>SetInt</code></a>* set2)</code><br>
+<p>
+ Returns true if the two <a href="#SetInt"><code>SetInt</code></a>&#x27;s have the same values.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="set_int_max_depth"><code>set_int_max_depth</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set)</code><br>
+<p>
+ Used for tests to verify balance.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_int_remove"><code>set_int_remove</code></a></span></b>(<a href="#SetInt"><code>SetInt</code></a>* set, int value)</code><br>
+<p>
+ Removes the given value and returns true; or does nothing
+ (if the value isn&#x27;set in the <a href="#SetInt"><code>SetInt</code></a>) and returns false.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="set_int_to_str"><code>set_int_to_str</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set)</code><br>
+<p>
+ Returns the set as a caller-owned string of space-separated ints.
+</p>
+</p>
+<p><code><a href="#VecInt"><code>VecInt</code></a> <b><span style="color:navy"><a id="set_int_to_vec"><code>set_int_to_vec</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set)</code><br>
+<p>
+ Returns a <a href="#VecInt"><code>VecInt</code></a> which the caller owns and that has a copy of all the
+ set&#x27;s values in order.
+ See the source of this function and its helper to see how to iterate a
+ set.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_int_unite"><code>set_int_unite</code></a></span></b>(<a href="#SetInt"><code>SetInt</code></a>* set1, const <a href="#SetInt"><code>SetInt</code></a>* set2)</code><br>
+<p>
+ Adds every value from set2 to set1 (with no duplicates).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_int_visit"><code>set_int_visit</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set, void* state, visitor_fn)</code><br>
+<p>
+ Calls visitor(value, state) on every element of the set.
+ See the tests for an example of use.
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="SetStr"><code>struct SetStr</code></a></h3>
+<p>
+ A red-black tree of owned or borrowed <code>char*</code> values.
+ All data members are private; all accesses via functions.
+</p>
+<ul>
+<li><code><a href="#set_str_alloc"><code>set_str_alloc()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_str_copy"><code>set_str_copy()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_str_difference"><code>set_str_difference()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_str_intersection"><code>set_str_intersection()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_str_union"><code>set_str_union()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_str_free"><code>set_str_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#set_str_add"><code>set_str_add()</code></a></code></li>
+<li><code><a href="#set_str_clear"><code>set_str_clear()</code></a></code></li>
+<li><code><a href="#set_str_contains"><code>set_str_contains()</code></a></code></li>
+<li><code><a href="#set_str_equal"><code>set_str_equal()</code></a></code></li>
+<li><code><a href="#set_str_join"><code>set_str_join()</code></a></code></li>
+<li><code><a href="#set_str_max_depth"><code>set_str_max_depth()</code></a></code></li>
+<li><code><a href="#set_str_remove"><code>set_str_remove()</code></a></code></li>
+<li><code><a href="#set_str_to_vec"><code>set_str_to_vec()</code></a></code></li>
+<li><code><a href="#set_str_unite"><code>set_str_unite()</code></a></code></li>
+<li><code><a href="#set_str_visit"><code>set_str_visit()</code></a></code></li>
+</ul>
+<p><code><a href="#SetStr"><code>SetStr</code></a> <b><span style="color:navy"><a id="set_str_alloc"><code>set_str_alloc</code></a></span></b>(<a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Allocates a new empty <a href="#SetStr"><code>SetStr</code></a> of owned or borrowed <code>char*</code> values.
+</p>
+</p>
+<p><code><a href="#SetStr"><code>SetStr</code></a> <b><span style="color:navy"><a id="set_str_copy"><code>set_str_copy</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns a copy (deep if owns is true) of the <a href="#SetStr"><code>SetStr</code></a> which the caller now
+ owns.
+</p>
+</p>
+<p><code><a href="#SetStr"><code>SetStr</code></a> <b><span style="color:navy"><a id="set_str_difference"><code>set_str_difference</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set1, const <a href="#SetStr"><code>SetStr</code></a>* set2, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns a new <a href="#SetStr"><code>SetStr</code></a> that contains the values which are in set1 that are
+ not in set2. If owns the result is an owned copy.
+</p>
+</p>
+<p><code><a href="#SetStr"><code>SetStr</code></a> <b><span style="color:navy"><a id="set_str_intersection"><code>set_str_intersection</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set1, const <a href="#SetStr"><code>SetStr</code></a>* set2, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns a new <a href="#SetStr"><code>SetStr</code></a> that contains the values that set1 and set2 have in
+ common. If owns the result is an owned copy.
+</p>
+</p>
+<p><code><a href="#SetStr"><code>SetStr</code></a> <b><span style="color:navy"><a id="set_str_union"><code>set_str_union</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set1, const <a href="#SetStr"><code>SetStr</code></a>* set2, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns a new <a href="#SetStr"><code>SetStr</code></a> that contains the values from set1 and from set2
+ (with no duplicates of course). If owns the result is an owned copy.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_str_free"><code>set_str_free</code></a></span></b>(<a href="#SetStr"><code>SetStr</code></a>* set)</code><br>
+<p>
+ Destroys the <a href="#SetStr"><code>SetStr</code></a> freeing its memory, and if owning, also freeing every
+ value. The <a href="#SetStr"><code>SetStr</code></a> is not usable after this.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_str_add"><code>set_str_add</code></a></span></b>(<a href="#SetStr"><code>SetStr</code></a>* set, char* value)</code><br>
+<p>
+ Adds the value in order. If the value was already present, does nothing
+ and returns false; otherwise inserts the new value and returns true.
+ If owning, <a href="#SetStr"><code>SetStr</code></a> takes ownership of the new value (e.g., use strdup()).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_str_clear"><code>set_str_clear</code></a></span></b>(<a href="#SetStr"><code>SetStr</code></a>* set)</code><br>
+<p>
+ Calls destroy on all the <a href="#SetStr"><code>SetStr</code></a>&#x27;s values if owning.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_str_contains"><code>set_str_contains</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set, const char* value)</code><br>
+<p>
+ Returns true if value is in the <a href="#SetStr"><code>SetStr</code></a>.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_str_equal"><code>set_str_equal</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set1, const <a href="#SetStr"><code>SetStr</code></a>* set2)</code><br>
+<p>
+ Returns true if the two <a href="#SetStr"><code>SetStr</code></a>&#x27;s have the same values.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="set_str_join"><code>set_str_join</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set, const char* sep)</code><br>
+<p>
+ Returns the set as a caller-owned string of sep-separated strings.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="set_str_max_depth"><code>set_str_max_depth</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set)</code><br>
+<p>
+ Used for tests to verify balance.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="set_str_remove"><code>set_str_remove</code></a></span></b>(<a href="#SetStr"><code>SetStr</code></a>* set, const char* value)</code><br>
+<p>
+ Removes and if owning, frees the given value, and returns true; or does
+ nothing (if the value isn&#x27;t in the <a href="#SetStr"><code>SetStr</code></a>) and returns false.
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="set_str_to_vec"><code>set_str_to_vec</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns an owned or borrowed <a href="#VecStr"><code>VecStr</code></a> which the caller owns with all
+ the set&#x27;s values in order.
+ See the source of this function and its helper to see how to iterate a
+ set.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_str_unite"><code>set_str_unite</code></a></span></b>(<a href="#SetStr"><code>SetStr</code></a>* set1, const <a href="#SetStr"><code>SetStr</code></a>* set2)</code><br>
+<p>
+ Adds every value from set2 to set1 (with no duplicates).
+ If set1 owns, set2&#x27;s values are deep copied.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="set_str_visit"><code>set_str_visit</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set, void* state, visitor_fn)</code><br>
+<p>
+ Calls visitor(value, state) on every element of the set.
+ See the tests for an example of use.
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="Vec"><code>struct Vec</code></a></h3>
+<p>
+ A vector of owned or borrowed void* values.
+ All accesses via functions, but _reading_ <code>_values</code>
+ is okay.
+ See vecs.h for size and capacity macros.
+
+ To see an example of how to use store an arbitrary struct type in a
+ <a href="#Vec"><code>Vec</code></a> see tag_test.h for the Tag struct and vec_test.[hc] for usage
+ examples.
+
+ To iterate:
+ <pre>
+  for (int i = 0; i &lt; <a href="#VEC_SIZE"><code>VEC_SIZE</code></a>(vec); ++i)
+      const MyType* value = <a href="#VEC_GET"><code>VEC_GET</code></a>(vec, i);
+ </pre>
+
+</p>
+<ul>
+<li><code><a href="#map_str_real_to_vec"><code>map_str_real_to_vec()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_alloc"><code>vec_alloc()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_copy"><code>vec_copy()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_free"><code>vec_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#vec_add"><code>vec_add()</code></a></code></li>
+<li><code><a href="#vec_clear"><code>vec_clear()</code></a></code></li>
+<li><code><a href="#vec_equal"><code>vec_equal()</code></a></code></li>
+<li><code><a href="#vec_find"><code>vec_find()</code></a></code></li>
+<li><code><a href="#vec_find_last"><code>vec_find_last()</code></a></code></li>
+<li><code><a href="#vec_get"><code>vec_get()</code></a></code></li>
+<li><code><a href="#vec_get_first"><code>vec_get_first()</code></a></code></li>
+<li><code><a href="#vec_get_last"><code>vec_get_last()</code></a></code></li>
+<li><code><a href="#vec_insert"><code>vec_insert()</code></a></code></li>
+<li><code><a href="#vec_merge"><code>vec_merge()</code></a></code></li>
+<li><code><a href="#vec_pop"><code>vec_pop()</code></a></code></li>
+<li><code><a href="#vec_push"><code>vec_push()</code></a></code></li>
+<li><code><a href="#vec_remove"><code>vec_remove()</code></a></code></li>
+<li><code><a href="#vec_replace"><code>vec_replace()</code></a></code></li>
+<li><code><a href="#vec_same"><code>vec_same()</code></a></code></li>
+<li><code><a href="#vec_search"><code>vec_search()</code></a></code></li>
+<li><code><a href="#vec_set"><code>vec_set()</code></a></code></li>
+<li><code><a href="#vec_sort"><code>vec_sort()</code></a></code></li>
+<li><code><a href="#vec_take"><code>vec_take()</code></a></code></li>
+</ul>
+<p><code><a href="#Vec"><code>Vec</code></a> <b><span style="color:navy"><a id="map_str_real_to_vec"><code>map_str_real_to_vec</code></a></span></b>(const <a href="#MapStrReal"><code>MapStrReal</code></a>* map)</code><br>
+<p>
+ Returns a <a href="#Vec"><code>Vec</code></a> of StrRealPairs (with borrowed strings).
+</p>
+</p>
+<p><code><a href="#Vec"><code>Vec</code></a> <b><span style="color:navy"><a id="vec_alloc"><code>vec_alloc</code></a></span></b>(int cap, int (*cmp)(const void*, const void*), void (*destroy)(void* value))</code><br>
+<p>
+ Allocates a new <a href="#Vec"><code>Vec</code></a> of owned or borrowed void* with the given
+ capacity which may be 0.
+ Caller must supply cmp to compare values (for find, sort, and search),
+ and if owning, destroy to free a value.
+</p>
+</p>
+<p><code><a href="#Vec"><code>Vec</code></a> <b><span style="color:navy"><a id="vec_copy"><code>vec_copy</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec, void* (*cpy)(const void*))</code><br>
+<p>
+ Returns an owning (or borrowing) copy of the given owning (or borrowing)
+ <a href="#Vec"><code>Vec</code></a> using the given copy function.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_free"><code>vec_free</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec)</code><br>
+<p>
+ Destroys the <a href="#Vec"><code>Vec</code></a> freeing its memory and if owning, also freeing every
+ value. The <a href="#Vec"><code>Vec</code></a> is not usable after this.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_add"><code>vec_add</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec, void* value)</code><br>
+<p>
+ Adds the value in order (in a sorted <a href="#Vec"><code>Vec</code></a>) and moves succeeding values up
+ (right), increasing the <a href="#Vec"><code>Vec</code></a>&#x27;s size (and cap if necessary): O(n).
+ If owning, <a href="#Vec"><code>Vec</code></a> takes ownership of the new value (e.g., if <code>char*</code> then use
+ strdup()).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_clear"><code>vec_clear</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec)</code><br>
+<p>
+ Calls destroy on all the <a href="#Vec"><code>Vec</code></a>&#x27;s values if owning.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="vec_equal"><code>vec_equal</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec1, const <a href="#Vec"><code>Vec</code></a>* vec2)</code><br>
+<p>
+ Returns true if the two <a href="#Vec"><code>Vec</code></a>&#x27;s have the same values.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_find"><code>vec_find</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec, const void* value)</code><br>
+<p>
+ Returns the index where the value was found in the <a href="#Vec"><code>Vec</code></a> or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_find_last"><code>vec_find_last</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec, const void* value)</code><br>
+<p>
+ Returns the last index where the value was found in the <a href="#Vec"><code>Vec</code></a> or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>void* <b><span style="color:navy"><a id="vec_get"><code>vec_get</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec, int index)</code><br>
+<p>
+ Returns the <a href="#Vec"><code>Vec</code></a>&#x27;s value at position index.
+ If owning, <a href="#Vec"><code>Vec</code></a> retains ownership, so do not delete the value.
+ The <a href="#VEC_GET"><code>VEC_GET</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>void* <b><span style="color:navy"><a id="vec_get_first"><code>vec_get_first</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#Vec"><code>Vec</code></a>&#x27;s value at its first valid index.
+ If owning, <a href="#Vec"><code>Vec</code></a> retains ownership, so do not delete the value.
+ The <a href="#VEC_GET_FIRST"><code>VEC_GET_FIRST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>void* <b><span style="color:navy"><a id="vec_get_last"><code>vec_get_last</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#Vec"><code>Vec</code></a>&#x27;s value at its last valid index.
+ If owning, <a href="#Vec"><code>Vec</code></a> retains ownership, so do not delete the value.
+ The <a href="#VEC_GET_LAST"><code>VEC_GET_LAST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_insert"><code>vec_insert</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec, int index, void* value)</code><br>
+<p>
+ Inserts the value at position index and moves succeeding values up
+ (right), increasing the <a href="#Vec"><code>Vec</code></a>&#x27;s size (and cap if necessary): O(n).
+ Use add to insert into a sorted <a href="#Vec"><code>Vec</code></a>, or push to insert at the end of
+ an unsorted <a href="#Vec"><code>Vec</code></a>.
+ If owning, <a href="#Vec"><code>Vec</code></a> takes ownership of the new value (e.g., if <code>char*</code> then use
+ strdup()).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_merge"><code>vec_merge</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec1, <a href="#Vec"><code>Vec</code></a>* vec2)</code><br>
+<p>
+ Moves all vec2&#x27;s values to the end of vec1&#x27;s values, after which vec2 is
+ freed and must not be used again.
+ Only callable if both vecs are compatible, i.e., they have matching
+ _cmp() and _destroy() functions (so both are owners or both are
+ borrowers of the same kind of objects).
+ Use case: an array of <a href="#Vec"><code>Vec</code></a>&#x27;s each one of which is populated in its own
+ thread and at the end we want to merge all the <a href="#Vec"><code>Vec</code></a>&#x27;s into one.
+</p>
+</p>
+<p><code>void* <b><span style="color:navy"><a id="vec_pop"><code>vec_pop</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec)</code><br>
+<p>
+ Removes and returns the last value. Only use if vec.isempty() is false.
+ The returned value is now owned by the caller, if <a href="#Vec"><code>Vec</code></a> is owning: O(1).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_push"><code>vec_push</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec, void* value)</code><br>
+<p>
+ Pushes a new value onto the end of the <a href="#Vec"><code>Vec</code></a>, increasing the <a href="#Vec"><code>Vec</code></a>&#x27;s size
+ (and cap if necessary): O(1). Use <a href="#vec_add"><code>vec_add</code></a>() to insert into a sorted
+ <a href="#Vec"><code>Vec</code></a>.
+ If owning, <a href="#Vec"><code>Vec</code></a> takes ownership of the value (e.g., if <code>char*</code> then use
+ strdup()).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_remove"><code>vec_remove</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec, int index)</code><br>
+<p>
+ Removes and, if owning, frees the value at the given index and closes up
+ the gap: O(n).
+</p>
+</p>
+<p><code>void* <b><span style="color:navy"><a id="vec_replace"><code>vec_replace</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec, int index, void* value)</code><br>
+<p>
+ Sets the <a href="#Vec"><code>Vec</code></a>&#x27;s value at position index to the given value and returns
+ the old value from that position.
+ If owning, <a href="#Vec"><code>Vec</code></a> takes ownership of the new value (e.g., if <code>char*</code> then use
+ strdup()). The returned value is now owned by the caller if it was owned
+ by <a href="#Vec"><code>Vec</code></a>.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="vec_same"><code>vec_same</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec1, const <a href="#Vec"><code>Vec</code></a>* vec2)</code><br>
+<p>
+ Returns true if the two <a href="#Vec"><code>Vec</code></a>&#x27;s have the same values and the same cmp
+ and destroy.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_search"><code>vec_search</code></a></span></b>(const <a href="#Vec"><code>Vec</code></a>* vec, const void* value)</code><br>
+<p>
+ Returns the index where the value was found in the <a href="#Vec"><code>Vec</code></a> or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a binary search that assumes <a href="#vec_sort"><code>vec_sort</code></a>() has
+ been used.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_set"><code>vec_set</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec, int index, void* value)</code><br>
+<p>
+ Sets the <a href="#Vec"><code>Vec</code></a>&#x27;s value at position index to the given value.
+ If owning, <a href="#Vec"><code>Vec</code></a> takes ownership of the new value (e.g., if <code>char*</code> then use
+ strdup()) and frees the old value.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_sort"><code>vec_sort</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec)</code><br>
+<p>
+ Sorts the <a href="#Vec"><code>Vec</code></a> in-place using the cmp function.
+ See tag_test.h&#x27;s tag_cmp and sx.c&#x27;s str_strcmp functions for examples
+ of how to create a cmp function.
+</p>
+</p>
+<p><code>void* <b><span style="color:navy"><a id="vec_take"><code>vec_take</code></a></span></b>(<a href="#Vec"><code>Vec</code></a>* vec, int index)</code><br>
+<p>
+ Returns and removes the value at the given index and closes up the
+ gap.
+ If <a href="#Vec"><code>Vec</code></a> is owning, the returned value is now owned by the caller: O(n).
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="VecByte"><code>struct VecByte</code></a></h3>
+<p>
+ A vector of byte values.
+ All accesses via functions, but _reading_ <code>_values</code>
+ is okay.
+
+ To iterate:
+ <pre>
+ for (int i = 0; i &lt; <a href="#VEC_SIZE"><code>VEC_SIZE</code></a>(vec); ++i)
+     byte value = <a href="#VEC_GET"><code>VEC_GET</code></a>(vec, i);
+ </pre>
+
+</p>
+<ul>
+<li><code><a href="#vec_byte_alloc_cap"><code>vec_byte_alloc_cap()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_byte_copy"><code>vec_byte_copy()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_byte_free"><code>vec_byte_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#vec_byte_clear"><code>vec_byte_clear()</code></a></code></li>
+<li><code><a href="#vec_byte_dump"><code>vec_byte_dump()</code></a></code></li>
+<li><code><a href="#vec_byte_equal"><code>vec_byte_equal()</code></a></code></li>
+<li><code><a href="#vec_byte_find"><code>vec_byte_find()</code></a></code></li>
+<li><code><a href="#vec_byte_find_last"><code>vec_byte_find_last()</code></a></code></li>
+<li><code><a href="#vec_byte_get"><code>vec_byte_get()</code></a></code></li>
+<li><code><a href="#vec_byte_get_first"><code>vec_byte_get_first()</code></a></code></li>
+<li><code><a href="#vec_byte_get_last"><code>vec_byte_get_last()</code></a></code></li>
+<li><code><a href="#vec_byte_insert"><code>vec_byte_insert()</code></a></code></li>
+<li><code><a href="#vec_byte_merge"><code>vec_byte_merge()</code></a></code></li>
+<li><code><a href="#vec_byte_pop"><code>vec_byte_pop()</code></a></code></li>
+<li><code><a href="#vec_byte_push"><code>vec_byte_push()</code></a></code></li>
+<li><code><a href="#vec_byte_remove"><code>vec_byte_remove()</code></a></code></li>
+<li><code><a href="#vec_byte_replace"><code>vec_byte_replace()</code></a></code></li>
+<li><code><a href="#vec_byte_set"><code>vec_byte_set()</code></a></code></li>
+<li><code><a href="#vec_byte_take"><code>vec_byte_take()</code></a></code></li>
+<li><code><a href="#vec_byte_to_str"><code>vec_byte_to_str()</code></a></code></li>
+</ul>
+<p><code><a href="#VecByte"><code>VecByte</code></a> <b><span style="color:navy"><a id="vec_byte_alloc_cap"><code>vec_byte_alloc_cap</code></a></span></b>(int cap)</code><br>
+<p>
+ Allocates a new empty <a href="#VecByte"><code>VecByte</code></a> with the given capacity.
+</p>
+</p>
+<p><code><a href="#VecByte"><code>VecByte</code></a> <b><span style="color:navy"><a id="vec_byte_copy"><code>vec_byte_copy</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ Returns a deep copy of the <a href="#VecByte"><code>VecByte</code></a>.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_free"><code>vec_byte_free</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ Destroys the <a href="#VecByte"><code>VecByte</code></a> freeing its memory. The <a href="#VecByte"><code>VecByte</code></a> is not usable
+ after this.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_clear"><code>vec_byte_clear</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ Clears all the <a href="#VecByte"><code>VecByte</code></a>&#x27;s values.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_dump"><code>vec_byte_dump</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ For debugging.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="vec_byte_equal"><code>vec_byte_equal</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec1, const <a href="#VecByte"><code>VecByte</code></a>* vec2)</code><br>
+<p>
+ Returns true if the two <a href="#VecByte"><code>VecByte</code></a>&#x27;s have the same byte values.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_byte_find"><code>vec_byte_find</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec, byte value)</code><br>
+<p>
+ Returns the index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_byte_find_last"><code>vec_byte_find_last</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec, byte value)</code><br>
+<p>
+ Returns the last index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>byte <b><span style="color:navy"><a id="vec_byte_get"><code>vec_byte_get</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec, int index)</code><br>
+<p>
+ Returns the <a href="#VecByte"><code>VecByte</code></a>&#x27;s byte value at position index.
+ The <a href="#VEC_GET"><code>VEC_GET</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>byte <b><span style="color:navy"><a id="vec_byte_get_first"><code>vec_byte_get_first</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#VecByte"><code>VecByte</code></a>&#x27;s int value at its first valid index.
+ The <a href="#VEC_GET_FIRST"><code>VEC_GET_FIRST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>byte <b><span style="color:navy"><a id="vec_byte_get_last"><code>vec_byte_get_last</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#VecByte"><code>VecByte</code></a>&#x27;s int value at its last valid index.
+ The <a href="#VEC_GET_LAST"><code>VEC_GET_LAST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_insert"><code>vec_byte_insert</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec, int index, byte value)</code><br>
+<p>
+ Inserts the byte at position index and moves succeeding values
+ up (right), increasing the <a href="#VecByte"><code>VecByte</code></a>&#x27;s size (and cap if necessary): O(n).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_merge"><code>vec_byte_merge</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec1, <a href="#VecByte"><code>VecByte</code></a>* vec2)</code><br>
+<p>
+ Moves all vec2&#x27;s values to the end of vec1&#x27;s values, after which vec2 is
+ freed and must not be used again.
+ The two <a href="#VecByte"><code>VecByte</code></a>&#x27;s must have the same cmp, cpy, and destroy methods.
+ Use case: an array of <a href="#VecByte"><code>VecByte</code></a>&#x27;s each one of which is populated in its own
+ thread and at the end we want to merge all the <a href="#VecByte"><code>VecByte</code></a>&#x27;s into one.
+</p>
+</p>
+<p><code>byte <b><span style="color:navy"><a id="vec_byte_pop"><code>vec_byte_pop</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ Removes and returns the last int value. Only use if
+ vec.isempty() is false: O(1).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_push"><code>vec_byte_push</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec, byte value)</code><br>
+<p>
+ Pushes a new byte value onto the end of the <a href="#VecByte"><code>VecByte</code></a>,
+ increasing the <a href="#VecByte"><code>VecByte</code></a>&#x27;s size (and cap) if necessary: O(1).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_remove"><code>vec_byte_remove</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec, int index)</code><br>
+<p>
+ Removes the value at the given index and closes up the gap: O(n).
+</p>
+</p>
+<p><code>byte <b><span style="color:navy"><a id="vec_byte_replace"><code>vec_byte_replace</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec, int index, byte value)</code><br>
+<p>
+ Sets the <a href="#VecByte"><code>VecByte</code></a>&#x27;s value at position index to the given byte
+ and returns the old byte value from that position.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_byte_set"><code>vec_byte_set</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec, int index, byte value)</code><br>
+<p>
+ Sets the <a href="#VecByte"><code>VecByte</code></a>&#x27;s value at position index to the given byte.
+</p>
+</p>
+<p><code>byte <b><span style="color:navy"><a id="vec_byte_take"><code>vec_byte_take</code></a></span></b>(<a href="#VecByte"><code>VecByte</code></a>* vec, int index)</code><br>
+<p>
+ Returns and removes the value at the given index and closes up the
+ gap: O(n).
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_byte_to_str"><code>vec_byte_to_str</code></a></span></b>(const <a href="#VecByte"><code>VecByte</code></a>* vec)</code><br>
+<p>
+ Returns a string representing the vec&#x27;s byte values as
+ space-separated hex numbers or <code>NULL</code> if the vec is empty.
+ The caller owns the returned string.
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="VecInt"><code>struct VecInt</code></a></h3>
+<p>
+ A vector of int values.
+ All accesses via functions, but _reading_ <code>_values</code>
+ is okay.
+
+ To iterate:
+ <pre>
+ for (int i = 0; i &lt; <a href="#VEC_SIZE"><code>VEC_SIZE</code></a>(vec); ++i)
+     int value = <a href="#VEC_GET"><code>VEC_GET</code></a>(vec, i);
+ </pre>
+
+</p>
+<ul>
+<li><code><a href="#set_int_to_vec"><code>set_int_to_vec()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_int_alloc_cap"><code>vec_int_alloc_cap()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_int_copy"><code>vec_int_copy()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_int_free"><code>vec_int_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#vec_int_add"><code>vec_int_add()</code></a></code></li>
+<li><code><a href="#vec_int_clear"><code>vec_int_clear()</code></a></code></li>
+<li><code><a href="#vec_int_dump"><code>vec_int_dump()</code></a></code></li>
+<li><code><a href="#vec_int_equal"><code>vec_int_equal()</code></a></code></li>
+<li><code><a href="#vec_int_find"><code>vec_int_find()</code></a></code></li>
+<li><code><a href="#vec_int_find_last"><code>vec_int_find_last()</code></a></code></li>
+<li><code><a href="#vec_int_get"><code>vec_int_get()</code></a></code></li>
+<li><code><a href="#vec_int_get_first"><code>vec_int_get_first()</code></a></code></li>
+<li><code><a href="#vec_int_get_last"><code>vec_int_get_last()</code></a></code></li>
+<li><code><a href="#vec_int_insert"><code>vec_int_insert()</code></a></code></li>
+<li><code><a href="#vec_int_merge"><code>vec_int_merge()</code></a></code></li>
+<li><code><a href="#vec_int_pop"><code>vec_int_pop()</code></a></code></li>
+<li><code><a href="#vec_int_push"><code>vec_int_push()</code></a></code></li>
+<li><code><a href="#vec_int_remove"><code>vec_int_remove()</code></a></code></li>
+<li><code><a href="#vec_int_replace"><code>vec_int_replace()</code></a></code></li>
+<li><code><a href="#vec_int_search"><code>vec_int_search()</code></a></code></li>
+<li><code><a href="#vec_int_set"><code>vec_int_set()</code></a></code></li>
+<li><code><a href="#vec_int_sort"><code>vec_int_sort()</code></a></code></li>
+<li><code><a href="#vec_int_take"><code>vec_int_take()</code></a></code></li>
+<li><code><a href="#vec_int_to_str"><code>vec_int_to_str()</code></a></code></li>
+</ul>
+<p><code><a href="#VecInt"><code>VecInt</code></a> <b><span style="color:navy"><a id="set_int_to_vec"><code>set_int_to_vec</code></a></span></b>(const <a href="#SetInt"><code>SetInt</code></a>* set)</code><br>
+<p>
+ Returns a <a href="#VecInt"><code>VecInt</code></a> which the caller owns and that has a copy of all the
+ set&#x27;s values in order.
+ See the source of this function and its helper to see how to iterate a
+ set.
+</p>
+</p>
+<p><code><a href="#VecInt"><code>VecInt</code></a> <b><span style="color:navy"><a id="vec_int_alloc_cap"><code>vec_int_alloc_cap</code></a></span></b>(int cap)</code><br>
+<p>
+ Allocates a new empty <a href="#VecInt"><code>VecInt</code></a> with the given capacity.
+</p>
+</p>
+<p><code><a href="#VecInt"><code>VecInt</code></a> <b><span style="color:navy"><a id="vec_int_copy"><code>vec_int_copy</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Returns a deep copy of the <a href="#VecInt"><code>VecInt</code></a>.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_free"><code>vec_int_free</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Destroys the <a href="#VecInt"><code>VecInt</code></a> freeing its memory. The <a href="#VecInt"><code>VecInt</code></a> is not usable
+ after this.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_add"><code>vec_int_add</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec, int value)</code><br>
+<p>
+ Adds the value in order (in a sorted vec) and moves succeeding values up
+ (right), increasing the vec&#x27;s size (and cap if necessary): O(n).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_clear"><code>vec_int_clear</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Clears all the <a href="#VecInt"><code>VecInt</code></a>&#x27;s values.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_dump"><code>vec_int_dump</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ For debugging.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="vec_int_equal"><code>vec_int_equal</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec1, const <a href="#VecInt"><code>VecInt</code></a>* vec2)</code><br>
+<p>
+ Returns true if the two <a href="#VecInt"><code>VecInt</code></a>&#x27;s have the same int values.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_find"><code>vec_int_find</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec, int value)</code><br>
+<p>
+ Returns the index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_find_last"><code>vec_int_find_last</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec, int value)</code><br>
+<p>
+ Returns the last index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_get"><code>vec_int_get</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec, int index)</code><br>
+<p>
+ Returns the <a href="#VecInt"><code>VecInt</code></a>&#x27;s int value at position index.
+ The <a href="#VEC_GET"><code>VEC_GET</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_get_first"><code>vec_int_get_first</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#VecInt"><code>VecInt</code></a>&#x27;s int value at its first valid index.
+ The <a href="#VEC_GET_FIRST"><code>VEC_GET_FIRST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_get_last"><code>vec_int_get_last</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#VecInt"><code>VecInt</code></a>&#x27;s int value at its last valid index.
+ The <a href="#VEC_GET_LAST"><code>VEC_GET_LAST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_insert"><code>vec_int_insert</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec, int index, int value)</code><br>
+<p>
+ Inserts the int at position index and moves succeeding values
+ up (right), increasing the <a href="#VecInt"><code>VecInt</code></a>&#x27;s size (and cap if necessary): O(n).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_merge"><code>vec_int_merge</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec1, <a href="#VecInt"><code>VecInt</code></a>* vec2)</code><br>
+<p>
+ Moves all vec2&#x27;s values to the end of vec1&#x27;s values, after which vec2 is
+ freed and must not be used again.
+ The two <a href="#VecInt"><code>VecInt</code></a>&#x27;s must have the same cmp, cpy, and destroy methods.
+ Use case: an array of <a href="#VecInt"><code>VecInt</code></a>&#x27;s each one of which is populated in its own
+ thread and at the end we want to merge all the <a href="#VecInt"><code>VecInt</code></a>&#x27;s into one.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_pop"><code>vec_int_pop</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Removes and returns the last int value. Only use if
+ vec.isempty() is false: O(1).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_push"><code>vec_int_push</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec, int value)</code><br>
+<p>
+ Pushes a new int value onto the end of the <a href="#VecInt"><code>VecInt</code></a>,
+ increasing the <a href="#VecInt"><code>VecInt</code></a>&#x27;s size (and cap) if necessary: O(1).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_remove"><code>vec_int_remove</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec, int index)</code><br>
+<p>
+ Removes the value at the given index and closes up the gap: O(n).
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_replace"><code>vec_int_replace</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec, int index, int value)</code><br>
+<p>
+ Sets the <a href="#VecInt"><code>VecInt</code></a>&#x27;s value at position index to the given int
+ and returns the old int value from that position.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_search"><code>vec_int_search</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec, int i)</code><br>
+<p>
+ Returns the index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a binary search that assumes <a href="#vec_int_sort"><code>vec_int_sort</code></a>() has
+ been used.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_set"><code>vec_int_set</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec, int index, int value)</code><br>
+<p>
+ Sets the <a href="#VecInt"><code>VecInt</code></a>&#x27;s value at position index to the given int.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_int_sort"><code>vec_int_sort</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Sorts the <a href="#VecInt"><code>VecInt</code></a> in-place in ascending order.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_int_take"><code>vec_int_take</code></a></span></b>(<a href="#VecInt"><code>VecInt</code></a>* vec, int index)</code><br>
+<p>
+ Returns and removes the value at the given index and closes up the
+ gap: O(n).
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_int_to_str"><code>vec_int_to_str</code></a></span></b>(const <a href="#VecInt"><code>VecInt</code></a>* vec)</code><br>
+<p>
+ Returns a string of space-separated int values.
+ The returned <code>char*</code> value is now owns by the caller.
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3><a id="VecStr"><code>struct VecStr</code></a></h3>
+<p>
+ A vector of owned or borrowed <code>char*</code> values.
+ All accesses via functions, but reading <code>values</code>
+ is okay.
+
+ To iterate:
+ <pre>
+ for (int i = 0; i &lt; <a href="#VEC_SIZE"><code>VEC_SIZE</code></a>(vec); ++i)
+     const <code>char*</code> value = <a href="#VEC_GET"><code>VEC_GET</code></a>(vec, i);
+ </pre>
+
+</p>
+<ul>
+<li><code><a href="#file_read_lines_size"><code>file_read_lines_size()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#map_str_real_keys"><code>map_str_real_keys()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#set_str_to_vec"><code>set_str_to_vec()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#split_chr"><code>split_chr()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#split_str"><code>split_str()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#split_ws"><code>split_ws()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_str_alloc_custom"><code>vec_str_alloc_custom()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_str_copy"><code>vec_str_copy()</code></a></code><i><span style="color:green"> constructor</span></i></li>
+<li><code><a href="#vec_str_free"><code>vec_str_free()</code></a></code><i><span style="color:red"> destructor</span></i></li>
+<li><code><a href="#vec_str_add"><code>vec_str_add()</code></a></code></li>
+<li><code><a href="#vec_str_caseadd"><code>vec_str_caseadd()</code></a></code></li>
+<li><code><a href="#vec_str_casesearch"><code>vec_str_casesearch()</code></a></code></li>
+<li><code><a href="#vec_str_casesort"><code>vec_str_casesort()</code></a></code></li>
+<li><code><a href="#vec_str_clear"><code>vec_str_clear()</code></a></code></li>
+<li><code><a href="#vec_str_dump"><code>vec_str_dump()</code></a></code></li>
+<li><code><a href="#vec_str_equal"><code>vec_str_equal()</code></a></code></li>
+<li><code><a href="#vec_str_find"><code>vec_str_find()</code></a></code></li>
+<li><code><a href="#vec_str_find_last"><code>vec_str_find_last()</code></a></code></li>
+<li><code><a href="#vec_str_get"><code>vec_str_get()</code></a></code></li>
+<li><code><a href="#vec_str_get_first"><code>vec_str_get_first()</code></a></code></li>
+<li><code><a href="#vec_str_get_last"><code>vec_str_get_last()</code></a></code></li>
+<li><code><a href="#vec_str_insert"><code>vec_str_insert()</code></a></code></li>
+<li><code><a href="#vec_str_join"><code>vec_str_join()</code></a></code></li>
+<li><code><a href="#vec_str_longest_common_path"><code>vec_str_longest_common_path()</code></a></code></li>
+<li><code><a href="#vec_str_longest_common_prefix"><code>vec_str_longest_common_prefix()</code></a></code></li>
+<li><code><a href="#vec_str_merge"><code>vec_str_merge()</code></a></code></li>
+<li><code><a href="#vec_str_pop"><code>vec_str_pop()</code></a></code></li>
+<li><code><a href="#vec_str_push"><code>vec_str_push()</code></a></code></li>
+<li><code><a href="#vec_str_remove"><code>vec_str_remove()</code></a></code></li>
+<li><code><a href="#vec_str_replace"><code>vec_str_replace()</code></a></code></li>
+<li><code><a href="#vec_str_search"><code>vec_str_search()</code></a></code></li>
+<li><code><a href="#vec_str_set"><code>vec_str_set()</code></a></code></li>
+<li><code><a href="#vec_str_sort"><code>vec_str_sort()</code></a></code></li>
+<li><code><a href="#vec_str_take"><code>vec_str_take()</code></a></code></li>
+</ul>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="file_read_lines_size"><code>file_read_lines_size</code></a></span></b>(const char* filename, long long max_size, bool* ok)</code><br>
+<p>
+ Reads a whole file (if smaller than max_size) and returns it as a
+ <a href="#VecStr"><code>VecStr</code></a> of lines (each an owned <code>char*</code>) and sets <code>ok</code>
+ if not <code><code>NULL</code></code>
+.
+ See also <a href="#file_read_lines"><code>file_read_lines</code></a>().
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="map_str_real_keys"><code>map_str_real_keys</code></a></span></b>(const <a href="#MapStrReal"><code>MapStrReal</code></a>* map)</code><br>
+<p>
+ Returns a <a href="#VecStr"><code>VecStr</code></a> of keys (with borrowed strings).
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="set_str_to_vec"><code>set_str_to_vec</code></a></span></b>(const <a href="#SetStr"><code>SetStr</code></a>* set, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns an owned or borrowed <a href="#VecStr"><code>VecStr</code></a> which the caller owns with all
+ the set&#x27;s values in order.
+ See the source of this function and its helper to see how to iterate a
+ set.
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="split_chr"><code>split_chr</code></a></span></b>(const char* s, int sep)</code><br>
+<p>
+ Splits the given string (which may not be <code>NULL</code>) on the sep char and
+ returns an owning <a href="#VecStr"><code>VecStr</code></a> (which may be empty).
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="split_str"><code>split_str</code></a></span></b>(const char* s, const char* sep)</code><br>
+<p>
+ Splits the given string on the sep string, neither of which may be
+ <code>NULL</code> and returns an owning <a href="#VecStr"><code>VecStr</code></a> (which may be empty).
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="split_ws"><code>split_ws</code></a></span></b>(const char* s)</code><br>
+<p>
+ Splits the given string by any amount of whitespace and returns an
+ owning <a href="#VecStr"><code>VecStr</code></a> (which may be empty).
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="vec_str_alloc_custom"><code>vec_str_alloc_custom</code></a></span></b>(int cap, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Allocates a new <a href="#VecStr"><code>VecStr</code></a> of <code>char*</code> (owns if owns, otherwise borrowed)
+ with the specified capacity. See also <a href="#vec_str_alloc"><code>vec_str_alloc</code></a>().
+</p>
+</p>
+<p><code><a href="#VecStr"><code>VecStr</code></a> <b><span style="color:navy"><a id="vec_str_copy"><code>vec_str_copy</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec, <a href="#Ownership"><code>Ownership</code></a> ownership)</code><br>
+<p>
+ Returns a copy of the <a href="#VecStr"><code>VecStr</code></a> (a deep copy if owns is true).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_free"><code>vec_str_free</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Destroys the <a href="#VecStr"><code>VecStr</code></a> freeing its memory and if owns, freeing every
+ value. The <a href="#VecStr"><code>VecStr</code></a> is not usable after this.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_add"><code>vec_str_add</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, char* value)</code><br>
+<p>
+ Adds the value in order (in a sorted vec) and moves succeeding values up
+ (right), increasing the vec&#x27;s size (and cap if necessary): O(n).
+ If owns, vec takes ownership of the new value (e.g., use strdup()).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_caseadd"><code>vec_str_caseadd</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, char* value)</code><br>
+<p>
+ Adds the value in order (in a case sorted vec) and moves succeeding
+ values up (right), increasing the vec&#x27;s size (and cap if necessary):
+ O(n).
+ If owns, vec takes ownership of the new value (e.g., use strdup()).
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_str_casesearch"><code>vec_str_casesearch</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec, const char* s)</code><br>
+<p>
+ Returns the index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a binary search that assumes <a href="#vec_str_sort"><code>vec_str_sort</code></a>() has
+ been used.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_casesort"><code>vec_str_casesort</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Sorts the <a href="#VecStr"><code>VecStr</code></a> in-place with case-folding.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_clear"><code>vec_str_clear</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Calls free on all the <a href="#VecStr"><code>VecStr</code></a>&#x27;s values if owns.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_dump"><code>vec_str_dump</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ For debugging.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="vec_str_equal"><code>vec_str_equal</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec1, const <a href="#VecStr"><code>VecStr</code></a>* vec2)</code><br>
+<p>
+ Returns true if the two <a href="#VecStr"><code>VecStr</code></a>&#x27;s have the same values.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_str_find"><code>vec_str_find</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec, const char* value)</code><br>
+<p>
+ Returns the index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_str_find_last"><code>vec_str_find_last</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec, const char* value)</code><br>
+<p>
+ Returns the last index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a linear search.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_get"><code>vec_str_get</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec, int index)</code><br>
+<p>
+ Returns the <a href="#VecStr"><code>VecStr</code></a>&#x27;s value at position index.
+ <a href="#VecStr"><code>VecStr</code></a> retains ownership (if owns), so do not delete the value.
+ The <a href="#VEC_GET"><code>VEC_GET</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_get_first"><code>vec_str_get_first</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#VecStr"><code>VecStr</code></a>&#x27;s value at its first valid index.
+ <a href="#VecStr"><code>VecStr</code></a> retains ownership (if owns), so do not delete the value.
+ The <a href="#VEC_GET_FIRST"><code>VEC_GET_FIRST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_get_last"><code>vec_str_get_last</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Returns the <a href="#VecStr"><code>VecStr</code></a>&#x27;s value at its last valid index.
+ <a href="#VecStr"><code>VecStr</code></a> retains ownership (if owns), so do not delete the value.
+ The <a href="#VEC_GET_LAST"><code>VEC_GET_LAST</code></a>() macro is faster but unchecked.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_insert"><code>vec_str_insert</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, int index, char* value)</code><br>
+<p>
+ Inserts the value at position index and moves succeeding values up
+ (right), increasing the <a href="#VecStr"><code>VecStr</code></a>&#x27;s size (and cap if necessary): O(n).
+ Use <a href="#vec_str_add"><code>vec_str_add</code></a>() to insert into a sorted <a href="#VecStr"><code>VecStr</code></a>.
+ If owns, <a href="#VecStr"><code>VecStr</code></a> takes ownership of the new value (e.g., use strdup()).
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_join"><code>vec_str_join</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec, const char* sep)</code><br>
+<p>
+ Returns a <code>char*</code> of all the vec&#x27;s strings joined together with sep, or
+ <code>NULL</code> if vec is empty. If sep is <code>NULL</code> they are joined with no separator.
+ The returned <code>char*</code> value is now owned by the caller.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_longest_common_path"><code>vec_str_longest_common_path</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Returns the longest common path of all the strings in vec; or <code>NULL</code>
+ if there is no common path. This is Unix-specific. The caller owns
+ the returned string.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_longest_common_prefix"><code>vec_str_longest_common_prefix</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Returns the longest common prefix of all the strings in vec; or <code>NULL</code>
+ if there is no common prefix. The caller owns the returned string.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_merge"><code>vec_str_merge</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec1, <a href="#VecStr"><code>VecStr</code></a>* vec2)</code><br>
+<p>
+ Moves all vec2&#x27;s values to the end of vec1&#x27;s values, after which vec2 is
+ freed and must not be used again.
+ Only callable if both vecs are compatible, i.e., both are owners or both
+ are borrowers.
+ Use case: an array of <a href="#VecStr"><code>VecStr</code></a>&#x27;s each one of which is populated in its own
+ thread and at the end we want to merge all the <a href="#VecStr"><code>VecStr</code></a>&#x27;s into one.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_pop"><code>vec_str_pop</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Removes and returns the last value. Only use if vec.isempty() is false.
+ The returned value is now owns by the caller if it was owns by
+ <a href="#VecStr"><code>VecStr</code></a>: O(1).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_push"><code>vec_str_push</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, char* value)</code><br>
+<p>
+ Pushes a new value onto the end of the <a href="#VecStr"><code>VecStr</code></a>, increasing the <a href="#VecStr"><code>VecStr</code></a>&#x27;s
+ size (and cap if necessary): O(1). Use <a href="#vec_str_add"><code>vec_str_add</code></a>() to insert into a
+ sorted <a href="#VecStr"><code>VecStr</code></a>. If owns, <a href="#VecStr"><code>VecStr</code></a> takes ownership of the value (e.g., if
+ <code>char*</code> then use strdup()).
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_remove"><code>vec_str_remove</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, int index)</code><br>
+<p>
+ Removes (and frees if owns) the value at the given index and closes
+ up the gap: O(n).
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_replace"><code>vec_str_replace</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, int index, char* value)</code><br>
+<p>
+ Sets the <a href="#VecStr"><code>VecStr</code></a>&#x27;s value at position index to the given value and returns
+ the old value from that position.
+ If owns, <a href="#VecStr"><code>VecStr</code></a> takes ownership of the new value (e.g., if <code>char*</code>
+ then use strdup()). The returned value is now owns by the caller (if
+ it was owns by the <a href="#VecStr"><code>VecStr</code></a>).
+</p>
+</p>
+<p><code>int <b><span style="color:navy"><a id="vec_str_search"><code>vec_str_search</code></a></span></b>(const <a href="#VecStr"><code>VecStr</code></a>* vec, const char* s)</code><br>
+<p>
+ Returns the index where the value was found in the vec or
+ <a href="#VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a> (-1). Uses a binary search that assumes <a href="#vec_str_sort"><code>vec_str_sort</code></a>() has
+ been used.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_set"><code>vec_str_set</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, int index, char* value)</code><br>
+<p>
+ Sets the <a href="#VecStr"><code>VecStr</code></a>&#x27;s value at position index to the given value.
+ If owns, <a href="#VecStr"><code>VecStr</code></a> takes ownership of the new value (e.g., if <code>char*</code>
+ then use strdup()) and frees the old value.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="vec_str_sort"><code>vec_str_sort</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec)</code><br>
+<p>
+ Sorts the <a href="#VecStr"><code>VecStr</code></a> in-place.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="vec_str_take"><code>vec_str_take</code></a></span></b>(<a href="#VecStr"><code>VecStr</code></a>* vec, int index)</code><br>
+<p>
+ Returns and removes the value at the given index and closes up the
+ gap: O(n).
+ The returned value is now owns by the caller if it was owns by <a href="#VecStr"><code>VecStr</code></a>.
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3>Functions</h3>
+<p><code>const char* <b><span style="color:navy"><a id="bool_to_str"><code>bool_to_str</code></a></span></b>(bool b)</code><br>
+<p>
+ Returns &quot;true&quot; or &quot;false&quot; depending on b.
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="commas"><code>commas</code></a></span></b>(char* s, int64_t n)</code><br>
+<p>
+ Populates <code>s</code>
+ with <code>n</code>
+&#x27;s digits plus grouping <a href="#commas"><code>commas</code></a>.
+ <code>s</code>
+ should be of size <a href="#COMMA_I64_SIZE"><code>COMMA_I64_SIZE</code></a>.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="file_change_ext"><code>file_change_ext</code></a></span></b>(const char* filename, const char* ext)</code><br>
+<p>
+ Returns a copy of the given filename with the given extension which the
+ caller must free.
+</p>
+</p>
+<p><code>const char* <b><span style="color:navy"><a id="file_ext"><code>file_ext</code></a></span></b>(const char* filename)</code><br>
+<p>
+ Returns the given filename&#x27;s extension excluding the leading dot.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="file_get_config_name"><code>file_get_config_name</code></a></span></b>(char* filename, const char* domain, const char* appname, const char* ext)</code><br>
+<p>
+ Populates filename (of size <a href="#FILENAME_SIZE"><code>FILENAME_SIZE</code></a>) and returns true if it
+ exists. The filename is either <code>$HOME/.config/domain_appname.ext</code>
+ or
+ <code>$HOME/.domain_appname.ext</code>
+. Domain may be <code>NULL</code> in which case filename
+ is <code>$HOME/.config/appname.ext</code>
+ or <code>$HOME/.appname.ext</code>
+.
+ See also <a href="#file_get_ini_name"><code>file_get_ini_name</code></a>().
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="file_read_size"><code>file_read_size</code></a></span></b>(const char* filename, long long max_size, bool* ok)</code><br>
+<p>
+ Reads a whole file (if smaller than max_size) and returns it as a
+ single string which the caller owns and sets ok if not <code>NULL</code>.
+ See also <a href="#file_read"><code>file_read</code></a>().
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="is_equalish"><code>is_equalish</code></a></span></b>(double a, double b)</code><br>
+<p>
+ Returns true if doubles a and b are effectively equal.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="is_file"><code>is_file</code></a></span></b>(const char* path)</code><br>
+<p>
+ Returns true if the given filename exists.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="is_file_or_folder"><code>is_file_or_folder</code></a></span></b>(const char* path)</code><br>
+<p>
+ Returns true if the given filename or folder exists.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="is_folder"><code>is_folder</code></a></span></b>(const char* path)</code><br>
+<p>
+ Returns true if the given folder exists.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="is_zeroish"><code>is_zeroish</code></a></span></b>(double a)</code><br>
+<p>
+ Returns true if double a is effectively zero.
+</p>
+</p>
+<p><code>const char* <b><span style="color:navy"><a id="skip_nonws"><code>skip_nonws</code></a></span></b>(const char* p)</code><br>
+<p>
+ Returns a pointer to the first whitespace char in p or <code>NULL</code>.
+</p>
+</p>
+<p><code>const char* <b><span style="color:navy"><a id="skip_ws"><code>skip_ws</code></a></span></b>(const char* p)</code><br>
+<p>
+ Returns a pointer to the first non-whitespace char in p or <code>NULL</code>.
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="str_caseends"><code>str_caseends</code></a></span></b>(const char* s, const char* suffix)</code><br>
+<p>
+ Returns true if <code>char*</code> s ends with <code>char*</code> suffix, regardless of case
+</p>
+</p>
+<p><code>bool <b><span style="color:navy"><a id="str_ends"><code>str_ends</code></a></span></b>(const char* s, const char* suffix)</code><br>
+<p>
+ Returns true if <code>char*</code> s ends with <code>char*</code> suffix
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="str_lowercase"><code>str_lowercase</code></a></span></b>(const char* s)</code><br>
+<p>
+ Returns new <code>char*</code> of given <code>char*</code>&#x27;s ASCII chars lowercased
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="str_lowercase_ip"><code>str_lowercase_ip</code></a></span></b>(char* s)</code><br>
+<p>
+ Modifies <code>char*</code>&#x27;s text in-place converting ASCII lowercase to lowercase
+</p>
+</p>
+<p><code>double <b><span style="color:navy"><a id="str_to_real"><code>str_to_real</code></a></span></b>(const char* s, bool* ok)</code><br>
+<p>
+ Returns a double converted from s and sets ok (if not <code>NULL</code>) to true;
+ otherwise returns zero and sets ok (if not <code>NULL</code>) to false.
+</p>
+</p>
+<p><code>const char* <b><span style="color:navy"><a id="str_trim_left"><code>str_trim_left</code></a></span></b>(const char* s)</code><br>
+<p>
+ Returns a pointer to s&#x27;s first non-whitespace char or <code>NULL</code> if s is
+ empty or all whitespace
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="str_trimn"><code>str_trimn</code></a></span></b>(const char* s, size_t n)</code><br>
+<p>
+ Like <a href="#str_trim"><code>str_trim</code></a> but only operates on the first n chars of s if n &gt; 0 or
+ the whole of s (i.e., up to the terminating NUL) if n == 0.
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="str_uppercase"><code>str_uppercase</code></a></span></b>(const char* s)</code><br>
+<p>
+ Returns new <code>char*</code> of given <code>char*</code>&#x27;s ASCII chars uppercased
+</p>
+</p>
+<p><code>void <b><span style="color:navy"><a id="str_uppercase_ip"><code>str_uppercase_ip</code></a></span></b>(char* s)</code><br>
+<p>
+ Modifies <code>char*</code>&#x27;s text in-place converting ASCII lowercase to uppercase
+</p>
+</p>
+<p><code>char* <b><span style="color:navy"><a id="str_uppercasen"><code>str_uppercasen</code></a></span></b>(const char* s, int n)</code><br>
+<p>
+ Returns new <code>char*</code> of up to n chars from the given <code>char*</code>&#x27;s ASCII chars
+ uppercased
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3>Defines</h3>
+<p><code>#define <b><span style="color:navy"><a id="ARG_ERR"><code>ARG_ERR</code></a></span></b> 2</code><br>
+<p>
+ The default return value for argument error errors.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="ARGEXIT"><code>ARGEXIT</code></a></span></b> <a href="#ARGEXIT"><code>ARGEXIT</code></a>(...)</code><br>
+<p>
+ Prints the printf-format message to stderr and calls exit(<a href="#ARG_ERR"><code>ARG_ERR</code></a>).
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="assert_valid_index"><code>assert_valid_index</code></a></span></b> <a href="#assert_valid_index"><code>assert_valid_index</code></a>(vec, index)</code><br>
+<p>
+ index must be a variable or literal, not an expression!
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="clamp"><code>clamp</code></a></span></b> <a href="#clamp"><code>clamp</code></a>(T, U, V)</code><br>
+<p>
+ <a href="#clamp"><code>clamp</code></a>(minval, val, maxval) where all may be int, int64_t, size_t, or
+ double
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="COMMA_I64_SIZE"><code>COMMA_I64_SIZE</code></a></span></b> 28</code><br>
+<p>
+ The buffer size required to convert an int of up to 64-bits into a
+ string with comma grouped digits. See <a href="#commas"><code>commas</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="DEQ_ISEMPTY"><code>DEQ_ISEMPTY</code></a></span></b> <a href="#DEQ_ISEMPTY"><code>DEQ_ISEMPTY</code></a>(deq)</code><br>
+<p>
+ Returns true if the deq is empty.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="DEQ_SIZE"><code>DEQ_SIZE</code></a></span></b> <a href="#DEQ_SIZE"><code>DEQ_SIZE</code></a>(deq)</code><br>
+<p>
+ Returns the deq&#x27;s size.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="deq_str_ownership"><code>deq_str_ownership</code></a></span></b> <a href="#deq_str_ownership"><code>deq_str_ownership</code></a>(deq)</code><br>
+<p>
+ Returns Owns if the <a href="#DeqStr"><code>DeqStr</code></a> is owning, otherwise Borrows
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="EXIT"><code>EXIT</code></a></span></b> <a href="#EXIT"><code>EXIT</code></a>(...)</code><br>
+<p>
+ Prints the printf-format message to stderr and calls exit(EXIT_SUCCESS).
+ See also <a href="#FAIL"><code>FAIL</code></a>() and <a href="#WARN"><code>WARN</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="FAIL"><code>FAIL</code></a></span></b> <a href="#FAIL"><code>FAIL</code></a>(...)</code><br>
+<p>
+ Prints the file and line and printf-format message to stderr and
+ calls exit(EXIT_FAILURE). See also <a href="#WARN"><code>WARN</code></a>() and <a href="#EXIT"><code>EXIT</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="file_get_ini_name"><code>file_get_ini_name</code></a></span></b> <a href="#file_get_ini_name"><code>file_get_ini_name</code></a>(filename, domain, appname)</code><br>
+<p>
+ Populates filename (of size <a href="#FILENAME_SIZE"><code>FILENAME_SIZE</code></a>) and returns true if it
+ exists. The filename is either <code>$HOME/.config/domain_appname.ini</code>
+ or
+ <code>$HOME/.domain_appname.ini</code>
+. Domain may be <code>NULL</code> in which case filename is
+ <code>$HOME/.config/appname.ini</code>
+ or <code>$HOME/.appname.ini</code>
+.
+ See also <a href="#file_get_config_name"><code>file_get_config_name</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="file_read"><code>file_read</code></a></span></b> <a href="#file_read"><code>file_read</code></a>(filename, ok)</code><br>
+<p>
+ Reads a whole file (if &lt; 1048576 bytes) and returns it as a
+ single string which the caller owns and sets ok if not <code>NULL</code>.
+ See also <a href="#file_read_size"><code>file_read_size</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="file_read_lines"><code>file_read_lines</code></a></span></b> <a href="#file_read_lines"><code>file_read_lines</code></a>(filename, ok)</code><br>
+<p>
+ Reads a whole file (if &lt; 1048576 bytes) and returns it as a <a href="#VecStr"><code>VecStr</code></a> of
+ lines (each an owned <code>char*</code>) and sets <code>ok</code>
+ if not <code><code>NULL</code></code>
+.
+ See also <a href="#file_read_lines_size"><code>file_read_lines_size</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="FILENAME_SIZE"><code>FILENAME_SIZE</code></a></span></b> _POSIX_PATH_MAX</code><br>
+<p>
+ The maximum buffer size for a filename (normally 256, ∴ 255 chars)
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="MAP_ISEMPTY"><code>MAP_ISEMPTY</code></a></span></b> <a href="#MAP_ISEMPTY"><code>MAP_ISEMPTY</code></a>(map)</code><br>
+<p>
+ Returns true if the map is empty.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="MAP_SIZE"><code>MAP_SIZE</code></a></span></b> <a href="#MAP_SIZE"><code>MAP_SIZE</code></a>(map)</code><br>
+<p>
+ Returns the maps&#x27;s size.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="map_str_real_ownership"><code>map_str_real_ownership</code></a></span></b> <a href="#map_str_real_ownership"><code>map_str_real_ownership</code></a>(map)</code><br>
+<p>
+ Returns Owns if the <a href="#MapStrReal"><code>MapStrReal</code></a> is owning, otherwise Borrows.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="max"><code>max</code></a></span></b> <a href="#max"><code>max</code></a>(T, U)</code><br>
+<p>
+ <a href="#max"><code>max</code></a>(a, b) where both may be int, int64_t, or size_t. See also <a href="#min"><code>min</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="min"><code>min</code></a></span></b> <a href="#min"><code>min</code></a>(T, U)</code><br>
+<p>
+ <a href="#min"><code>min</code></a>(a, b) where both may be int, int64_t, or size_t. See also <a href="#max"><code>max</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="SET_ISEMPTY"><code>SET_ISEMPTY</code></a></span></b> <a href="#SET_ISEMPTY"><code>SET_ISEMPTY</code></a>(set)</code><br>
+<p>
+ Returns true if the set is empty.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="SET_SIZE"><code>SET_SIZE</code></a></span></b> <a href="#SET_SIZE"><code>SET_SIZE</code></a>(set)</code><br>
+<p>
+ Returns the set&#x27;s size.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="set_str_ownership"><code>set_str_ownership</code></a></span></b> <a href="#set_str_ownership"><code>set_str_ownership</code></a>(set)</code><br>
+<p>
+ Returns Owns if the <a href="#SetStr"><code>SetStr</code></a> is owning, otherwise Borrows.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="str_begins"><code>str_begins</code></a></span></b> <a href="#str_begins"><code>str_begins</code></a>(s, prefix)</code><br>
+<p>
+ Returns true if <code>char*</code> s begins with <code>char*</code> prefix
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="str_casebegins"><code>str_casebegins</code></a></span></b> <a href="#str_casebegins"><code>str_casebegins</code></a>(s, prefix)</code><br>
+<p>
+ Returns true if <code>char*</code> s begins with <code>char*</code> prefix, regardless of case
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="str_caseeq"><code>str_caseeq</code></a></span></b> <a href="#str_caseeq"><code>str_caseeq</code></a>(s, t)</code><br>
+<p>
+ Returns true if <code>char*</code> s case-folded equals <code>char*</code> t
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="str_eq"><code>str_eq</code></a></span></b> <a href="#str_eq"><code>str_eq</code></a>(s, t)</code><br>
+<p>
+ Returns true if <code>char*</code> s equals <code>char*</code> t
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="str_trim"><code>str_trim</code></a></span></b> <a href="#str_trim"><code>str_trim</code></a>(s)</code><br>
+<p>
+ Returns a new string owned by the caller that is a copy of s with no
+ leading or trailing whitespace: or <code>NULL</code> if s is empty or all
+ whitespace. If s is nonempty and has no leading or trailing
+ whitespace this function is effectively the same as strdup().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="typename"><code>typename</code></a></span></b> <a href="#typename"><code>typename</code></a>(x)</code><br>
+<p>
+ Returns the string representing the given object&#x27;s <a href="#typename"><code>typename</code></a>. (For
+ debugging.)
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="vec_byte_alloc"><code>vec_byte_alloc</code></a></span></b> <a href="#vec_byte_alloc"><code>vec_byte_alloc</code></a>()</code><br>
+<p>
+ Allocates a new empty <a href="#VecByte"><code>VecByte</code></a> with a default capacity of 0.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_CAP"><code>VEC_CAP</code></a></span></b> <a href="#VEC_CAP"><code>VEC_CAP</code></a>(vec)</code><br>
+<p>
+ Returns the <a href="#Vec"><code>Vec</code></a>&#x27;s capacity.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_GET"><code>VEC_GET</code></a></span></b> <a href="#VEC_GET"><code>VEC_GET</code></a>(vec, index)</code><br>
+<p>
+ Fast unchecked access to an element in any vector.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_GET_FIRST"><code>VEC_GET_FIRST</code></a></span></b> <a href="#VEC_GET_FIRST"><code>VEC_GET_FIRST</code></a>(vec)</code><br>
+<p>
+ Fast unchecked access to the first element in any nonempty vector.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_GET_LAST"><code>VEC_GET_LAST</code></a></span></b> <a href="#VEC_GET_LAST"><code>VEC_GET_LAST</code></a>(vec)</code><br>
+<p>
+ Fast unchecked access to the last element in any nonempty vector.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_INITIAL_CAP"><code>VEC_INITIAL_CAP</code></a></span></b> 16</code><br>
+<p>
+ Vecs start out empty, but at the first addition (e.g., first push)
+ they are first grown to this size.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="vec_int_alloc"><code>vec_int_alloc</code></a></span></b> <a href="#vec_int_alloc"><code>vec_int_alloc</code></a>()</code><br>
+<p>
+ Allocates a new empty <a href="#VecInt"><code>VecInt</code></a> with a default capacity of 0.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_ISEMPTY"><code>VEC_ISEMPTY</code></a></span></b> <a href="#VEC_ISEMPTY"><code>VEC_ISEMPTY</code></a>(vec)</code><br>
+<p>
+ Returns true if the <a href="#Vec"><code>Vec</code></a> is empty.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_NOT_FOUND"><code>VEC_NOT_FOUND</code></a></span></b> -1</code><br>
+<p>
+ The index returned by <code>vec…find()</code>
+ methods when the value can&#x27;t be
+ found.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="vec_ownership"><code>vec_ownership</code></a></span></b> <a href="#vec_ownership"><code>vec_ownership</code></a>(vec)</code><br>
+<p>
+ Returns Owns if the <a href="#Vec"><code>Vec</code></a> is owning, otherwise Borrows.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="VEC_SIZE"><code>VEC_SIZE</code></a></span></b> <a href="#VEC_SIZE"><code>VEC_SIZE</code></a>(vec)</code><br>
+<p>
+ Returns the <a href="#Vec"><code>Vec</code></a>&#x27;s size.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="vec_str_alloc"><code>vec_str_alloc</code></a></span></b> <a href="#vec_str_alloc"><code>vec_str_alloc</code></a>()</code><br>
+<p>
+ Allocates a new <a href="#VecStr"><code>VecStr</code></a> of owned <code>char*</code> with default capacity of 0.
+ See also <a href="#vec_str_alloc_custom"><code>vec_str_alloc_custom</code></a>().
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="vec_str_ownership"><code>vec_str_ownership</code></a></span></b> <a href="#vec_str_ownership"><code>vec_str_ownership</code></a>(vec)</code><br>
+<p>
+ Returns Owns if the <a href="#VecStr"><code>VecStr</code></a> owns its strings, otherwise Borrows.
+</p>
+</p>
+<p><code>#define <b><span style="color:navy"><a id="WARN"><code>WARN</code></a></span></b> <a href="#WARN"><code>WARN</code></a>(...)</code><br>
+<p>
+ Prints the file and line and printf-format message to stderr.
+ See also <a href="#FAIL"><code>FAIL</code></a>() and <a href="#EXIT"><code>EXIT</code></a>().
+</p>
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+<h3>Enums</h3>
+<h3><a id="IniReply"><code>enum IniReply</code></a></h3>
+<ul>
+<li><code>IniItemNotFound</code></li>
+<li><code>IniInvalidValue</code></li>
+<li><code>IniItemFound</code></li>
+</ul>
+<p>
+ One of these is returned by most ini_get… functions.
+</p>
+<h3><a id="Ownership"><code>enum Ownership</code></a></h3>
+<ul>
+<li><code>Owns</code></li>
+<li><code>Borrows</code></li>
+</ul>
+<p>
+ Used to set whether a collection owns its element pointers (and must
+ free them) or not.
+ See, for example, <a href="#deq_str_alloc"><code>deq_str_alloc</code></a>(), <a href="#map_str_real_alloc"><code>map_str_real_alloc</code></a>(), <a href="#set_str_copy"><code>set_str_copy</code></a>(),
+ <a href="#set_str_to_vec"><code>set_str_to_vec</code></a>(), <a href="#vec_str_alloc_custom"><code>vec_str_alloc_custom</code></a>(), and <a href="#vec_str_copy"><code>vec_str_copy</code></a>().
+</p>
+<p><a href="#top"><i>Contents</i></a></p>
+</div></body></html>
